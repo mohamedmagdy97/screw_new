@@ -8,14 +8,8 @@ class DashBoardAppBar extends PreferredSize {
   final bool fromHistory;
   final Function? onPressed;
 
-  const DashBoardAppBar({
-    super.key,
-    required this.fromHistory,
-    this.onPressed,
-  }) : super(
-          child: const SizedBox(),
-          preferredSize: const Size.fromHeight(80),
-        );
+  const DashBoardAppBar({super.key, required this.fromHistory, this.onPressed})
+    : super(child: const SizedBox(), preferredSize: const Size.fromHeight(80));
 
   @override
   Widget build(BuildContext context) {
@@ -27,48 +21,52 @@ class DashBoardAppBar extends PreferredSize {
           ? IconButton(
               onPressed: () {
                 showDialog(
-                    context: context,
-                    builder: (_) => Dialog(
-                          backgroundColor: AppColors.bg,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16.0, vertical: 32),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                CustomText(
-                                  text: "تحذير",
-                                  fontSize: 18.sp,
-                                  color: AppColors.mainColor,
-                                ),
-                                const SizedBox(height: 40),
-                                CustomText(
-                                  text: "هل تريد اعادة بدأ الجولة",
-                                  fontSize: 18.sp,
-                                ),
-                                const SizedBox(height: 40),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    TextButton(
-                                      onPressed: () => Navigator.pop(context),
-                                      child: const CustomText(
-                                          text: "لا", fontSize: 18),
-                                    ),
-                                    CustomButton(
-                                      width: 0.25.sw,
-                                      height: 40,
-                                      text: "نعم",
-                                      isButtonBorder: true,
-                                      onPressed: onPressed,
-                                    ),
-                                  ],
-                                )
-                              ],
-                            ),
+                  context: context,
+                  builder: (_) => Dialog(
+                    backgroundColor: AppColors.bg,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0,
+                        vertical: 32,
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          CustomText(
+                            text: "تحذير",
+                            fontSize: 18.sp,
+                            color: AppColors.mainColor,
                           ),
-                        ));
+                          const SizedBox(height: 40),
+                          CustomText(
+                            text: "هل تريد اعادة بدأ الجولة",
+                            fontSize: 18.sp,
+                          ),
+                          const SizedBox(height: 40),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: const CustomText(
+                                  text: "لا",
+                                  fontSize: 18,
+                                ),
+                              ),
+                              CustomButton(
+                                width: 0.25.sw,
+                                height: 40,
+                                text: "نعم",
+                                isButtonBorder: true,
+                                onPressed: onPressed,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
               },
               icon: const Icon(Icons.refresh, color: AppColors.white),
             )

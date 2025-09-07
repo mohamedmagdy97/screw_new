@@ -18,7 +18,7 @@ class FriendsMode extends StatelessWidget {
       padding: const EdgeInsets.all(24),
       children: [
         CustomText(
-          text: "أختر عدد التيمات",
+          text: "أختر عدد الفرق",
           fontSize: 16.sp,
           textAlign: TextAlign.end,
         ),
@@ -26,8 +26,9 @@ class FriendsMode extends StatelessWidget {
         BlocBuilder<GenericCubit<List<Item>>, GenericState<List<Item>>>(
           bloc: homeData.listTeamsCubit,
           builder: (context, state) {
-            final activeTeams =
-                state.data!.firstWhere((e) => e.isActive == true).key!;
+            final activeTeams = state.data!
+                .firstWhere((e) => e.isActive == true)
+                .key!;
             return Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
@@ -46,7 +47,9 @@ class FriendsMode extends StatelessWidget {
                             height: 50,
                             alignment: Alignment.center,
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 10),
+                              horizontal: 8,
+                              vertical: 10,
+                            ),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12.sp),
                               color: state.data![index].isActive!
@@ -59,8 +62,9 @@ class FriendsMode extends StatelessWidget {
                               ),
                             ),
                             child: CustomText(
-                                text: state.data![index].value.toString(),
-                                fontSize: 18.sp),
+                              text: state.data![index].value.toString(),
+                              fontSize: 18.sp,
+                            ),
                           ),
                         ),
                       ),
@@ -88,7 +92,9 @@ class FriendsMode extends StatelessWidget {
                   ),
                 Padding(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 20.0, vertical: 16),
+                    horizontal: 20.0,
+                    vertical: 16,
+                  ),
                   child: CustomButton(
                     text: "التالي",
                     onPressed: () => homeData.goToNextTeams(context),
@@ -97,7 +103,7 @@ class FriendsMode extends StatelessWidget {
               ],
             );
           },
-        )
+        ),
       ],
     );
   }

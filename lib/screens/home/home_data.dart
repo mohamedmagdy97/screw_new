@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:screw_calculator/cubits/generic_cubit/generic_cubit.dart';
 import 'package:screw_calculator/models/item.dart';
@@ -31,10 +30,6 @@ class HomeData {
   List<PlayerModel> players = [];
   DateTime? currentBackPressTime;
   GenericCubit<bool> isLoadedCubit = GenericCubit(data: false);
-
-  final adUnitId = Platform.isAndroid
-      ? 'ca-app-pub-2846618561973841/6485504999'
-      : 'ca-app-pub-3940256099942544/2934735716';
 
   void init() {
     classicInit();
@@ -116,12 +111,12 @@ class HomeData {
     }
     players.add(PlayerModel(id: 1, name: playerOne.text));
     players.add(PlayerModel(id: 2, name: playerTwo.text));
-    players.add(PlayerModel(id: 3, name: playerThree.text ?? ""));
-    players.add(PlayerModel(id: 4, name: playerFour.text ?? ""));
-    players.add(PlayerModel(id: 5, name: playerFive.text ?? ""));
-    players.add(PlayerModel(id: 6, name: playerSix.text ?? ""));
-    players.add(PlayerModel(id: 7, name: playerOne2.text ?? ""));
-    players.add(PlayerModel(id: 8, name: playerTwo2.text ?? ""));
+    players.add(PlayerModel(id: 3, name: playerThree.text));
+    players.add(PlayerModel(id: 4, name: playerFour.text));
+    players.add(PlayerModel(id: 5, name: playerFive.text));
+    players.add(PlayerModel(id: 6, name: playerSix.text));
+    players.add(PlayerModel(id: 7, name: playerOne2.text));
+    players.add(PlayerModel(id: 8, name: playerTwo2.text));
 
     players.removeWhere((e) => e.name!.isEmpty);
 
