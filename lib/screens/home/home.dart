@@ -44,6 +44,14 @@ class _MyHomePageState extends State<MyHomePage> {
       key: homeData.scaffoldKey,
       appBar: AppBar(
           centerTitle: true,
+          leading: InkWell(
+            onTap: () => Navigator.pop(context),
+            child: const Padding(
+              padding: EdgeInsets.all(8.0),
+              child:
+              Icon(Icons.keyboard_backspace_rounded, color: Colors.white),
+            ),
+          ),
           automaticallyImplyLeading: false,
           backgroundColor: AppColors.grayy,
           title: CustomText(text: "سكرو حاسبة", fontSize: 22.sp),

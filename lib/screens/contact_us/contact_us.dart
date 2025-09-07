@@ -96,7 +96,7 @@ class _ContactUSState extends State<ContactUS> {
             color: AppColors.mainColor,
             child: const CustomText(
               text:
-                  "التطبيق لا ينتمي للأستاذ يحى عزام ولكن لمطورية فقط, ورقم الواتس المرفق للاقترحات والشكاوى",
+                  "التطبيق لا ينتمي للمهندس يحى عزام ولكن لمطورية فقط, ورقم الواتس المرفق للاقترحات والشكاوى",
               fontSize: 14,
             ),
           ),
