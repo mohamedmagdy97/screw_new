@@ -20,7 +20,7 @@ class _GameModeState extends State<GameMode> {
 
   @override
   void initState() {
-    gameModeData.init();
+    gameModeData.init(context);
     super.initState();
   }
 
