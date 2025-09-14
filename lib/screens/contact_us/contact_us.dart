@@ -75,13 +75,6 @@ class _ContactUSState extends State<ContactUS> {
                     underline: true,
                   ),
                 ),
-                const SizedBox(height: 16),
-                TitleWithValue(
-                  title: "",
-                  highlight: true,
-                  value:
-                      "وايضا اذا رأيت اعلان غير مناسب يرجى ابلاغنا لحذفه وعدم ظهوره مرة اخرى",
-                ),
               ],
             ),
           ),
@@ -91,15 +84,15 @@ class _ContactUSState extends State<ContactUS> {
             fontSize: 16,
           ),
           const SizedBox(height: 16),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            color: AppColors.mainColor,
-            child: const CustomText(
-              text:
-                  "التطبيق لا ينتمي للمهندس يحى عزام ولكن لمطورية فقط, ورقم الواتس المرفق للاقترحات والشكاوى",
-              fontSize: 14,
-            ),
-          ),
+          // Container(
+          //   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          //   color: AppColors.mainColor,
+          //   child: const CustomText(
+          //     text:
+          //         "التطبيق لا ينتمي للمهندس يحيى عزام ولكن لمطورية فقط, ورقم الواتس المرفق للاقترحات والشكاوى",
+          //     fontSize: 14,
+          //   ),
+          // ),
         ],
       ),
     );

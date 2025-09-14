@@ -44,6 +44,7 @@ class FirebaseNotificationService {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       debugPrint("📩 Foreground: ${message.notification?.title}");
       debugPrint("📩 Foreground body: ${message.notification?.body}");
+      debugPrint("📩 Foreground data: ${message.data}");
 
       if (message.notification != null) {
         showNotification(
@@ -68,8 +69,64 @@ class FirebaseNotificationService {
     // Print Device Token
     String? token = await _firebaseMessaging.getToken();
     debugPrint("📱 Device FCM Token: $token");
+    subscribeToAllUsers();
     debugPrint("Dddddddddddddddd== fcmToken=>>>>>>>>>>>>> $token");
   }
+
+  // static Future<void> init(BuildContext context) async {
+  //   const AndroidInitializationSettings initializationSettingsAndroid =
+  //   AndroidInitializationSettings('@mipmap/ic_launcher');
+  //
+  //   const InitializationSettings initializationSettings =
+  //   InitializationSettings(android: initializationSettingsAndroid);
+  //
+  //   await _flutterLocalNotificationsPlugin.initialize(
+  //     initializationSettings,
+  //     onDidReceiveNotificationResponse: (NotificationResponse response) {
+  //       // لما المستخدم يضغط على الإشعار وهو في foreground
+  //       print("👉 User tapped notification (foreground/local)");
+  //     },
+  //   );
+  //
+  //   // Create Notification Channel
+  //   const AndroidNotificationChannel channel = AndroidNotificationChannel(
+  //     'high_importance_channel',
+  //     'High Importance Notifications',
+  //     description: 'This channel is used for important notifications.',
+  //     importance: Importance.high,
+  //   );
+  //
+  //   await _flutterLocalNotificationsPlugin
+  //       .resolvePlatformSpecificImplementation<
+  //       AndroidFlutterLocalNotificationsPlugin
+  //   >()
+  //       ?.createNotificationChannel(channel);
+  //
+  //   // Foreground listener
+  //   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+  //     print("📩 Got a message in foreground: ${message.notification?.title}");
+  //
+  //     if (message.notification != null) {
+  //       _showNotification(
+  //         message.notification!.title ?? "No Title",
+  //         message.notification!.body ?? "No Body",
+  //       );
+  //     }
+  //   });
+  //
+  //   // Background / terminated click listener
+  //   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+  //     handleNotificationClick(message, context);
+  //   });
+  //
+  //   // Terminated state (app closed completely)
+  //   FirebaseMessaging.instance.getInitialMessage().then((message) {
+  //     if (message != null) {
+  //       handleNotificationClick(message, context);
+  //     }
+  //   });
+  // }
+
 
   /// Setup Local Notification Channel
   static Future<void> setupLocalNotifications() async {
@@ -151,4 +208,24 @@ class FirebaseNotificationService {
       }
     }
   }
+
+   static subscribeToAllUsers() async {
+
+    await FirebaseMessaging.instance.subscribeToTopic("all");
+    debugPrint("👉👉👉👉👉 subscribeToAllUsers");
+
+   }
+
+  /// لما المستخدم يفتح الإشعار (من الـ background أو terminated)
+  static void handleNotificationClick(RemoteMessage message, BuildContext context) {
+    if (message.data.isNotEmpty) {
+      debugPrint("👉 User clicked notification with data: ${message.data}");
+
+      final String? screen = message.data['screen'];
+      if (screen == "dashboard") {
+        Navigator.pushNamed(context, "/dashboard");
+      }
+    }
+  }
+
 }
