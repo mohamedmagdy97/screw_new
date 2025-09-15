@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:screw_calculator/components/custom_text.dart';
+import 'package:screw_calculator/features/game_mode/domain/item.dart';
 import 'package:screw_calculator/screens/home/home_data.dart';
 import 'package:screw_calculator/screens/home/widgets/classic_mode.dart';
 import 'package:screw_calculator/screens/home/widgets/drawer_widget.dart';
@@ -10,7 +11,9 @@ import 'package:screw_calculator/utility/app_theme.dart';
 import 'package:flutter/cupertino.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+  final Item selected;
+
+  const MyHomePage({super.key, required this.selected});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -19,15 +22,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
-    // WidgetsBinding.instance.addObserver(
-    //   LifecycleEventHandler(
-    //     resumeCallBack: () async => setState(
-    //           () {
-    //         // print('looooooooooool ===');
-    //       },
-    //     ),
-    //   ),
-    // );
     homeData.init();
     super.initState();
   }
@@ -41,37 +35,40 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: homeData.scaffoldKey,
-      appBar: AppBar(
-        centerTitle: true,
-        leading: InkWell(
-          onTap: () => Navigator.pop(context),
-          child: const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Icon(CupertinoIcons.back, color: Colors.white),
-          ),
-        ),
-        automaticallyImplyLeading: true,
-        backgroundColor: AppColors.grayy,
-        title: CustomText(text: "سكرو حاسبة", fontSize: 22.sp),
-        actions: [
-          InkWell(
-            onTap: () => homeData.scaffoldKey.currentState!.openEndDrawer(),
+    return Hero(
+      tag: 'gameMode-${widget.selected.value}',
+      child: Scaffold(
+        key: homeData.scaffoldKey,
+        appBar: AppBar(
+          centerTitle: true,
+          leading: InkWell(
+            onTap: () => Navigator.pop(context),
             child: const Padding(
               padding: EdgeInsets.all(8.0),
-              child: Icon(Icons.menu, color: Colors.white),
+              child: Icon(CupertinoIcons.back, color: Colors.white),
             ),
           ),
-        ],
-      ),
-      endDrawer: const DrawerWidget(),
-      backgroundColor: AppColors.bg,
-      body: Form(
-        key: homeData.formKey,
-        child: ModeClass.mode == GameMode.classic
-            ? const ClassicMode()
-            : const FriendsMode(),
+          automaticallyImplyLeading: true,
+          backgroundColor: AppColors.grayy,
+          title: CustomText(text: "سكرو حاسبة", fontSize: 22.sp),
+          actions: [
+            InkWell(
+              onTap: () => homeData.scaffoldKey.currentState!.openEndDrawer(),
+              child: const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Icon(Icons.menu, color: Colors.white),
+              ),
+            ),
+          ],
+        ),
+        endDrawer: const DrawerWidget(),
+        backgroundColor: AppColors.bg,
+        body: Form(
+          key: homeData.formKey,
+          child: ModeClass.mode == GameMode.classic
+              ? const ClassicMode()
+              : const FriendsMode(),
+        ),
       ),
     );
   }

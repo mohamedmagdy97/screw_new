@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:screw_calculator/components/custom_text.dart';
 import 'package:screw_calculator/features/game_mode/presentation/pages/game_mode_page.dart';
 import 'package:screw_calculator/helpers/firebase_notification_service.dart';
-import 'package:screw_calculator/screens/game_mode/game_mode.dart';
 import 'package:screw_calculator/utility/app_theme.dart';
 
 class SplashScreen extends StatefulWidget {

@@ -68,15 +68,15 @@ class GameModePage extends StatelessWidget {
                             orElse: () => Item(value: ''),
                           );
                           if (selected.value.isNotEmpty) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => const MyHomePage(),
+                            Navigator.of(context).push(
+                              PageRouteBuilder(
+                                transitionDuration: const Duration(
+                                  milliseconds: 750,
+                                ),
+                                pageBuilder: (_, _, _) =>
+                                    MyHomePage(selected: selected),
                               ),
                             );
-                            // ScaffoldMessenger.of(context).showSnackBar(
-                            //   SnackBar(content: Text('تم اختيار: ${selected.value}')),
-                            // );
                           }
                         },
                       ),
