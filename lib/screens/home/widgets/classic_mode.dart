@@ -19,9 +19,10 @@ class ClassicMode extends StatelessWidget {
       padding: const EdgeInsets.all(24),
       children: [
         CustomText(
-            text: "أختر عدد الاعبيين",
-            fontSize: 16.sp,
-            textAlign: TextAlign.end),
+          text: "أختر عدد الاعبيين",
+          fontSize: 16.sp,
+          textAlign: TextAlign.end,
+        ),
         const SizedBox(height: 16),
         BlocBuilder<GenericCubit<List<Item>>, GenericState<List<Item>>>(
           bloc: homeData.listCubit,
@@ -44,7 +45,9 @@ class ClassicMode extends StatelessWidget {
                             height: 50,
                             alignment: Alignment.center,
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 10),
+                              horizontal: 8,
+                              vertical: 10,
+                            ),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12.sp),
                               color: state.data![index].isActive!
@@ -57,8 +60,9 @@ class ClassicMode extends StatelessWidget {
                               ),
                             ),
                             child: CustomText(
-                                text: state.data![index].value.toString(),
-                                fontSize: 18.sp),
+                              text: state.data![index].value.toString(),
+                              fontSize: 18.sp,
+                            ),
                           ),
                         ),
                       ),
@@ -66,9 +70,11 @@ class ClassicMode extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 36),
-                for (int i = 0;
-                    i < state.data!.firstWhere((e) => e.isActive == true).key!;
-                    i++)
+                for (
+                  int i = 0;
+                  i < state.data!.firstWhere((e) => e.isActive == true).key!;
+                  i++
+                )
                   CustomTextField(
                     controller: homeData.controllers[i],
                     hintText: '',
@@ -77,13 +83,10 @@ class ClassicMode extends StatelessWidget {
                     inputType: TextInputType.text,
                     textFieldVaidType: TextFieldValidatorType.displayText,
                   ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 20.0, vertical: 16),
-                  child: CustomButton(
-                    text: "التالي",
-                    onPressed: () => homeData.goToNext(context),
-                  ),
+                const SizedBox(height: 16),
+                CustomButton(
+                  text: "التالي",
+                  onPressed: () => homeData.goToNext(context),
                 ),
               ],
             );

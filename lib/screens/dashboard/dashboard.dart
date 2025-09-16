@@ -90,9 +90,12 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     int gw = getCurrentRound();
-    int resWinner = widget.players
-        .map((p) => int.parse(p.total!))
-        .reduce((a, b) => a < b ? a : b);
+    int resWinner = 0;
+    if (widget.players.isNotEmpty) {
+      resWinner = widget.players
+          .map((p) => int.parse(p.total!))
+          .reduce((a, b) => a < b ? a : b);
+    }
 
     Team? winningTeam;
     if (teams.isNotEmpty) {
@@ -101,137 +104,143 @@ class _DashboardState extends State<Dashboard> {
       );
     }
 
-    return WillPopScope(
-      onWillPop: () async {
-        Navigator.pop(context, true);
-        return true;
-      },
-      child: Scaffold(
-        appBar: DashBoardAppBar(
-          fromHistory: widget.fromHistory ?? false,
-          onPressed: () {
-            homeData.clearValues();
-            setState(() {});
-            Navigator.pop(context);
-          },
-        ),
-        backgroundColor: AppColors.bg,
-        body: Directionality(
-          textDirection: TextDirection.rtl,
-          child: Column(
-            children: [
-              MarqueeBar(dashboardData: dashboardData),
-              const SizedBox(height: 8),
-              CustomText(
-                text: gw == 10 ? "انتهت الجولات" : "الجولة رقم $gw",
-                color: AppColors.mainColorLight,
-                fontSize: 18,
-              ),
-              enums.ModeClass.mode == enums.GameMode.classic ||
-                      widget.fromHistory == true
-                  ? Expanded(
-                      child: SingleChildScrollView(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 1,
-                        ),
-                        child: Column(
-                          children:
-                              widget.players
-                                  .map(
-                                    (player) =>
-                                        buildPlayerCard(player, resWinner),
-                                  )
-                                  .toList()
-                                ..addAll(
-                                  widget.fromHistory!
-                                      ? []
-                                      : buildGameSaveSection(),
-                                ),
-                        ),
-                      ),
-                    )
-                  : Expanded(
-                      child: SingleChildScrollView(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 1,
-                        ),
-                        child: Column(
-                          children: [
-                            // Display Teams
-                            if (teams.isNotEmpty)
-                              ...teams.map((team) {
-                                return Container(
-                                  padding: const EdgeInsets.all(8),
-                                  margin: const EdgeInsets.symmetric(
-                                    vertical: 4,
+    return Hero(
+      tag: 'players-tag',
+      child: WillPopScope(
+        onWillPop: () async {
+          Navigator.pop(context, true);
+          return true;
+        },
+        child: Scaffold(
+          appBar: DashBoardAppBar(
+            fromHistory: widget.fromHistory ?? false,
+            onPressed: () {
+              homeData.clearValues();
+              setState(() {});
+              Navigator.pop(context);
+            },
+          ),
+          backgroundColor: AppColors.bg,
+          body: Directionality(
+            textDirection: TextDirection.rtl,
+            child: Column(
+              children: [
+                MarqueeBar(dashboardData: dashboardData),
+                const SizedBox(height: 8),
+                CustomText(
+                  text: gw == 10 ? "انتهت الجولات" : "الجولة رقم $gw",
+                  color: AppColors.mainColorLight,
+                  fontSize: 18,
+                ),
+                enums.ModeClass.mode == enums.GameMode.classic ||
+                        widget.fromHistory == true
+                    ? Expanded(
+                        child: SingleChildScrollView(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 1,
+                          ),
+                          child: Column(
+                            children:
+                                widget.players
+                                    .map(
+                                      (player) =>
+                                          buildPlayerCard(player, resWinner),
+                                    )
+                                    .toList()
+                                  ..addAll(
+                                    widget.fromHistory!
+                                        ? []
+                                        : buildGameSaveSection(),
                                   ),
-                                  decoration: BoxDecoration(
-                                    color: team == winningTeam
-                                        ? AppColors.mainColor
-                                        : Colors.transparent,
-                                    borderRadius: BorderRadius.circular(12),
-                                    border: Border.all(color: AppColors.grayy),
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      CustomText(
-                                        text: team.name,
-                                        fontSize: 18.sp,
-                                        fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      )
+                    : Expanded(
+                        child: SingleChildScrollView(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 1,
+                          ),
+                          child: Column(
+                            children: [
+                              // Display Teams
+                              if (teams.isNotEmpty)
+                                ...teams.map((team) {
+                                  return Container(
+                                    padding: const EdgeInsets.all(8),
+                                    margin: const EdgeInsets.symmetric(
+                                      vertical: 4,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: team == winningTeam
+                                          ? AppColors.mainColor
+                                          : Colors.transparent,
+                                      borderRadius: BorderRadius.circular(12),
+                                      border: Border.all(
+                                        color: AppColors.grayy,
                                       ),
-                                      Row(
-                                        children: [
-                                          CustomText(
-                                            text: "${team.playerOne.name} :: ",
-                                            fontSize: 16.sp,
-                                          ),
-                                          Expanded(
-                                            child: buildPlayerScoresRow(
-                                              team.playerOne,
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        CustomText(
+                                          text: team.name,
+                                          fontSize: 18.sp,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        Row(
+                                          children: [
+                                            CustomText(
+                                              text:
+                                                  "${team.playerOne.name} :: ",
+                                              fontSize: 16.sp,
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          CustomText(
-                                            text: "${team.playerTwo.name} :: ",
-                                            fontSize: 16.sp,
-                                          ),
-                                          Expanded(
-                                            child: buildPlayerScoresRow(
-                                              team.playerTwo,
+                                            Expanded(
+                                              child: buildPlayerScoresRow(
+                                                team.playerOne,
+                                              ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                      const Divider(),
-                                      CustomText(
-                                        text: "المجموع: ${team.totalScore}",
-                                        fontSize: 20.sp,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              }).toList(),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            CustomText(
+                                              text:
+                                                  "${team.playerTwo.name} :: ",
+                                              fontSize: 16.sp,
+                                            ),
+                                            Expanded(
+                                              child: buildPlayerScoresRow(
+                                                team.playerTwo,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        const Divider(),
+                                        CustomText(
+                                          text: "المجموع: ${team.totalScore}",
+                                          fontSize: 20.sp,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }).toList(),
 
-                            Column(
-                              children: [
-                                const SizedBox(height: 16),
-                                CustomButton(
-                                  text: "اعادة بدأ الجولة",
-                                  color: AppColors.textColorTitle,
-                                  onPressed: () =>
-                                      dashboardData.reloadGame(context, () {
-                                        homeData.clearValues();
-                                        setState(() {});
-                                        Navigator.pop(context);
-                                      }),
-                                ),
-                                /* CustomText(
+                              Column(
+                                children: [
+                                  const SizedBox(height: 16),
+                                  CustomButton(
+                                    text: "اعادة بدأ الجولة",
+                                    color: AppColors.textColorTitle,
+                                    onPressed: () =>
+                                        dashboardData.reloadGame(context, () {
+                                          homeData.clearValues();
+                                          setState(() {});
+                                          Navigator.pop(context);
+                                        }),
+                                  ),
+                                  /* CustomText(
                                 text:
                                     "بعد انتهاء جميع الجولات يمكنك حفظها لتراها في السجلات الخاصة بك",
                                 fontSize: 14.sp),
@@ -241,21 +250,22 @@ class _DashboardState extends State<Dashboard> {
                                 color: AppColors.textColorTitle,
                                 onPressed: () => dashboardData.saveGame(
                                     widget.players, context)),*/
-                                const SizedBox(height: 20),
-                              ],
-                            ),
-                          ],
-                          /* widget.players
+                                  const SizedBox(height: 20),
+                                ],
+                              ),
+                            ],
+                            /* widget.players
                               .map((player) =>
                                   buildPlayerCard(player, resWinner))
                               .toList()
                             ..addAll(widget.fromHistory!
                                 ? []
                                 : buildGameSaveSection()),*/
+                          ),
                         ),
                       ),
-                    ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

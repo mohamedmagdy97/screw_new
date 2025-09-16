@@ -90,15 +90,10 @@ class FriendsMode extends StatelessWidget {
                     teamName: "الفريق الرابع",
                     controllers: [homeData.playerOne2, homeData.playerTwo2],
                   ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20.0,
-                    vertical: 16,
-                  ),
-                  child: CustomButton(
-                    text: "التالي",
-                    onPressed: () => homeData.goToNextTeams(context),
-                  ),
+                const SizedBox(height: 16),
+                CustomButton(
+                  text: "التالي",
+                  onPressed: () => homeData.goToNextTeams(context),
                 ),
               ],
             );

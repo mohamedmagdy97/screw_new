@@ -98,8 +98,25 @@ class HomeData {
 
     await Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (_) => Dashboard(players: players, teamsMode: teamsMode),
+      PageRouteBuilder(
+        transitionDuration: const Duration(milliseconds: 500),
+        reverseTransitionDuration: const Duration(milliseconds: 400),
+        pageBuilder: (context, animation, secondaryAnimation) => FadeTransition(
+          opacity: animation,
+          child: SlideTransition(
+            position:
+                Tween<Offset>(
+                  begin: const Offset(0, 0.1),
+                  end: Offset.zero,
+                ).animate(
+                  CurvedAnimation(
+                    parent: animation,
+                    curve: Curves.easeOutCubic,
+                  ),
+                ),
+            child: Dashboard(players: players, teamsMode: teamsMode),
+          ),
+        ),
       ),
     );
 
@@ -147,10 +164,26 @@ class HomeData {
 
     /* bool res = */
 
-    await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => Dashboard(players: players, teamsMode: true),
+    await Navigator.of(context).push(
+      PageRouteBuilder(
+        transitionDuration: const Duration(milliseconds: 500),
+        reverseTransitionDuration: const Duration(milliseconds: 400),
+        pageBuilder: (context, animation, secondaryAnimation) => FadeTransition(
+          opacity: animation,
+          child: SlideTransition(
+            position:
+                Tween<Offset>(
+                  begin: const Offset(0, 0.1),
+                  end: Offset.zero,
+                ).animate(
+                  CurvedAnimation(
+                    parent: animation,
+                    curve: Curves.easeOutCubic,
+                  ),
+                ),
+            child: Dashboard(players: players, teamsMode: true),
+          ),
+        ),
       ),
     );
     players.clear();

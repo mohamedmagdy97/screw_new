@@ -41,7 +41,7 @@ class _GameModeState extends State<GameMode> {
           padding: const EdgeInsets.all(24),
           children: [
             CustomText(
-              text: "Game mode",
+              text: "اختر وضع اللعبة",
               fontSize: 16.sp,
               textAlign: TextAlign.center,
             ),
@@ -56,7 +56,7 @@ class _GameModeState extends State<GameMode> {
                       scrollDirection: Axis.vertical,
                       child: Hero(
                         tag:
-                            'gameMode-${state.data!.where((e) => e.isActive!).toList().first.key}', // معرف فريد لكل عنصر
+                            'gameMode-${state.data!.where((e) => e.isActive!).toList().first.key}',
                         child: Material(
                           color: Colors.transparent,
                           child: AnimatedOpacity(
