@@ -54,39 +54,70 @@ class _GameModeState extends State<GameMode> {
                   children: [
                     SingleChildScrollView(
                       scrollDirection: Axis.vertical,
-                      child: Column(
-                        // spacing: 16.w,
-                        // runSpacing: 16.h,
-                        children: List.generate(
-                          state.data!.length,
-                          (index) => Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: InkWell(
-                              borderRadius: BorderRadius.circular(12.sp),
-                              onTap: () =>
-                                  gameModeData.onSelect(context, index),
-                              child: Container(
-                                width: 1.sw /* (1.sw - 120.w) / 5*/,
-                                height: (1.sh - 0.5.sh) / 3,
-                                alignment: Alignment.center,
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                  vertical: 10,
-                                ),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12.sp),
-                                  color: state.data![index].isActive!
-                                      ? AppColors.mainColor
-                                      : null,
-                                  border: Border.all(
-                                    color: !state.data![index].isActive!
+                      child: Hero(
+                        tag:
+                            'gameMode-${state.data!.where((e) => e.isActive!).toList().first.key}', // معرف فريد لكل عنصر
+                        child: Material(
+                          color: Colors.transparent,
+                          child: AnimatedOpacity(
+                            duration: const Duration(milliseconds: 500),
+                            opacity: /*state.isLoading ? 0.5 :*/ 1,
+
+                            child: Column(
+                              children: List.generate(
+                                state.data!.length,
+                                (index) => AnimatedContainer(
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.easeInOut,
+                                  height: 120.h,
+                                  width: 1.sw,
+                                  margin: const EdgeInsets.symmetric(
+                                    vertical: 12,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12),
+                                    color: state.data![index].isActive!
                                         ? AppColors.mainColor
                                         : Colors.transparent,
+                                    border: Border.all(
+                                      color: state.data![index].isActive!
+                                          ? Colors.transparent
+                                          : AppColors.mainColor,
+                                    ),
+                                    boxShadow: state.data![index].isActive!
+                                        ? [
+                                            BoxShadow(
+                                              color: AppColors.mainColor
+                                                  .withOpacity(.3),
+                                              blurRadius: 8,
+                                            ),
+                                          ]
+                                        : [],
                                   ),
-                                ),
-                                child: CustomText(
-                                  text: state.data![index].value.toString(),
-                                  fontSize: 18.sp,
+                                  child: InkWell(
+                                    borderRadius: BorderRadius.circular(12),
+                                    onTap: () =>
+                                        gameModeData.onSelect(context, index),
+                                    child: Center(
+                                      child: AnimatedDefaultTextStyle(
+                                        style: TextStyle(
+                                          fontSize: 18.sp,
+                                          fontWeight: FontWeight.normal,
+                                          color: state.data![index].isActive!
+                                              ? Colors.white
+                                              : AppColors.black,
+                                        ),
+                                        duration: const Duration(
+                                          milliseconds: 300,
+                                        ),
+                                        child: CustomText(
+                                          text: state.data![index].value
+                                              .toString(),
+                                          fontSize: 22,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
@@ -95,14 +126,15 @@ class _GameModeState extends State<GameMode> {
                       ),
                     ),
                     const SizedBox(height: 36),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20.0,
-                        vertical: 16,
-                      ),
-                      child: CustomButton(
-                        text: "التالي",
-                        onPressed: () => gameModeData.goToHome(context),
+                    CustomButton(
+                      text: "التالي",
+                      onPressed: () => gameModeData.goHome(
+                        context,
+                        state.data!
+                            .where((e) => e.isActive!)
+                            .toList()
+                            .first
+                            .key,
                       ),
                     ),
                   ],

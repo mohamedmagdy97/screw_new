@@ -10,7 +10,9 @@ import 'package:screw_calculator/utility/app_theme.dart';
 import 'package:flutter/cupertino.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+  final int index;
+
+  const MyHomePage({super.key, required this.index});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -41,37 +43,40 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: homeData.scaffoldKey,
-      appBar: AppBar(
-        centerTitle: true,
-        leading: InkWell(
-          onTap: () => Navigator.pop(context),
-          child: const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Icon(CupertinoIcons.back, color: Colors.white),
-          ),
-        ),
-        automaticallyImplyLeading: true,
-        backgroundColor: AppColors.grayy,
-        title: CustomText(text: "سكرو حاسبة", fontSize: 22.sp),
-        actions: [
-          InkWell(
-            onTap: () => homeData.scaffoldKey.currentState!.openEndDrawer(),
+    return Hero(
+      tag: 'gameMode-${widget.index}',
+      child: Scaffold(
+        key: homeData.scaffoldKey,
+        appBar: AppBar(
+          centerTitle: true,
+          leading: InkWell(
+            onTap: () => Navigator.pop(context),
             child: const Padding(
               padding: EdgeInsets.all(8.0),
-              child: Icon(Icons.menu, color: Colors.white),
+              child: Icon(CupertinoIcons.back, color: Colors.white),
             ),
           ),
-        ],
-      ),
-      endDrawer: const DrawerWidget(),
-      backgroundColor: AppColors.bg,
-      body: Form(
-        key: homeData.formKey,
-        child: ModeClass.mode == GameMode.classic
-            ? const ClassicMode()
-            : const FriendsMode(),
+          automaticallyImplyLeading: true,
+          backgroundColor: AppColors.grayy,
+          title: CustomText(text: "سكرو حاسبة", fontSize: 22.sp),
+          actions: [
+            InkWell(
+              onTap: () => homeData.scaffoldKey.currentState!.openEndDrawer(),
+              child: const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Icon(Icons.menu, color: Colors.white),
+              ),
+            ),
+          ],
+        ),
+        endDrawer: const DrawerWidget(),
+        backgroundColor: AppColors.bg,
+        body: Form(
+          key: homeData.formKey,
+          child: ModeClass.mode == GameMode.classic
+              ? const ClassicMode()
+              : const FriendsMode(),
+        ),
       ),
     );
   }

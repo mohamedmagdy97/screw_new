@@ -23,7 +23,6 @@ class GameModeData {
     listCubit.update(data: list);
 
     await FirebaseNotificationService.init(context);
-
   }
 
   onSelect(context, index) {
@@ -41,24 +40,16 @@ class GameModeData {
     listCubit.update(data: listCubit.state.data!);
   }
 
-  goToHome(context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => const MyHomePage(
-            // builder: (_) => const DashboardChatGPT(
-            /*gameMode: listCubit.state.data!
-                  .where((e) => e.isActive == true)
-                  .toList()
-                  .first
-                  .key ??
-              0,*/
-            ),
+  goHome(BuildContext context, index) {
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        transitionDuration: const Duration(milliseconds: 750),
+        pageBuilder: (_, _, _) => MyHomePage(index: index),
       ),
     );
   }
 
-  Future<bool> onWillPop(context) {
+  Future<bool> onWillPop(BuildContext context) {
     DateTime now = DateTime.now();
     if (currentBackPressTime == null ||
         now.difference(currentBackPressTime!) > const Duration(seconds: 2)) {
