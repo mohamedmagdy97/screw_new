@@ -3,9 +3,8 @@ class Assets {
   Assets._();
 
   static const String assetsVideoScrewVideo = 'assets/video/screw_video.mp4';
-  static const String fontsCodecProBold = 'assets/fonts/codec-pro-bold.ttf';
-  static const String fontsCodecProHeavy = 'assets/fonts/codec-pro-heavy.ttf';
-  static const String fontsCodecProRegular = 'assets/fonts/CodecPro-Regular.ttf';
+  static const String fontsJannaLTBold = 'assets/fonts/JannaLT-Bold.ttf';
+  static const String fontsJannaLTRegular = 'assets/fonts/JannaLT-Regular.ttf';
   static const String iconsIcon = 'assets/icons/icon.png';
   static const String iconsLogo = 'assets/icons/logo.png';
   static const String iconsStoreIcon = 'assets/icons/store_icon.png';

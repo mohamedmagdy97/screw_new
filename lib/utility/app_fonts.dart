@@ -1,13 +1,9 @@
 part of 'app_theme.dart';
 
 class AppFonts {
-  // static String fontKUFIR = "DROIDKUFI-REGULAR";
-  // static String fontKUFIB = "DROIDKUFI-BOLD";
-  // static String fontAHDB = "AL_AHD_TV";
+  static String regular = "JannaLT-Regular"; //  CodecPro-Regular
+  static String bold = "JannaLT-Bold"; // codec-pro-bold
 
-  static String regular = "CodecPro-Regular";
-  static String bold = "codec-pro-bold";
-  static String heavy = "codec-pro-heavy";
 
   //Regular
   static FontWeight w400 = FontWeight.w400;

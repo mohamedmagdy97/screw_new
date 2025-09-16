@@ -15,8 +15,8 @@ class GameModeData {
 
   init(BuildContext context) async {
     List<Item> list = [
-      Item(isActive: true, key: 0, value: "كلاسيك\n (فردي)"),
-      Item(isActive: false, key: 1, value: "صاحب صاحبه\n (زوجي)"),
+      Item(isActive: true, key: 0, value: "كلاسيك\n ( فردي )"),
+      Item(isActive: false, key: 1, value: "صاحب صاحبه\n ( زوجي )"),
 
       // Item(isActive: false,key: 2,value: "بينج بونج"),
     ];

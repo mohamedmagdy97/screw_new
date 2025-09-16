@@ -33,6 +33,7 @@ dependencies:
   firebase_performance: ^0.11.0+1
   firebase_messaging: ^16.0.1
   flutter_local_notifications: ^19.4.2
+  confetti: ^0.8.0
 
 
 dev_dependencies:
@@ -54,12 +55,9 @@ flutter:
     - assets/icons/
     - assets/video/screw_video.mp4
   fonts:
-    - family: CodecPro-Regular
+    - family: JannaLT-Regular
       fonts:
-        - asset: assets/fonts/CodecPro-Regular.ttf
-    - family: codec-pro-bold
+        - asset: assets/fonts/JannaLT-Regular.ttf
+    - family: JannaLT-Bold
       fonts:
-        - asset: assets/fonts/codec-pro-bold.ttf
-    - family: codec-pro-heavy
-      fonts:
-        - asset: assets/fonts/codec-pro-heavy.ttf
+        - asset: assets/fonts/JannaLT-Bold.ttf
