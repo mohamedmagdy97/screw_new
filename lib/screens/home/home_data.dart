@@ -3,6 +3,7 @@ import 'package:screw_calculator/cubits/generic_cubit/generic_cubit.dart';
 import 'package:screw_calculator/models/item.dart';
 import 'package:screw_calculator/models/player_model.dart';
 import 'package:screw_calculator/screens/dashboard/dashboard.dart';
+import 'package:in_app_review/in_app_review.dart';
 
 HomeData homeData = HomeData();
 
@@ -173,5 +174,14 @@ class HomeData {
       element.gw5 = "";
       element.total = "0";
     });
+  }
+
+  Future<void> rateMyApp() async {
+    final InAppReview inAppReview = InAppReview.instance;
+    if (await inAppReview.isAvailable()) {
+      await inAppReview.requestReview();
+    } else {
+      await inAppReview.openStoreListing();
+    }
   }
 }

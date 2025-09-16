@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:screw_calculator/components/custom_text.dart';
 import 'package:screw_calculator/screens/contact_us/contact_us.dart';
 import 'package:screw_calculator/screens/history/history.dart';
+import 'package:screw_calculator/screens/home/home_data.dart';
 import 'package:screw_calculator/screens/rules/rules_screen.dart';
 import 'package:screw_calculator/screens/show_video/show_video.dart';
 import 'package:screw_calculator/utility/app_theme.dart';
@@ -80,13 +81,15 @@ class DrawerWidget extends StatelessWidget {
                     textAlign: TextAlign.end,
                   ),
                 ),
-                // ListTile(
-                //   title: CustomText(
-                //     text: "لمعرفه اماكن شراء اللعبه",
-                //     fontSize: 16,
-                //     textAlign: TextAlign.end,
-                //   ),
-                // ),
+                ListTile(
+                  onTap: () => homeData.rateMyApp(),
+                  title: const CustomText(
+                    text: "⭐ قيمنا",
+                    fontSize: 16,
+                    textAlign: TextAlign.end,
+                  ),
+                ),
+
                 const Spacer(),
                 const CustomText(
                   text: "version 2.0.0",
