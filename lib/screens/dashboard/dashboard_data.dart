@@ -6,6 +6,7 @@ import 'package:screw_calculator/components/custom_text.dart';
 import 'package:screw_calculator/cubits/generic_cubit/generic_cubit.dart';
 import 'package:screw_calculator/models/game_model.dart';
 import 'package:screw_calculator/models/player_model.dart';
+import 'package:screw_calculator/models/team_model_new.dart';
 import 'package:screw_calculator/utility/app_theme.dart';
 import 'package:screw_calculator/utility/local_store.dart';
 import 'package:screw_calculator/utility/local_storge_key.dart';
@@ -14,11 +15,44 @@ import 'package:screw_calculator/utility/utilities.dart';
 class DashboardData {
   final TextEditingController controller = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  late List<Team> teams;
 
-  init() {
+  void init() {
     hideMarquee.update(data: false);
     getSavedGames();
     // loadNativeAdvanced();
+  }
+
+  void initTeams(List<PlayerModel> players, bool? teamsMode) {
+    // Assuming we have 4 players for 2 teams
+    if (teamsMode == true && players.length >= 4) {
+      teams = [
+        Team(
+          name: "الفريق الأول",
+          playerOne: players[0],
+          playerTwo: players[1],
+        ),
+        Team(
+          name: "الفريق الثاني",
+          playerOne: players[2],
+          playerTwo: players[3],
+        ),
+        if (players.length > 4)
+          Team(
+            name: "الفريق الثالث",
+            playerOne: players[4],
+            playerTwo: players[5],
+          ),
+        if (players.length > 6)
+          Team(
+            name: "الفريق الرابع",
+            playerOne: players[6],
+            playerTwo: players[7],
+          ),
+      ];
+    } else {
+      teams = [];
+    }
   }
 
   checkAllGwPlayed(int gw, List<PlayerModel> players, int index) {
@@ -29,15 +63,20 @@ class DashboardData {
     debugPrint('ddddddddd=gw5=${players[index].gw5!.isNotEmpty}');
     debugPrint('ddddddddd==$gw');
     debugPrint(
-        'dd=1=${players.where((element) => element.gw1!.isEmpty).toList().length > 1}');
+      'dd=1=${players.where((element) => element.gw1!.isEmpty).toList().length > 1}',
+    );
     debugPrint(
-        'dd=2=${players.where((element) => element.gw2!.isEmpty).toList().length > 1}');
+      'dd=2=${players.where((element) => element.gw2!.isEmpty).toList().length > 1}',
+    );
     debugPrint(
-        'dd=3=${players.where((element) => element.gw3!.isEmpty).toList().length > 1}');
+      'dd=3=${players.where((element) => element.gw3!.isEmpty).toList().length > 1}',
+    );
     debugPrint(
-        'dd=4=${players.where((element) => element.gw4!.isEmpty).toList().length > 1}');
+      'dd=4=${players.where((element) => element.gw4!.isEmpty).toList().length > 1}',
+    );
     debugPrint(
-        'dd=5=${players.where((element) => element.gw5!.isEmpty).toList().length > 1}');
+      'dd=5=${players.where((element) => element.gw5!.isEmpty).toList().length > 1}',
+    );
 
     if (gw == 1) {
       if (players[index].gw1!.isNotEmpty != false &&
@@ -198,10 +237,7 @@ class DashboardData {
                 color: AppColors.mainColor,
               ),
               const SizedBox(height: 40),
-              CustomText(
-                text: "هل تريد اعادة بدأ الجولة",
-                fontSize: 18.sp,
-              ),
+              CustomText(text: "هل تريد اعادة بدأ الجولة", fontSize: 18.sp),
               const SizedBox(height: 40),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -218,7 +254,7 @@ class DashboardData {
                     onPressed: onPressed,
                   ),
                 ],
-              )
+              ),
             ],
           ),
         ),
@@ -241,21 +277,17 @@ class DashboardData {
       // Navigator.pop(context);
       // AdManager().loadInterstitialAd();
     } else {
-      return Utilities().showCustomSnack(context,
-           txt: "لحفظ النتائج يجب ادخال جميع الجولات");
-
-
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   const SnackBar(content: Text('Hello')),
-      // );
-     // return Utilities().customSnackBarTerms(context,
-     //      txt: "لحفظ النتائج يجب ادخال جميع الجولات");
+      return Utilities().showCustomSnack(
+        context,
+        txt: "لحفظ النتائج يجب ادخال جميع الجولات",
+      );
     }
   }
 
   addGameToDB() async {
     AppLocalStore.setString(
-        LocalStoreNames.gamesHistory, jsonEncode(listGames));
+      LocalStoreNames.gamesHistory,
+      jsonEncode(listGames),
+    );
   }
-
 }

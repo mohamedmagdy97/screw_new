@@ -114,7 +114,7 @@ class HomeData {
                     curve: Curves.easeOutCubic,
                   ),
                 ),
-            child: Dashboard(players: players, teamsMode: teamsMode),
+            child: Dashboard(players: players, teamsMode: teamsMode), // false
           ),
         ),
       ),
@@ -166,8 +166,8 @@ class HomeData {
 
     await Navigator.of(context).push(
       PageRouteBuilder(
-        transitionDuration: const Duration(milliseconds: 500),
-        reverseTransitionDuration: const Duration(milliseconds: 400),
+        transitionDuration: const Duration(milliseconds: 400),
+        reverseTransitionDuration: const Duration(milliseconds: 300),
         pageBuilder: (context, animation, secondaryAnimation) => FadeTransition(
           opacity: animation,
           child: SlideTransition(
