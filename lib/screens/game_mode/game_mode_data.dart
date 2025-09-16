@@ -54,7 +54,7 @@ class GameModeData {
     if (currentBackPressTime == null ||
         now.difference(currentBackPressTime!) > const Duration(seconds: 2)) {
       currentBackPressTime = now;
-      Utilities().customSnackBarTerms(context, txt: "للخروج اضغط مرتين ");
+      Utilities().showCustomSnack(context, txt: "للخروج اضغط مرتين ");
       return Future.value(false);
     }
     return Future.value(true);

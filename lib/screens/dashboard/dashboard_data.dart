@@ -233,7 +233,7 @@ class DashboardData {
         listPlayers.first.gw5!.isNotEmpty) {
       listGames.add(GameModel(game: listPlayers));
       addGameToDB();
-      Utilities().customSnackBarTerms(context, txt: "تم حفظ الجولة");
+      Utilities().showCustomSnack(context, txt: "تم حفظ الجولة");
       // Navigator.push(
       //   context,
       //   MaterialPageRoute(builder: (_) => const HistoryScreen()),
@@ -241,8 +241,15 @@ class DashboardData {
       // Navigator.pop(context);
       // AdManager().loadInterstitialAd();
     } else {
-      Utilities().customSnackBarTerms(context,
-          txt: "لحفظ النتائج يجب ادخال جميع الجولات");
+      return Utilities().showCustomSnack(context,
+           txt: "لحفظ النتائج يجب ادخال جميع الجولات");
+
+
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(content: Text('Hello')),
+      // );
+     // return Utilities().customSnackBarTerms(context,
+     //      txt: "لحفظ النتائج يجب ادخال جميع الجولات");
     }
   }
 
