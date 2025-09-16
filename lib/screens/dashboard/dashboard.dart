@@ -348,13 +348,33 @@ class _DashboardState extends State<Dashboard> {
   }
 
   addValue(BuildContext context, {required PlayerModel player}) {
-    showDialog(
+    showGeneralDialog(
       context: context,
-      builder: (_) => AddValueDialog(
+      barrierDismissible: true,
+      barrierLabel: 'Dismiss',
+      barrierColor: Colors.black54, // خلفية شفافة مع تغميق
+      transitionDuration: const Duration(milliseconds: 300),
+
+      pageBuilder: (context, anim1, anim2) => AddValueDialog(
         dashboardData: dashboardData,
         player: player,
         fun: () => setState(() {}),
       ),
+      transitionBuilder: (context, anim, secondaryAnim, child) {
+        final curvedValue = Curves.easeInOut.transform(anim.value);
+
+        return Transform.scale(
+          scale: curvedValue,
+          child: Opacity(
+            opacity: anim.value,
+            child: AddValueDialog(
+              dashboardData: dashboardData,
+              player: player,
+              fun: () => setState(() {}),
+            ),
+          ),
+        );
+      },
     );
   }
 }
