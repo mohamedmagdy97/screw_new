@@ -211,7 +211,7 @@ class FirebaseNotificationService {
 
    static subscribeToAllUsers() async {
 
-    await FirebaseMessaging.instance.subscribeToTopic("all");
+    await FirebaseMessaging.instance.subscribeToTopic("allUsers");
     debugPrint("👉👉👉👉👉 subscribeToAllUsers");
 
    }

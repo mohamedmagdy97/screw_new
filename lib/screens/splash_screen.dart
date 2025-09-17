@@ -14,6 +14,9 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   Future<void> getNextPage() async {
     Future.delayed(const Duration(milliseconds: 2000), () {
+      if (!mounted) {
+        return;
+      }
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (_) => const GameMode()),
