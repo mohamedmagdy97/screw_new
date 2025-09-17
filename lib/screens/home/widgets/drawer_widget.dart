@@ -6,7 +6,7 @@ import 'package:screw_calculator/screens/contact_us/contact_us.dart';
 import 'package:screw_calculator/screens/history/history.dart';
 import 'package:screw_calculator/screens/home/home_data.dart';
 import 'package:screw_calculator/screens/rules/rules_screen.dart';
-import 'package:screw_calculator/screens/show_video/show_video.dart';
+import 'package:screw_calculator/screens/show_video/show_video_youtube.dart';
 import 'package:screw_calculator/utility/app_theme.dart';
 
 class DrawerWidget extends StatelessWidget {
@@ -53,7 +53,7 @@ class DrawerWidget extends StatelessWidget {
                   ),
                 ),
                 ListTile(
-                  onTap: () => routeFromDrawer(context, const ShowVideo()),
+                  onTap: () => routeFromDrawer(context, const YoutubeLikePlayer()),
                   title: const CustomText(
                     text: "فيديو شرح اللعبة",
                     fontSize: 16,
