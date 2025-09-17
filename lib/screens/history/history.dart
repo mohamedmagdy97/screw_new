@@ -6,11 +6,10 @@ import 'package:screw_calculator/cubits/generic_cubit/generic_cubit.dart';
 import 'package:screw_calculator/models/game_model.dart';
 import 'package:screw_calculator/screens/dashboard/dashboard.dart';
 import 'package:screw_calculator/screens/history/history_data.dart';
-import 'package:screw_calculator/screens/home/home_data.dart';
 import 'package:screw_calculator/utility/app_theme.dart';
 
 class HistoryScreen extends StatefulWidget {
-  const HistoryScreen({Key? key}) : super(key: key);
+  const HistoryScreen({super.key});
 
   @override
   State<HistoryScreen> createState() => _HistoryScreenState();

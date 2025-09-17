@@ -14,14 +14,14 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
-  await FirebaseNotificationService.setupLocalNotifications();
+  // await FirebaseNotificationService.setupLocalNotifications();
   debugPrint("🔔 Handling a background message: ${message.messageId}");
 
   if (message.notification != null) {
-    FirebaseNotificationService.showNotification(
-      message.notification!.title ?? "No Title",
-      message.notification!.body ?? "No Body",
-    );
+    // FirebaseNotificationService.showNotification(
+    //   message.notification!.title ?? "No Title",
+    //   message.notification!.body ?? "No Body",
+    // );
   }
 }
 
@@ -46,17 +46,12 @@ class FirebaseNotificationService {
       debugPrint("📩 Foreground body: ${message.notification?.body}");
       debugPrint("📩 Foreground data: ${message.data}");
 
+
       if (message.notification != null) {
         showNotification(
           message.notification!.title ?? "No Title",
           message.notification!.body ?? "No Body",
         );
-
-        // Optional UI feedback
-        final snackBar = SnackBar(
-          content: Text(message.notification?.body ?? "No body"),
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
     });
 
@@ -126,7 +121,6 @@ class FirebaseNotificationService {
   //     }
   //   });
   // }
-
 
   /// Setup Local Notification Channel
   static Future<void> setupLocalNotifications() async {
@@ -209,15 +203,16 @@ class FirebaseNotificationService {
     }
   }
 
-   static subscribeToAllUsers() async {
-
+  static subscribeToAllUsers() async {
     await FirebaseMessaging.instance.subscribeToTopic("allUsers");
     debugPrint("👉👉👉👉👉 subscribeToAllUsers");
-
-   }
+  }
 
   /// لما المستخدم يفتح الإشعار (من الـ background أو terminated)
-  static void handleNotificationClick(RemoteMessage message, BuildContext context) {
+  static void handleNotificationClick(
+    RemoteMessage message,
+    BuildContext context,
+  ) {
     if (message.data.isNotEmpty) {
       debugPrint("👉 User clicked notification with data: ${message.data}");
 
@@ -227,5 +222,4 @@ class FirebaseNotificationService {
       }
     }
   }
-
 }
