@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:screw_calculator/components/custom_button.dart';
@@ -11,11 +13,15 @@ import 'package:screw_calculator/utility/app_theme.dart';
 import 'package:screw_calculator/utility/local_store.dart';
 import 'package:screw_calculator/utility/local_storge_key.dart';
 import 'package:screw_calculator/utility/utilities.dart';
+import 'package:screenshot/screenshot.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:path_provider/path_provider.dart';
 
 class DashboardData {
   final TextEditingController controller = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   late List<Team> teams;
+  ScreenshotController screenshotController = ScreenshotController();
 
   void init() {
     hideMarquee.update(data: false);
@@ -290,4 +296,40 @@ class DashboardData {
       jsonEncode(listGames),
     );
   }
+
+  Future<void> captureAndShare(BuildContext context) async {
+    final Uint8List? imageBytes;
+    try {
+      imageBytes = await screenshotController.capture(
+        delay: Duration(milliseconds: 10),
+      );
+
+      if (imageBytes == null) return;
+      // ShowCapturedWidget(context, imageBytes);
+      final directory = await getTemporaryDirectory();
+      final filePath =
+          '${directory.path}/screenshot${DateTime.now().toString().replaceAll(' ', '_')}.png';
+      final file = File(filePath);
+      await file.writeAsBytes(imageBytes);
+
+      await Share.shareXFiles([XFile(filePath)], text: '📸 شوف نتيجتي!');
+    } catch (e) {
+      debugPrint('❌ خطأ أثناء مشاركة الصورة: $e');
+    }
+  }
+}
+
+Future<dynamic> ShowCapturedWidget(
+    BuildContext context,
+    Uint8List capturedImage,
+    ) {
+  return showDialog(
+    useSafeArea: false,
+    context: context,
+    builder: (context) => Scaffold(
+      backgroundColor: AppColors.bg,
+      appBar: AppBar(title: Text("Captured widget screenshot")),
+      body: Center(child: Image.memory(capturedImage)),
+    ),
+  );
 }

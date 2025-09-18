@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:screenshot/screenshot.dart';
 import 'package:screw_calculator/components/custom_button.dart';
 import 'package:screw_calculator/components/custom_text.dart';
 import 'package:screw_calculator/components/fade_animation.dart';
@@ -102,153 +103,167 @@ class _DashboardState extends State<Dashboard> {
             },
           ),
           backgroundColor: AppColors.bg,
+          floatingActionButton: FloatingActionButton.extended(
+            heroTag: null,
+            onPressed: () => dashboardData.captureAndShare(context),
+            label: const CustomText(
+              text: "📲 مشاركة",
+              fontSize: 18,
+              color: AppColors.black,
+            ),
+          ),
           body: Stack(
             alignment: Alignment.center,
             children: [
-              Directionality(
-                textDirection: TextDirection.rtl,
-                child: Column(
-                  children: [
-                    MarqueeBar(dashboardData: dashboardData),
-                    const SizedBox(height: 8),
-                    CustomText(
-                      text: gw == 10 ? "انتهت الجولات" : "الجولة رقم $gw",
-                      color: AppColors.mainColorLight,
-                      fontSize: 18,
-                    ),
-                    enums.ModeClass.mode == enums.GameMode.classic ||
-                            widget.fromHistory == true
-                        ? Expanded(
-                            child: SingleChildScrollView(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 1,
-                              ),
-                              child: Column(
-                                children:
-                                    widget.players
-                                        .map(
-                                          (player) => buildPlayerCard(
-                                            player,
-                                            resWinner,
-                                          ),
-                                        )
-                                        .toList()
-                                      ..addAll(
-                                        widget.fromHistory!
-                                            ? []
-                                            : buildGameSaveSection(),
-                                      ),
-                              ),
-                            ),
-                          )
-                        : Expanded(
-                            child: SingleChildScrollView(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 1,
-                              ),
-                              child: Column(
-                                spacing: 8,
-                                children: [
-                                  if (dashboardData.teams.isNotEmpty)
-                                    ...dashboardData.teams.map((team) {
-                                      return FadeSlide(
-                                        child: Container(
-                                          padding: const EdgeInsets.all(8),
-                                          margin: const EdgeInsets.symmetric(
-                                            vertical: 4,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: team == winningTeam
-                                                ? AppColors.mainColor
-                                                : Colors.transparent,
-                                            borderRadius: BorderRadius.circular(
-                                              12,
+              Screenshot(
+                controller: dashboardData.screenshotController,
+                child: Directionality(
+                  textDirection: TextDirection.rtl,
+                  child: Column(
+                    children: [
+                      MarqueeBar(dashboardData: dashboardData),
+                      const SizedBox(height: 8),
+                      CustomText(
+                        text: gw == 10 ? "انتهت الجولات" : "الجولة رقم $gw",
+                        color: AppColors.mainColorLight,
+                        fontSize: 18,
+                      ),
+                      enums.ModeClass.mode == enums.GameMode.classic ||
+                              widget.fromHistory == true
+                          ? Expanded(
+                              child: SingleChildScrollView(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 1,
+                                ),
+                                child: Column(
+                                  children:
+                                      widget.players
+                                          .map(
+                                            (player) => buildPlayerCard(
+                                              player,
+                                              resWinner,
                                             ),
-                                            border: Border.all(
-                                              color: AppColors.grayy,
-                                            ),
-                                          ),
-                                          child: Column(
-                                            children: [
-                                              CustomText(
-                                                text: team.name,
-                                                fontSize: 18.sp,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                              Row(
-                                                children: [
-                                                  CustomText(
-                                                    text:
-                                                        "${team.playerOne.name} | ",
-                                                    fontSize: 16.sp,
-                                                  ),
-                                                  Expanded(
-                                                    child: buildPlayerScoresRow(
-                                                      team.playerOne,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-
-                                              // Divider(
-                                              //   color: team == winningTeam
-                                              //       ? AppColors.grey.withOpacity(
-                                              //           0.25,
-                                              //         )
-                                              //       : AppColors.opacity_1,
-                                              // ),
-                                              Row(
-                                                children: [
-                                                  CustomText(
-                                                    text:
-                                                        "${team.playerTwo.name} | ",
-                                                    fontSize: 16.sp,
-                                                  ),
-                                                  Expanded(
-                                                    child: buildPlayerScoresRow(
-                                                      team.playerTwo,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              const Divider(),
-                                              CustomText(
-                                                text:
-                                                    "المجموع: ${team.totalScore}",
-                                                fontSize: 20.sp,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ],
-                                          ),
+                                          )
+                                          .toList()
+                                        ..addAll(
+                                          widget.fromHistory!
+                                              ? []
+                                              : buildGameSaveSection(),
                                         ),
-                                      );
-                                    }).toList(),
+                                ),
+                              ),
+                            )
+                          : Expanded(
+                              child: SingleChildScrollView(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 1,
+                                ),
+                                child: Column(
+                                  spacing: 8,
+                                  children: [
+                                    if (dashboardData.teams.isNotEmpty)
+                                      ...dashboardData.teams.map((team) {
+                                        return FadeSlide(
+                                          child: Container(
+                                            padding: const EdgeInsets.all(8),
+                                            margin: const EdgeInsets.symmetric(
+                                              vertical: 4,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: team == winningTeam
+                                                  ? AppColors.mainColor
+                                                  : Colors.transparent,
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                              border: Border.all(
+                                                color: AppColors.grayy,
+                                              ),
+                                            ),
+                                            child: Column(
+                                              children: [
+                                                CustomText(
+                                                  text: team.name,
+                                                  fontSize: 18.sp,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    CustomText(
+                                                      text:
+                                                          "${team.playerOne.name} | ",
+                                                      fontSize: 16.sp,
+                                                    ),
+                                                    Expanded(
+                                                      child:
+                                                          buildPlayerScoresRow(
+                                                            team.playerOne,
+                                                          ),
+                                                    ),
+                                                  ],
+                                                ),
 
-                                  Column(
-                                    children: [
-                                      const SizedBox(height: 16),
-                                      CustomButton(
-                                        text: "اعادة بدأ الجولة",
-                                        color: AppColors.textColorTitle,
-                                        onPressed: () => dashboardData
-                                            .reloadGame(context, () {
-                                              homeData.clearValues();
-                                              setState(() {});
-                                              Navigator.pop(context);
-                                            }),
-                                      ),
-                                      const SizedBox(height: 20),
-                                    ],
-                                  ),
-                                ],
+                                                // Divider(
+                                                //   color: team == winningTeam
+                                                //       ? AppColors.grey.withOpacity(
+                                                //           0.25,
+                                                //         )
+                                                //       : AppColors.opacity_1,
+                                                // ),
+                                                Row(
+                                                  children: [
+                                                    CustomText(
+                                                      text:
+                                                          "${team.playerTwo.name} | ",
+                                                      fontSize: 16.sp,
+                                                    ),
+                                                    Expanded(
+                                                      child:
+                                                          buildPlayerScoresRow(
+                                                            team.playerTwo,
+                                                          ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                const Divider(),
+                                                CustomText(
+                                                  text:
+                                                      "المجموع: ${team.totalScore}",
+                                                  fontSize: 20.sp,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      }).toList(),
+
+                                    Column(
+                                      children: [
+                                        const SizedBox(height: 16),
+                                        CustomButton(
+                                          text: "اعادة بدأ الجولة",
+                                          color: AppColors.textColorTitle,
+                                          onPressed: () => dashboardData
+                                              .reloadGame(context, () {
+                                                homeData.clearValues();
+                                                setState(() {});
+                                                Navigator.pop(context);
+                                              }),
+                                        ),
+                                        const SizedBox(height: 20),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
+
               /// confetti 🎉
               ConfettiWidget(
                 confettiController: _controller,
