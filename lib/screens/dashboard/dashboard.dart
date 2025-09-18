@@ -99,7 +99,6 @@ class _DashboardState extends State<Dashboard> {
             onPressed: () {
               homeData.clearValues();
               setState(() {});
-              Navigator.pop(context);
             },
           ),
           backgroundColor: AppColors.bg,

@@ -22,7 +22,7 @@ class DashBoardAppBar extends PreferredSize {
               onPressed: () {
                 showDialog(
                   context: context,
-                  builder: (_) => Dialog(
+                  builder: (ctx) => Dialog(
                     backgroundColor: AppColors.bg,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
@@ -47,7 +47,7 @@ class DashBoardAppBar extends PreferredSize {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               TextButton(
-                                onPressed: () => Navigator.pop(context),
+                                onPressed: () => Navigator.pop(ctx),
                                 child: const CustomText(
                                   text: "لا",
                                   fontSize: 18,
@@ -58,7 +58,10 @@ class DashBoardAppBar extends PreferredSize {
                                 height: 40,
                                 text: "نعم",
                                 isButtonBorder: true,
-                                onPressed: onPressed,
+                                onPressed: () async {
+                                  await onPressed?.call();
+                                  Navigator.pop(ctx);
+                                },
                               ),
                             ],
                           ),
