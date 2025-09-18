@@ -46,7 +46,6 @@ class FirebaseNotificationService {
       debugPrint("📩 Foreground body: ${message.notification?.body}");
       debugPrint("📩 Foreground data: ${message.data}");
 
-
       if (message.notification != null) {
         showNotification(
           message.notification!.title ?? "No Title",
@@ -185,18 +184,14 @@ class FirebaseNotificationService {
       debugPrint("🔔 User permission: ${settings.authorizationStatus}");
 
       if (settings.authorizationStatus != AuthorizationStatus.authorized) {
-        await customAlertOptional(
-          alertType: "Warning",
+        await customAlertAnimation(
+          alertType: "تحذير",
           title:
               "صديقي, الإشعارات مغلقة لديك ولن تتمكن من إستقبال آخر الاشعارات والتحديثات, من فضلك قم بالسماح للتطبيق بإستقبال الإشعارات",
-          barrierDismissible: true,
           textButton: "السماح بالإشعارات",
           textSecondButton: "ليس الآن",
-          onTap: () {
-            Navigator.pop(context);
-            AppSettings.openAppSettings(type: AppSettingsType.notification);
-          },
-          onCancel: () => Navigator.pop(context),
+          onTap: () =>
+              AppSettings.openAppSettings(type: AppSettingsType.notification),
           context: context,
         );
       }

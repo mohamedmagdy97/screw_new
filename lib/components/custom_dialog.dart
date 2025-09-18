@@ -4,83 +4,78 @@ import 'package:screw_calculator/components/custom_button.dart';
 import 'package:screw_calculator/components/custom_text.dart';
 import 'package:screw_calculator/utility/app_theme.dart';
 
-customAlertOptional({
+Future<Object?> customAlertAnimation({
   required BuildContext context,
   required String title,
   required String alertType,
   required Function onTap,
-  required Function onCancel,
   String? textButton,
   String? textSecondButton,
   bool barrierDismissible = false,
   double? buttonWidth,
   bool willPopScope = true,
 }) {
-  return showDialog(
-    barrierDismissible: barrierDismissible,
+  return showGeneralDialog(
     context: context,
-    builder: (context) {
-      return StatefulBuilder(
-        builder: (context, setState) {
-          return WillPopScope(
-            onWillPop: () async {
-              return willPopScope;
-            },
-            child: SimpleDialog(
-              insetPadding: EdgeInsets.all(20.sp),
-              contentPadding: EdgeInsets.all(18.sp),
-              clipBehavior: Clip.antiAliasWithSaveLayer,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(30.sp)),
-              ),
-              children: [
-                SizedBox(
-                  width: 1.sw,
-                  child: Padding(
-                    padding: EdgeInsets.zero,
-                    child: Column(
-                      children: [
-                        SizedBox(height: 6.h),
-                        CustomText(
-                          text: alertType,
-                          maxLines: 1,
-                          fontSize: 22.sp,
-                          textAlign: TextAlign.center,
-                          color: AppColors.mainColor,
-                          fontFamily: AppFonts.bold,
-                        ),
-                        SizedBox(height: 18.h),
-                        CustomText(
-                          text: title,
-                          fontSize: 16.sp,
-                          textAlign: TextAlign.center,
-                          color: AppColors.black,
-                          fontFamily: AppFonts.bold,
-                          height: 1.5,
-                        ),
-                        SizedBox(height: 24.h),
-                        CustomButton(
-                          width: buttonWidth ?? 150.w,
-                          onPressed: () => onTap(),
-                          text: "موافق",
-                        ),
-                        SizedBox(height: 16.h),
-                        CustomButton(
-                          width: 100.w,
-                          isButtonBorder: true,
-                          colorFont: AppColors.black,
-                          onPressed: () => onCancel(),
-                          text: "رجوع",
-                        ),
-                        SizedBox(height: 8.h),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
+    barrierDismissible: false,
+    barrierColor: Colors.black54,
+    transitionDuration: const Duration(milliseconds: 450),
+    pageBuilder: (_, _, _) => const SizedBox.shrink(),
+    transitionBuilder: (ctx, anim, _, child) {
+      final curvedValue = Curves.easeInOut.transform(anim.value);
+      return Transform.scale(
+        scale: curvedValue,
+        child: Opacity(
+          opacity: anim.value,
+          child: Dialog(
+            backgroundColor: AppColors.bg,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
             ),
-          );
-        },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 32,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CustomText(
+                    text: alertType,
+                    fontSize: 18.sp,
+                    color: AppColors.mainColor,
+                  ),
+                  const SizedBox(height: 40),
+                  CustomText(text: title, fontSize: 18.sp),
+                  const SizedBox(height: 40),
+                  Column(
+                    // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      CustomButton(
+                        // width: 0.25.sw,
+                        height: 40,
+                        text: textButton ?? "موافق",
+                        onPressed: () {
+                          Navigator.pop(ctx);
+                          onTap();
+                        },
+                      ),
+                      const SizedBox(height: 16),
+
+                      TextButton(
+                        onPressed: () => Navigator.pop(ctx),
+                        child: CustomText(
+                          text: textSecondButton ?? "رجوع",
+                          fontSize: 18,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
       );
     },
   );
