@@ -1,0 +1,40 @@
+## .dart_code_metrics.yaml
+#metrics:
+#  cyclomatic-complexity:
+#    threshold: 12
+#  maximum-nesting-level:
+#    threshold: 4
+#  lines-of-code:
+#    # الحد الأعلى لعدد أسطر الدوال/الملفات
+#    # الملف الطويل (مثلاً نحد 100 سطر للشاشة)
+#    threshold: 350
+#  number-of-parameters:
+#    threshold: 3
+#  maintainability-index:
+#    threshold: 70
+#
+#anti-patterns:
+#  - name: long-widget-file
+#    # تحذير لو الملف يتعدى 100 سطر (مثال)
+#    pattern: |
+#      files
+#    # dart_code_metrics لا يعطي مباشرة rule لملفات > N سطر في كل نسخة
+#    # سنعالج ذلك بتحليل lines-of-code أو باستخدام custom script إن احتجت
+#
+#rules:
+#  - no-boolean-literal-compare
+#  - no-unused-parameters
+#  - avoid-returning-this
+#  # ... أضف أي rules جاهزة من dart_code_metrics
+#
+#metrics_rules:
+#  # مثال: تحذير أو خطأ لو عدد الParameters > threshold
+#  number-of-parameters:
+#    severity: warning
+#
+#cyclomatic-compexity:
+#  severity: warning
+#
+#exclude:
+#  - lib/generated/**
+#  - test/**

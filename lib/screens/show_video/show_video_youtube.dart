@@ -70,7 +70,7 @@ class _YoutubeLikePlayerState extends State<YoutubeLikePlayer>
         centerTitle: true,
         automaticallyImplyLeading: false,
         backgroundColor: AppColors.grayy,
-        title: CustomText(text: "شرح قواعد اللعبة", fontSize: 22.sp),
+        title: CustomText(text: 'شرح قواعد اللعبة', fontSize: 22.sp),
         actions: [
           IconButton(
             onPressed: () => Navigator.pop(context),

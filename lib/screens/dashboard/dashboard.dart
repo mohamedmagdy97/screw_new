@@ -72,7 +72,7 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
-    int gw = getCurrentRound();
+    final int gw = getCurrentRound();
     int resWinner = 0;
     if (widget.players.isNotEmpty) {
       resWinner = widget.players
@@ -107,7 +107,7 @@ class _DashboardState extends State<Dashboard> {
             heroTag: null,
             onPressed: () => dashboardData.captureAndShare(context),
             label: const CustomText(
-              text: "📲 مشاركة",
+              text: '📲 مشاركة',
               fontSize: 18,
               color: AppColors.black,
             ),
@@ -124,7 +124,7 @@ class _DashboardState extends State<Dashboard> {
                       MarqueeBar(dashboardData: dashboardData),
                       const SizedBox(height: 8),
                       CustomText(
-                        text: gw == 10 ? "انتهت الجولات" : "الجولة رقم $gw",
+                        text: gw == 10 ? 'انتهت الجولات' : 'الجولة رقم $gw',
                         color: AppColors.mainColorLight,
                         fontSize: 18,
                       ),
@@ -192,7 +192,7 @@ class _DashboardState extends State<Dashboard> {
                                                   children: [
                                                     CustomText(
                                                       text:
-                                                          "${team.playerOne.name} | ",
+                                                          '${team.playerOne.name} | ',
                                                       fontSize: 16.sp,
                                                     ),
                                                     Expanded(
@@ -215,7 +215,7 @@ class _DashboardState extends State<Dashboard> {
                                                   children: [
                                                     CustomText(
                                                       text:
-                                                          "${team.playerTwo.name} | ",
+                                                          '${team.playerTwo.name} | ',
                                                       fontSize: 16.sp,
                                                     ),
                                                     Expanded(
@@ -229,7 +229,7 @@ class _DashboardState extends State<Dashboard> {
                                                 const Divider(),
                                                 CustomText(
                                                   text:
-                                                      "المجموع: ${team.totalScore}",
+                                                      'المجموع: ${team.totalScore}',
                                                   fontSize: 20.sp,
                                                   fontWeight: FontWeight.bold,
                                                 ),
@@ -243,13 +243,12 @@ class _DashboardState extends State<Dashboard> {
                                       children: [
                                         const SizedBox(height: 16),
                                         CustomButton(
-                                          text: "اعادة بدأ الجولة",
+                                          text: 'اعادة بدأ الجولة',
                                           color: AppColors.textColorTitle,
                                           onPressed: () => dashboardData
                                               .reloadGame(context, () {
                                                 homeData.clearValues();
                                                 setState(() {});
-                                                Navigator.pop(context);
                                               }),
                                         ),
                                         const SizedBox(height: 20),
@@ -318,10 +317,10 @@ class _DashboardState extends State<Dashboard> {
     return Row(
       children:
           List.generate(5, (i) {
-            String? roundScore = player.getRoundScore(i + 1);
+            final String? roundScore = player.getRoundScore(i + 1);
             return roundScore != null && roundScore.isNotEmpty
                 ? CustomText(
-                    text: i == 0 ? " $roundScore" : " + $roundScore",
+                    text: i == 0 ? ' $roundScore' : ' + $roundScore',
                     fontSize: 20.sp,
                   )
                 : const SizedBox();
@@ -341,8 +340,8 @@ class _DashboardState extends State<Dashboard> {
                 ),
               ),
             const Spacer(),
-            CustomText(text: "=", fontSize: 20.sp),
-            CustomText(text: " ${player.total} ", fontSize: 20.sp),
+            CustomText(text: '=', fontSize: 20.sp),
+            CustomText(text: ' ${player.total} ', fontSize: 20.sp),
           ]),
     );
   }
@@ -351,12 +350,12 @@ class _DashboardState extends State<Dashboard> {
     return [
       const SizedBox(height: 8),
       CustomText(
-        text: "بعد انتهاء جميع الجولات يمكنك حفظها لتراها في السجلات الخاصة بك",
+        text: 'بعد انتهاء جميع الجولات يمكنك حفظها لتراها في السجلات الخاصة بك',
         fontSize: 14.sp,
       ),
       const SizedBox(height: 8),
       CustomButton(
-        text: "حفظ",
+        text: 'حفظ',
         color: AppColors.textColorTitle,
         onPressed: () => dashboardData.saveGame(widget.players, context),
       ),

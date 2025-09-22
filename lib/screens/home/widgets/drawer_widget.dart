@@ -26,20 +26,20 @@ class DrawerWidget extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(top: 32.0),
-                  child: Image.asset("assets/icons/icon.png", height: 0.15.sh),
+                  child: Image.asset('assets/icons/icon.png', height: 0.15.sh),
 
                   // Icon(Icons.gavel_sharp,
                   //     size: 50, color: Colors.white),
                 ),
                 const Padding(
                   padding: EdgeInsets.symmetric(vertical: 32.0),
-                  child: CustomText(text: "آهلا بيك يا صديقي", fontSize: 16),
+                  child: CustomText(text: 'آهلا بيك يا صديقي', fontSize: 16),
                 ),
                 const Divider(endIndent: 10, indent: 10),
                 ListTile(
                   onTap: () => routeFromDrawer(context, const HistoryScreen()),
                   title: const CustomText(
-                    text: "الجولات السابقة",
+                    text: 'الجولات السابقة',
                     fontSize: 16,
                     textAlign: TextAlign.end,
                   ),
@@ -47,7 +47,7 @@ class DrawerWidget extends StatelessWidget {
                 ListTile(
                   onTap: () => routeFromDrawer(context, const RulesScreen()),
                   title: const CustomText(
-                    text: "قوانين اللعبة",
+                    text: 'قوانين اللعبة',
                     fontSize: 16,
                     textAlign: TextAlign.end,
                   ),
@@ -55,7 +55,7 @@ class DrawerWidget extends StatelessWidget {
                 ListTile(
                   onTap: () => routeFromDrawer(context, const YoutubeLikePlayer()),
                   title: const CustomText(
-                    text: "فيديو شرح اللعبة",
+                    text: 'فيديو شرح اللعبة',
                     fontSize: 16,
                     textAlign: TextAlign.end,
                   ),
@@ -63,7 +63,7 @@ class DrawerWidget extends StatelessWidget {
                 ListTile(
                   onTap: () => routeFromDrawer(context, const ContactUS()),
                   title: const CustomText(
-                    text: "للاقتراحات والتواصل معنا ",
+                    text: 'للاقتراحات والتواصل معنا ',
                     fontSize: 16,
                     textAlign: TextAlign.end,
                   ),
@@ -71,14 +71,14 @@ class DrawerWidget extends StatelessWidget {
                 ListTile(
                   onTap: () => homeData.rateMyApp(),
                   title: const CustomText(
-                    text: "⭐ قيمنا",
+                    text: '⭐ قيمنا',
                     fontSize: 16,
                     textAlign: TextAlign.end,
                   ),
                 ),
 
                 const Spacer(),
-                const CustomText(text: "version 1.0.6", fontSize: 16),
+                const CustomText(text: 'version 1.0.6', fontSize: 16),
               ],
             ),
           ),

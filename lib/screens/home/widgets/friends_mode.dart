@@ -18,7 +18,7 @@ class FriendsMode extends StatelessWidget {
       padding: const EdgeInsets.all(24),
       children: [
         CustomText(
-          text: "أختر عدد الفرق",
+          text: 'أختر عدد الفرق',
           fontSize: 16.sp,
           textAlign: TextAlign.end,
         ),
@@ -73,26 +73,26 @@ class FriendsMode extends StatelessWidget {
                 ),
                 const SizedBox(height: 20),
                 BuildTeamFields(
-                  teamName: "الفريق الأول",
+                  teamName: 'الفريق الأول',
                   controllers: [homeData.playerOne, homeData.playerTwo],
                 ),
                 BuildTeamFields(
-                  teamName: "الفريق الثاني",
+                  teamName: 'الفريق الثاني',
                   controllers: [homeData.playerThree, homeData.playerFour],
                 ),
                 if (activeTeams >= 3)
                   BuildTeamFields(
-                    teamName: "الفريق الثالث",
+                    teamName: 'الفريق الثالث',
                     controllers: [homeData.playerFive, homeData.playerSix],
                   ),
                 if (activeTeams >= 4)
                   BuildTeamFields(
-                    teamName: "الفريق الرابع",
+                    teamName: 'الفريق الرابع',
                     controllers: [homeData.playerOne2, homeData.playerTwo2],
                   ),
                 const SizedBox(height: 16),
                 CustomButton(
-                  text: "التالي",
+                  text: 'التالي',
                   onPressed: () => homeData.goToNextTeams(context),
                 ),
               ],

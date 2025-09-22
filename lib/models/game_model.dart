@@ -5,13 +5,14 @@ class GameModel {
 
   GameModel({this.game});
 
-  GameModel.fromJson(Map<String, dynamic> json) {
-    if (json['game'] != null) {
-      game = <PlayerModel>[];
-      json['game'].forEach((v) {
-        game!.add(PlayerModel.fromJson(v));
-      });
-    }
+  factory GameModel.fromJson(Map<String, dynamic> json) {
+    return GameModel(
+      game: json['game'] != null
+          ? (json['game'] as List)
+                .map((v) => PlayerModel.fromJson(v as Map<String, dynamic>))
+                .toList()
+          : [],
+    );
   }
 
   Map<String, dynamic> toJson() {

@@ -19,7 +19,7 @@ class ClassicMode extends StatelessWidget {
       padding: const EdgeInsets.all(24),
       children: [
         CustomText(
-          text: "أختر عدد الاعبيين",
+          text: 'أختر عدد الاعبيين',
           fontSize: 16.sp,
           textAlign: TextAlign.end,
         ),
@@ -85,7 +85,7 @@ class ClassicMode extends StatelessWidget {
                   ),
                 const SizedBox(height: 16),
                 CustomButton(
-                  text: "التالي",
+                  text: 'التالي',
                   onPressed: () => homeData.goToNext(context),
                 ),
               ],

@@ -15,61 +15,68 @@ class PlayerModel {
   PlayerModel({
     this.id,
     this.name,
-    this.gw1 = "",
-    this.gw2 = "",
-    this.gw3 = "",
-    this.gw4 = "",
-    this.gw5 = "",
-    this.total = "0",
+    this.gw1 = '',
+    this.gw2 = '',
+    this.gw3 = '',
+    this.gw4 = '',
+    this.gw5 = '',
+    this.total = '0',
     this.isActive = false,
     this.isFavorite = false,
     int rounds = 5,
-  })  : scores = List.filled(5, null),
-        roundScores = List.generate(rounds, (_) => 0);
+  }) : scores = List.filled(5, null),
+       roundScores = List.generate(rounds, (_) => 0);
 
   int get totalScore => roundScores.reduce((a, b) => a + b);
 
   factory PlayerModel.fromJson(Map<String, dynamic> json) => PlayerModel(
-        id: json["id"],
-        name: json["name"],
-        gw1: json["gw1"] ?? "",
-        gw2: json["gw2"] ?? "",
-        gw3: json["gw3"] ?? "",
-        gw4: json["gw4"] ?? "",
-        gw5: json["gw5"] ?? "",
-        total: json["total"] ?? "0",
-        isActive: json["isActive"] ?? false,
-        isFavorite: json["isFavorite"] ?? false,
-      );
+    id: json['id'] is int
+        ? json['id'] as int
+        : int.tryParse(json['id']?.toString() ?? ''),
+    name: json['name']?.toString(),
+    gw1: json['gw1']?.toString(),
+    gw2: json['gw2']?.toString(),
+    gw3: json['gw3']?.toString(),
+    gw4: json['gw4']?.toString(),
+    gw5: json['gw5']?.toString(),
+    total: json['total']?.toString(),
+    isActive: json['isActive'] is bool
+        ? json['isActive'] as bool
+        : json['isActive'].toString().toLowerCase() == 'true',
+
+    isFavorite: json['isFavorite'] is bool
+        ? json['isFavorite'] as bool
+        : json['isFavorite'].toString().toLowerCase() == 'true',
+  );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "name": name,
-        "gw1": gw1,
-        "gw2": gw2,
-        "gw3": gw3,
-        "gw4": gw4,
-        "gw5": gw5,
-        "total": total,
-        "isActive": isActive ?? false,
-        "isFavorite": isFavorite ?? false,
-      };
+    'id': id,
+    'name': name,
+    'gw1': gw1,
+    'gw2': gw2,
+    'gw3': gw3,
+    'gw4': gw4,
+    'gw5': gw5,
+    'total': total,
+    'isActive': isActive ?? false,
+    'isFavorite': isFavorite ?? false,
+  };
 
   // New method to get round score dynamically
   String getRoundScore(int round) {
     switch (round) {
       case 1:
-        return gw1 ?? "";
+        return gw1 ?? '';
       case 2:
-        return gw2 ?? "";
+        return gw2 ?? '';
       case 3:
-        return gw3 ?? "";
+        return gw3 ?? '';
       case 4:
-        return gw4 ?? "";
+        return gw4 ?? '';
       case 5:
-        return gw5 ?? "";
+        return gw5 ?? '';
       default:
-        return "";
+        return '';
     }
   }
 

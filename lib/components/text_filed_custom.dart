@@ -90,10 +90,10 @@ class _CustomTextFieldState extends State<CustomTextField> {
             obscureText: widget.obscureText,
             obscuringCharacter: '*',
             readOnly: widget.isDisable,
-            validator: (v) => validation(
+            validator: (String? v) => validation(
                 type: widget.textFieldVaidType!,
                 value: v!,
-                firstPasswordForConfirm: ""),
+                firstPasswordForConfirm: ''),
 
             decoration: InputDecoration(
               errorMaxLines: widget.maxerrorLines,

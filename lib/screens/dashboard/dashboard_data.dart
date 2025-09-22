@@ -34,24 +34,24 @@ class DashboardData {
     if (teamsMode == true && players.length >= 4) {
       teams = [
         Team(
-          name: "الفريق الأول",
+          name: 'الفريق الأول',
           playerOne: players[0],
           playerTwo: players[1],
         ),
         Team(
-          name: "الفريق الثاني",
+          name: 'الفريق الثاني',
           playerOne: players[2],
           playerTwo: players[3],
         ),
         if (players.length > 4)
           Team(
-            name: "الفريق الثالث",
+            name: 'الفريق الثالث',
             playerOne: players[4],
             playerTwo: players[5],
           ),
         if (players.length > 6)
           Team(
-            name: "الفريق الرابع",
+            name: 'الفريق الرابع',
             playerOne: players[6],
             playerTwo: players[7],
           ),
@@ -61,7 +61,7 @@ class DashboardData {
     }
   }
 
-  checkAllGwPlayed(int gw, List<PlayerModel> players, int index) {
+  void checkAllGwPlayed(int gw, List<PlayerModel> players, int index) {
     debugPrint('ddddddddd=gw1=${players[index].gw1!.isNotEmpty}');
     debugPrint('ddddddddd=gw2=${players[index].gw2!.isNotEmpty}');
     debugPrint('ddddddddd=gw3=${players[index].gw3!.isNotEmpty}');
@@ -215,67 +215,111 @@ class DashboardData {
   GenericCubit<List<GameModel>> jobsCubit = GenericCubit<List<GameModel>>();
   GenericCubit<bool> hideMarquee = GenericCubit<bool>(data: false);
 
-  getSavedGames() async {
-    String? res = await AppLocalStore.getString(LocalStoreNames.gamesHistory);
+  Future<void> getSavedGames() async {
+    final String? res = await AppLocalStore.getString(
+      LocalStoreNames.gamesHistory,
+    );
+    if (res != null && res.isNotEmpty) {
+      final dynamic decoded = jsonDecode(res);
 
-    final List<dynamic> jsonData = jsonDecode(res ?? '[]');
+      if (decoded is List) {
+        final List<Map<String, dynamic>> jsonData = decoded
+            .cast<Map<String, dynamic>>();
 
-    listGames = jsonData.map<GameModel>((jsonItem) {
-      return GameModel.fromJson(jsonItem);
-    }).toList();
+        listGames = jsonData.map<GameModel>(GameModel.fromJson).toList();
+      } else {
+        // في حالة unexpected type
+        listGames = [];
+      }
+    } else {
+      // في حالة مفيش بيانات
+      listGames = [];
+    }
+    // listGames = jsonData.map<GameModel>((jsonItem) {
+    //    return GameModel.fromJson(jsonItem);
+    //  }).toList();
 
     jobsCubit.update(data: listGames.toList());
   }
 
-  reloadGame(BuildContext context, Function? onPressed) {
-    return showDialog(
+  Future<void> reloadGame(BuildContext context, Function? onPressed) {
+    return showGeneralDialog(
       context: context,
-      builder: (_) => Dialog(
-        backgroundColor: AppColors.bg,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 32),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              CustomText(
-                text: "تحذير",
-                fontSize: 18.sp,
-                color: AppColors.mainColor,
+      barrierDismissible: false,
+      barrierColor: Colors.black54,
+      transitionDuration: const Duration(milliseconds: 450),
+      pageBuilder: (_, __, ___) => const SizedBox.shrink(),
+      transitionBuilder: (ctx, anim, _, child) {
+        //       final curvedValue = Curves.easeInOut.transform(anim.value);
+        //       return Transform.scale(
+        //        scale: curvedValue,
+
+        return SlideTransition(
+          position: Tween<Offset>(
+            begin: const Offset(0, 1),
+            end: Offset.zero,
+          ).animate(CurvedAnimation(parent: anim, curve: Curves.easeOutCubic)),
+          child: Opacity(
+            opacity: anim.value,
+            child: Dialog(
+              backgroundColor: AppColors.bg,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 32,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CustomText(
+                      text: 'تحذير',
+                      fontSize: 18.sp,
+                      color: AppColors.mainColor,
+                    ),
+                    const SizedBox(height: 40),
+                    CustomText(
+                      text: 'هل تريد اعادة بدأ الجولة',
+                      fontSize: 18.sp,
+                    ),
+                    const SizedBox(height: 40),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(ctx),
+                          child: const CustomText(text: 'لا', fontSize: 18),
+                        ),
+                        CustomButton(
+                          width: 0.25.sw,
+                          height: 40,
+                          text: 'نعم',
+                          isButtonBorder: true,
+                          onPressed: () {
+                            onPressed?.call();
+                            Navigator.pop(ctx);
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-              const SizedBox(height: 40),
-              CustomText(text: "هل تريد اعادة بدأ الجولة", fontSize: 18.sp),
-              const SizedBox(height: 40),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: const CustomText(text: "لا", fontSize: 18),
-                  ),
-                  CustomButton(
-                    width: 0.25.sw,
-                    height: 40,
-                    text: "نعم",
-                    isButtonBorder: true,
-                    onPressed: onPressed,
-                  ),
-                ],
-              ),
-            ],
+            ),
+            // _buildDialog(ctx),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
-  saveGame(List<PlayerModel> listPlayers, context) {
+  void saveGame(List<PlayerModel> listPlayers, BuildContext context) {
     if (listPlayers.last.gw5 != null &&
         listPlayers.last.gw5!.isNotEmpty &&
         listPlayers.first.gw5 != null &&
         listPlayers.first.gw5!.isNotEmpty) {
       listGames.add(GameModel(game: listPlayers));
       addGameToDB();
-      Utilities().showCustomSnack(context, txt: "تم حفظ الجولة");
+      Utilities().showCustomSnack(context, txt: 'تم حفظ الجولة');
       // Navigator.push(
       //   context,
       //   MaterialPageRoute(builder: (_) => const HistoryScreen()),
@@ -285,12 +329,12 @@ class DashboardData {
     } else {
       return Utilities().showCustomSnack(
         context,
-        txt: "لحفظ النتائج يجب ادخال جميع الجولات",
+        txt: 'لحفظ النتائج يجب ادخال جميع الجولات',
       );
     }
   }
 
-  addGameToDB() async {
+  Future<void> addGameToDB() async {
     AppLocalStore.setString(
       LocalStoreNames.gamesHistory,
       jsonEncode(listGames),
@@ -320,15 +364,15 @@ class DashboardData {
 }
 
 Future<dynamic> ShowCapturedWidget(
-    BuildContext context,
-    Uint8List capturedImage,
-    ) {
+  BuildContext context,
+  Uint8List capturedImage,
+) {
   return showDialog(
     useSafeArea: false,
     context: context,
     builder: (context) => Scaffold(
       backgroundColor: AppColors.bg,
-      appBar: AppBar(title: Text("Captured widget screenshot")),
+      appBar: AppBar(title: Text('Captured widget screenshot')),
       body: Center(child: Image.memory(capturedImage)),
     ),
   );

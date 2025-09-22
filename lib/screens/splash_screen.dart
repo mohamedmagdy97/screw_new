@@ -21,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
       await Navigator.of(context).pushAndRemoveUntil(
         PageRouteBuilder(
           transitionDuration: const Duration(milliseconds: 400),
-          reverseTransitionDuration: const Duration(milliseconds: 300),
+          // reverseTransitionDuration: const Duration(milliseconds: 300),
           pageBuilder: (context, animation, secondaryAnimation) =>
               FadeTransition(
                 opacity: animation,
@@ -36,7 +36,7 @@ class _SplashScreenState extends State<SplashScreen> {
                           curve: Curves.easeOutCubic,
                         ),
                       ),
-                  child: GameMode(),
+                  child: const GameMode(),
                 ),
               ),
         ),
@@ -62,10 +62,10 @@ class _SplashScreenState extends State<SplashScreen> {
             SizedBox(height: 80.h),
             Padding(
               padding: EdgeInsets.all(24.sp),
-              child: Image.asset("assets/icons/icon.png", height: 0.15.sh),
+              child: Image.asset('assets/icons/icon.png', height: 0.15.sh),
             ),
             SizedBox(height: 25.h),
-            const CustomText(text: "صلي على النبي", fontSize: 16),
+            const CustomText(text: 'صلي على النبي', fontSize: 16),
 
             SizedBox(height: 0.45.sh),
             const CircularProgressIndicator.adaptive(
