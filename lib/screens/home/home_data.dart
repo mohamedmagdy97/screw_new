@@ -123,7 +123,7 @@ class HomeData {
     players.clear();
   }
 
-  goToNextTeams(context) async {
+  Future<void> goToNextTeams(BuildContext context) async {
     if (!formKey.currentState!.validate()) {
       return;
     }
@@ -198,7 +198,7 @@ class HomeData {
     );
   }
 
-  clearValues() {
+  void clearValues() {
     players.forEach((element) {
       element.gw1 = "";
       element.gw2 = "";

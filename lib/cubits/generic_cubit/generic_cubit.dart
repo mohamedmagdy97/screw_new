@@ -6,11 +6,11 @@ part 'generic_state.dart';
 class GenericCubit<T> extends Cubit<GenericState<T>> {
   GenericCubit({T? data}) : super(GenericInitial<T>(data));
 
-  update({required T data}) {
+  void update({required T data}) {
     emit(GenericUpdate<T>(change: !state.change, data: data));
   }
 
-  reInitial({required T data}) {
+  void reInitial({required T data}) {
     emit(GenericInitial<T>(data));
   }
 }

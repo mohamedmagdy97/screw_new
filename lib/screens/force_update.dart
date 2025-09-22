@@ -16,6 +16,7 @@ class ForceUpdateWrapper extends StatefulWidget {
 
 class _ForceUpdateWrapperState extends State<ForceUpdateWrapper>
     with SingleTickerProviderStateMixin {
+  bool _forceUpdateConfig = false;
   bool _forceUpdate = false;
   bool _optionalUpdate = false;
   String _storeUrl = '';
@@ -61,13 +62,25 @@ class _ForceUpdateWrapperState extends State<ForceUpdateWrapper>
     final minVersion = rc.getString('min_supported_version');
     _latestVersion = rc.getString('latest_version');
     _storeUrl = rc.getString('store_url');
-    _forceUpdate = rc.getBool('force_update');
+    _forceUpdateConfig = rc.getBool('force_update');
 
     final info = await PackageInfo.fromPlatform();
     final current = info.version;
 
-    if (_isLower(current, minVersion)) {
-      // setState(() => _forceUpdate = true);
+    if (_isLower(current, _latestVersion)) {
+      if (_forceUpdateConfig) {
+        setState(() => _forceUpdate = true);
+      } else {
+        setState(() {
+          _optionalUpdate = true;
+          _controller.forward();
+        });
+      }
+    } else if (_isLower(current, minVersion)) {
+      setState(() {
+        _optionalUpdate = true;
+        _controller.forward();
+      });
     } else if (_isLower(current, _latestVersion)) {
       setState(() {
         _optionalUpdate = true;

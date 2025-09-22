@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:screw_calculator/components/custom_text.dart';
-import 'package:screw_calculator/screens/rules/widgets/title_with_value.dart';
 import 'package:screw_calculator/utility/app_theme.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -30,7 +29,7 @@ class _ContactUSState extends State<ContactUS> {
         centerTitle: true,
         automaticallyImplyLeading: false,
         backgroundColor: AppColors.grayy,
-        title: CustomText(text: "للتواصل وتقديم الاقتراحات", fontSize: 22.sp),
+        title: CustomText(text: 'للتواصل وتقديم الاقتراحات', fontSize: 22.sp),
         actions: [
           IconButton(
             onPressed: () => Navigator.pop(context),
@@ -53,23 +52,23 @@ class _ContactUSState extends State<ContactUS> {
               children: [
                 const Padding(
                   padding: EdgeInsets.symmetric(vertical: 32.0),
-                  child: CustomText(text: "آهلا بيك يا صديقي", fontSize: 16),
+                  child: CustomText(text: 'آهلا بيك يا صديقي', fontSize: 16),
                 ),
                 const CustomText(
-                  text: "يمكنك محادثتنا للأسئلة والاستفسارات من خلال",
+                  text: 'يمكنك محادثتنا للأسئلة والاستفسارات من خلال',
                   fontSize: 16,
                 ),
                 const SizedBox(height: 16),
                 InkWell(
                   onTap: () async {
-                    String url = "https://wa.me/+201149504892";
+                    String url = 'https://wa.me/+201149504892';
 
                     if (await canLaunchUrl(Uri.parse(url))) {
                       await launchUrl(Uri.parse(url));
                     }
                   },
                   child: const CustomText(
-                    text: "الواتس اب",
+                    text: 'الواتس اب',
                     fontSize: 20,
                     color: AppColors.green,
                     underline: true,
@@ -80,7 +79,7 @@ class _ContactUSState extends State<ContactUS> {
           ),
           const CustomText(
             text:
-                "نحن لا نبيع اللعبة ولكن يمكنك الارسال لمساعدتنا بتحسين التطبيق ومعرفة اخر التطبيقات",
+                'نحن لا نبيع اللعبة ولكن يمكنك الارسال لمساعدتنا بتحسين التطبيق ومعرفة اخر التطبيقات',
             fontSize: 16,
           ),
           const SizedBox(height: 16),

@@ -81,7 +81,7 @@ class AppStyle {
         ]);
   }
 
-  static get whiteGradient {
+  static LinearGradient get whiteGradient {
     return const LinearGradient(colors: [
       Colors.white,
       Colors.white,

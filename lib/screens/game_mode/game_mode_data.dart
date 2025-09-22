@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:screw_calculator/cubits/generic_cubit/generic_cubit.dart';
 import 'package:screw_calculator/helpers/firebase_notification_service.dart';
@@ -13,7 +12,7 @@ class GameModeData {
   GenericCubit<List<Item>> listCubit = GenericCubit<List<Item>>(data: []);
   DateTime? currentBackPressTime;
 
-  init(BuildContext context) async {
+  Future<void> init(BuildContext context) async {
     List<Item> list = [
       Item(isActive: true, key: 0, value: "كلاسيك\n ( فردي )"),
       Item(isActive: false, key: 1, value: "صاحب صاحبه\n ( زوجي )"),
@@ -25,7 +24,7 @@ class GameModeData {
     await FirebaseNotificationService.init(context);
   }
 
-  onSelect(context, index) {
+  void onSelect(BuildContext context, int index) {
     if (index == 1) {
       ModeClass.mode = GameMode.friendly;
       // return Utilities()
@@ -40,7 +39,7 @@ class GameModeData {
     listCubit.update(data: listCubit.state.data!);
   }
 
-  goHome(BuildContext context, index) {
+  void goHome(BuildContext context, int index) {
     Navigator.of(context).push(
       PageRouteBuilder(
         transitionDuration: const Duration(milliseconds: 750),
@@ -60,7 +59,7 @@ class GameModeData {
     return Future.value(true);
   }
 
-  void showSnackBar(String content, context) {
+  void showSnackBar(String content, BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(content),

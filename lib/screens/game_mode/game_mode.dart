@@ -131,10 +131,11 @@ class _GameModeState extends State<GameMode> {
                       onPressed: () => gameModeData.goHome(
                         context,
                         state.data!
-                            .where((e) => e.isActive!)
-                            .toList()
-                            .first
-                            .key,
+                                .where((e) => e.isActive!)
+                                .toList()
+                                .first
+                                .key ??
+                            0,
                       ),
                     ),
                   ],

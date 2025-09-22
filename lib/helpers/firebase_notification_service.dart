@@ -211,10 +211,10 @@ class FirebaseNotificationService {
     if (message.data.isNotEmpty) {
       debugPrint("👉 User clicked notification with data: ${message.data}");
 
-      final String? screen = message.data['screen'];
-      if (screen == "dashboard") {
-        Navigator.pushNamed(context, "/dashboard");
-      }
+      // final String? screen = message.data['screen'];
+      // if (screen == "dashboard") {
+      //   Navigator.pushNamed(context, "/dashboard");
+      // }
     }
   }
 }
