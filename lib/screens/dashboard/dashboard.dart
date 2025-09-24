@@ -5,6 +5,7 @@ import 'package:screenshot/screenshot.dart';
 import 'package:screw_calculator/components/custom_button.dart';
 import 'package:screw_calculator/components/custom_text.dart';
 import 'package:screw_calculator/components/fade_animation.dart';
+import 'package:screw_calculator/generated/assets.dart';
 import 'package:screw_calculator/models/player_model.dart';
 import 'package:screw_calculator/models/team_model_new.dart';
 import 'package:screw_calculator/screens/dashboard/dashboard_data.dart';
@@ -73,11 +74,16 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     final int gw = getCurrentRound();
-    int resWinner = 0;
+    int winnerResult = 0;
+    int loserResult = 0;
     if (widget.players.isNotEmpty) {
-      resWinner = widget.players
+      winnerResult = widget.players
           .map((p) => int.parse(p.total!))
           .reduce((a, b) => a < b ? a : b);
+
+      loserResult = widget.players
+          .map((p) => int.parse(p.total!))
+          .reduce((a, b) => a > b ? a : b);
     }
 
     Team? winningTeam;
@@ -142,7 +148,8 @@ class _DashboardState extends State<Dashboard> {
                                           .map(
                                             (player) => buildPlayerCard(
                                               player,
-                                              resWinner,
+                                              winnerResult,
+                                              loserResult,
                                             ),
                                           )
                                           .toList()
@@ -286,7 +293,7 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-  Widget buildPlayerCard(PlayerModel player, int resWinner) {
+  Widget buildPlayerCard(PlayerModel player, int resWinner, int loserResult) {
     return FadeSlide(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -294,7 +301,9 @@ class _DashboardState extends State<Dashboard> {
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
           decoration: BoxDecoration(
             color: resWinner.toString() == player.total
-                ? AppColors.mainColor
+                ? AppColors.green.withOpacity(0.75)
+                : loserResult.toString() == player.total
+                ? AppColors.red.withOpacity(0.75)
                 : null,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(color: AppColors.grayy),
@@ -302,7 +311,25 @@ class _DashboardState extends State<Dashboard> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CustomText(text: player.name.toString(), fontSize: 20.sp),
+              Row(
+                children: [
+                  Expanded(
+                    child: CustomText(
+                      text: player.name.toString(),
+                      fontSize: 20.sp,
+                      textAlign: TextAlign.start,
+                    ),
+                  ),
+
+                  ?resWinner.toString() == player.total
+                      ? const Image(
+                          image: AssetImage(Assets.kingIcon),
+                          height: 25,
+                          width: 25,
+                        )
+                      : null,
+                ],
+              ),
               const SizedBox(width: 20, child: Divider(color: AppColors.white)),
               const SizedBox(height: 4),
               buildPlayerScoresRow(player),
