@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:screw_calculator/components/custom_text.dart';
 import 'package:screw_calculator/utility/app_theme.dart';
@@ -140,8 +140,8 @@ class _ForceUpdateWrapperState extends State<ForceUpdateWrapper>
                         color: AppColors.mainColor,
                       ),
                       const SizedBox(height: 16),
-                      CustomText(
-                        text: "تحديث إجباري",
+                      const CustomText(
+                        text: 'تحديث إجباري',
                         fontSize: 22,
                         color: AppColors.black,
                         textAlign: TextAlign.center,
@@ -149,8 +149,8 @@ class _ForceUpdateWrapperState extends State<ForceUpdateWrapper>
                       const SizedBox(height: 12),
                       CustomText(
                         text:
-                            "يرجى تحديث التطبيق للإصدار $_latestVersion "
-                            "للاستمرار في استخدام جميع المميزات.",
+                            'يرجى تحديث التطبيق للإصدار $_latestVersion '
+                            'للاستمرار في استخدام جميع المميزات.',
                         textAlign: TextAlign.center,
                         fontSize: 16,
                         color: AppColors.black,
@@ -174,7 +174,7 @@ class _ForceUpdateWrapperState extends State<ForceUpdateWrapper>
                         ),
                         onPressed: _openStore,
                         label: const CustomText(
-                          text: "تحديث الآن",
+                          text: 'تحديث الآن',
                           fontSize: 16,
                         ),
                       ),
@@ -195,7 +195,7 @@ class _ForceUpdateWrapperState extends State<ForceUpdateWrapper>
             widget.child,
             if (_optionalUpdate)
               Padding(
-                padding: EdgeInsets.only(bottom: 28),
+                padding: const EdgeInsets.only(bottom: 28),
                 child: SlideTransition(
                   position: _slide,
                   child: Align(
@@ -216,11 +216,11 @@ class _ForceUpdateWrapperState extends State<ForceUpdateWrapper>
                           end: Alignment.bottomRight,
                         ),
                         borderRadius: BorderRadius.circular(16),
-                        boxShadow: [
+                        boxShadow: const [
                           BoxShadow(
                             color: Colors.black26,
                             blurRadius: 8,
-                            offset: const Offset(0, -2),
+                            offset: Offset(0, -2),
                           ),
                         ],
                       ),
@@ -237,8 +237,8 @@ class _ForceUpdateWrapperState extends State<ForceUpdateWrapper>
                             child: CustomText(
                               textAlign: TextAlign.start,
                               text:
-                                  "إصدار جديد ($_latestVersion) متاح 🎉\n"
-                                  "جرّب أحدث المميزات الآن!",
+                                  'إصدار جديد ($_latestVersion) متاح 🎉\n'
+                                  'جرّب أحدث المميزات الآن!',
                               fontSize: 14,
                             ),
                           ),
@@ -247,7 +247,7 @@ class _ForceUpdateWrapperState extends State<ForceUpdateWrapper>
                             onPressed: _openStore,
                             icon: const Icon(Icons.arrow_back_ios, size: 16),
                             label: CustomText(
-                              text: "تحديث",
+                              text: 'تحديث',
                               fontSize: 14,
                               color: AppColors.mainColor,
                               fontFamily: AppFonts.bold,

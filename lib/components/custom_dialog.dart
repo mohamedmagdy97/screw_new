@@ -54,7 +54,7 @@ Future<Object?> customAlertAnimation({
                       CustomButton(
                         // width: 0.25.sw,
                         height: 40,
-                        text: textButton ?? "موافق",
+                        text: textButton ?? 'موافق',
                         onPressed: () {
                           Navigator.pop(ctx);
                           onTap();
@@ -65,7 +65,7 @@ Future<Object?> customAlertAnimation({
                       TextButton(
                         onPressed: () => Navigator.pop(ctx),
                         child: CustomText(
-                          text: textSecondButton ?? "رجوع",
+                          text: textSecondButton ?? 'رجوع',
                           fontSize: 18,
                         ),
                       ),

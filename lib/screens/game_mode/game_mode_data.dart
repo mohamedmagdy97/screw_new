@@ -13,9 +13,9 @@ class GameModeData {
   DateTime? currentBackPressTime;
 
   Future<void> init(BuildContext context) async {
-    List<Item> list = [
-      Item(isActive: true, key: 0, value: "كلاسيك\n ( فردي )"),
-      Item(isActive: false, key: 1, value: "صاحب صاحبه\n ( زوجي )"),
+    final List<Item> list = [
+      Item(isActive: true, key: 0, value: 'كلاسيك\n ( فردي )'),
+      Item(isActive: false, key: 1, value: 'صاحب صاحبه\n ( زوجي )'),
 
       // Item(isActive: false,key: 2,value: "بينج بونج"),
     ];
@@ -49,11 +49,11 @@ class GameModeData {
   }
 
   Future<bool> onWillPop(BuildContext context) {
-    DateTime now = DateTime.now();
+    final DateTime now = DateTime.now();
     if (currentBackPressTime == null ||
         now.difference(currentBackPressTime!) > const Duration(seconds: 2)) {
       currentBackPressTime = now;
-      Utilities().showCustomSnack(context, txt: "للخروج اضغط مرتين ");
+      Utilities().showCustomSnack(context, txt: 'للخروج اضغط مرتين ');
       return Future.value(false);
     }
     return Future.value(true);

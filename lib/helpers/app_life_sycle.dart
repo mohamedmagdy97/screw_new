@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 class LifecycleEventHandler extends WidgetsBindingObserver {
   final AsyncCallback? resumeCallBack;
@@ -12,7 +12,7 @@ class LifecycleEventHandler extends WidgetsBindingObserver {
 
   @override
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
-    debugPrint("state changed >>>>>>>>>>>>>>>>${state.name}");
+    debugPrint('state changed >>>>>>>>>>>>>>>>${state.name}');
     switch (state) {
       case AppLifecycleState.resumed:
         if (resumeCallBack != null) {

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:screw_calculator/components/custom_text.dart';
@@ -7,7 +8,6 @@ import 'package:screw_calculator/screens/home/widgets/drawer_widget.dart';
 import 'package:screw_calculator/screens/home/widgets/friends_mode.dart';
 import 'package:screw_calculator/utility/Enums.dart';
 import 'package:screw_calculator/utility/app_theme.dart';
-import 'package:flutter/cupertino.dart';
 
 class MyHomePage extends StatefulWidget {
   final int index;
@@ -58,7 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           automaticallyImplyLeading: true,
           backgroundColor: AppColors.grayy,
-          title: CustomText(text: "سكرو حاسبة", fontSize: 22.sp),
+          title: CustomText(text: 'سكرو حاسبة', fontSize: 22.sp),
           actions: [
             InkWell(
               onTap: () => homeData.scaffoldKey.currentState!.openEndDrawer(),

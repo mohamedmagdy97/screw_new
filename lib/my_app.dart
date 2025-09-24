@@ -9,7 +9,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 28),
+      padding: const EdgeInsets.only(bottom: 28),
       child: ScreenUtilInit(
         designSize: const Size(414, 896),
         builder: (context, child) => Directionality(

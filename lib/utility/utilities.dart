@@ -31,9 +31,8 @@ class Utilities {
             child: Padding(
               padding: const EdgeInsets.all(12),
               child: CustomText(
-                text: txt ?? "",
+                text: txt ?? '',
                 fontSize: 16.sp,
-                color: AppColors.white,
                 textAlign: TextAlign.end,
               ), // here you may safely put Hero
             ),

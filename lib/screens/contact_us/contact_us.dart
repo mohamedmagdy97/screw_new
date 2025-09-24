@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:screw_calculator/components/custom_text.dart';
+import 'package:screw_calculator/generated/assets.dart';
 import 'package:screw_calculator/utility/app_theme.dart';
+import 'package:screw_calculator/utility/sochial_links.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ContactUS extends StatefulWidget {
@@ -58,21 +60,83 @@ class _ContactUSState extends State<ContactUS> {
                   text: 'يمكنك محادثتنا للأسئلة والاستفسارات من خلال',
                   fontSize: 16,
                 ),
-                const SizedBox(height: 16),
-                InkWell(
-                  onTap: () async {
-                    String url = 'https://wa.me/+201149504892';
+                const SizedBox(height: 24),
+                Row(
+                  spacing: 32,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    InkWell(
+                      onTap: () async {
+                        final Uri url = Uri.parse(SocialLinks.linkedin);
+                        if (!await launchUrl(
+                          url,
+                          mode: LaunchMode.externalApplication,
+                        )) {
+                          throw Exception('Could not launch $url');
+                        }
 
-                    if (await canLaunchUrl(Uri.parse(url))) {
-                      await launchUrl(Uri.parse(url));
-                    }
-                  },
-                  child: const CustomText(
-                    text: 'الواتس اب',
-                    fontSize: 20,
-                    color: AppColors.green,
-                    underline: true,
-                  ),
+                        // if (await canLaunchUrl(
+                        //   Uri.parse(SocialLinks.linkedin),
+                        // )) {
+                        //   await launchUrl(Uri.parse(SocialLinks.linkedin));
+                        // }
+                      },
+                      child: const Image(
+                        image: AssetImage(Assets.linkedInIcon),
+                        height: 55,
+                        width: 55,
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () async {
+                        final Uri url = Uri.parse(SocialLinks.whatsapp);
+                        if (!await launchUrl(
+                          url,
+                          mode: LaunchMode.externalApplication,
+                        )) {
+                          throw Exception('Could not launch $url');
+                        }
+                      },
+                      child: const Image(
+                        image: AssetImage(Assets.whatsappIcon),
+                        height: 55,
+                        width: 55,
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () async {
+                        final Uri url = Uri.parse(SocialLinks.github);
+                        if (!await launchUrl(
+                          url,
+                          mode: LaunchMode.externalNonBrowserApplication,
+                        )) {
+                          throw Exception('Could not launch $url');
+                        }
+                      },
+                      child: const Image(
+                        image: AssetImage(Assets.githubIcon),
+                        height: 55,
+                        width: 55,
+                        color: AppColors.white,
+                      ),
+                    ),
+
+                    // InkWell(
+                    //   onTap: () async {
+                    //     String url = 'https://wa.me/+201149504892';
+                    //
+                    //     if (await canLaunchUrl(Uri.parse(url))) {
+                    //       await launchUrl(Uri.parse(url));
+                    //     }
+                    //   },
+                    //   child: const CustomText(
+                    //     text: 'الواتس اب',
+                    //     fontSize: 20,
+                    //     color: AppColors.green,
+                    //     underline: true,
+                    //   ),
+                    // ),
+                  ],
                 ),
               ],
             ),

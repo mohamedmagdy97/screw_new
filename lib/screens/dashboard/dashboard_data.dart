@@ -3,6 +3,8 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:screenshot/screenshot.dart';
 import 'package:screw_calculator/components/custom_button.dart';
 import 'package:screw_calculator/components/custom_text.dart';
 import 'package:screw_calculator/cubits/generic_cubit/generic_cubit.dart';
@@ -13,9 +15,7 @@ import 'package:screw_calculator/utility/app_theme.dart';
 import 'package:screw_calculator/utility/local_store.dart';
 import 'package:screw_calculator/utility/local_storge_key.dart';
 import 'package:screw_calculator/utility/utilities.dart';
-import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:path_provider/path_provider.dart';
 
 class DashboardData {
   final TextEditingController controller = TextEditingController();
@@ -248,7 +248,7 @@ class DashboardData {
       barrierDismissible: false,
       barrierColor: Colors.black54,
       transitionDuration: const Duration(milliseconds: 450),
-      pageBuilder: (_, __, ___) => const SizedBox.shrink(),
+      pageBuilder: (_, _, _) => const SizedBox.shrink(),
       transitionBuilder: (ctx, anim, _, child) {
         //       final curvedValue = Curves.easeInOut.transform(anim.value);
         //       return Transform.scale(
@@ -345,7 +345,7 @@ class DashboardData {
     final Uint8List? imageBytes;
     try {
       imageBytes = await screenshotController.capture(
-        delay: Duration(milliseconds: 10),
+        delay: const Duration(milliseconds: 10),
       );
 
       if (imageBytes == null) return;
@@ -372,7 +372,7 @@ Future<dynamic> ShowCapturedWidget(
     context: context,
     builder: (context) => Scaffold(
       backgroundColor: AppColors.bg,
-      appBar: AppBar(title: Text('Captured widget screenshot')),
+      appBar: AppBar(title: const Text('Captured widget screenshot')),
       body: Center(child: Image.memory(capturedImage)),
     ),
   );

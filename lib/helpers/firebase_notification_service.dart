@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:app_settings/app_settings.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:app_settings/app_settings.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:screw_calculator/components/custom_dialog.dart';
 import 'package:screw_calculator/helpers/firbase_handling.dart';
 
@@ -15,7 +15,7 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
   // await FirebaseNotificationService.setupLocalNotifications();
-  debugPrint("🔔 Handling a background message: ${message.messageId}");
+  debugPrint('🔔 Handling a background message: ${message.messageId}');
 
   if (message.notification != null) {
     // FirebaseNotificationService.showNotification(
@@ -42,29 +42,29 @@ class FirebaseNotificationService {
 
     // Foreground messages
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      debugPrint("📩 Foreground: ${message.notification?.title}");
-      debugPrint("📩 Foreground body: ${message.notification?.body}");
-      debugPrint("📩 Foreground data: ${message.data}");
+      debugPrint('📩 Foreground: ${message.notification?.title}');
+      debugPrint('📩 Foreground body: ${message.notification?.body}');
+      debugPrint('📩 Foreground data: ${message.data}');
 
       if (message.notification != null) {
         showNotification(
-          message.notification!.title ?? "No Title",
-          message.notification!.body ?? "No Body",
+          message.notification!.title ?? 'No Title',
+          message.notification!.body ?? 'No Body',
         );
       }
     });
 
     // On Notification Tap (App in background/terminated)
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      debugPrint("👉 User tapped notification: ${message.data}");
+      debugPrint('👉 User tapped notification: ${message.data}');
       FireBaseHandling.setupInteractedMessage();
     });
 
     // Print Device Token
-    String? token = await _firebaseMessaging.getToken();
-    debugPrint("📱 Device FCM Token: $token");
+    final String? token = await _firebaseMessaging.getToken();
+    debugPrint('📱 Device FCM Token: $token');
     subscribeToAllUsers();
-    debugPrint("Dddddddddddddddd== fcmToken=>>>>>>>>>>>>> $token");
+    debugPrint('Dddddddddddddddd== fcmToken=>>>>>>>>>>>>> $token');
   }
 
   // static Future<void> init(BuildContext context) async {
@@ -181,15 +181,15 @@ class FirebaseNotificationService {
         provisional: true,
       );
 
-      debugPrint("🔔 User permission: ${settings.authorizationStatus}");
+      debugPrint('🔔 User permission: ${settings.authorizationStatus}');
 
       if (settings.authorizationStatus != AuthorizationStatus.authorized) {
         await customAlertAnimation(
-          alertType: "تحذير",
+          alertType: 'تحذير',
           title:
-              "صديقي, الإشعارات مغلقة لديك ولن تتمكن من إستقبال آخر الاشعارات والتحديثات, من فضلك قم بالسماح للتطبيق بإستقبال الإشعارات",
-          textButton: "السماح بالإشعارات",
-          textSecondButton: "ليس الآن",
+              'صديقي, الإشعارات مغلقة لديك ولن تتمكن من إستقبال آخر الاشعارات والتحديثات, من فضلك قم بالسماح للتطبيق بإستقبال الإشعارات',
+          textButton: 'السماح بالإشعارات',
+          textSecondButton: 'ليس الآن',
           onTap: () =>
               AppSettings.openAppSettings(type: AppSettingsType.notification),
           context: context,
@@ -198,9 +198,9 @@ class FirebaseNotificationService {
     }
   }
 
-  static subscribeToAllUsers() async {
-    await FirebaseMessaging.instance.subscribeToTopic("allUsers");
-    debugPrint("👉👉👉👉👉 subscribeToAllUsers");
+  static Future<void> subscribeToAllUsers() async {
+    await FirebaseMessaging.instance.subscribeToTopic('allUsers');
+    debugPrint('👉👉👉👉👉 subscribeToAllUsers');
   }
 
   /// لما المستخدم يفتح الإشعار (من الـ background أو terminated)
@@ -209,7 +209,7 @@ class FirebaseNotificationService {
     BuildContext context,
   ) {
     if (message.data.isNotEmpty) {
-      debugPrint("👉 User clicked notification with data: ${message.data}");
+      debugPrint('👉 User clicked notification with data: ${message.data}');
 
       // final String? screen = message.data['screen'];
       // if (screen == "dashboard") {

@@ -84,27 +84,27 @@ class HistoryData {
             mainAxisSize: MainAxisSize.min,
             children: [
               CustomText(
-                text: "تحذير",
+                text: 'تحذير',
                 fontSize: 18.sp,
                 color: AppColors.mainColor,
               ),
               const SizedBox(height: 40),
               CustomText(
-                text: "سيتم حذف الجولة رقم ${index + 1}",
+                text: 'سيتم حذف الجولة رقم ${index + 1}',
                 fontSize: 18.sp,
               ),
-              const SizedBox(height: 40),
+                const SizedBox(height: 40),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   TextButton(
                     onPressed: () => Navigator.pop(context),
-                    child: const CustomText(text: "لا", fontSize: 18),
+                    child: const CustomText(text: 'لا', fontSize: 18),
                   ),
                   CustomButton(
                     width: 0.25.sw,
                     height: 40,
-                    text: "نعم",
+                    text: 'نعم',
                     isButtonBorder: true,
                     onPressed: () {
                       gamesCubit.state.data!.removeAt(index);
@@ -134,24 +134,24 @@ class HistoryData {
             mainAxisSize: MainAxisSize.min,
             children: [
               CustomText(
-                text: "تحذير",
+                text: 'تحذير',
                 fontSize: 18.sp,
                 color: AppColors.mainColor,
               ),
               const SizedBox(height: 40),
-              CustomText(text: "سيتم حذف جميع السجلات", fontSize: 18.sp),
+              CustomText(text: 'سيتم حذف جميع السجلات', fontSize: 18.sp),
               const SizedBox(height: 40),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   TextButton(
                     onPressed: () => Navigator.pop(context),
-                    child: const CustomText(text: "لا", fontSize: 18),
+                    child: const CustomText(text: 'لا', fontSize: 18),
                   ),
                   CustomButton(
                     width: 0.25.sw,
                     height: 40,
-                    text: "نعم",
+                    text: 'نعم',
                     isButtonBorder: true,
                     onPressed: () {
                       AppLocalStore.removeString(LocalStoreNames.gamesHistory);

@@ -1,3 +1,4 @@
+import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:screenshot/screenshot.dart';
@@ -5,15 +6,14 @@ import 'package:screw_calculator/components/custom_button.dart';
 import 'package:screw_calculator/components/custom_text.dart';
 import 'package:screw_calculator/components/fade_animation.dart';
 import 'package:screw_calculator/models/player_model.dart';
-import 'package:screw_calculator/screens/dashboard/dashboard_data.dart';
 import 'package:screw_calculator/models/team_model_new.dart';
+import 'package:screw_calculator/screens/dashboard/dashboard_data.dart';
 import 'package:screw_calculator/screens/dashboard/widgets/add_value_dialog.dart';
 import 'package:screw_calculator/screens/dashboard/widgets/dashboard_appbar.dart';
 import 'package:screw_calculator/screens/dashboard/widgets/marquee_bar.dart';
 import 'package:screw_calculator/screens/home/home_data.dart';
-import 'package:screw_calculator/utility/app_theme.dart';
 import 'package:screw_calculator/utility/Enums.dart' as enums;
-import 'package:confetti/confetti.dart';
+import 'package:screw_calculator/utility/app_theme.dart';
 
 class Dashboard extends StatefulWidget {
   final List<PlayerModel> players;

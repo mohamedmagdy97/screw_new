@@ -14,7 +14,7 @@ class CustomText extends StatelessWidget {
   final bool? underline;
 
   const CustomText({
-    Key? key,
+    super.key,
     required this.text,
     this.color = AppColors.white,
     this.fontWeight = FontWeight.normal,
@@ -24,7 +24,7 @@ class CustomText extends StatelessWidget {
     this.height,
     this.underline = false,
     this.maxLines = 20,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

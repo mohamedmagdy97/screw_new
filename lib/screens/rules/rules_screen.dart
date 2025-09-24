@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:screw_calculator/components/custom_text.dart';
+import 'package:screw_calculator/generated/assets.dart';
 import 'package:screw_calculator/screens/rules/widgets/title_with_value.dart';
 import 'package:screw_calculator/utility/app_theme.dart';
 
@@ -12,7 +13,6 @@ class RulesScreen extends StatefulWidget {
 }
 
 class _RulesScreenState extends State<RulesScreen> {
-
   @override
   void initState() {
     super.initState();
@@ -51,7 +51,7 @@ class _RulesScreenState extends State<RulesScreen> {
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 28.0),
-            child: Image.asset('assets/icons/icon.png', height: 0.10.sh),
+            child: Image.asset(Assets.iconsIcon, height: 0.10.sh),
           ),
           const TitleWithValue(
             title: 'قواعد اللعبة',

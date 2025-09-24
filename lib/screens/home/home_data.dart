@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:screw_calculator/cubits/generic_cubit/generic_cubit.dart';
 import 'package:screw_calculator/models/item.dart';
 import 'package:screw_calculator/models/player_model.dart';
 import 'package:screw_calculator/screens/dashboard/dashboard.dart';
-import 'package:in_app_review/in_app_review.dart';
 
 HomeData homeData = HomeData();
 
@@ -41,7 +41,7 @@ class HomeData {
     listCubit.update(
       data: List.generate(
         11,
-        (index) => Item(key: index + 2, value: "${index + 2}", isActive: false),
+        (index) => Item(key: index + 2, value: '${index + 2}', isActive: false),
       ),
     );
 
@@ -53,7 +53,7 @@ class HomeData {
     listTeamsCubit.update(
       data: List.generate(
         3,
-        (index) => Item(key: index + 2, value: "${index + 2}", isActive: false),
+        (index) => Item(key: index + 2, value: '${index + 2}', isActive: false),
       ),
     );
 
@@ -91,7 +91,7 @@ class HomeData {
       (teamsMode ? listTeamsCubit : listCubit).state.data!
               .firstWhere((element) => element.isActive!)
               .value ??
-          "2",
+          '2',
     );
 
     players.removeWhere((element) => element.id! > playersCount);
@@ -144,7 +144,7 @@ class HomeData {
               .where((element) => element.isActive!)
               .toList()[0]
               .value ??
-          "2",
+          '2',
     )) {
       case 2:
         playersCount = 4;
@@ -200,12 +200,12 @@ class HomeData {
 
   void clearValues() {
     players.forEach((element) {
-      element.gw1 = "";
-      element.gw2 = "";
-      element.gw3 = "";
-      element.gw4 = "";
-      element.gw5 = "";
-      element.total = "0";
+      element.gw1 = '';
+      element.gw2 = '';
+      element.gw3 = '';
+      element.gw4 = '';
+      element.gw5 = '';
+      element.total = '0';
     });
   }
 

@@ -9,5 +9,5 @@ void main() async {
   await Firebase.initializeApp();
 
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  runApp(ForceUpdateWrapper(child: const MyApp()));
+  runApp(const ForceUpdateWrapper(child: MyApp()));
 }

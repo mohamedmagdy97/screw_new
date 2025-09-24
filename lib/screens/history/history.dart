@@ -36,7 +36,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
         centerTitle: true,
         automaticallyImplyLeading: false,
         backgroundColor: AppColors.grayy,
-        title: CustomText(text: "الجولات السابقة", fontSize: 22.sp),
+        title: CustomText(text: 'الجولات السابقة', fontSize: 22.sp),
         actions: [
           IconButton(
               onPressed: () => Navigator.pop(context),
@@ -86,14 +86,14 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           CustomText(
-                            text: "الجولة ${index + 1} ",
+                            text: 'الجولة ${index + 1} ',
                             fontSize: 18,
                             fontFamily: AppFonts.bold,
                             textAlign: TextAlign.end,
                           ),
                           CustomText(
                             text:
-                                "(${state.data![index].game!.reduce((curr, next) => int.parse(curr.total!) < int.parse(next.total!) ? (curr) : (next)).name.toString()}) صاحب أقل سكور ",
+                                '(${state.data![index].game!.reduce((curr, next) => int.parse(curr.total!) < int.parse(next.total!) ? (curr) : (next)).name.toString()}) صاحب أقل سكور ',
                             fontSize: 14,
                             textAlign: TextAlign.end,
                           ),
@@ -109,7 +109,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
           } else {
             return const Center(
               child: CustomText(
-                  text: "لا يوجد سجلات سابقة",
+                  text: 'لا يوجد سجلات سابقة',
                   fontSize: 20,
                   textAlign: TextAlign.end),
             );

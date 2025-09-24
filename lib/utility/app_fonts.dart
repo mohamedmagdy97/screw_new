@@ -1,8 +1,8 @@
 part of 'app_theme.dart';
 
 class AppFonts {
-  static String regular = "JannaLT-Regular"; //  CodecPro-Regular
-  static String bold = "JannaLT-Bold"; // codec-pro-bold
+  static String regular = 'JannaLT-Regular'; //  CodecPro-Regular
+  static String bold = 'JannaLT-Bold'; // codec-pro-bold
 
 
   //Regular

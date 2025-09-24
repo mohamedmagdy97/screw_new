@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:screw_calculator/components/build_fancy_route.dart';
 import 'package:screw_calculator/components/custom_text.dart';
+import 'package:screw_calculator/generated/assets.dart';
 import 'package:screw_calculator/screens/contact_us/contact_us.dart';
 import 'package:screw_calculator/screens/history/history.dart';
 import 'package:screw_calculator/screens/home/home_data.dart';
@@ -26,7 +27,7 @@ class DrawerWidget extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(top: 32.0),
-                  child: Image.asset('assets/icons/icon.png', height: 0.15.sh),
+                  child: Image.asset(Assets.iconsIcon, height: 0.15.sh),
 
                   // Icon(Icons.gavel_sharp,
                   //     size: 50, color: Colors.white),

@@ -6,7 +6,7 @@ class FireBaseHandling {
   static Future<void> setupInteractedMessage() async {
     // Get any messages which caused the application to open from
     // a terminated state.
-    RemoteMessage? initialMessage = await FirebaseMessaging.instance
+    final RemoteMessage? initialMessage = await FirebaseMessaging.instance
         .getInitialMessage();
 
     // If the message also contains a data property with a "type" of "chat",
@@ -16,7 +16,7 @@ class FireBaseHandling {
     }
   }
 
-  static _handleMessage(RemoteMessage? message) {
-    log(">>>>>>>>>>>>>>>>>>>>>> object ==>>RemoteMessage>=${message!}");
+  static void _handleMessage(RemoteMessage? message) {
+    log('>>>>>>>>>>>>>>>>>>>>>> object ==>>RemoteMessage>=${message!}');
   }
 }

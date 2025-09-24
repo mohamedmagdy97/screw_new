@@ -241,19 +241,19 @@ class AddValueDialog extends StatelessWidget {
             CustomButton(
               text: ' سكرو (0) ',
               onPressed: () {
-                dashboardData.controller.text = "0";
+                dashboardData.controller.text = '0';
                 // if (!formKey.currentState!.validate()) {
                 //   return;
                 // }
                 Navigator.pop(context);
                 if (player.gw1!.isEmpty) {
-                  player.gw1 = "0";
+                  player.gw1 = '0';
 
                   player.total =
                       (int.parse(player.gw1.toString())).toString();
                 } else if (player.gw2!.isEmpty &&
                     player.gw1!.isNotEmpty) {
-                  player.gw2 = "0";
+                  player.gw2 = '0';
 
                   player.total =
                       (int.parse(player.gw1.toString()) +
@@ -262,7 +262,7 @@ class AddValueDialog extends StatelessWidget {
                 } else if (player.gw3!.isEmpty &&
                     player.gw2!.isNotEmpty &&
                     player.gw1!.isNotEmpty) {
-                  player.gw3 = "0";
+                  player.gw3 = '0';
 
                   player.total =
                       (int.parse(player.gw1.toString()) +
@@ -273,7 +273,7 @@ class AddValueDialog extends StatelessWidget {
                     player.gw3!.isNotEmpty &&
                     player.gw2!.isNotEmpty &&
                     player.gw1!.isNotEmpty) {
-                  player.gw4 = "0";
+                  player.gw4 = '0';
 
                   player.total =
                       (int.parse(player.gw1.toString()) +
@@ -286,7 +286,7 @@ class AddValueDialog extends StatelessWidget {
                     player.gw3!.isNotEmpty &&
                     player.gw2!.isNotEmpty &&
                     player.gw1!.isNotEmpty) {
-                  player.gw5 = "0";
+                  player.gw5 = '0';
                   player.total =
                       (int.parse(player.gw1.toString()) +
                               int.parse(player.gw2.toString()) +
@@ -303,7 +303,7 @@ class AddValueDialog extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             CustomText(
-              text: "انتبه لا يمكن التعديل على النتيجة",
+              text: 'انتبه لا يمكن التعديل على النتيجة',
               fontSize: 14.sp,
               color: Colors.red,
               fontWeight: FontWeight.bold,

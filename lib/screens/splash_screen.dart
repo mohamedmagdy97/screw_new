@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:screw_calculator/components/custom_text.dart';
+import 'package:screw_calculator/generated/assets.dart';
 import 'package:screw_calculator/screens/game_mode/game_mode.dart';
 import 'package:screw_calculator/utility/app_theme.dart';
 
@@ -62,7 +63,7 @@ class _SplashScreenState extends State<SplashScreen> {
             SizedBox(height: 80.h),
             Padding(
               padding: EdgeInsets.all(24.sp),
-              child: Image.asset('assets/icons/icon.png', height: 0.15.sh),
+              child: Image.asset(Assets.iconsIcon, height: 0.15.sh),
             ),
             SizedBox(height: 25.h),
             const CustomText(text: 'صلي على النبي', fontSize: 16),

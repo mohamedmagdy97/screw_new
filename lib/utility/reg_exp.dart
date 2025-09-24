@@ -23,4 +23,4 @@ RegExp regExpName = RegExp(
 );
 
 RegExp regExpNumber =
-    RegExp("[a-zA-Z ]*\\d+.*", caseSensitive: false, multiLine: false);
+    RegExp('[a-zA-Z ]*\\d+.*', caseSensitive: false, multiLine: false);

@@ -34,14 +34,14 @@ class _GameModeState extends State<GameMode> {
           centerTitle: true,
           automaticallyImplyLeading: false,
           backgroundColor: AppColors.grayy,
-          title: CustomText(text: "سكرو حاسبة", fontSize: 22.sp),
+          title: CustomText(text: 'سكرو حاسبة', fontSize: 22.sp),
         ),
         backgroundColor: AppColors.bg,
         body: ListView(
           padding: const EdgeInsets.all(24),
           children: [
             CustomText(
-              text: "اختر وضع اللعبة",
+              text: 'اختر وضع اللعبة',
               fontSize: 16.sp,
               textAlign: TextAlign.center,
             ),
@@ -127,7 +127,7 @@ class _GameModeState extends State<GameMode> {
                     ),
                     const SizedBox(height: 36),
                     CustomButton(
-                      text: "التالي",
+                      text: 'التالي',
                       onPressed: () => gameModeData.goHome(
                         context,
                         state.data!

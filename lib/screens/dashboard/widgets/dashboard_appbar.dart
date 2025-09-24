@@ -25,7 +25,7 @@ class DashBoardAppBar extends PreferredSize {
                   barrierDismissible: false,
                   barrierColor: Colors.black54,
                   transitionDuration: const Duration(milliseconds: 450),
-                  pageBuilder: (_, __, ___) => const SizedBox.shrink(),
+                  pageBuilder: (_, _, _) => const SizedBox.shrink(),
                   transitionBuilder: (ctx, anim, _, child) {
                     //       final curvedValue = Curves.easeInOut.transform(anim.value);
                     //       return Transform.scale(
@@ -62,7 +62,7 @@ class DashBoardAppBar extends PreferredSize {
           ),
         ),
       ],
-      title: CustomText(text: "النتائج", fontSize: 22.sp),
+      title: CustomText(text: 'النتائج', fontSize: 22.sp),
     );
   }
 
@@ -76,12 +76,12 @@ class DashBoardAppBar extends PreferredSize {
           mainAxisSize: MainAxisSize.min,
           children: [
             CustomText(
-              text: "تحذير",
+              text: 'تحذير',
               fontSize: 18.sp,
               color: AppColors.mainColor,
             ),
             const SizedBox(height: 40),
-            CustomText(text: "هل تريد إعادة بدأ الجولة؟", fontSize: 18.sp),
+            CustomText(text: 'هل تريد إعادة بدأ الجولة؟', fontSize: 18.sp),
             const SizedBox(height: 40),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -90,12 +90,12 @@ class DashBoardAppBar extends PreferredSize {
                   onPressed: () {
                     Navigator.pop(dialogContext);
                   },
-                  child: const CustomText(text: "لا", fontSize: 18),
+                  child: const CustomText(text: 'لا', fontSize: 18),
                 ),
                 CustomButton(
                   width: 0.25.sw,
                   height: 40,
-                  text: "نعم",
+                  text: 'نعم',
                   isButtonBorder: true,
                   onPressed: () {
                     Navigator.pop(dialogContext);
