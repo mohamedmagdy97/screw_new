@@ -353,18 +353,43 @@ class _DashboardState extends State<Dashboard> {
                 : const SizedBox();
           })..addAll([
             if (player.gw5!.isEmpty)
-              IconButton(
-                onPressed: player.gw5?.isNotEmpty ?? false
-                    ? null
-                    : () async {
-                        await addValue(context, player: player);
-                        setState(() {});
-                      },
-                icon: const Icon(
-                  Icons.add_circle_sharp,
-                  color: AppColors.white,
-                  size: 30,
-                ),
+              Row(
+                children: [
+                  if (player.gw1!.isNotEmpty)
+                    IconButton(
+                      padding: EdgeInsets.zero,
+
+                      onPressed: player.gw5?.isNotEmpty ?? false
+                          ? null
+                          : () async {
+                              await addValue(
+                                context,
+                                player: player,
+                                edit: true,
+                              );
+                              setState(() {});
+                            },
+                      icon: const Icon(
+                        Icons.edit,
+                        color: AppColors.white,
+                        size: 20,
+                      ),
+                    ),
+                  IconButton(
+                    padding: EdgeInsets.zero,
+                    onPressed: player.gw5?.isNotEmpty ?? false
+                        ? null
+                        : () async {
+                            await addValue(context, player: player);
+                            setState(() {});
+                          },
+                    icon: const Icon(
+                      Icons.add_circle_sharp,
+                      color: AppColors.white,
+                      size: 24,
+                    ),
+                  ),
+                ],
               ),
             const Spacer(),
             CustomText(text: '=', fontSize: 20.sp),
@@ -390,18 +415,28 @@ class _DashboardState extends State<Dashboard> {
     ];
   }
 
-  addValue(BuildContext context, {required PlayerModel player}) {
+  addValue(
+    BuildContext context, {
+    required PlayerModel player,
+    bool? edit = false,
+  }) {
     showGeneralDialog(
       context: context,
       barrierDismissible: true,
       barrierLabel: 'Dismiss',
       barrierColor: Colors.black54,
       transitionDuration: const Duration(milliseconds: 300),
-      pageBuilder: (context, anim1, anim2) => AddValueDialog(
-        dashboardData: dashboardData,
-        player: player,
-        fun: () => setState(() {}),
-      ),
+      pageBuilder: (context, anim1, anim2) => (edit ?? false)
+          ? EditValueDialog(
+              dashboardData: dashboardData,
+              player: player,
+              fun: () => setState(() {}),
+            )
+          : AddValueDialog(
+              dashboardData: dashboardData,
+              player: player,
+              fun: () => setState(() {}),
+            ),
       transitionBuilder: (context, anim, secondaryAnim, child) {
         final curvedValue = Curves.easeInOut.transform(anim.value);
 
@@ -409,11 +444,17 @@ class _DashboardState extends State<Dashboard> {
           scale: curvedValue,
           child: Opacity(
             opacity: anim.value,
-            child: AddValueDialog(
-              dashboardData: dashboardData,
-              player: player,
-              fun: () => setState(() {}),
-            ),
+            child: (edit ?? false)
+                ? EditValueDialog(
+                    dashboardData: dashboardData,
+                    player: player,
+                    fun: () => setState(() {}),
+                  )
+                : AddValueDialog(
+                    dashboardData: dashboardData,
+                    player: player,
+                    fun: () => setState(() {}),
+                  ),
           ),
         );
       },
