@@ -83,8 +83,8 @@ class _ContactUSState extends State<ContactUS> {
                       },
                       child: const Image(
                         image: AssetImage(Assets.linkedInIcon),
-                        height: 55,
-                        width: 55,
+                        height: 50,
+                        width: 50,
                       ),
                     ),
                     InkWell(
@@ -99,8 +99,8 @@ class _ContactUSState extends State<ContactUS> {
                       },
                       child: const Image(
                         image: AssetImage(Assets.whatsappIcon),
-                        height: 55,
-                        width: 55,
+                        height: 50,
+                        width: 50,
                       ),
                     ),
                     InkWell(
@@ -115,8 +115,8 @@ class _ContactUSState extends State<ContactUS> {
                       },
                       child: const Image(
                         image: AssetImage(Assets.githubIcon),
-                        height: 55,
-                        width: 55,
+                        height: 50,
+                        width: 50,
                         color: AppColors.white,
                       ),
                     ),
