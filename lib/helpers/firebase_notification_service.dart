@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:app_settings/app_settings.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -5,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:screw_calculator/components/custom_dialog.dart';
 import 'package:screw_calculator/helpers/firbase_handling.dart';
+import 'package:screw_calculator/screens/notifications/notifications_data.dart';
 
 /// Plugin Instance
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -16,8 +19,17 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
   // await FirebaseNotificationService.setupLocalNotifications();
   debugPrint('🔔 Handling a background message: ${message.messageId}');
-
+  final imageUrl =
+      message.notification!.android?.imageUrl ??
+      message.notification!.apple?.imageUrl ??
+      'https://i.ibb.co/N2gS7rd9/play-store-512.png';
   if (message.notification != null) {
+    await notificationsData.addNotification(
+      title: message.notification!.title ?? '',
+      description: message.notification!.body ?? '',
+      type: 'general',
+      image: imageUrl,
+    );
     // FirebaseNotificationService.showNotification(
     //   message.notification!.title ?? "No Title",
     //   message.notification!.body ?? "No Body",
@@ -41,15 +53,30 @@ class FirebaseNotificationService {
     FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
     // Foreground messages
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      debugPrint('📩 Foreground: ${message.notification?.title}');
-      debugPrint('📩 Foreground body: ${message.notification?.body}');
-      debugPrint('📩 Foreground data: ${message.data}');
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+      log('📩 Foreground: ${message.notification?.title}');
+      log('📩 Foreground body: ${message.notification?.body}');
+      log('📩 Foreground imageUrl: ${message.notification!.android?.imageUrl}');
 
+      // final imageUrl = message.notification!.android?.imageUrl ??
+      //                      message.notification!.apple?.imageUrl ??
+      //                      message.notification?.web?.imageUrl;
+      // debugPrint('📩 Foreground data: ${message.data}');
+      final imageUrl =
+          message.notification!.android?.imageUrl ??
+          message.notification!.apple?.imageUrl ??
+          'https://i.ibb.co/N2gS7rd9/play-store-512.png';
       if (message.notification != null) {
         showNotification(
           message.notification!.title ?? 'No Title',
           message.notification!.body ?? 'No Body',
+        );
+
+        await notificationsData.addNotification(
+          title: message.notification!.title ?? '',
+          description: message.notification!.body ?? '',
+          type: 'general',
+          image: imageUrl, // logo
         );
       }
     });

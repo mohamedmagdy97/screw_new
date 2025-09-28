@@ -43,17 +43,28 @@ class CustomButton extends StatelessWidget {
       width: width,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(borderRadius ?? 12.sp),
-        color: isSecondButton
-            ? AppColors.secondaryColorOpacity
-            : isButtonBorder
-                ? Colors.transparent
-                : color ?? AppColors.mainColor,
+        gradient: LinearGradient(
+          colors: isSecondButton || isButtonBorder
+              ? [Colors.transparent, Colors.transparent]
+              : [
+                  color ?? Colors.purple.shade600,
+                  color ?? Colors.purple.shade800,
+                ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        // color: isSecondButton
+        //     ? AppColors.secondaryColorOpacity
+        //     : isButtonBorder
+        //         ? Colors.transparent
+        //         : color ?? AppColors.mainColor,
         border: isButtonBorder
             ? Border.all(
                 color: borderColor == null
                     ? AppColors.secondaryColor
                     : borderColor!,
-                width: 1)
+                width: 1,
+              )
             : null,
       ),
       child: Material(
@@ -64,15 +75,16 @@ class CustomButton extends StatelessWidget {
               onPressed == null ? Navigator.pop(context) : onPressed!(),
           child: Center(
             child: Padding(
-              padding:
-                  EdgeInsets.symmetric(horizontal: horizontalPadding ?? 4.0),
+              padding: EdgeInsets.symmetric(
+                horizontal: horizontalPadding ?? 4.0,
+              ),
               child: CustomText(
                 text: text,
                 fontSize: fontSize ?? 20.sp,
                 fontFamily: isSecondButton
                     ? fontFamily == AppFonts.regular
-                        ? AppFonts.regular
-                        : AppFonts.bold
+                          ? AppFonts.regular
+                          : AppFonts.bold
                     : fontFamily ?? AppFonts.regular,
                 fontWeight: AppFonts.w400,
                 height: 1,

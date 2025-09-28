@@ -76,9 +76,19 @@ class _GameModeState extends State<GameMode> {
                                   ),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(12),
-                                    color: state.data![index].isActive!
-                                        ? AppColors.mainColor
-                                        : Colors.transparent,
+                                    gradient: LinearGradient(
+                                      colors: state.data![index].isActive!
+                                          ? [
+                                              Colors.purple.shade600,
+                                              Colors.purple.shade800,
+                                            ]
+                                          : [
+                                              Colors.transparent,
+                                              Colors.transparent,
+                                            ],
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                    ),
                                     border: Border.all(
                                       color: state.data![index].isActive!
                                           ? Colors.transparent

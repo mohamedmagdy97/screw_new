@@ -6,6 +6,7 @@ import 'package:screw_calculator/generated/assets.dart';
 import 'package:screw_calculator/screens/contact_us/contact_us.dart';
 import 'package:screw_calculator/screens/history/history.dart';
 import 'package:screw_calculator/screens/home/home_data.dart';
+import 'package:screw_calculator/screens/notifications/notifications_screen.dart';
 import 'package:screw_calculator/screens/rules/rules_screen.dart';
 import 'package:screw_calculator/screens/show_video/show_video_youtube.dart';
 import 'package:screw_calculator/utility/app_theme.dart';
@@ -17,10 +18,10 @@ class DrawerWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 0.7.sw,
-      padding: EdgeInsets.only(top: 60.h, bottom: 54.h),
+      padding: EdgeInsets.only(top: 55.h, bottom: 54.h),
       child: SafeArea(
         child: Drawer(
-          backgroundColor: AppColors.opacity_1,
+          backgroundColor: AppColors.opacity_1.withOpacity(0.8),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: Column(
@@ -38,9 +39,10 @@ class DrawerWidget extends StatelessWidget {
                 ),
                 const Divider(endIndent: 10, indent: 10),
                 ListTile(
-                  onTap: () => routeFromDrawer(context, const HistoryScreen()),
+                  onTap: () =>
+                      routeFromDrawer(context, const NotificationsScreen()),
                   title: const CustomText(
-                    text: 'الجولات السابقة',
+                    text: 'الاشعارات ',
                     fontSize: 16,
                     textAlign: TextAlign.end,
                   ),
@@ -54,13 +56,24 @@ class DrawerWidget extends StatelessWidget {
                   ),
                 ),
                 ListTile(
-                  onTap: () => routeFromDrawer(context, const YoutubeLikePlayer()),
+                  onTap: () => routeFromDrawer(context, const HistoryScreen()),
+                  title: const CustomText(
+                    text: 'الجولات السابقة',
+                    fontSize: 16,
+                    textAlign: TextAlign.end,
+                  ),
+                ),
+
+                ListTile(
+                  onTap: () =>
+                      routeFromDrawer(context, const YoutubeLikePlayer()),
                   title: const CustomText(
                     text: 'فيديو شرح اللعبة',
                     fontSize: 16,
                     textAlign: TextAlign.end,
                   ),
                 ),
+
                 ListTile(
                   onTap: () => routeFromDrawer(context, const ContactUS()),
                   title: const CustomText(
@@ -79,7 +92,7 @@ class DrawerWidget extends StatelessWidget {
                 ),
 
                 const Spacer(),
-                const CustomText(text: 'version 1.0.6', fontSize: 16),
+                const CustomText(text: 'version 1.0.8', fontSize: 16),
               ],
             ),
           ),
