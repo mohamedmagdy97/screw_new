@@ -292,12 +292,13 @@ class AddValueDialog extends StatelessWidget {
               },
             ),
             const SizedBox(height: 16),
-            CustomText(
-              text: 'انتبه لا يمكن التعديل على النتيجة',
-              fontSize: 14.sp,
-              color: Colors.red,
-              fontWeight: FontWeight.bold,
-            ),
+            if (player.gw4!.isNotEmpty && player.gw5!.isEmpty)
+              CustomText(
+                text: 'انتبه لا يمكن التعديل على النتيجة',
+                fontSize: 14.sp,
+                color: Colors.red,
+                fontWeight: FontWeight.bold,
+              ),
           ],
         ),
       ),

@@ -50,9 +50,19 @@ class ClassicMode extends StatelessWidget {
                             ),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12.sp),
-                              color: state.data![index].isActive!
-                                  ? AppColors.mainColor
-                                  : null,
+                              gradient: LinearGradient(
+                                colors: state.data![index].isActive!
+                                    ? [
+                                        Colors.purple.shade600,
+                                        Colors.purple.shade800,
+                                      ]
+                                    : [Colors.transparent, Colors.transparent],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                              // color: state.data![index].isActive!
+                              //     ? AppColors.mainColor
+                              //     : null,
                               border: Border.all(
                                 color: !state.data![index].isActive!
                                     ? AppColors.mainColor
