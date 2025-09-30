@@ -6,6 +6,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:screw_calculator/components/custom_dialog.dart';
+import 'package:screw_calculator/helpers/app_print.dart';
 import 'package:screw_calculator/helpers/firbase_handling.dart';
 import 'package:screw_calculator/screens/notifications/notifications_data.dart';
 
@@ -28,6 +29,7 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
       title: message.notification!.title ?? '',
       description: message.notification!.body ?? '',
       type: 'general',
+      messageId: message.messageId ?? '',
       image: imageUrl,
     );
     // FirebaseNotificationService.showNotification(
@@ -54,14 +56,15 @@ class FirebaseNotificationService {
 
     // Foreground messages
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-      log('📩 Foreground: ${message.notification?.title}');
-      log('📩 Foreground body: ${message.notification?.body}');
-      log('📩 Foreground imageUrl: ${message.notification!.android?.imageUrl}');
+      Printing.info('📩 Foreground: ${message.notification?.title}');
+      Printing.info('📩 Foreground body: ${message.notification?.body}');
+      Printing.info(
+        '📩 Foreground imageUrl: ${message.notification!.android?.imageUrl}',
+      );
+      Printing.info('📩 Foreground messageId: ${message.messageId!}');
+      Printing.info('📩 Foreground ttl: ${message.ttl!}');
 
-      // final imageUrl = message.notification!.android?.imageUrl ??
-      //                      message.notification!.apple?.imageUrl ??
-      //                      message.notification?.web?.imageUrl;
-      // debugPrint('📩 Foreground data: ${message.data}');
+      final String messageId = message.messageId ?? '';
       final imageUrl =
           message.notification!.android?.imageUrl ??
           message.notification!.apple?.imageUrl ??
@@ -76,6 +79,7 @@ class FirebaseNotificationService {
           title: message.notification!.title ?? '',
           description: message.notification!.body ?? '',
           type: 'general',
+          messageId: messageId,
           image: imageUrl, // logo
         );
       }
@@ -89,9 +93,10 @@ class FirebaseNotificationService {
 
     // Print Device Token
     final String? token = await _firebaseMessaging.getToken();
-    debugPrint('📱 Device FCM Token: $token');
     subscribeToAllUsers();
-    debugPrint('Dddddddddddddddd== fcmToken=>>>>>>>>>>>>> $token');
+    Printing.info('📱 Device FCM Token: $token');
+
+    await notificationsData.addToken(token: token ?? '');
   }
 
   // static Future<void> init(BuildContext context) async {

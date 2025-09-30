@@ -10,6 +10,9 @@ class NotificationModel {
   final bool isRead;
   final String priority;
   final String? actionUrl;
+  final String? createdAt;
+  final String? token;
+  final String? messageId;
 
   NotificationModel({
     required this.id,
@@ -21,6 +24,9 @@ class NotificationModel {
     this.isRead = false,
     this.priority = 'low',
     this.actionUrl,
+    this.createdAt,
+    this.token,
+    this.messageId,
   });
 
   factory NotificationModel.fromJson(Map<String, dynamic> json, String docId) {
@@ -49,6 +55,9 @@ class NotificationModel {
           : json['isRead'].toString().toLowerCase() == 'true',
       priority: json['priority']!.toString(),
       actionUrl: json['actionUrl']!.toString(),
+      createdAt: json['createdAt']!.toString(),
+      messageId: json['messageId'] != null ? json['messageId']!.toString() : '',
+      token: json['token'] != null ? json['token']!.toString() : '',
     );
   }
 
@@ -62,6 +71,8 @@ class NotificationModel {
       'isRead': isRead,
       'priority': priority,
       'actionUrl': actionUrl,
+      'messageId': messageId,
+      'token': token,
       'createdAt': DateTime.now().toIso8601String(),
     };
   }
