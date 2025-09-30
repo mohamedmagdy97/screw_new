@@ -356,10 +356,8 @@ class _DashboardState extends State<Dashboard> {
               Row(
                 children: [
                   if (player.gw1!.isNotEmpty)
-                    IconButton(
-                      padding: EdgeInsets.zero,
-
-                      onPressed: player.gw5?.isNotEmpty ?? false
+                    InkWell(
+                      onTap: player.gw5?.isNotEmpty ?? false
                           ? null
                           : () async {
                               await addValue(
@@ -369,24 +367,31 @@ class _DashboardState extends State<Dashboard> {
                               );
                               setState(() {});
                             },
-                      icon: const Icon(
-                        Icons.edit,
-                        color: AppColors.white,
-                        size: 20,
+                      borderRadius: BorderRadius.circular(50),
+                      child: const Padding(
+                        padding: EdgeInsets.all(6.0),
+                        child: Icon(
+                          Icons.edit,
+                          color: AppColors.white,
+                          size: 22,
+                        ),
                       ),
                     ),
-                  IconButton(
-                    padding: EdgeInsets.zero,
-                    onPressed: player.gw5?.isNotEmpty ?? false
+                  InkWell(
+                    onTap: player.gw5?.isNotEmpty ?? false
                         ? null
                         : () async {
                             await addValue(context, player: player);
                             setState(() {});
                           },
-                    icon: const Icon(
-                      Icons.add_circle_sharp,
-                      color: AppColors.white,
-                      size: 24,
+                    borderRadius: BorderRadius.circular(50),
+                    child: const Padding(
+                      padding: EdgeInsets.all(6.0),
+                      child: Icon(
+                        Icons.add_circle_sharp,
+                        color: AppColors.white,
+                        size: 24,
+                      ),
                     ),
                   ),
                 ],
@@ -408,7 +413,6 @@ class _DashboardState extends State<Dashboard> {
       const SizedBox(height: 8),
       CustomButton(
         text: 'حفظ',
-        color: AppColors.textColorTitle,
         onPressed: () => dashboardData.saveGame(widget.players, context),
       ),
       const SizedBox(height: 20),
