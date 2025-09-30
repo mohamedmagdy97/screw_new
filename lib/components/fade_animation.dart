@@ -8,7 +8,7 @@ class FadeSlide extends StatefulWidget {
   const FadeSlide({
     super.key,
     required this.child,
-    this.duration = const Duration(milliseconds: 1500),
+    this.duration = const Duration(milliseconds: 750),
     this.begin = const Offset(0, 1),
   });
 

@@ -21,7 +21,7 @@ class DrawerWidget extends StatelessWidget {
       padding: EdgeInsets.only(top: 55.h, bottom: 54.h),
       child: SafeArea(
         child: Drawer(
-          backgroundColor: AppColors.opacity_1.withOpacity(0.8),
+          backgroundColor: AppColors.drawerBg,
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: Column(
@@ -37,8 +37,14 @@ class DrawerWidget extends StatelessWidget {
                   padding: EdgeInsets.symmetric(vertical: 32.0),
                   child: CustomText(text: 'آهلا بيك يا صديقي', fontSize: 16),
                 ),
-                const Divider(endIndent: 10, indent: 10),
+                Divider(
+                  endIndent: 10,
+                  indent: 10,
+                  height: 8,
+                  color: AppColors.mainColor.withValues(alpha: 0.5),
+                ),
                 ListTile(
+                  minTileHeight: 0,
                   onTap: () =>
                       routeFromDrawer(context, const NotificationsScreen()),
                   title: const CustomText(
@@ -47,7 +53,11 @@ class DrawerWidget extends StatelessWidget {
                     textAlign: TextAlign.end,
                   ),
                 ),
+                const Divider(height: 2, color: AppColors.opacity_1),
+
                 ListTile(
+                  minTileHeight: 0,
+
                   onTap: () => routeFromDrawer(context, const RulesScreen()),
                   title: const CustomText(
                     text: 'قوانين اللعبة',
@@ -55,7 +65,11 @@ class DrawerWidget extends StatelessWidget {
                     textAlign: TextAlign.end,
                   ),
                 ),
+                const Divider(height: 2, color: AppColors.opacity_1),
+
                 ListTile(
+                  minTileHeight: 0,
+
                   onTap: () => routeFromDrawer(context, const HistoryScreen()),
                   title: const CustomText(
                     text: 'الجولات السابقة',
@@ -63,8 +77,10 @@ class DrawerWidget extends StatelessWidget {
                     textAlign: TextAlign.end,
                   ),
                 ),
+                const Divider(height: 2, color: AppColors.opacity_1),
 
                 ListTile(
+                  minTileHeight: 0,
                   onTap: () =>
                       routeFromDrawer(context, const YoutubeLikePlayer()),
                   title: const CustomText(
@@ -73,8 +89,10 @@ class DrawerWidget extends StatelessWidget {
                     textAlign: TextAlign.end,
                   ),
                 ),
+                const Divider(height: 2, color: AppColors.opacity_1),
 
                 ListTile(
+                  minTileHeight: 0,
                   onTap: () => routeFromDrawer(context, const ContactUS()),
                   title: const CustomText(
                     text: 'للاقتراحات والتواصل معنا ',
@@ -82,7 +100,9 @@ class DrawerWidget extends StatelessWidget {
                     textAlign: TextAlign.end,
                   ),
                 ),
+                const Divider(height: 2, color: AppColors.opacity_1),
                 ListTile(
+                  minTileHeight: 0,
                   onTap: () => homeData.rateMyApp(),
                   title: const CustomText(
                     text: '⭐ قيمنا',
@@ -90,9 +110,10 @@ class DrawerWidget extends StatelessWidget {
                     textAlign: TextAlign.end,
                   ),
                 ),
+                const Divider(height: 2, color: AppColors.opacity_1),
 
                 const Spacer(),
-                const CustomText(text: 'version 1.0.8', fontSize: 16),
+                const CustomText(text: 'version 1.0.9', fontSize: 16),
               ],
             ),
           ),
@@ -103,7 +124,7 @@ class DrawerWidget extends StatelessWidget {
 }
 
 void routeFromDrawer(BuildContext context, Widget widget) async {
-  Navigator.of(context).pop(); // close drawer first
+  Navigator.of(context).pop();
   await Future.delayed(const Duration(milliseconds: 250));
 
   Navigator.of(context).push(buildFancyRoute(widget));
