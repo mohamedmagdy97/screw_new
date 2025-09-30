@@ -113,7 +113,26 @@ class DrawerWidget extends StatelessWidget {
                 const Divider(height: 2, color: AppColors.opacity_1),
 
                 const Spacer(),
-                const CustomText(text: 'version 1.0.9', fontSize: 16),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          CustomText(text: '© ', fontSize: 16),
+                          CustomText(text: 'MegTech', fontSize: 14),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          CustomText(text: 'version - ', fontSize: 16),
+                          CustomText(text: 'v2.0', fontSize: 13),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
