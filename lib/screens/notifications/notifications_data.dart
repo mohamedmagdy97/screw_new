@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:screw_calculator/helpers/app_print.dart';
+import 'package:screw_calculator/helpers/device_info.dart';
 import 'package:screw_calculator/models/notification_model.dart';
 import 'package:uuid/uuid.dart';
 
@@ -34,7 +35,7 @@ class NotificationsData {
         .collection('notifications');
 
     final snapshot = await notifications
-        .where('messageId', isEqualTo: messageId)
+        .where('description', isEqualTo: description)
         .get();
 
     if (snapshot.docs.isNotEmpty) {
@@ -48,10 +49,14 @@ class NotificationsData {
   }
 
   Future<void> addToken({required String token}) async {
+    final String deviceName = await getDeviceName();
+    Printing.info('deviceName ==$deviceName');
+
     final id = const Uuid().v4();
     final userToken = {
       'id': id,
       'token': token,
+      'deviceName': deviceName,
       'datetime': DateTime.now(),
       'createdAt': FieldValue.serverTimestamp(),
     };

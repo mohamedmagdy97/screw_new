@@ -83,23 +83,48 @@ class _RulesScreenState extends State<RulesScreen> {
               textAlign: TextAlign.center,
             ),
           ),
+          CustomText(text: 'الكروت الجديدة (أوسكار)', fontSize: 16.sp),
+          const Divider(),
+          const TitleWithValue(
+            title: 'كارت بوم',
+            highlight: true,
+            isOscar: true,
+            value:
+                'دا زي لغم اللي هيرميه هيخلي كل اللي بيلعبوا يبصرو ماعدا هو.',
+          ),
+          const TitleWithValue(
+            title: 'كارت الايف جاكيت',
+            highlight: true,
+            isOscar: true,
+            value: 'بياخد قيمة أقل قيمة كارت في الكروت اللي معاك.',
+          ),
+          const TitleWithValue(
+            title: 'كارت صرخة أوسكار',
+            highlight: true,
+            isOscar: true,
+            value:
+                'بتجمعوا كل الكروت اللي مع بعض وتفنطوها تاني وتوزعوا الكروت بنفس عدد الكروت اللي كانت مع كل واحد.',
+          ),
           CustomText(text: 'الكروت الجديدة (رمضان)', fontSize: 16.sp),
           const Divider(),
           const TitleWithValue(
             title: 'كارت المسحراتي',
             highlight: true,
+            isRamadan: true,
             value:
                 'دا اول ما يتسحب ويترمي على الارض بيكون سكرو اجباري في لحظتها',
           ),
           const TitleWithValue(
             title: 'كارت الخشاف',
             highlight: true,
+            isRamadan: true,
             value:
                 'بتسحب اربع ورقات من كومة الورق وتختار ورقة منهم وبتنزل الباقي في كومة الورق',
           ),
           const TitleWithValue(
             title: 'كارت المدفع',
             highlight: true,
+            isRamadan: true,
             value: 'بتختار واحد يكشف كل ورقة',
           ),
           const Divider(),

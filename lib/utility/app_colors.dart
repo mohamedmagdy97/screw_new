@@ -6,12 +6,15 @@ class AppColors {
   static const Color mainColorAccent = Colors.purpleAccent;
   static const Color mainColorLight = Color(0xFFE583FC);
   static const Color secondaryColor = Color(0xffFF782C);
+  static const Color secondaryColor2 = Color(0xffd50e0e);
   static const Color secondaryColorLight = Color(0xffF49864);
   static const Color secondaryColorOpacity = Color(0xffFFD9C4);
   static const Color textColorTitle = Color(0xff122A41);
   static const Color textColorHint = Color(0xffA4A4A5);
   static const Color grayy = Color(0xff303030);
   static const Color bg = Color(0xff121212);
+  static const Color oscarColor = Color(0xff702b0a);
+  static const Color oscarLightColor = Color(0xffdf5821);
 
   static const Color green = Color(0xff44CE00);
   static const Color grey = Color(0xffd4d4d4);

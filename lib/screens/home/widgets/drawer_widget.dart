@@ -127,7 +127,7 @@ class DrawerWidget extends StatelessWidget {
                       Row(
                         children: [
                           CustomText(text: 'version - ', fontSize: 16),
-                          CustomText(text: 'v2.0', fontSize: 13),
+                          CustomText(text: 'v2.1', fontSize: 13),
                         ],
                       ),
                     ],

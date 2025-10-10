@@ -35,6 +35,7 @@ class HomeData {
   void init() {
     classicInit();
     friendsInit();
+    rateMyApp();
   }
 
   void classicInit() {
