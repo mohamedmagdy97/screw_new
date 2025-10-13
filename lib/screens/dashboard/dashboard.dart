@@ -2,6 +2,7 @@ import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:screenshot/screenshot.dart';
+import 'package:screw_calculator/components/bottom_nav_text.dart';
 import 'package:screw_calculator/components/custom_button.dart';
 import 'package:screw_calculator/components/custom_text.dart';
 import 'package:screw_calculator/components/fade_animation.dart';
@@ -109,6 +110,7 @@ class _DashboardState extends State<Dashboard> {
             },
           ),
           backgroundColor: AppColors.bg,
+          bottomNavigationBar: const BottomNavigationText(),
           floatingActionButton: FloatingActionButton.extended(
             heroTag: null,
             onPressed: () => dashboardData.captureAndShare(context),

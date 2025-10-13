@@ -3,5 +3,5 @@ class LocalStoreNames {
   static const String lang = 'language_code';
   static const String gamesHistory = 'gamesHistory';
   static const String firebaseDeviceId = 'firebaseDeviceId';
-
+  static const String prayerCity = 'prayerCountry';
 }

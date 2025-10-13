@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:screw_calculator/components/bottom_nav_text.dart';
 import 'package:screw_calculator/components/custom_text.dart';
 import 'package:screw_calculator/models/notification_model.dart';
 import 'package:screw_calculator/screens/notifications/widgets/notify_item.dart';
@@ -31,7 +32,7 @@ class NotificationsScreen extends StatelessWidget {
         ],
       ),
       backgroundColor: AppColors.bg,
-
+      bottomNavigationBar: const BottomNavigationText(),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection('notifications')

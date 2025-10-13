@@ -7,6 +7,7 @@ import 'package:screw_calculator/screens/contact_us/contact_us.dart';
 import 'package:screw_calculator/screens/history/history.dart';
 import 'package:screw_calculator/screens/home/home_data.dart';
 import 'package:screw_calculator/screens/notifications/notifications_screen.dart';
+import 'package:screw_calculator/screens/prayer/screen/prayer_screen.dart';
 import 'package:screw_calculator/screens/rules/rules_screen.dart';
 import 'package:screw_calculator/screens/show_video/show_video_youtube.dart';
 import 'package:screw_calculator/utility/app_theme.dart';
@@ -43,6 +44,16 @@ class DrawerWidget extends StatelessWidget {
                   height: 8,
                   color: AppColors.mainColor.withValues(alpha: 0.5),
                 ),
+                ListTile(
+                  minTileHeight: 0,
+                  onTap: () => routeFromDrawer(context, PrayerScreen()),
+                  title: const CustomText(
+                    text: 'مواقيت الصلاة',
+                    fontSize: 16,
+                    textAlign: TextAlign.end,
+                  ),
+                ),
+
                 ListTile(
                   minTileHeight: 0,
                   onTap: () =>

@@ -204,7 +204,7 @@ class NotificationsItem extends StatelessWidget {
                           Expanded(
                             child: CustomText(
                               text: notifyItem.title,
-                              fontSize: 18,
+                              fontSize: 17,
                               fontFamily: AppFonts.bold,
                               textAlign: TextAlign.end,
                             ),
@@ -215,7 +215,7 @@ class NotificationsItem extends StatelessWidget {
 
                       CustomText(
                         text: notifyItem.description,
-                        fontSize: 16.sp,
+                        fontSize: 15.sp,
                         textAlign: TextAlign.end,
                       ),
                     ],

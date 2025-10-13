@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:screw_calculator/my_app.dart';
 import 'package:screw_calculator/screens/force_update.dart';
+import 'package:screw_calculator/screens/prayer/core/notification_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await NotificationService.init();
 
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(const ForceUpdateWrapper(child: MyApp()));

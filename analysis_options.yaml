@@ -20,6 +20,7 @@ analyzer:
     dead_code: warning
     unused_import: warning
     unnecessary_null_checks: warning
+    argument_type_not_assignable: warning
     missing_required_param: error
     missing_return: error
     return_of_invalid_type_from_closure: ignore

@@ -1,6 +1,7 @@
 /// main old screen
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:screw_calculator/components/bottom_nav_text.dart';
 import 'package:screw_calculator/components/custom_text.dart';
 import 'package:screw_calculator/utility/app_theme.dart';
 import 'package:video_player/video_player.dart';
@@ -56,11 +57,12 @@ class _ShowVideoState extends State<ShowVideo> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.bg,
+      bottomNavigationBar: const BottomNavigationText(),
       appBar: AppBar(
         centerTitle: true,
         automaticallyImplyLeading: false,
         backgroundColor: AppColors.grayy,
-        title: CustomText(text: "شرح قواعد اللعبة", fontSize: 22.sp),
+        title: CustomText(text: 'شرح قواعد اللعبة', fontSize: 22.sp),
         actions: [
           IconButton(
             onPressed: () => Navigator.pop(context),

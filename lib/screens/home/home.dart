@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:screw_calculator/components/bottom_nav_text.dart';
 import 'package:screw_calculator/components/custom_text.dart';
 import 'package:screw_calculator/screens/home/home_data.dart';
 import 'package:screw_calculator/screens/home/widgets/classic_mode.dart';
@@ -71,6 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         endDrawer: const DrawerWidget(),
         backgroundColor: AppColors.bg,
+        bottomNavigationBar: const BottomNavigationText(),
         body: Form(
           key: homeData.formKey,
           child: ModeClass.mode == GameMode.classic

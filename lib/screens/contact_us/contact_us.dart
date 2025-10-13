@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:screw_calculator/components/bottom_nav_text.dart';
 import 'package:screw_calculator/components/custom_text.dart';
 import 'package:screw_calculator/generated/assets.dart';
 import 'package:screw_calculator/utility/app_theme.dart';
@@ -46,6 +47,7 @@ class _ContactUSState extends State<ContactUS> {
         ],
       ),
       backgroundColor: AppColors.bg,
+      bottomNavigationBar: const BottomNavigationText(),
       body: Column(
         children: [
           Expanded(

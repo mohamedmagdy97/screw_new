@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:screw_calculator/components/bottom_nav_text.dart';
 import 'package:screw_calculator/components/custom_button.dart';
 import 'package:screw_calculator/components/custom_text.dart';
 import 'package:screw_calculator/cubits/generic_cubit/generic_cubit.dart';
@@ -37,6 +38,7 @@ class _GameModeState extends State<GameMode> {
           title: CustomText(text: 'سكرو حاسبة', fontSize: 22.sp),
         ),
         backgroundColor: AppColors.bg,
+        bottomNavigationBar: const BottomNavigationText(),
         body: ListView(
           padding: const EdgeInsets.all(24),
           children: [

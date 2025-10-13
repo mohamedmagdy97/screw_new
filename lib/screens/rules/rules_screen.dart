@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:screw_calculator/components/bottom_nav_text.dart';
 import 'package:screw_calculator/components/custom_text.dart';
 import 'package:screw_calculator/generated/assets.dart';
 import 'package:screw_calculator/screens/rules/widgets/title_with_value.dart';
@@ -45,7 +46,7 @@ class _RulesScreenState extends State<RulesScreen> {
         ],
       ),
       backgroundColor: AppColors.bg,
-
+      bottomNavigationBar: const BottomNavigationText(),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
