@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:in_app_review/in_app_review.dart';
+import 'package:screw_calculator/components/build_fancy_route.dart';
 import 'package:screw_calculator/cubits/generic_cubit/generic_cubit.dart';
 import 'package:screw_calculator/models/item.dart';
 import 'package:screw_calculator/models/player_model.dart';
@@ -209,6 +210,14 @@ class HomeData {
       element.total = '0';
     });
   }
+
+  void routeFromDrawer(BuildContext context, Widget widget) async {
+    Navigator.of(context).pop();
+    await Future.delayed(const Duration(milliseconds: 250));
+
+    Navigator.of(context).push(buildFancyRoute(widget));
+  }
+
 
   Future<void> rateMyApp() async {
     final InAppReview inAppReview = InAppReview.instance;

@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:screw_calculator/components/build_fancy_route.dart';
 import 'package:screw_calculator/components/custom_text.dart';
 import 'package:screw_calculator/generated/assets.dart';
 import 'package:screw_calculator/screens/contact_us/contact_us.dart';
 import 'package:screw_calculator/screens/history/history.dart';
 import 'package:screw_calculator/screens/home/home_data.dart';
+import 'package:screw_calculator/screens/home/widgets/drawer_item_widget.dart';
 import 'package:screw_calculator/screens/notifications/notifications_screen.dart';
 import 'package:screw_calculator/screens/prayer/screen/prayer_screen.dart';
 import 'package:screw_calculator/screens/rules/rules_screen.dart';
 import 'package:screw_calculator/screens/show_video/show_video_youtube.dart';
+import 'package:screw_calculator/screens/users_screenshoot_sharing/user_sc_sharing_screen.dart';
 import 'package:screw_calculator/utility/app_theme.dart';
 
 class DrawerWidget extends StatelessWidget {
@@ -30,9 +31,6 @@ class DrawerWidget extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(top: 32.0),
                   child: Image.asset(Assets.iconsIcon, height: 0.15.sh),
-
-                  // Icon(Icons.gavel_sharp,
-                  //     size: 50, color: Colors.white),
                 ),
                 const Padding(
                   padding: EdgeInsets.symmetric(vertical: 32.0),
@@ -44,84 +42,50 @@ class DrawerWidget extends StatelessWidget {
                   height: 8,
                   color: AppColors.mainColor.withValues(alpha: 0.5),
                 ),
-                ListTile(
-                  minTileHeight: 0,
-                  onTap: () => routeFromDrawer(context, PrayerScreen()),
-                  title: const CustomText(
-                    text: 'مواقيت الصلاة',
-                    fontSize: 16,
-                    textAlign: TextAlign.end,
-                  ),
-                ),
 
-                ListTile(
-                  minTileHeight: 0,
+                DrawerItemWidget(
+                  title: 'مواقيت الصلاة',
                   onTap: () =>
-                      routeFromDrawer(context, const NotificationsScreen()),
-                  title: const CustomText(
-                    text: 'الاشعارات ',
-                    fontSize: 16,
-                    textAlign: TextAlign.end,
+                      homeData.routeFromDrawer(context, const PrayerScreen()),
+                ),
+                DrawerItemWidget(
+                  title: 'الاشعارات',
+                  onTap: () => homeData.routeFromDrawer(
+                    context,
+                    const NotificationsScreen(),
                   ),
                 ),
-                const Divider(height: 2, color: AppColors.opacity_1),
-
-                ListTile(
-                  minTileHeight: 0,
-
-                  onTap: () => routeFromDrawer(context, const RulesScreen()),
-                  title: const CustomText(
-                    text: 'قوانين اللعبة',
-                    fontSize: 16,
-                    textAlign: TextAlign.end,
-                  ),
-                ),
-                const Divider(height: 2, color: AppColors.opacity_1),
-
-                ListTile(
-                  minTileHeight: 0,
-
-                  onTap: () => routeFromDrawer(context, const HistoryScreen()),
-                  title: const CustomText(
-                    text: 'الجولات السابقة',
-                    fontSize: 16,
-                    textAlign: TextAlign.end,
-                  ),
-                ),
-                const Divider(height: 2, color: AppColors.opacity_1),
-
-                ListTile(
-                  minTileHeight: 0,
+                DrawerItemWidget(
+                  title: 'قوانين اللعبة',
                   onTap: () =>
-                      routeFromDrawer(context, const YoutubeLikePlayer()),
-                  title: const CustomText(
-                    text: 'فيديو شرح اللعبة',
-                    fontSize: 16,
-                    textAlign: TextAlign.end,
+                      homeData.routeFromDrawer(context, const RulesScreen()),
+                ),
+                DrawerItemWidget(
+                  title: 'الجولات السابقة',
+                  onTap: () =>
+                      homeData.routeFromDrawer(context, const HistoryScreen()),
+                ),
+                DrawerItemWidget(
+                  title: 'فيديو شرح اللعبة',
+                  onTap: () => homeData.routeFromDrawer(
+                    context,
+                    const YoutubeLikePlayer(),
                   ),
                 ),
-                const Divider(height: 2, color: AppColors.opacity_1),
-
-                ListTile(
-                  minTileHeight: 0,
-                  onTap: () => routeFromDrawer(context, const ContactUS()),
-                  title: const CustomText(
-                    text: 'للاقتراحات والتواصل معنا ',
-                    fontSize: 16,
-                    textAlign: TextAlign.end,
-                  ),
+                DrawerItemWidget(
+                  title: 'مشاركات نتائج الاخرين',
+                  onTap: () =>
+                      homeData.routeFromDrawer(context, const UserScSharingScreen()),
                 ),
-                const Divider(height: 2, color: AppColors.opacity_1),
-                ListTile(
-                  minTileHeight: 0,
+                DrawerItemWidget(
+                  title: 'للاقتراحات والتواصل معنا',
+                  onTap: () =>
+                      homeData.routeFromDrawer(context, const ContactUS()),
+                ),
+                DrawerItemWidget(
+                  title: '⭐ قيمنا',
                   onTap: () => homeData.rateMyApp(),
-                  title: const CustomText(
-                    text: '⭐ قيمنا',
-                    fontSize: 16,
-                    textAlign: TextAlign.end,
-                  ),
                 ),
-                const Divider(height: 2, color: AppColors.opacity_1),
 
                 const Spacer(),
                 const Padding(
@@ -151,11 +115,4 @@ class DrawerWidget extends StatelessWidget {
       ),
     );
   }
-}
-
-void routeFromDrawer(BuildContext context, Widget widget) async {
-  Navigator.of(context).pop();
-  await Future.delayed(const Duration(milliseconds: 250));
-
-  Navigator.of(context).push(buildFancyRoute(widget));
 }

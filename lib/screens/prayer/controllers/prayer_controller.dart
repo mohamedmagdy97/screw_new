@@ -47,7 +47,7 @@ class PrayerController extends GetxController {
     CountryModel(id: 27, nameAr: 'جنوب سيناء', nameEn: 'South Sinai'),
   ];
 
-  Future<void> loadPrayerTimes({String? selectCity}) async {
+  Future<void> loadPrayerTimes() async {
     final String? res = await AppLocalStore.getString(
       LocalStoreNames.prayerCity,
     );
@@ -60,8 +60,8 @@ class PrayerController extends GetxController {
 
       AppLocalStore.setString(LocalStoreNames.prayerCity, selectedCity.nameEn);
     } else {
-      selectedCity = egyptGovernorates.last.obs.value;
-      city = egyptGovernorates.last;
+      selectedCity = egyptGovernorates.first.obs.value;
+      city = egyptGovernorates.first;
     }
     try {
       isLoading.value = true;

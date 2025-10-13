@@ -9,7 +9,7 @@ class BottomNavigationText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.only(right: 16, left: 16, bottom: 16, top: 4),
       child: CustomText(
         text: '🌙 لا تجعل اللعبة تلهيك عن الصلاة 🌙',
         fontSize: 16.sp,

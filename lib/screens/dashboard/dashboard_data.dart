@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:path_provider/path_provider.dart';
@@ -16,6 +17,7 @@ import 'package:screw_calculator/utility/local_store.dart';
 import 'package:screw_calculator/utility/local_storge_key.dart';
 import 'package:screw_calculator/utility/utilities.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:uuid/uuid.dart';
 
 class DashboardData {
   final TextEditingController controller = TextEditingController();
@@ -355,10 +357,38 @@ class DashboardData {
           '${directory.path}/screenshot${DateTime.now().toString().replaceAll(' ', '_')}.png';
       final file = File(filePath);
       await file.writeAsBytes(imageBytes);
+      uploadImageToDatabase(title: filePath, imageFile: file);
 
-      await Share.shareXFiles([XFile(filePath)], text: '📸 شوف نتيجتي!');
+      await Share.shareXFiles([
+        XFile(filePath),
+      ], text: '📸 شوف نتيجتي! من تطبيق سكرو حاسبة');
     } catch (e) {
       debugPrint('❌ خطأ أثناء مشاركة الصورة: $e');
+    }
+  }
+
+  Future<void> uploadImageToDatabase({
+    required String title,
+    required File imageFile,
+  }) async {
+    final id = const Uuid().v4();
+
+    final _db = FirebaseFirestore.instance;
+
+    try {
+      final bytes = await imageFile.readAsBytes();
+      final base64Image = base64Encode(bytes);
+
+      final ref = _db.collection('user_screenshoot_sharing').doc(id);
+      await ref.set({
+        'id': id,
+        'title': title,
+        'imageBase64': base64Image,
+        'timestamp': DateTime.now().toIso8601String(),
+      });
+      print('✅ Uploaded image directly to Realtime Database');
+    } catch (e) {
+      print('❌ Database upload error: $e');
     }
   }
 }
