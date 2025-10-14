@@ -105,23 +105,23 @@ class _ContactUSState extends State<ContactUS> {
                         width: 50,
                       ),
                     ),
-                    InkWell(
-                      onTap: () async {
-                        final Uri url = Uri.parse(SocialLinks.github);
-                        if (!await launchUrl(
-                          url,
-                          mode: LaunchMode.externalNonBrowserApplication,
-                        )) {
-                          throw Exception('Could not launch $url');
-                        }
-                      },
-                      child: const Image(
-                        image: AssetImage(Assets.githubIcon),
-                        height: 50,
-                        width: 50,
-                        color: AppColors.white,
-                      ),
-                    ),
+                    // InkWell(
+                    //   onTap: () async {
+                    //     final Uri url = Uri.parse(SocialLinks.github);
+                    //     if (!await launchUrl(
+                    //       url,
+                    //       mode: LaunchMode.externalNonBrowserApplication,
+                    //     )) {
+                    //       throw Exception('Could not launch $url');
+                    //     }
+                    //   },
+                    //   child: const Image(
+                    //     image: AssetImage(Assets.githubIcon),
+                    //     height: 50,
+                    //     width: 50,
+                    //     color: AppColors.white,
+                    //   ),
+                    // ),
 
                     // InkWell(
                     //   onTap: () async {
