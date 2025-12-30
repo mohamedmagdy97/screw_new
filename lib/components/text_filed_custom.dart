@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:screw_calculator/utility/validation_form.dart';
 
@@ -71,9 +72,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: Theme(
-        data: Theme.of(context).copyWith(
-          hintColor: AppColors.secondaryColor.withOpacity(.9),
-        ),
+        data: Theme.of(
+          context,
+        ).copyWith(hintColor: AppColors.secondaryColor.withOpacity(.9)),
         child: Directionality(
           textDirection: TextDirection.rtl,
           child: TextFormField(
@@ -88,21 +89,29 @@ class _CustomTextFieldState extends State<CustomTextField> {
             textDirection: TextDirection.rtl,
             keyboardType: widget.inputType,
             obscureText: widget.obscureText,
+            inputFormatters: widget.inputType == TextInputType.phone
+                ? [
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(11),
+                  ]
+                : null,
             obscuringCharacter: '*',
             readOnly: widget.isDisable,
             validator: (String? v) => validation(
-                type: widget.textFieldVaidType!,
-                value: v!,
-                firstPasswordForConfirm: ''),
+              type: widget.textFieldVaidType!,
+              value: v!,
+              firstPasswordForConfirm: '',
+            ),
 
             decoration: InputDecoration(
               errorMaxLines: widget.maxerrorLines,
               counter: const Offstage(),
               errorStyle: TextStyle(
-                  height: 1,
-                  fontFamily: AppFonts.regular,
-                  fontSize: 12.sp,
-                  color: AppColors.red),
+                height: 1,
+                fontFamily: AppFonts.regular,
+                fontSize: 12.sp,
+                color: AppColors.red,
+              ),
               fillColor: widget.isDisable
                   ? widget.fillColor ?? AppColors.cardColor
                   : widget.fillColor ?? AppColors.grayy,
@@ -112,19 +121,25 @@ class _CustomTextFieldState extends State<CustomTextField> {
                   widget.borderRadius != null
                       ? widget.borderRadius!
                       : widget.maxLines == null
-                          ? 12.sp
-                          : 15.sp,
+                      ? 12.sp
+                      : 15.sp,
                 ),
                 borderSide: BorderSide(
-                    color: widget.fillColor == null
-                        ? widget.isDisable
+                  color: widget.fillColor == null
+                      ? widget.isDisable
                             ? Colors.transparent
-                            : widget.fillBorderColor ?? AppColors.mainColorAccent
-                        : widget.fillBorderColor!),
+                            : widget.fillBorderColor ??
+                                  AppColors.mainColorAccent
+                      : widget.fillBorderColor ?? AppColors.mainColorAccent,
+                ),
                 gapPadding: 10,
               ),
               contentPadding: const EdgeInsets.only(
-                  left: 12, right: 12 , top: 10 , bottom: 10 ),
+                left: 12,
+                right: 12,
+                top: 10,
+                bottom: 10,
+              ),
               alignLabelWithHint: true,
               prefixIconConstraints: const BoxConstraints(
                 maxWidth: 40,
@@ -134,33 +149,40 @@ class _CustomTextFieldState extends State<CustomTextField> {
               hintText: widget.hintText,
               labelText: widget.labelText,
               labelStyle: TextStyle(
-                  fontSize: widget.hintFontSize ?? 16.sp,
-                  color: widget.hintColor ?? AppColors.white,
+                fontSize: widget.hintFontSize ?? 16.sp,
+                color: widget.hintColor ?? AppColors.white,
 
-                  fontFamily: AppFonts.regular,
-                  fontWeight: AppFonts.w400),
+                fontFamily: AppFonts.regular,
+                fontWeight: AppFonts.w400,
+              ),
               hintStyle: TextStyle(
-                  fontSize: widget.hintFontSize ?? 12.sp,
-                  color: widget.hintColor ?? AppColors.textColorHint,
-                  fontFamily: AppFonts.regular,
-                  fontWeight: AppFonts.w400),
+                fontSize: widget.hintFontSize ?? 12.sp,
+                color: widget.hintColor ?? AppColors.textColorHint,
+                fontFamily: AppFonts.regular,
+                fontWeight: AppFonts.w400,
+              ),
               floatingLabelBehavior: FloatingLabelBehavior.always,
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(widget.borderRadius != null
-                    ? widget.borderRadius!
-                    : widget.maxLines == null
-                        ? 12.sp
-                        : 15.sp),
-                borderSide:
-                    BorderSide(color: widget.fillBorderColor ?? AppColors.grey),
+                borderRadius: BorderRadius.circular(
+                  widget.borderRadius != null
+                      ? widget.borderRadius!
+                      : widget.maxLines == null
+                      ? 12.sp
+                      : 15.sp,
+                ),
+                borderSide: BorderSide(
+                  color: widget.fillBorderColor ?? AppColors.grey,
+                ),
                 gapPadding: 10,
               ),
               focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(widget.borderRadius != null
-                    ? widget.borderRadius!
-                    : widget.maxLines == null
-                        ? 12.sp
-                        : 15.sp),
+                borderRadius: BorderRadius.circular(
+                  widget.borderRadius != null
+                      ? widget.borderRadius!
+                      : widget.maxLines == null
+                      ? 12.sp
+                      : 15.sp,
+                ),
                 borderSide: const BorderSide(color: AppColors.grey),
                 gapPadding: 10,
               ),

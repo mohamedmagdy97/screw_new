@@ -1,10 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:screw_calculator/components/build_fancy_route.dart';
 import 'package:screw_calculator/cubits/generic_cubit/generic_cubit.dart';
+import 'package:screw_calculator/helpers/device_info.dart';
 import 'package:screw_calculator/models/item.dart';
 import 'package:screw_calculator/models/player_model.dart';
 import 'package:screw_calculator/screens/dashboard/dashboard.dart';
+import 'package:uuid/uuid.dart';
 
 HomeData homeData = HomeData();
 
@@ -13,6 +17,7 @@ class HomeData {
   GenericCubit<List<Item>> listTeamsCubit = GenericCubit<List<Item>>(data: []);
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> formKeyUserData = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   final TextEditingController playerOne = TextEditingController();
   final TextEditingController playerTwo = TextEditingController();
@@ -23,6 +28,15 @@ class HomeData {
 
   final TextEditingController playerOne2 = TextEditingController();
   final TextEditingController playerTwo2 = TextEditingController();
+
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController countryController = TextEditingController();
+  final Box userBox = Hive.box('userBox');
+
+  String? userName;
+  String? userPhone;
+  String? userCountry;
 
   final List<TextEditingController> controllers = List.generate(
     12,
@@ -36,7 +50,38 @@ class HomeData {
   void init() {
     classicInit();
     friendsInit();
+    initChatData();
     rateMyApp();
+  }
+
+  initChatData() {
+    userName = userBox.get('name')?.toString();
+    userPhone = userBox.get('phone')?.toString();
+    userCountry = userBox.get('country')?.toString();
+  }
+
+  Future<void> addUserDataToDB() async {
+
+    userBox.put('name', nameController.text);
+    userBox.put('phone', phoneController.text);
+    userBox.put('country', countryController.text);
+
+    userName = nameController.text;
+    userPhone = phoneController.text;
+    userCountry = countryController.text;
+
+    final id = const Uuid().v4();
+
+    final userData = {
+      'id': id,
+      'userName': userName,
+      'userPhone': userPhone,
+      'userCountry': userCountry,
+      'deviceName': await getDeviceName(),
+      'datetime': DateTime.now(),
+      'createdAt': FieldValue.serverTimestamp(),
+    };
+    await FirebaseFirestore.instance.collection('users').doc(id).set(userData);
   }
 
   void classicInit() {
@@ -217,7 +262,6 @@ class HomeData {
 
     Navigator.of(context).push(buildFancyRoute(widget));
   }
-
 
   Future<void> rateMyApp() async {
     final InAppReview inAppReview = InAppReview.instance;

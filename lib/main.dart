@@ -12,6 +12,9 @@ void main() async {
   await NotificationService.init();
   await Hive.initFlutter();
   await Hive.openBox('prayerCache');
+  await Hive.openBox('userBox');
+  await Hive.openBox('cachedMessages');
+
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(const ForceUpdateWrapper(child: MyApp()));
 }

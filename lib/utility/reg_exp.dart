@@ -24,3 +24,8 @@ RegExp regExpName = RegExp(
 
 RegExp regExpNumber =
     RegExp('[a-zA-Z ]*\\d+.*', caseSensitive: false, multiLine: false);
+
+/// Egyptian phone numbers validation
+// String pattern = r'^(010|011|012|015)[0-9]{8}$';
+// RegExp regExpPhoneNumber = RegExp(r'^(010|011|012|015)\d{8}$');
+RegExp regExpPhoneNumber = RegExp(r'^(?:010|011|012|015)[0-9]{8}$'); // sharp

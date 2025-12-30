@@ -1,6 +1,6 @@
 import 'package:screw_calculator/utility/reg_exp.dart';
 
-enum TextFieldValidatorType { name, displayText, optional, Number }
+enum TextFieldValidatorType { name, displayText, optional, number, phoneNumber }
 
 String? validation({
   required TextFieldValidatorType type,
@@ -16,7 +16,7 @@ String? validation({
     // if (value.length < 2) {
     //   return GlobalWords.short_text.tr;
     // }
-  } else if (type == TextFieldValidatorType.Number) {
+  } else if (type == TextFieldValidatorType.number) {
     if (value.isEmpty) {
       return 'هذا الحقل مطلوب';
     }
@@ -25,6 +25,17 @@ String? validation({
         value.trim().contains('.') ||
         value.trim().contains(',')) {
       return 'لا يجب ان يحتوي علي حروف خاصة';
+    }
+  } else if (type == TextFieldValidatorType.phoneNumber) {
+    if (value.isEmpty) {
+      return 'هذا الحقل مطلوب';
+    }
+
+    if (value.trim().contains('.') || value.trim().contains(',')) {
+      return 'لا يجب ان يحتوي علي حروف خاصة';
+    }
+    if (!regExpPhoneNumber.hasMatch(value.trim())) {
+      return 'يجب ان يكون رقم موبايل صحيح';
     }
   } else if (type == TextFieldValidatorType.name) {
     if (value.isEmpty) {

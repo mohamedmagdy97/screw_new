@@ -22,7 +22,6 @@ dependencies:
   flutter_bloc: ^9.1.1
   equatable: ^2.0.5
   url_launcher: ^6.3.2
-  shared_preferences: ^2.2.2
 
   # video
   video_player: ^2.8.1
@@ -51,8 +50,11 @@ dependencies:
   get: ^4.7.2
   timezone: ^0.10.1
   permission_handler: ^12.0.1
+
+  # local database
   hive: ^2.2.3
   hive_flutter: ^1.1.0
+  shared_preferences: ^2.2.2
 
 
 dev_dependencies:

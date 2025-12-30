@@ -46,7 +46,7 @@ class AddValueDialog extends StatelessWidget {
               fillColor: Colors.white,
               textColor: Colors.black,
               fillBorderColor: AppColors.grayy,
-              textFieldVaidType: TextFieldValidatorType.Number,
+              textFieldVaidType: TextFieldValidatorType.number,
             ),
             const SizedBox(height: 16),
             CustomButton(
@@ -344,7 +344,7 @@ class EditValueDialog extends StatelessWidget {
               fillColor: Colors.white,
               textColor: Colors.black,
               fillBorderColor: AppColors.grayy,
-              textFieldVaidType: TextFieldValidatorType.Number,
+              textFieldVaidType: TextFieldValidatorType.number,
             ),
             const SizedBox(height: 16),
             CustomButton(

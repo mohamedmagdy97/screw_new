@@ -77,7 +77,8 @@ class UserScSharingScreen extends StatelessWidget {
                       margin: const EdgeInsets.all(4),
                       decoration: customBoxDecoration(borderRadius: 0),
                       child: Container(
-                        color: AppColors.bg,
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        color: AppColors.opacity_1.withOpacity(0.75),
                         child: Image.memory(
                           base64Decode(notif.imageBase64.toString()),
                           width: 1.sw,
