@@ -1,16 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:hive/hive.dart';
 import 'package:screw_calculator/components/custom_button.dart';
 import 'package:screw_calculator/components/custom_text.dart';
 import 'package:screw_calculator/components/text_filed_custom.dart';
 import 'package:screw_calculator/generated/assets.dart';
-import 'package:screw_calculator/helpers/device_info.dart';
-import 'package:screw_calculator/screens/chat/chat_sc_with_local_old_chats.dart' as oldChat;
 import 'package:screw_calculator/screens/chat/chat_screen.dart';
-import 'package:screw_calculator/screens/chat/chat_screen_lazy_load.dart' as lazy;
-import 'package:screw_calculator/screens/chat/chat_screen_lazy_load_high.dart' as lazyHigh;
 import 'package:screw_calculator/screens/contact_us/contact_us.dart';
 import 'package:screw_calculator/screens/history/history.dart';
 import 'package:screw_calculator/screens/home/home_data.dart';
@@ -202,8 +196,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                                         Navigator.pop(ctx);
                                         homeData.routeFromDrawer(
                                           context,
-                                          lazyHigh. ChatPage(),
-                                          // ChatScreen(),
+                                          const ChatScreen(),
                                         );
                                       }
                                     },
@@ -214,57 +207,9 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                           );
                         },
                       );
-                      // showDialog(
-                      //   context: context,
-                      //   barrierDismissible: false,
-                      //   builder: (_) => AlertDialog(
-                      //     title: Text('Enter Your Info'),
-                      //     content: Column(
-                      //       mainAxisSize: MainAxisSize.min,
-                      //       children: [
-                      //         TextField(
-                      //           controller: homeData.nameController,
-                      //           decoration: InputDecoration(hintText: 'Name'),
-                      //         ),
-                      //         TextField(
-                      //           controller: homeData.phoneController,
-                      //           decoration: InputDecoration(hintText: 'Phone'),
-                      //         ),
-                      //         TextField(
-                      //           controller: homeData.countryController,
-                      //           decoration: InputDecoration(
-                      //             hintText: 'Country',
-                      //           ),
-                      //         ),
-                      //       ],
-                      //     ),
-                      //     actions: [
-                      //       TextButton(
-                      //         onPressed: () async {
-                      //            if (homeData.nameController.text.isNotEmpty &&
-                      //               homeData.phoneController.text.isNotEmpty &&
-                      //               homeData
-                      //                   .countryController
-                      //                   .text
-                      //                   .isNotEmpty) {
-                      //             homeData.addUserDataToDB();
-                      //             Navigator.pop(context);
-                      //              homeData.routeFromDrawer(
-                      //               context,
-                      //               ChatScreen(),
-                      //             );
-                      //           }
-                      //         },
-                      //         child: Text('Save'),
-                      //       ),
-                      //     ],
-                      //   ),
-                      // );
                     } else {
-                      homeData.routeFromDrawer(context, oldChat.ChatPage());
+                      homeData.routeFromDrawer(context, const ChatScreen());
                     }
-                    // =>
-                    //     homeData.routeFromDrawer(context, ChatScreen())
                   },
                 ),
                 DrawerItemWidget(
