@@ -343,7 +343,19 @@ class DashboardData {
     );
   }
 
-  Future<void> captureAndShare(BuildContext context) async {
+  Future<void> captureAndShare(
+    BuildContext context,
+    List<PlayerModel> listPlayers,
+  ) async {
+    if (listPlayers.last.gw4 == null ||
+        listPlayers.last.gw4!.isEmpty ||
+        listPlayers.first.gw4 == null ||
+        listPlayers.first.gw4!.isEmpty) {
+      return Utilities().showCustomSnack(
+        context,
+        txt: 'لمشاركة النتائج يجب ادخال جميع الجولات',
+      );
+    }
     final Uint8List? imageBytes;
     try {
       imageBytes = await screenshotController.capture(

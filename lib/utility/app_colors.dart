@@ -12,11 +12,13 @@ class AppColors {
   static const Color textColorTitle = Color(0xff122A41);
   static const Color textColorHint = Color(0xffA4A4A5);
   static const Color grayy = Color(0xff303030);
+  static const Color grayy2 = Color(0xff7c7474);
   static const Color bg = Color(0xff121212);
   static const Color oscarColor = Color(0xff702b0a);
   static const Color oscarLightColor = Color(0xffdf5821);
 
   static const Color green = Color(0xff44CE00);
+  static const Color greenDark = Color(0xff2e8800);
   static const Color grey = Color(0xffd4d4d4);
   static const Color opacity_1 = Color(0xff341a41);
   static const Color drawerBg = Color(0xEA300A40);

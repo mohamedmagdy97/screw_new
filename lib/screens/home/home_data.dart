@@ -61,7 +61,6 @@ class HomeData {
   }
 
   Future<void> addUserDataToDB() async {
-
     userBox.put('name', nameController.text);
     userBox.put('phone', phoneController.text);
     userBox.put('country', countryController.text);
@@ -69,7 +68,6 @@ class HomeData {
     userName = nameController.text;
     userPhone = phoneController.text;
     userCountry = countryController.text;
-
     final id = const Uuid().v4();
 
     final userData = {
@@ -81,7 +79,12 @@ class HomeData {
       'datetime': DateTime.now(),
       'createdAt': FieldValue.serverTimestamp(),
     };
-    await FirebaseFirestore.instance.collection('users').doc(id).set(userData);
+    await FirebaseFirestore.instance
+        .collection('chats')
+        .doc('users')
+        .collection('users')
+        .doc(id)
+        .set(userData);
   }
 
   void classicInit() {
@@ -134,7 +137,7 @@ class HomeData {
         .where((player) => player.name!.isNotEmpty)
         .toList();
 
-    int playersCount = int.parse(
+    final int playersCount = int.parse(
       (teamsMode ? listTeamsCubit : listCubit).state.data!
               .firstWhere((element) => element.isActive!)
               .value ??

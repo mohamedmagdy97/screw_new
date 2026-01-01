@@ -157,6 +157,7 @@ class _DashboardState extends State<Dashboard> {
 
                                         ShareScreenBtn(
                                           dashboardData: dashboardData,
+                                          players: widget.players,
                                         ),
 
                                         ...widget.fromHistory!
@@ -274,6 +275,7 @@ class _DashboardState extends State<Dashboard> {
                                         ),
                                         ShareScreenBtn(
                                           dashboardData: dashboardData,
+                                          players: widget.players,
                                         ),
                                         ...buildGameSaveSectionTeams(),
                                       ],
