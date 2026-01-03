@@ -42,6 +42,12 @@ class _ChatScreenState extends State<ChatScreen> {
   String? userCountry;
   Set<String> _usersTyping = {};
 
+  // Search
+  bool _isSearching = false;
+  final TextEditingController _searchCtrl = TextEditingController();
+  List<int> _searchResults = [];
+  int _currentSearchIndex = 0;
+
   @override
   void initState() {
     super.initState();
@@ -56,6 +62,7 @@ class _ChatScreenState extends State<ChatScreen> {
     _fetchInitialMessages();
     _listenRealtime();
     _listenTyping();
+    _markSeen();
 
     _scrollCtrl.addListener(_onScroll);
   }
@@ -167,6 +174,7 @@ class _ChatScreenState extends State<ChatScreen> {
               final i = _messages.indexWhere((m) => m.id == msg.id);
               if (i != -1) _messages[i] = msg;
             }
+            _markSeen();
           }
 
           setState(() {});
@@ -181,9 +189,15 @@ class _ChatScreenState extends State<ChatScreen> {
         .collection('typing')
         .snapshots()
         .listen((snap) {
+          final now = DateTime.now();
           final typing = <String>{};
           for (var d in snap.docs) {
-            if (d.id != userName && d['typing'] == true) {
+            if (d.id == userName) continue;
+
+            final ts = (d['updatedAt'] as Timestamp?)?.toDate();
+            if (d['typing'] == true &&
+                ts != null &&
+                now.difference(ts).inSeconds <= 5) {
               typing.add(d.id);
             }
           }
@@ -197,7 +211,36 @@ class _ChatScreenState extends State<ChatScreen> {
         .doc('typing')
         .collection('typing')
         .doc(userName)
-        .set({'typing': v});
+        .set({'typing': v, 'updatedAt': FieldValue.serverTimestamp()});
+  }
+
+  Future<void> _markSeen() async {
+    final batch = FirebaseFirestore.instance.batch();
+    int ops = 0;
+
+    for (final m in _messages) {
+      if (m.id == null) continue;
+
+      final seen = List<String>.from(m.seenBy ?? []);
+      if (seen.contains(userName)) continue;
+      if (m.name == userName) continue;
+
+      final ref = FirebaseFirestore.instance
+          .collection('chats')
+          .doc('messages')
+          .collection('messages')
+          .doc(m.id);
+
+      batch.set(ref, {
+        'seenBy': FieldValue.arrayUnion([userName]),
+      }, SetOptions(merge: true));
+
+      ops++;
+    }
+
+    if (ops > 0) {
+      await batch.commit();
+    }
   }
 
   void _cacheMessages(List<ChatMessage> msgs) {
@@ -279,18 +322,25 @@ class _ChatScreenState extends State<ChatScreen> {
         .collection('messages')
         .doc(msg.id);
 
+    // userName هو المتغير الذي جلبته من Hive سابقاً
+    if (userName == null) return;
+
     await FirebaseFirestore.instance.runTransaction((tx) async {
       final snap = await tx.get(docRef);
       if (!snap.exists) return;
 
       final data = snap.data()!;
-      final reactions = Map<String, String>.from(data['reactions'] ?? {});
+      // خريطة التفاعلات: { "اسم المستخدم": "الإيموجي" }
+      final Map<String, dynamic> reactions = Map<String, dynamic>.from(
+        data['reactions'] ?? {},
+      );
 
-      if (reactions[msg.id] == emoji) {
-        reactions.remove(msg.id);
+      if (reactions[userName] == emoji) {
+        // إذا ضغط نفس الإيموجي مرتين -> يحذفه
+        reactions.remove(userName);
       } else {
-        // جديد أو تبديل
-        reactions[msg.id] = emoji;
+        // يضيف تفاعل جديد أو يستبدل القديم لهذا المستخدم
+        reactions[userName!] = emoji;
       }
       tx.update(docRef, {'reactions': reactions});
     });
@@ -347,6 +397,66 @@ class _ChatScreenState extends State<ChatScreen> {
     });
   }
 
+  // ---------------- SEARCH ----------------
+
+  void _toggleSearch() {
+    setState(() {
+      _isSearching = !_isSearching;
+      _searchCtrl.clear();
+      _searchResults.clear();
+      _currentSearchIndex = 0;
+    });
+  }
+
+  void _onSearchChanged(String query) {
+    _searchResults.clear();
+
+    if (query.isEmpty) {
+      setState(() {});
+      return;
+    }
+
+    for (int i = 0; i < _messages.length; i++) {
+      if (_messages[i].message.toLowerCase().contains(query.toLowerCase())) {
+        _searchResults.add(i);
+      }
+    }
+
+    if (_searchResults.isNotEmpty) {
+      _currentSearchIndex = 0;
+      _scrollToSearchResult();
+    }
+
+    setState(() {});
+  }
+
+  void _nextSearchResult() {
+    if (_searchResults.isEmpty) return;
+
+    _currentSearchIndex = (_currentSearchIndex + 1) % _searchResults.length;
+    _scrollToSearchResult();
+  }
+
+  void _prevSearchResult() {
+    if (_searchResults.isEmpty) return;
+
+    _currentSearchIndex =
+        (_currentSearchIndex - 1 + _searchResults.length) %
+        _searchResults.length;
+    _scrollToSearchResult();
+  }
+
+  void _scrollToSearchResult() {
+    final index = _searchResults[_currentSearchIndex];
+
+    _scrollCtrl.animateTo(
+      index * 72.0,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+    setState(() {});
+  }
+
   void _scrollToBottomIfNear() {
     if (!_scrollCtrl.hasClients) return;
     final d = _scrollCtrl.position.maxScrollExtent - _scrollCtrl.offset;
@@ -362,8 +472,68 @@ class _ChatScreenState extends State<ChatScreen> {
         centerTitle: true,
         automaticallyImplyLeading: false,
         backgroundColor: AppColors.grayy,
-        title: CustomText(text: 'الشات', fontSize: 22.sp),
+        title: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 250),
+          switchInCurve: Curves.easeOut,
+          switchOutCurve: Curves.easeIn,
+          transitionBuilder: (child, animation) {
+            return FadeTransition(
+              opacity: animation,
+              child: SlideTransition(
+                position: Tween<Offset>(
+                  begin: const Offset(0.1, 0),
+                  end: Offset.zero,
+                ).animate(animation),
+                child: child,
+              ),
+            );
+          },
+          child: _isSearching
+              ? TextField(
+                  controller: _searchCtrl,
+                  autofocus: true,
+                  cursorColor: AppColors.white,
+                  textDirection: TextDirection.rtl,
+                  style: TextStyle(
+                    color: AppColors.white,
+                    fontFamily: AppFonts.regular,
+                  ),
+                  decoration: InputDecoration(
+                    hintText: 'بحث…',
+                    hintTextDirection: TextDirection.rtl,
+                    hintStyle: TextStyle(
+                      color: AppColors.white,
+                      fontFamily: AppFonts.regular,
+                    ),
+                    border: InputBorder.none,
+                  ),
+                  onChanged: _onSearchChanged,
+                )
+              : CustomText(text: 'الشات', fontSize: 22.sp),
+        ),
+
         actions: [
+          if (_isSearching && _searchResults.isNotEmpty) ...[
+            IconButton(
+              icon: const Icon(Icons.keyboard_arrow_up, color: AppColors.white),
+              onPressed: _prevSearchResult,
+            ),
+            IconButton(
+              icon: const Icon(
+                Icons.keyboard_arrow_down,
+                color: AppColors.white,
+              ),
+              onPressed: _nextSearchResult,
+            ),
+          ],
+
+          IconButton(
+            icon: Icon(
+              _isSearching ? Icons.close : Icons.search,
+              color: AppColors.white,
+            ),
+            onPressed: _toggleSearch,
+          ),
           IconButton(
             onPressed: () => Navigator.pop(context),
             icon: Transform.flip(
@@ -426,6 +596,10 @@ class _ChatScreenState extends State<ChatScreen> {
     final showName = (prev == null || prev.name != msg.name) && !isMe;
 
     final showDay = prev == null || prev.timestamp.day != msg.timestamp.day;
+
+    final isHighlighted =
+        _searchResults.contains(index) &&
+        _searchResults[_currentSearchIndex] == index;
 
     if (msg.isDeleted) {
       return Column(
@@ -510,7 +684,11 @@ class _ChatScreenState extends State<ChatScreen> {
                 Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: isMe ? Colors.blue[100] : Colors.grey[200],
+                    color: isHighlighted
+                        ? Colors.green[200]
+                        : isMe
+                        ? Colors.blue[100]
+                        : Colors.grey[200],
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Column(
@@ -568,16 +746,10 @@ class _ChatScreenState extends State<ChatScreen> {
                                   children: [
                                     const SizedBox(width: 4),
 
-                                    const Icon(
-                                      Icons.remove_red_eye,
-                                      size: 12,
-                                      color: AppColors.greenDark,
-                                    ),
-                                    const SizedBox(width: 2),
                                     Text(
-                                      '${msg.seenBy.length}',
+                                      '👁 ${msg.seenBy.length}',
                                       style: const TextStyle(
-                                        fontSize: 10,
+                                        fontSize: 12,
                                         color: AppColors.greenDark,
                                       ),
                                     ),
@@ -601,27 +773,44 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Widget _reactionRow(ChatMessage msg) {
     if (msg.reactions.isEmpty) return const SizedBox();
-    final grouped = <String, int>{};
-    msg.reactions.values.forEach((e) => grouped[e] = (grouped[e] ?? 0) + 1);
 
-    return Wrap(
-      children: grouped.entries
-          .map(
-            (e) => GestureDetector(
-              onTap: () => _showReactionUsers(msg, e.key),
-              child: Padding(
-                padding: const EdgeInsets.only(right: 8, left: 8),
-                child: Chip(
-                  padding: const EdgeInsets.all(4),
-                  labelPadding: const EdgeInsets.symmetric(horizontal: 4),
-                  label: Text('${e.key} ${e.value}'),
-                  // color: WidgetStateProperty.all(Colors.transparent),
-                  backgroundColor: Colors.transparent,
-                ),
+    // تجميع التفاعلات المتشابهة وحساب عددها
+    final grouped = <String, int>{};
+    for (var emoji in msg.reactions.values) {
+      grouped[emoji] = (grouped[emoji] ?? 0) + 1;
+    }
+
+    final isMe = msg.name == userName;
+
+    return Padding(
+      padding: EdgeInsets.only(right: isMe ? 8 : 0, left: isMe ? 0 : 8, top: 4),
+      child: Wrap(
+        spacing: 4,
+        children: grouped.entries.map((e) {
+          return GestureDetector(
+            onTap: () => _showReactionUsers(msg, e.key),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.9),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.black12, width: 0.5),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 2,
+                    offset: const Offset(0, 1),
+                  ),
+                ],
+              ),
+              child: Text(
+                '${e.key} ${e.value}',
+                style: const TextStyle(fontSize: 12),
               ),
             ),
-          )
-          .toList(),
+          );
+        }).toList(),
+      ),
     );
   }
 
@@ -691,6 +880,7 @@ class _ChatScreenState extends State<ChatScreen> {
             Expanded(
               child: TextField(
                 controller: _textCtrl,
+                textDirection: TextDirection.rtl,
                 decoration: InputDecoration(
                   hintText: 'اكتب رسالتك ...',
                   hintStyle: TextStyle(fontFamily: AppFonts.regular),
@@ -706,6 +896,8 @@ class _ChatScreenState extends State<ChatScreen> {
                     borderSide: BorderSide.none,
                   ),
                 ),
+                maxLines: null,
+                minLines: 1,
                 onChanged: (text) => _updateTyping(text.isNotEmpty),
               ),
             ),
@@ -799,26 +991,35 @@ class _ChatScreenState extends State<ChatScreen> {
   void _showReactions(ChatMessage msg) {
     showModalBottomSheet(
       context: context,
-      builder: (_) => Wrap(
-        children: ['❤️', '😂', '👍', '🔥']
-            .map(
-              (e) => Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: msg.reactions[msg.id] == e
-                      ? AppColors.grey
-                      : Colors.transparent,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (_) => Container(
+        padding: const EdgeInsets.all(16),
+        child: Wrap(
+          alignment: WrapAlignment.center,
+          children: ['❤️', '😂', '👍', '🔥', '😮', '😢']
+              .map(
+                (e) => Container(
+                  margin: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    // نتحقق هل إيموجي المستخدم الحالي (userName) هو هذا الإيموجي؟
+                    color: msg.reactions[userName] == e
+                        ? Colors.blue.withOpacity(0.2)
+                        : Colors.transparent,
+                  ),
+                  child: IconButton(
+                    icon: Text(e, style: const TextStyle(fontSize: 30)),
+                    onPressed: () {
+                      toggleReaction(msg, e);
+                      Navigator.pop(context);
+                    },
+                  ),
                 ),
-                child: IconButton(
-                  icon: Text(e, style: const TextStyle(fontSize: 26)),
-                  onPressed: () {
-                    toggleReaction(msg, e);
-                    Navigator.pop(context);
-                  },
-                ),
-              ),
-            )
-            .toList(),
+              )
+              .toList(),
+        ),
       ),
     );
   }
@@ -831,18 +1032,36 @@ class _ChatScreenState extends State<ChatScreen> {
 
     showModalBottomSheet(
       context: context,
-      builder: (_) => ListView(
-        children: users
-            .map(
-              (u) => ListTile(
-                leading: const Icon(Icons.person),
-                title: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [Text(u), Text(emoji)],
+      builder: (_) => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: CustomText(
+              text: "المتفاعلون بـ $emojiـ",
+              fontSize: 14.sp,
+              fontFamily: AppFonts.bold,
+              color: AppColors.black,
+            ),
+          ),
+          const Divider(),
+          Flexible(
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: users.length,
+              itemBuilder: (context, index) => ListTile(
+                leading: const CircleAvatar(child: Icon(Icons.person)),
+                title: CustomText(
+                  text: users[index],
+                  fontSize: 15.sp,
+                  color: AppColors.black,
+                  textAlign: TextAlign.start,
                 ),
+                trailing: Text(emoji, style: TextStyle(fontSize: 16.sp)),
               ),
-            )
-            .toList(),
+            ),
+          ),
+        ],
       ),
     );
   }

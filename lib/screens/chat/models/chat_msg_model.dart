@@ -6,10 +6,11 @@ class ChatMessage {
   final String phoneNumber;
   final String message;
   final String? replyTo;
-  final Map<String, String> reactions;
+  final Map<String, dynamic> reactions;
   final DateTime timestamp;
   final List<String> seenBy;
   final bool isDeleted;
+  final bool? isPinned;
   final String? audioUrl;
   final String? audioDuration;
   final String? type;
@@ -23,6 +24,7 @@ class ChatMessage {
     required this.reactions,
     required this.seenBy,
     required this.isDeleted,
+    this.isPinned,
     this.replyTo,
     this.audioUrl,
     this.audioDuration,
@@ -40,9 +42,10 @@ class ChatMessage {
       ((m['timestamp'] != null ? m['timestamp'] : Timestamp.now())
       as Timestamp)
           .toDate(),
-      reactions: Map<String, String>.from(m['reactions'] ?? {}),
+      reactions: Map<String, dynamic>.from(m['reactions'] ?? {}),
       seenBy: List<String>.from(m['seenBy'] ?? []),
       isDeleted: m['isDeleted'] ?? false,
+      isPinned: m['isPinned'] ?? false,
       replyTo: m['replyTo'],
       audioUrl: m['audioUrl'],
       audioDuration: m['audioDuration'],
@@ -57,9 +60,10 @@ class ChatMessage {
       phoneNumber: m['phone'] ?? '01149504892',
       message: m['message'],
       timestamp: DateTime.parse(m['timestamp']),
-      reactions: Map<String, String>.from(m['reactions'] ?? {}),
+      reactions: Map<String, dynamic>.from(m['reactions'] ?? {}),
       seenBy: List<String>.from(m['seenBy']),
       isDeleted: m['isDeleted'] ?? false,
+      isPinned: m['isPinned'] ?? false,
       replyTo: m['replyTo'],
       audioUrl: m['audioUrl'],
       audioDuration: m['audioDuration'],
@@ -76,6 +80,7 @@ class ChatMessage {
     'reactions': reactions,
     'seenBy': seenBy,
     'isDeleted': isDeleted,
+    'isPinned': isPinned,
     'replyTo': replyTo,
     'audioUrl': audioUrl,
     'type': type,
