@@ -212,32 +212,27 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Future<void> _markSeen() async {
+    // افحص فقط آخر 10 رسائل أو الرسائل التي لم يظهر اسمك في seenBy الخاص بها
+    final unreadMessages = _messages
+        .where(
+          (m) => m.name != userName && !(m.seenBy ?? []).contains(userName),
+        )
+        .take(10); // تحديد العدد يحسن الأداء جداً
+
+    if (unreadMessages.isEmpty) return;
+
     final batch = FirebaseFirestore.instance.batch();
-    int ops = 0;
-
-    for (final m in _messages) {
-      if (m.id == null) continue;
-
-      final seen = List<String>.from(m.seenBy ?? []);
-      if (seen.contains(userName)) continue;
-      if (m.name == userName) continue;
-
+    for (final m in unreadMessages) {
       final ref = FirebaseFirestore.instance
           .collection('chats')
           .doc('messages')
           .collection('messages')
           .doc(m.id);
-
-      batch.set(ref, {
+      batch.update(ref, {
         'seenBy': FieldValue.arrayUnion([userName]),
-      }, SetOptions(merge: true));
-
-      ops++;
+      });
     }
-
-    if (ops > 0) {
-      await batch.commit();
-    }
+    await batch.commit();
   }
 
   void _cacheMessages(List<ChatMessage> msgs) {
