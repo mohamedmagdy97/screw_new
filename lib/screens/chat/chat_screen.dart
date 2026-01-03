@@ -43,7 +43,6 @@ class _ChatScreenState extends State<ChatScreen> {
   String? userCountry;
   Set<String> _usersTyping = {};
 
-  // Search
   bool _isSearching = false;
   final TextEditingController _searchCtrl = TextEditingController();
   List<int> _searchResults = [];
@@ -54,7 +53,6 @@ class _ChatScreenState extends State<ChatScreen> {
     super.initState();
     userBox = Hive.box('userBox');
     cacheBox = Hive.box('cachedMessages');
-
     userName = userBox.get('name')?.toString();
     userPhone = userBox.get('phone')?.toString();
     userCountry = userBox.get('country')?.toString();
@@ -79,7 +77,6 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   // ---------------- DATA ----------------
-
   void _loadCachedMessages() {
     final cached =
         cacheBox.values
@@ -153,7 +150,6 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   // ---------------- LISTEN ----------------
-
   void _listenRealtime() {
     _liveSub = FirebaseFirestore.instance
         .collection('chats')
@@ -251,7 +247,6 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   // ---------------- ACTIONS ----------------
-
   Future<void> _sendMessage() async {
     if (_textCtrl.text.trim().isEmpty) return;
 
@@ -307,15 +302,6 @@ class _ChatScreenState extends State<ChatScreen> {
     });
   }
 
-  /*Future<void> _addReaction(ChatMessage msg, String emoji) async {
-    await FirebaseFirestore.instance
-        .collection('chats')
-        .doc('messages')
-        .collection('messages')
-        .doc(msg.id)
-        .update({'reactions.$userName': emoji});
-  } */
-
   Future<void> toggleReaction(ChatMessage msg, String emoji) async {
     if (userPhone == null || userName == null) return;
     HapticFeedback.lightImpact();
@@ -334,8 +320,6 @@ class _ChatScreenState extends State<ChatScreen> {
       final Map<String, dynamic> reactions = Map<String, dynamic>.from(
         data['reactions'] ?? {},
       );
-      // القيمة المخزنة ستكون عبارة عن "الاسم|الإيموجي"
-      // مثال: "010...": "أحمد|❤️"
       String value = '$userName|$emoji';
       if (reactions[userPhone] == value) {
         reactions.remove(userPhone);
@@ -356,8 +340,6 @@ class _ChatScreenState extends State<ChatScreen> {
       dateLocal.day,
     );
     final int diff = today.difference(messageDate).inDays;
-    // print("Message Date: $messageDate | Today: $today | Diff: $diff");
-
     if (diff == 0) return 'Today';
     if (diff == 1) return 'Yesterday';
 
@@ -368,7 +350,6 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   // ---------------- MSG UI ----------------
-
   Widget _messageContent(ChatMessage msg, int index, bool isMe) {
     switch (msg.type) {
       case 'voice':
@@ -381,7 +362,6 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   // ---------------- SCROLL ----------------
-
   void _onScroll() {
     if (_scrollCtrl.position.pixels < 60) _fetchOlderMessages();
   }
@@ -398,7 +378,6 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   // ---------------- SEARCH ----------------
-
   void _toggleSearch() {
     setState(() {
       _isSearching = !_isSearching;
@@ -410,7 +389,6 @@ class _ChatScreenState extends State<ChatScreen> {
 
   void _onSearchChanged(String query) {
     _searchResults.clear();
-
     if (query.isEmpty) {
       setState(() {});
       return;
@@ -557,9 +535,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   const TypingDots(),
                   const SizedBox(width: 4),
                   CustomText(
-                    text:
-                        // '${_usersTyping.join(', ')} يكتب الأن…',
-                        ' يكتب الأن ${_usersTyping.join(', ')}',
+                    text: ' يكتب الأن ${_usersTyping.join(', ')}',
                     textAlign: TextAlign.end,
                     fontSize: 12,
                   ),
@@ -614,22 +590,12 @@ class _ChatScreenState extends State<ChatScreen> {
               border: Border.all(color: AppColors.grayy2),
               borderRadius: BorderRadius.circular(10),
             ),
-            child:
-                // Text(
-                //   "تم حذف هذه الرسالة",
-                //   maxLines: 2,
-                //   overflow: TextOverflow.ellipsis,
-                //   style: const TextStyle(fontSize: 12, fontStyle: FontStyle.italic,color: Colors.white),
-                // ),
-                CustomText(
-                  text: 'تم حذف هذه الرسالة',
-                  // 'This message was deleted',
-                  fontSize: 12,
-                  color: AppColors.grey,
-                  textAlign: msg.name == userName
-                      ? TextAlign.end
-                      : TextAlign.start,
-                ),
+            child: CustomText(
+              text: 'تم حذف هذه الرسالة',
+              fontSize: 12,
+              color: AppColors.grey,
+              textAlign: msg.name == userName ? TextAlign.end : TextAlign.start,
+            ),
           ),
         ],
       );
@@ -731,16 +697,6 @@ class _ChatScreenState extends State<ChatScreen> {
                                   color: AppColors.grayy2,
                                 ),
                               ),
-
-                              // if (isMe && msg.seenBy.isNotEmpty)
-                              //   const Padding(
-                              //     padding: EdgeInsets.only(left: 4),
-                              //     child: Icon(
-                              //       Icons.done_all,
-                              //       size: 12,
-                              //       color: Colors.green,
-                              //     ),
-                              //   ),
                               if (msg.seenBy.isNotEmpty && msg.name == userName)
                                 Row(
                                   children: [
@@ -771,79 +727,21 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  Widget _reactionRow(ChatMessage msg) {
-    if (msg.reactions.isEmpty) return const SizedBox();
-
-    // تجميع التفاعلات المتشابهة وحساب عددها
-    final grouped = <String, int>{};
-    for (var value in msg.reactions.values) {
-      // نأخذ الجزء الثاني فقط (الإيموجي) للحساب
-      final emoji = value.toString().split('|').last;
-      grouped[emoji] = (grouped[emoji] ?? 0) + 1;
-    }
-
-    final isMe = msg.name == userName;
-
-    return Padding(
-      padding: EdgeInsets.only(right: isMe ? 8 : 0, left: isMe ? 0 : 8, top: 4),
-      child: Wrap(
-        spacing: 4,
-        children: grouped.entries.map((e) {
-          return GestureDetector(
-            onTap: () => _showReactionUsers(msg, e.key),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.9),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.black12, width: 0.5),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
-                    blurRadius: 2,
-                    offset: const Offset(0, 1),
-                  ),
-                ],
-              ),
-              child: Text(
-                '${e.key} ${e.value}',
-                style: const TextStyle(fontSize: 12),
-              ),
-            ),
-          );
-        }).toList(),
-      ),
-    );
-  }
-
   Widget _replyPreview(ChatMessage msg) {
     final r = _messages.firstWhere(
       (m) => m.id == msg.replyTo,
       orElse: () => msg,
     );
     return Container(
-      // padding: const EdgeInsets.all(6),
-      // margin: const EdgeInsets.only(bottom: 4),
-      // decoration: BoxDecoration(
-      //   color: Colors.blueGrey[100],
-      //   borderRadius: BorderRadius.circular(6),
-      // ),
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-      // margin: const EdgeInsets.only(bottom: 4),
       decoration: BoxDecoration(
         color: Colors.black12,
         borderRadius: BorderRadius.circular(5),
       ),
-
-      // decoration: BoxDecoration(
-      //   color: Colors.grey[350],
-      //   borderRadius: BorderRadius.circular(6),
-      // ),
       child: Text(
         r.isDeleted
-            ? 'تم الرد على رسالة محذوفة' //'Replied to deleted message'
+            ? 'تم الرد على رسالة محذوفة'
             : '${r.name == userName ? r.message : maskPhoneNumbers(r.message)}',
-        // : '↪ ${r.name == userName ? r.message : maskPhoneNumbers(r.message)}',
         maxLines: 2,
         overflow: TextOverflow.ellipsis,
         style: const TextStyle(fontSize: 12, fontStyle: FontStyle.italic),
@@ -929,7 +827,6 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   // ---------------- OPTIONS ----------------
-
   void _showOptions(ChatMessage msg) {
     showModalBottomSheet(
       context: context,
@@ -990,6 +887,49 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
+  // ---------------- REACTION ----------------
+  Widget _reactionRow(ChatMessage msg) {
+    if (msg.reactions.isEmpty) return const SizedBox();
+    final grouped = <String, int>{};
+    for (var value in msg.reactions.values) {
+      final emoji = value.toString().split('|').last;
+      grouped[emoji] = (grouped[emoji] ?? 0) + 1;
+    }
+
+    final isMe = msg.name == userName;
+
+    return Padding(
+      padding: EdgeInsets.only(right: isMe ? 8 : 0, left: isMe ? 0 : 8, top: 4),
+      child: Wrap(
+        spacing: 4,
+        children: grouped.entries.map((e) {
+          return GestureDetector(
+            onTap: () => _showReactionUsers(msg, e.key),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.9),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.black12, width: 0.5),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 2,
+                    offset: const Offset(0, 1),
+                  ),
+                ],
+              ),
+              child: Text(
+                '${e.key} ${e.value}',
+                style: const TextStyle(fontSize: 12),
+              ),
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
   void _showReactions(ChatMessage msg) {
     showModalBottomSheet(
       context: context,
@@ -997,11 +937,7 @@ class _ChatScreenState extends State<ChatScreen> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (_) {
-        // جلب التفاعل الحالي للمستخدم من الخريطة (إذا وجد)
-        // القيمة المخزنة تكون مثل: "أحمد|❤️"
         final String? currentFullReaction = msg.reactions[userPhone];
-
-        // استخراج الإيموجي فقط للمقارنة وتلوين الدائرة
         final String? currentEmoji = currentFullReaction?.split('|').last;
 
         return Container(
@@ -1014,7 +950,6 @@ class _ChatScreenState extends State<ChatScreen> {
                     margin: const EdgeInsets.all(4),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      // نتحقق الآن من الإيموجي المستخرج من الصيغة المدمجة
                       color: currentEmoji == e
                           ? Colors.blue.withOpacity(0.2)
                           : Colors.transparent,
@@ -1036,7 +971,6 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   void _showReactionUsers(ChatMessage msg, String emoji) {
-    // تصفية التفاعلات التي تنتهي بنفس الإيموجي المطلوب
     final reactingDetails = msg.reactions.entries
         .where((e) => e.value.toString().split('|').last == emoji)
         .map(
@@ -1089,22 +1023,12 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   String maskPhoneNumbers(String text) {
-    // التعبير النمطي المطور:
-    // (?:\+2|002)?      <- كود الدولة (اختياري)
-    // \s?               <- مسافة (اختياري)
-    // (010|011|012|015) <- بداية رقم الموبايل المصري
-    // [-\s]?            <- شرطة أو مسافة (اختياري)
-    // \d{4,8}           <- يبحث عن حد أدنى 4 أرقام وحد أقصى 8 أرقام بعد الكود
-
     final RegExp phoneRegex = RegExp(
       r'(?:\+2|002)?\s?(010|011|012|015)[-\s]?\d{4,8}',
       caseSensitive: false,
     );
-
-    // replaceAllMapped تبحث عن كل التطابقات وتستبدلها
     return text.replaceAllMapped(phoneRegex, (match) {
       String found = match.group(0)!;
-      // استبدال طول الرقم المكتشف بالكامل بعلامات *
       return '*' * found.length;
     });
   }
