@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive/hive.dart';
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart' as intl;
 import 'package:screw_calculator/components/custom_text.dart';
 import 'package:screw_calculator/helpers/device_info.dart';
 import 'package:screw_calculator/screens/chat/models/chat_msg_model.dart';
@@ -263,23 +263,58 @@ class _ChatScreenState extends State<ChatScreen> {
     });
   }
 
-  Future<void> _addReaction(ChatMessage msg, String emoji) async {
+  /*Future<void> _addReaction(ChatMessage msg, String emoji) async {
     await FirebaseFirestore.instance
         .collection('chats')
         .doc('messages')
         .collection('messages')
         .doc(msg.id)
         .update({'reactions.$userName': emoji});
+  } */
+
+  Future<void> toggleReaction(ChatMessage msg, String emoji) async {
+    final docRef = FirebaseFirestore.instance
+        .collection('chats')
+        .doc('messages')
+        .collection('messages')
+        .doc(msg.id);
+
+    await FirebaseFirestore.instance.runTransaction((tx) async {
+      final snap = await tx.get(docRef);
+      if (!snap.exists) return;
+
+      final data = snap.data()!;
+      final reactions = Map<String, String>.from(data['reactions'] ?? {});
+
+      if (reactions[msg.id] == emoji) {
+        reactions.remove(msg.id);
+      } else {
+        // جديد أو تبديل
+        reactions[msg.id] = emoji;
+      }
+      tx.update(docRef, {'reactions': reactions});
+    });
   }
 
   String _daySeparator(DateTime dt) {
+    final dateLocal = dt.toLocal();
     final now = DateTime.now();
-    final d = DateTime(dt.year, dt.month, dt.day);
-    final diff = now.difference(d).inDays;
+    final today = DateTime(now.year, now.month, now.day);
+    final messageDate = DateTime(
+      dateLocal.year,
+      dateLocal.month,
+      dateLocal.day,
+    );
+    final int diff = today.difference(messageDate).inDays;
+    // print("Message Date: $messageDate | Today: $today | Diff: $diff");
 
     if (diff == 0) return 'Today';
     if (diff == 1) return 'Yesterday';
-    return DateFormat('d MMM').format(dt);
+
+    if (dateLocal.year == now.year) {
+      return intl.DateFormat('d MMM').format(dateLocal);
+    }
+    return intl.DateFormat('d MMM y').format(dateLocal);
   }
 
   // ---------------- MSG UI ----------------
@@ -345,14 +380,18 @@ class _ChatScreenState extends State<ChatScreen> {
         children: [
           if (_usersTyping.isNotEmpty)
             Padding(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.only(right: 8, left: 8, bottom: 4),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   const TypingDots(),
-                  const SizedBox(width: 6),
-                  Text(
-                    '${_usersTyping.join(', ')} typing…',
-                    style: const TextStyle(fontSize: 12, color: Colors.white),
+                  const SizedBox(width: 4),
+                  CustomText(
+                    text:
+                        // '${_usersTyping.join(', ')} يكتب الأن…',
+                        ' يكتب الأن ${_usersTyping.join(', ')}',
+                    textAlign: TextAlign.end,
+                    fontSize: 12,
                   ),
                 ],
               ),
@@ -380,13 +419,13 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Widget _buildMessage(ChatMessage msg, int index) {
     final msg = _messages[index];
+    final isMe = msg.name == userName;
 
     final prev = index > 0 ? _messages[index - 1] : null;
 
-    final showName = prev == null || prev.name != msg.name;
+    final showName = (prev == null || prev.name != msg.name) && !isMe;
 
     final showDay = prev == null || prev.timestamp.day != msg.timestamp.day;
-    final isMe = msg.name == userName;
 
     if (msg.isDeleted) {
       return Column(
@@ -468,7 +507,6 @@ class _ChatScreenState extends State<ChatScreen> {
                   ? CrossAxisAlignment.end
                   : CrossAxisAlignment.start,
               children: [
-                if (msg.replyTo != null) _replyPreview(msg),
                 Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
@@ -480,13 +518,15 @@ class _ChatScreenState extends State<ChatScreen> {
                     children: [
                       if (showName)
                         CustomText(
-                          text: ('${msg.name}'),
+                          text: msg.name,
                           fontSize: 14.sp,
                           color: isMe
                               ? AppColors.mainColor
                               : AppColors.secondaryColor,
                           fontFamily: AppFonts.bold,
                         ),
+
+                      if (msg.replyTo != null) _replyPreview(msg),
 
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.end,
@@ -507,7 +547,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                DateFormat.jm().format(msg.timestamp),
+                                intl.DateFormat.jm().format(msg.timestamp),
                                 style: const TextStyle(
                                   fontSize: 10,
                                   color: AppColors.grayy2,
@@ -570,7 +610,7 @@ class _ChatScreenState extends State<ChatScreen> {
             (e) => GestureDetector(
               onTap: () => _showReactionUsers(msg, e.key),
               child: Padding(
-                padding: const EdgeInsets.only(right: 4),
+                padding: const EdgeInsets.only(right: 8, left: 8),
                 child: Chip(
                   padding: const EdgeInsets.all(4),
                   labelPadding: const EdgeInsets.symmetric(horizontal: 4),
@@ -597,16 +637,22 @@ class _ChatScreenState extends State<ChatScreen> {
       //   color: Colors.blueGrey[100],
       //   borderRadius: BorderRadius.circular(6),
       // ),
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      margin: const EdgeInsets.only(bottom: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+      // margin: const EdgeInsets.only(bottom: 4),
       decoration: BoxDecoration(
-        color: Colors.grey[350],
-        borderRadius: BorderRadius.circular(6),
+        color: Colors.black12,
+        borderRadius: BorderRadius.circular(5),
       ),
+
+      // decoration: BoxDecoration(
+      //   color: Colors.grey[350],
+      //   borderRadius: BorderRadius.circular(6),
+      // ),
       child: Text(
         r.isDeleted
             ? 'تم الرد على رسالة محذوفة' //'Replied to deleted message'
-            : '↪ ${r.name == userName ? r.message : maskPhoneNumbers(r.message)}',
+            : '${r.name == userName ? r.message : maskPhoneNumbers(r.message)}',
+        // : '↪ ${r.name == userName ? r.message : maskPhoneNumbers(r.message)}',
         maxLines: 2,
         overflow: TextOverflow.ellipsis,
         style: const TextStyle(fontSize: 12, fontStyle: FontStyle.italic),
@@ -646,11 +692,13 @@ class _ChatScreenState extends State<ChatScreen> {
               child: TextField(
                 controller: _textCtrl,
                 decoration: InputDecoration(
-                  hintText: 'Type message...',
+                  hintText: 'اكتب رسالتك ...',
+                  hintStyle: TextStyle(fontFamily: AppFonts.regular),
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: 16,
                     vertical: 12,
                   ),
+                  hintTextDirection: TextDirection.rtl,
                   filled: true,
                   fillColor: Colors.grey[200],
                   border: OutlineInputBorder(
@@ -754,12 +802,20 @@ class _ChatScreenState extends State<ChatScreen> {
       builder: (_) => Wrap(
         children: ['❤️', '😂', '👍', '🔥']
             .map(
-              (e) => IconButton(
-                icon: Text(e, style: const TextStyle(fontSize: 26)),
-                onPressed: () {
-                  _addReaction(msg, e);
-                  Navigator.pop(context);
-                },
+              (e) => Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: msg.reactions[msg.id] == e
+                      ? AppColors.grey
+                      : Colors.transparent,
+                ),
+                child: IconButton(
+                  icon: Text(e, style: const TextStyle(fontSize: 26)),
+                  onPressed: () {
+                    toggleReaction(msg, e);
+                    Navigator.pop(context);
+                  },
+                ),
               ),
             )
             .toList(),
