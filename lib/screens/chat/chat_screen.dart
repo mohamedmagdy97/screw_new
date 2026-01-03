@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart' as intl;
@@ -316,31 +317,30 @@ class _ChatScreenState extends State<ChatScreen> {
   } */
 
   Future<void> toggleReaction(ChatMessage msg, String emoji) async {
+    if (userPhone == null || userName == null) return;
+    HapticFeedback.lightImpact();
+
     final docRef = FirebaseFirestore.instance
         .collection('chats')
         .doc('messages')
         .collection('messages')
         .doc(msg.id);
 
-    // userName هو المتغير الذي جلبته من Hive سابقاً
-    if (userName == null) return;
-
     await FirebaseFirestore.instance.runTransaction((tx) async {
       final snap = await tx.get(docRef);
       if (!snap.exists) return;
 
       final data = snap.data()!;
-      // خريطة التفاعلات: { "اسم المستخدم": "الإيموجي" }
       final Map<String, dynamic> reactions = Map<String, dynamic>.from(
         data['reactions'] ?? {},
       );
-
-      if (reactions[userName] == emoji) {
-        // إذا ضغط نفس الإيموجي مرتين -> يحذفه
-        reactions.remove(userName);
+      // القيمة المخزنة ستكون عبارة عن "الاسم|الإيموجي"
+      // مثال: "010...": "أحمد|❤️"
+      String value = '$userName|$emoji';
+      if (reactions[userPhone] == value) {
+        reactions.remove(userPhone);
       } else {
-        // يضيف تفاعل جديد أو يستبدل القديم لهذا المستخدم
-        reactions[userName!] = emoji;
+        reactions[userPhone!] = value;
       }
       tx.update(docRef, {'reactions': reactions});
     });
@@ -776,7 +776,9 @@ class _ChatScreenState extends State<ChatScreen> {
 
     // تجميع التفاعلات المتشابهة وحساب عددها
     final grouped = <String, int>{};
-    for (var emoji in msg.reactions.values) {
+    for (var value in msg.reactions.values) {
+      // نأخذ الجزء الثاني فقط (الإيموجي) للحساب
+      final emoji = value.toString().split('|').last;
       grouped[emoji] = (grouped[emoji] ?? 0) + 1;
     }
 
@@ -994,51 +996,66 @@ class _ChatScreenState extends State<ChatScreen> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (_) => Container(
-        padding: const EdgeInsets.all(16),
-        child: Wrap(
-          alignment: WrapAlignment.center,
-          children: ['❤️', '😂', '👍', '🔥', '😮', '😢']
-              .map(
-                (e) => Container(
-                  margin: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    // نتحقق هل إيموجي المستخدم الحالي (userName) هو هذا الإيموجي؟
-                    color: msg.reactions[userName] == e
-                        ? Colors.blue.withOpacity(0.2)
-                        : Colors.transparent,
+      builder: (_) {
+        // جلب التفاعل الحالي للمستخدم من الخريطة (إذا وجد)
+        // القيمة المخزنة تكون مثل: "أحمد|❤️"
+        final String? currentFullReaction = msg.reactions[userPhone];
+
+        // استخراج الإيموجي فقط للمقارنة وتلوين الدائرة
+        final String? currentEmoji = currentFullReaction?.split('|').last;
+
+        return Container(
+          padding: const EdgeInsets.all(16),
+          child: Wrap(
+            alignment: WrapAlignment.center,
+            children: ['❤️', '😂', '👍', '🔥', '😮', '😢']
+                .map(
+                  (e) => Container(
+                    margin: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      // نتحقق الآن من الإيموجي المستخرج من الصيغة المدمجة
+                      color: currentEmoji == e
+                          ? Colors.blue.withOpacity(0.2)
+                          : Colors.transparent,
+                    ),
+                    child: IconButton(
+                      icon: Text(e, style: const TextStyle(fontSize: 30)),
+                      onPressed: () {
+                        toggleReaction(msg, e);
+                        Navigator.pop(context);
+                      },
+                    ),
                   ),
-                  child: IconButton(
-                    icon: Text(e, style: const TextStyle(fontSize: 30)),
-                    onPressed: () {
-                      toggleReaction(msg, e);
-                      Navigator.pop(context);
-                    },
-                  ),
-                ),
-              )
-              .toList(),
-        ),
-      ),
+                )
+                .toList(),
+          ),
+        );
+      },
     );
   }
 
   void _showReactionUsers(ChatMessage msg, String emoji) {
-    final users = msg.reactions.entries
-        .where((e) => e.value == emoji)
-        .map((e) => e.key)
+    // تصفية التفاعلات التي تنتهي بنفس الإيموجي المطلوب
+    final reactingDetails = msg.reactions.entries
+        .where((e) => e.value.toString().split('|').last == emoji)
+        .map(
+          (e) => e.value.toString().split('|').first,
+        ) // نأخذ الجزء الأول وهو الاسم
         .toList();
 
     showModalBottomSheet(
       context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
       builder: (_) => Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: CustomText(
-              text: "المتفاعلون بـ $emojiـ",
+              text: 'المتفاعلون بـ $emojiـ',
               fontSize: 14.sp,
               fontFamily: AppFonts.bold,
               color: AppColors.black,
@@ -1048,17 +1065,22 @@ class _ChatScreenState extends State<ChatScreen> {
           Flexible(
             child: ListView.builder(
               shrinkWrap: true,
-              itemCount: users.length,
-              itemBuilder: (context, index) => ListTile(
-                leading: const CircleAvatar(child: Icon(Icons.person)),
-                title: CustomText(
-                  text: users[index],
-                  fontSize: 15.sp,
-                  color: AppColors.black,
-                  textAlign: TextAlign.start,
-                ),
-                trailing: Text(emoji, style: TextStyle(fontSize: 16.sp)),
-              ),
+              itemCount: reactingDetails.length,
+              itemBuilder: (context, index) {
+                final nName = reactingDetails[index];
+                return ListTile(
+                  leading: const CircleAvatar(child: Icon(Icons.person)),
+                  title: CustomText(
+                    text: nName == userName
+                        ? 'أنا (أنت)'
+                        : reactingDetails[index],
+                    fontSize: 16.sp,
+                    color: AppColors.black,
+                    textAlign: TextAlign.start,
+                  ),
+                  trailing: Text(emoji, style: TextStyle(fontSize: 16.sp)),
+                );
+              },
             ),
           ),
         ],
