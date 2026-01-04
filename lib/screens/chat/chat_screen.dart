@@ -10,6 +10,7 @@ import 'package:screw_calculator/helpers/device_info.dart';
 import 'package:screw_calculator/screens/chat/models/chat_msg_model.dart';
 import 'package:screw_calculator/screens/chat/widgets/typing_dots.dart';
 import 'package:screw_calculator/utility/app_theme.dart';
+import 'package:screw_calculator/utility/utilities.dart';
 import 'package:sticky_headers/sticky_headers.dart';
 import 'package:swipe_to/swipe_to.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -164,6 +165,8 @@ class _ChatScreenState extends State<ChatScreen> {
         .orderBy('timestamp')
         .snapshots()
         .listen((snap) {
+          bool hasChanges = false;
+
           for (final c in snap.docChanges) {
             final msg = ChatMessage.fromDoc(c.doc);
 
@@ -171,17 +174,31 @@ class _ChatScreenState extends State<ChatScreen> {
                 !_messages.any((m) => m.id == msg.id)) {
               _messages.add(msg);
               _cacheMessages([msg]);
+              hasChanges = true;
+
+              if (_isNearBottom) {
+                _scrollToBottom();
+              } else {
+                _unreadNewMessages++;
+                _unreadNewMessagesText = msg.message;
+                _showNewMsgIndicator = true;
+              }
             }
 
             if (c.type == DocumentChangeType.modified) {
               final i = _messages.indexWhere((m) => m.id == msg.id);
-              if (i != -1) _messages[i] = msg;
+              if (i != -1) {
+                _messages[i] = msg;
+                hasChanges = true;
+              }
             }
-            _markSeen();
           }
 
-          setState(() {});
-          _scrollToBottomIfNear();
+          if (hasChanges) {
+            setState(() {});
+            _scrollToBottomIfNear();
+            _markSeen();
+          }
         });
   }
 
@@ -218,17 +235,20 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Future<void> _markSeen() async {
-    // افحص فقط آخر 10 رسائل أو الرسائل التي لم يظهر اسمك في seenBy الخاص بها
-    final unreadMessages = _messages
+    final toUpdate = _messages
         .where(
-          (m) => m.name != userName && !(m.seenBy ?? []).contains(userName),
+          (m) =>
+              m.name != userName &&
+              !(m.seenBy ?? []).contains(userName) &&
+              m.id != null,
         )
-        .take(10); // تحديد العدد يحسن الأداء جداً
+        .take(10)
+        .toList();
 
-    if (unreadMessages.isEmpty) return;
+    if (toUpdate.isEmpty) return;
 
     final batch = FirebaseFirestore.instance.batch();
-    for (final m in unreadMessages) {
+    for (final m in toUpdate) {
       final ref = FirebaseFirestore.instance
           .collection('chats')
           .doc('messages')
@@ -237,8 +257,15 @@ class _ChatScreenState extends State<ChatScreen> {
       batch.update(ref, {
         'seenBy': FieldValue.arrayUnion([userName]),
       });
+
+      m.seenBy.add(userName!);
     }
-    await batch.commit();
+
+    try {
+      await batch.commit();
+    } catch (e) {
+      debugPrint("Error updating seen status: $e");
+    }
   }
 
   void _cacheMessages(List<ChatMessage> msgs) {
@@ -364,7 +391,30 @@ class _ChatScreenState extends State<ChatScreen> {
 
   // ---------------- SCROLL ----------------
   void _onScroll() {
-    if (_scrollCtrl.position.pixels < 60) _fetchOlderMessages();
+    if (!_scrollCtrl.hasClients) return;
+
+    final max = _scrollCtrl.position.maxScrollExtent;
+    final offset = _scrollCtrl.offset;
+
+    const threshold = 120.0;
+
+    final nearBottom = (max - offset) < threshold;
+
+    if (nearBottom != _isNearBottom) {
+      setState(() {
+        _isNearBottom = nearBottom;
+
+        if (_isNearBottom) {
+          _unreadNewMessages = 0;
+          _showNewMsgIndicator = false;
+        }
+      });
+    }
+
+    // pagination (كما عندك)
+    if (offset <= 60) {
+      _fetchOlderMessages();
+    }
   }
 
   void _scrollToBottom({bool force = false}) {
@@ -441,6 +491,52 @@ class _ChatScreenState extends State<ChatScreen> {
     final d = _scrollCtrl.position.maxScrollExtent - _scrollCtrl.offset;
     if (_firstLoad || d < 120) _scrollToBottom();
     _firstLoad = false;
+  }
+
+  bool _isNearBottom = true;
+  int _unreadNewMessages = 0;
+  String _unreadNewMessagesText = "";
+  bool _showNewMsgIndicator = false;
+
+  Widget _newMessageIndicator() {
+    return AnimatedScale(
+      duration: const Duration(milliseconds: 250),
+      scale: _showNewMsgIndicator ? 1 : 0,
+      child: GestureDetector(
+        onTap: _jumpToLatest,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          decoration: BoxDecoration(
+            color: AppColors.green.withOpacity(0.75),
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 6)],
+          ),
+          child: Row(
+            children: [
+              const Icon(Icons.arrow_downward, color: Colors.white, size: 18),
+              const SizedBox(width: 6),
+              Text(
+                '$_unreadNewMessages\n$_unreadNewMessagesText',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _jumpToLatest() {
+    _scrollToBottom();
+
+    setState(() {
+      _unreadNewMessages = 0;
+      _showNewMsgIndicator = false;
+      _isNearBottom = true;
+    });
   }
 
   @override
@@ -545,18 +641,30 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
 
           Expanded(
-            child: ListView.builder(
-              controller: _scrollCtrl,
-              itemCount: _messages.length,
-              itemBuilder: (c, i) {
-                _messageKeys.putIfAbsent(_messages[i].id, GlobalKey.new);
+            child: Stack(
+              children: [
+                ListView.builder(
+                  controller: _scrollCtrl,
+                  cacheExtent: 1000,
+                  itemCount: _messages.length,
+                  itemBuilder: (c, i) {
+                    _messageKeys.putIfAbsent(_messages[i].id, GlobalKey.new);
 
-                return _messageContent(
-                  _messages[i],
-                  i,
-                  _messages[i].name == userName,
-                );
-              },
+                    return _messageContent(
+                      _messages[i],
+                      i,
+                      _messages[i].name == userName,
+                    );
+                  },
+                ),
+
+                if (_showNewMsgIndicator)
+                  Positioned(
+                    bottom: 80,
+                    right: 16,
+                    child: _newMessageIndicator(),
+                  ),
+              ],
             ),
           ),
           if (_replyingTo != null) _replyBar(),
@@ -587,24 +695,31 @@ class _ChatScreenState extends State<ChatScreen> {
 
   void _onReplyTap(String replyToMessageId) async {
     final key = _messageKeys[replyToMessageId];
-    if (key == null) return;
 
-    final context = key.currentContext;
-    if (context == null) return;
+    if (key == null || key.currentContext == null) {
+      Utilities().showCustomSnack(
+        context,
+        txt: 'الرسالة قديمة جداً، يرجى التمرير للأعلى للوصول إليها ',
+      );
 
+      return;
+    }
     setState(() {
       _highlightedMessageId = replyToMessageId;
     });
 
-    await Scrollable.ensureVisible(
-      context,
-      duration: const Duration(milliseconds: 450),
-      curve: Curves.easeInOut,
-      alignment: 0.3, // خلي الرسالة مش لازقة فوق
-    );
+    try {
+      await Scrollable.ensureVisible(
+        key.currentContext!,
+        duration: const Duration(milliseconds: 600),
+        curve: Curves.fastOutSlowIn,
+        alignment: 0.5, // وضع الرسالة في منتصف الشاشة بالضبط
+      );
+    } catch (e) {
+      debugPrint("Scroll error: $e");
+    }
 
-    // إزالة الـ highlight بعد ثانية
-    Future.delayed(const Duration(seconds: 1), () {
+    Future.delayed(const Duration(seconds: 2), () {
       if (mounted) {
         setState(() => _highlightedMessageId = null);
       }
@@ -645,8 +760,11 @@ class _ChatScreenState extends State<ChatScreen> {
         _daySeparator(_messages[index - 1].timestamp) !=
             _daySeparator(msg.timestamp);
 
+    final messageKey = GlobalKey();
+    _messageKeys[msg.id] = messageKey;
+
     final Widget messageBubble = Container(
-      key: _messageKeys[msg.id],
+      key: messageKey,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 400),
         curve: Curves.easeOut,
