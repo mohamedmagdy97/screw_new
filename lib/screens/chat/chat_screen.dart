@@ -195,6 +195,7 @@ class _ChatScreenState extends State<ChatScreen> {
           }
 
           if (hasChanges) {
+            if (!mounted) return;
             setState(() {});
             _scrollToBottomIfNear();
             _markSeen();
@@ -411,8 +412,7 @@ class _ChatScreenState extends State<ChatScreen> {
       });
     }
 
-    // pagination (كما عندك)
-    if (offset <= 60) {
+    if (offset <= 60 && !_isLoadingMore && _hasMore && _lastDoc != null) {
       _fetchOlderMessages();
     }
   }
@@ -528,7 +528,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     ),
 
                     CustomText(
-                      text: _unreadNewMessagesText,
+                      text: maskPhoneNumbers(_unreadNewMessagesText),
                       maxLines: 2,
                       fontSize: 14.sp,
                       textAlign: TextAlign.end,
@@ -1294,12 +1294,12 @@ class _ChatScreenState extends State<ChatScreen> {
 
   String maskPhoneNumbers(String text) {
     final RegExp phoneRegex = RegExp(
-      r'(?:\+2|002)?\s?(010|011|012|015)[-\s]?\d{4,8}',
-      caseSensitive: false,
+      r'(?:\+|00)?\d{1,3}[\s\-]?\(?\d{1,5}\)?[\s\-]?\d{1,5}[\s\-]?\d{1,5}',
     );
     return text.replaceAllMapped(phoneRegex, (match) {
-      final String found = match.group(0)!;
-      return '*' * found.length;
+      final phone = match.group(0)!;
+      if (phone.length <= 4) return phone;
+      return '${phone.substring(0, 2)}${'*' * (phone.length - 4)}${phone.substring(phone.length - 2)}';
     });
   }
 }
