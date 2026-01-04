@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive/hive.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:screw_calculator/components/custom_text.dart';
 import 'package:screw_calculator/helpers/device_info.dart';
@@ -81,6 +83,40 @@ class _ChatScreenState extends State<ChatScreen> {
     _textCtrl.dispose();
     _updateTyping(false);
     super.dispose();
+  }
+
+  Future<void> _pickAndSendImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 50,
+    ); // ضغط الصورة
+
+    if (pickedFile != null) {
+      final bytes = await pickedFile.readAsBytes();
+      String base64Image = base64Encode(bytes);
+
+      // إرسال كرسالة عادية مع تحديد النوع
+      await FirebaseFirestore.instance
+          .collection('chats')
+          .doc('messages')
+          .collection('messages')
+          .add({
+            'name': userName,
+            'phone': userPhone,
+            'message': base64Image,
+            'type': 'image', // مهم جداً للتفريق
+            'timestamp': FieldValue.serverTimestamp(),
+            'seenBy': [],
+
+            'country': userCountry,
+            'deviceName': await getDeviceName(),
+            'datetime': DateTime.now(),
+            'replyTo': _replyingTo?.id,
+            'reactions': {},
+            'isDeleted': false,
+          });
+    }
   }
 
   // ---------------- DATA ----------------
@@ -265,7 +301,7 @@ class _ChatScreenState extends State<ChatScreen> {
     try {
       await batch.commit();
     } catch (e) {
-      debugPrint("Error updating seen status: $e");
+      debugPrint('Error updating seen status: $e');
     }
   }
 
@@ -359,6 +395,24 @@ class _ChatScreenState extends State<ChatScreen> {
     });
   }
 
+  void _showFullImage(String base64) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => Scaffold(
+          backgroundColor: Colors.black,
+          appBar: AppBar(backgroundColor: Colors.transparent),
+          body: Center(
+            child: InteractiveViewer(
+              // تفعيل الزووم تلقائياً
+              child: Image.memory(base64Decode(base64)),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   String _daySeparator(DateTime dt) {
     final dateLocal = dt.toLocal();
     final now = DateTime.now();
@@ -383,6 +437,19 @@ class _ChatScreenState extends State<ChatScreen> {
     switch (msg.type) {
       case 'voice':
         return Text(msg.message);
+      // case 'image':
+      //   return GestureDetector(
+      //     onTap: () => _showFullImage(msg.message),
+      //     child: ClipRRect(
+      //       borderRadius: BorderRadius.circular(8),
+      //       child: Image.memory(
+      //         base64Decode(msg.message),
+      //         width: 200,
+      //         height: 200,
+      //         fit: BoxFit.cover,
+      //       ),
+      //     ),
+      //   );
       // return _voiceBubble(msg, isMe);
       default:
         return _buildMessage(msg, index);
@@ -495,7 +562,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   bool _isNearBottom = true;
   int _unreadNewMessages = 0;
-  String _unreadNewMessagesText = "";
+  String _unreadNewMessagesText = '';
   bool _showNewMsgIndicator = false;
 
   Widget _newMessageIndicator() {
@@ -637,6 +704,50 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
       body: Column(
         children: [
+          StreamBuilder<DocumentSnapshot>(
+            stream: FirebaseFirestore.instance
+                .collection('chats')
+                .doc('pinned')
+                .snapshots(),
+            builder: (context, snap) {
+              if (!snap.hasData || !snap.data!.exists) return const SizedBox();
+              var data = snap.data!;
+              return Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                color: AppColors.mainColor,
+                child: Row(
+                  children: [
+                    const Icon(Icons.push_pin, size: 16, color: Colors.white),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        data['text'],
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 13,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    if (userName == 'الآدمن' ||
+                        userPhone == '01149504892' ||
+                        userPhone == '01556464892') // خيار الإلغاء للآدمن فقط
+                      IconButton(
+                        padding: EdgeInsets.zero,
+                        icon: const Icon(
+                          Icons.close,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                        onPressed: () => data.reference.delete(),
+                      ),
+                  ],
+                ),
+              );
+            },
+          ),
           if (_usersTyping.isNotEmpty)
             Padding(
               padding: const EdgeInsets.only(right: 8, left: 8, bottom: 4),
@@ -730,7 +841,7 @@ class _ChatScreenState extends State<ChatScreen> {
         alignment: 0.5, // وضع الرسالة في منتصف الشاشة بالضبط
       );
     } catch (e) {
-      debugPrint("Scroll error: $e");
+      debugPrint('Scroll error: $e');
     }
 
     Future.delayed(const Duration(seconds: 2), () {
@@ -918,18 +1029,43 @@ class _ChatScreenState extends State<ChatScreen> {
                                               CrossAxisAlignment.end,
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            Flexible(
-                                              child: CustomText(
-                                                text: isMe
-                                                    ? msg.message
-                                                    : maskPhoneNumbers(
-                                                        msg.message,
-                                                      ),
-                                                fontSize: 14.sp,
-                                                textAlign: TextAlign.start,
-                                                color: AppColors.black,
+                                            if (msg.type != 'image')
+                                              Flexible(
+                                                child: CustomText(
+                                                  text: isMe
+                                                      ? msg.message
+                                                      : maskPhoneNumbers(
+                                                          msg.message,
+                                                        ),
+                                                  fontSize: 14.sp,
+                                                  textAlign: TextAlign.start,
+                                                  color: AppColors.black,
+                                                ),
                                               ),
-                                            ),
+                                            if (msg.type == 'image')
+                                              GestureDetector(
+                                                onTap: () =>
+                                                    _showFullImage(msg.message),
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                  child: Image.memory(
+                                                    base64Decode(msg.message),
+                                                    width: 0.2.sw,
+                                                    height: 0.2.sh,
+                                                    fit: BoxFit.cover,
+                                                    cacheWidth: 400,
+                                                    errorBuilder:
+                                                        (
+                                                          context,
+                                                          error,
+                                                          stackTrace,
+                                                        ) => const Icon(
+                                                          Icons.broken_image,
+                                                        ),
+                                                  ),
+                                                ),
+                                              ),
                                             const SizedBox(width: 8),
                                             Row(
                                               mainAxisSize: MainAxisSize.min,
@@ -1047,6 +1183,10 @@ class _ChatScreenState extends State<ChatScreen> {
         padding: const EdgeInsets.all(6),
         child: Row(
           children: [
+            IconButton(
+              icon: const Icon(Icons.add_a_photo, color: Colors.blue),
+              onPressed: _pickAndSendImage,
+            ),
             Expanded(
               child: TextField(
                 controller: _textCtrl,
@@ -1103,6 +1243,19 @@ class _ChatScreenState extends State<ChatScreen> {
       builder: (_) => Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          ListTile(
+            leading: const Icon(Icons.push_pin),
+            title: const Text('Pin Message'),
+            onTap: () {
+              FirebaseFirestore.instance.collection('chats').doc('pinned').set({
+                'text': msg.message,
+                'sender': msg.name,
+                'phone': msg.phoneNumber,
+                'id': msg.id,
+              });
+              Navigator.pop(context);
+            },
+          ),
           if (msg.name == userName)
             ListTile(
               leading: const Icon(Icons.edit),

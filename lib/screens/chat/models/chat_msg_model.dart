@@ -1,5 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+enum MessageStatus { sending, sent, delivered, read, error }
+
+enum MessageType { text, image, voice, file }
+
 class ChatMessage {
   final String id;
   final String name;
@@ -16,6 +20,8 @@ class ChatMessage {
   final String? type;
   final String? status;
   final bool? isMe;
+  final String? country;
+  final String? deviceName;
 
   ChatMessage({
     required this.id,
@@ -26,6 +32,8 @@ class ChatMessage {
     required this.reactions,
     required this.seenBy,
     required this.isDeleted,
+    this.country,
+    this.deviceName,
     this.isPinned,
     this.replyTo,
     this.audioUrl,
@@ -43,9 +51,9 @@ class ChatMessage {
       phoneNumber: m['phone'] ?? '01149504892',
       message: m['message'] ?? '',
       timestamp:
-      ((m['timestamp'] != null ? m['timestamp'] : Timestamp.now())
-      as Timestamp)
-          .toDate(),
+          ((m['timestamp'] != null ? m['timestamp'] : Timestamp.now())
+                  as Timestamp)
+              .toDate(),
       reactions: Map<String, dynamic>.from(m['reactions'] ?? {}),
       seenBy: List<String>.from(m['seenBy'] ?? []),
       isDeleted: m['isDeleted'] ?? false,
@@ -56,6 +64,8 @@ class ChatMessage {
       audioUrl: m['audioUrl'],
       audioDuration: m['audioDuration'],
       type: m['type'],
+      country: m['country'],
+      deviceName: m['deviceName'],
     );
   }
 
@@ -76,6 +86,8 @@ class ChatMessage {
       audioUrl: m['audioUrl'],
       audioDuration: m['audioDuration'],
       type: m['type'],
+      country: m['country'],
+      deviceName: m['deviceName'],
     );
   }
 
@@ -94,6 +106,8 @@ class ChatMessage {
     'replyTo': replyTo,
     'audioUrl': audioUrl,
     'type': type,
+    'deviceName': deviceName,
+    'country': country,
   };
 }
 
