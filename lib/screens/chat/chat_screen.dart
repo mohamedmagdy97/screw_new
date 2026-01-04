@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:any_link_preview/any_link_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
@@ -11,6 +10,7 @@ import 'package:screw_calculator/helpers/device_info.dart';
 import 'package:screw_calculator/screens/chat/models/chat_msg_model.dart';
 import 'package:screw_calculator/screens/chat/widgets/typing_dots.dart';
 import 'package:screw_calculator/utility/app_theme.dart';
+import 'package:sticky_headers/sticky_headers.dart';
 import 'package:swipe_to/swipe_to.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -318,7 +318,7 @@ class _ChatScreenState extends State<ChatScreen> {
       final Map<String, dynamic> reactions = Map<String, dynamic>.from(
         data['reactions'] ?? {},
       );
-      String value = '$userName|$emoji';
+      final String value = '$userName|$emoji';
       if (reactions[userPhone] == value) {
         reactions.remove(userPhone);
       } else {
@@ -580,225 +580,240 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
+  Widget _buildFloatingDateHeader(String dateText) {
+    return Center(
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+        decoration: BoxDecoration(
+          color: AppColors.grayy.withOpacity(0.8),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Text(
+          dateText,
+          style: const TextStyle(color: Colors.white, fontSize: 11),
+        ),
+      ),
+    );
+  }
+
   Widget _buildMessage(ChatMessage msg, int index) {
     final msg = _messages[index];
     final isMe = msg.name == userName;
-
     final prev = index > 0 ? _messages[index - 1] : null;
 
     final showName = (prev == null || prev.name != msg.name) && !isMe;
-
     final showDay = prev == null || prev.timestamp.day != msg.timestamp.day;
 
     final isHighlighted =
         _searchResults.contains(index) &&
         _searchResults[_currentSearchIndex] == index;
+    final bool isFirstInGroup =
+        index == 0 ||
+        _daySeparator(_messages[index - 1].timestamp) !=
+            _daySeparator(msg.timestamp);
 
-    if (msg.isDeleted) {
-      return Column(
-        crossAxisAlignment: isMe
-            ? CrossAxisAlignment.end
-            : CrossAxisAlignment.start,
+    final Widget messageBubble = Align(
+      alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+      child: Column(
         children: [
-          Container(
-            margin: const EdgeInsets.only(top: 8, right: 8, left: 8),
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              border: Border.all(color: AppColors.grayy2),
-              borderRadius: BorderRadius.circular(10),
+          if (msg.isDeleted)
+            Column(
+              crossAxisAlignment: isMe
+                  ? CrossAxisAlignment.end
+                  : CrossAxisAlignment.start,
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(top: 8, right: 8, left: 8),
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: AppColors.grayy2),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: CustomText(
+                    text: 'تم حذف هذه الرسالة',
+                    fontSize: 12,
+                    color: AppColors.grey,
+                    textAlign: msg.name == userName
+                        ? TextAlign.end
+                        : TextAlign.start,
+                  ),
+                ),
+              ],
             ),
-            child: CustomText(
-              text: 'تم حذف هذه الرسالة',
-              fontSize: 12,
-              color: AppColors.grey,
-              textAlign: msg.name == userName ? TextAlign.end : TextAlign.start,
-            ),
+
+          Column(
+            crossAxisAlignment: isMe
+                ? CrossAxisAlignment.end
+                : CrossAxisAlignment.start,
+            children: [
+              if (showDay)
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: IntrinsicHeight(
+                      child: Row(
+                        children: [
+                          const Expanded(
+                            child: Divider(
+                              color: Colors.grey,
+                              thickness: 0.5,
+                              endIndent: 10,
+                            ),
+                          ),
+                          Text(
+                            _daySeparator(msg.timestamp),
+                            style: const TextStyle(color: Colors.grey),
+                          ),
+                          const Expanded(
+                            child: Divider(
+                              color: Colors.grey,
+                              thickness: 0.5,
+                              indent: 10,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+
+              if (!msg.isDeleted)
+                IntrinsicWidth(
+                  child: Container(
+                    constraints: BoxConstraints(
+                      maxWidth: MediaQuery.of(context).size.width * 0.8,
+                    ),
+
+                    child: SwipeTo(
+                      iconColor: AppColors.white,
+                      onRightSwipe: (details) {
+                        setState(() {
+                          _replyingTo = msg;
+                        });
+                        HapticFeedback.mediumImpact();
+                      },
+                      child: GestureDetector(
+                        onLongPress: () => _showOptions(msg),
+                        onDoubleTap: () => _showReactions(msg),
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                            right: 8,
+                            left: 8,
+                            top: 4,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: isMe
+                                ? CrossAxisAlignment.end
+                                : CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                // width: double.infinity,
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: isHighlighted
+                                      ? Colors.green[200]
+                                      : isMe
+                                      ? Colors.blue[100]
+                                      : Colors.grey[200],
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: const Radius.circular(12),
+                                    topRight: const Radius.circular(12),
+                                    bottomLeft: Radius.circular(isMe ? 12 : 0),
+                                    bottomRight: Radius.circular(isMe ? 0 : 12),
+                                  ),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    if (showName)
+                                      CustomText(
+                                        text: msg.name,
+                                        fontSize: 14.sp,
+                                        color: isMe
+                                            ? AppColors.mainColor
+                                            : AppColors.secondaryColor,
+                                        fontFamily: AppFonts.bold,
+                                      ),
+
+                                    if (msg.replyTo != null) _replyPreview(msg),
+
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Flexible(
+                                          child: CustomText(
+                                            text: isMe
+                                                ? msg.message
+                                                : maskPhoneNumbers(msg.message),
+                                            fontSize: 14.sp,
+                                            textAlign: TextAlign.start,
+                                            color: AppColors.black,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Text(
+                                              intl.DateFormat.jm().format(
+                                                msg.timestamp,
+                                              ),
+                                              style: const TextStyle(
+                                                fontSize: 10,
+                                                color: AppColors.grayy2,
+                                              ),
+                                            ),
+
+                                            _buildStatusIcons(msg, isMe),
+                                            if (msg.seenBy.isNotEmpty &&
+                                                msg.name == userName)
+                                              Row(
+                                                children: [
+                                                  const SizedBox(width: 4),
+
+                                                  Text(
+                                                    '👁 ${msg.seenBy.length}',
+                                                    style: const TextStyle(
+                                                      fontSize: 12,
+                                                      color:
+                                                          AppColors.greenDark,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              _reactionRow(msg),
+            ],
           ),
         ],
+      ),
+    );
+
+    if (isFirstInGroup) {
+      return StickyHeader(
+        header: _buildFloatingDateHeader(_daySeparator(msg.timestamp)),
+        content: messageBubble,
       );
     }
 
-    return Column(
-      crossAxisAlignment: isMe
-          ? CrossAxisAlignment.end
-          : CrossAxisAlignment.start,
-      children: [
-        if (showDay)
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: IntrinsicHeight(
-                child: Row(
-                  children: [
-                    const Expanded(
-                      child: Divider(
-                        color: Colors.grey,
-                        thickness: 0.5,
-                        endIndent: 10,
-                      ),
-                    ),
-                    Text(
-                      _daySeparator(msg.timestamp),
-                      style: const TextStyle(color: Colors.grey),
-                    ),
-                    const Expanded(
-                      child: Divider(
-                        color: Colors.grey,
-                        thickness: 0.5,
-                        indent: 10,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-
-        IntrinsicWidth(
-          child: Container(
-            constraints: BoxConstraints(
-              maxWidth: MediaQuery.of(context).size.width * 0.8,
-            ),
-
-            child: SwipeTo(
-              onRightSwipe: (details) {
-                setState(() {
-                  _replyingTo = msg;
-                });
-                HapticFeedback.mediumImpact();
-              },
-              child: GestureDetector(
-                onLongPress: () => _showOptions(msg),
-                onDoubleTap: () => _showReactions(msg),
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 8, left: 8, top: 4),
-                  child: Column(
-                    crossAxisAlignment: isMe
-                        ? CrossAxisAlignment.end
-                        : CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        // width: double.infinity,
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: isHighlighted
-                              ? Colors.green[200]
-                              : isMe
-                              ? Colors.blue[100]
-                              : Colors.grey[200],
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            if (showName)
-                              CustomText(
-                                text: msg.name,
-                                fontSize: 14.sp,
-                                color: isMe
-                                    ? AppColors.mainColor
-                                    : AppColors.secondaryColor,
-                                fontFamily: AppFonts.bold,
-                              ),
-
-                            if (msg.replyTo != null) _replyPreview(msg),
-
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Flexible(
-                                  child: CustomText(
-                                    text: isMe
-                                        ? msg.message
-                                        : maskPhoneNumbers(msg.message),
-                                    fontSize: 14.sp,
-                                    textAlign: TextAlign.start,
-                                    color: AppColors.black,
-                                  ),
-                                ),
-
-                                // if (msg.message.contains('http') ||
-                                //     msg.message.contains('www.') ||
-                                //     msg.message.contains('.com'))
-                                //   _buildLinkPreview(msg.message),
-                                const SizedBox(width: 8),
-                                Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      intl.DateFormat.jm().format(
-                                        msg.timestamp,
-                                      ),
-                                      style: const TextStyle(
-                                        fontSize: 10,
-                                        color: AppColors.grayy2,
-                                      ),
-                                    ),
-
-                                    _buildStatusIcons(msg, isMe),
-                                    if (msg.seenBy.isNotEmpty &&
-                                        msg.name == userName)
-                                      Row(
-                                        children: [
-                                          const SizedBox(width: 4),
-
-                                          Text(
-                                            '👁 ${msg.seenBy.length}',
-                                            style: const TextStyle(
-                                              fontSize: 12,
-                                              color: AppColors.greenDark,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-        _reactionRow(msg),
-      ],
-    );
+    return messageBubble;
   }
-
-  // Widget _buildLinkPreview(String text) {
-  //   // RegExp للتحقق من وجود رابط
-  //   final urlRegExp = RegExp(r'(https?:\/\/[^\s]+)');
-  //   final match = urlRegExp.firstMatch(text);
-  //
-  //   if (match != null) {
-  //     String url = match.group(0)!;
-  //     return Container(
-  //       // تحديد عرض أقصى للمعاينة لمنع الكراش داخل IntrinsicWidth
-  //       constraints: BoxConstraints(maxWidth: 250.w),
-  //       padding: const EdgeInsets.only(top: 8.0),
-  //       child: AnyLinkPreview(
-  //         link: url,
-  //         displayDirection: UIDirection.uiDirectionHorizontal,
-  //         showMultimedia: true,
-  //         bodyMaxLines: 2,
-  //         placeholderWidget: const SizedBox(),
-  //         // لا تظهر شيء أثناء التحميل
-  //         errorWidget: const SizedBox(),
-  //         // لا تظهر شيء إذا فشل الرابط
-  //         backgroundColor: Colors.white,
-  //         borderRadius: 12,
-  //         onTap: () async => await launchUrl(Uri.parse(url)),
-  //       ),
-  //     );
-  //   }
-  //   return const SizedBox();
-  // }
 
   Widget _replyPreview(ChatMessage msg) {
     final r = _messages.firstWhere(
@@ -1101,7 +1116,7 @@ class _ChatScreenState extends State<ChatScreen> {
       caseSensitive: false,
     );
     return text.replaceAllMapped(phoneRegex, (match) {
-      String found = match.group(0)!;
+      final String found = match.group(0)!;
       return '*' * found.length;
     });
   }

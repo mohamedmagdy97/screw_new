@@ -14,6 +14,8 @@ class ChatMessage {
   final String? audioUrl;
   final String? audioDuration;
   final String? type;
+  final String? status;
+  final bool? isMe;
 
   ChatMessage({
     required this.id,
@@ -29,6 +31,8 @@ class ChatMessage {
     this.audioUrl,
     this.audioDuration,
     this.type,
+    this.status,
+    this.isMe,
   });
 
   factory ChatMessage.fromDoc(DocumentSnapshot d) {
@@ -46,6 +50,8 @@ class ChatMessage {
       seenBy: List<String>.from(m['seenBy'] ?? []),
       isDeleted: m['isDeleted'] ?? false,
       isPinned: m['isPinned'] ?? false,
+      isMe: m['isMe'] ?? false,
+      status: m['status'],
       replyTo: m['replyTo'],
       audioUrl: m['audioUrl'],
       audioDuration: m['audioDuration'],
@@ -64,6 +70,8 @@ class ChatMessage {
       seenBy: List<String>.from(m['seenBy']),
       isDeleted: m['isDeleted'] ?? false,
       isPinned: m['isPinned'] ?? false,
+      isMe: m['isMe'] ?? false,
+      status: m['status'],
       replyTo: m['replyTo'],
       audioUrl: m['audioUrl'],
       audioDuration: m['audioDuration'],
@@ -81,6 +89,8 @@ class ChatMessage {
     'seenBy': seenBy,
     'isDeleted': isDeleted,
     'isPinned': isPinned,
+    'isMe': isMe,
+    'status': status,
     'replyTo': replyTo,
     'audioUrl': audioUrl,
     'type': type,
