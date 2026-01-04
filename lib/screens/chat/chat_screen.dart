@@ -605,7 +605,9 @@ class _ChatScreenState extends State<ChatScreen> {
                     ),
 
                     CustomText(
-                      text: maskPhoneNumbers(_unreadNewMessagesText),
+                      text: _unreadNewMessagesText.length > 1000
+                          ? 'صورة جديدة'
+                          : maskPhoneNumbers(_unreadNewMessagesText),
                       maxLines: 2,
                       fontSize: 14.sp,
                       textAlign: TextAlign.end,
@@ -1164,14 +1166,27 @@ class _ChatScreenState extends State<ChatScreen> {
           color: Colors.black12,
           borderRadius: BorderRadius.circular(5),
         ),
-        child: Text(
-          r.isDeleted
-              ? 'تم الرد على رسالة محذوفة'
-              : '${r.name == userName ? r.message : maskPhoneNumbers(r.message)}',
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-          style: const TextStyle(fontSize: 12, fontStyle: FontStyle.italic),
-        ),
+        child: r.message.length > 1000
+            ? Image.memory(
+                base64Decode(r.message),
+                width: 0.2.sw,
+                height: 0.1.sh,
+                fit: BoxFit.cover,
+                cacheWidth: 400,
+                errorBuilder: (context, error, stackTrace) =>
+                    const Icon(Icons.broken_image),
+              )
+            : Text(
+                r.isDeleted
+                    ? 'تم الرد على رسالة محذوفة'
+                    : '${r.name == userName ? r.message : maskPhoneNumbers(r.message)}',
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
       ),
     );
   }
@@ -1184,7 +1199,9 @@ class _ChatScreenState extends State<ChatScreen> {
         children: [
           Expanded(
             child: Text(
-              _replyingTo!.name == userName
+              _replyingTo!.message.length > 1000
+                  ? 'رد على صورة'
+                  : _replyingTo!.name == userName
                   ? _replyingTo!.message
                   : maskPhoneNumbers(_replyingTo!.message),
             ),
@@ -1204,10 +1221,19 @@ class _ChatScreenState extends State<ChatScreen> {
         padding: const EdgeInsets.all(6),
         child: Row(
           children: [
-            IconButton(
-              icon: const Icon(Icons.add_a_photo, color: Colors.blue),
-              onPressed: _pickAndSendImage,
+            CircleAvatar(
+              radius: 24,
+              backgroundColor: AppColors.mainColor,
+              child: IconButton(
+                icon: const Icon(
+                  Icons.camera_alt_outlined,
+                  color: Colors.white,
+                ),
+                onPressed: _pickAndSendImage,
+              ),
             ),
+
+            const SizedBox(width: 6),
             Expanded(
               child: TextField(
                 controller: _textCtrl,
@@ -1245,7 +1271,7 @@ class _ChatScreenState extends State<ChatScreen> {
             const SizedBox(width: 6),
             CircleAvatar(
               radius: 24,
-              backgroundColor: Colors.blue,
+              backgroundColor: AppColors.mainColor,
               child: IconButton(
                 icon: const Icon(Icons.send, color: Colors.white),
                 onPressed: _sendMessage,
