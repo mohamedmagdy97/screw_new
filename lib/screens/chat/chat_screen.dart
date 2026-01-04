@@ -505,21 +505,35 @@ class _ChatScreenState extends State<ChatScreen> {
       child: GestureDetector(
         onTap: _jumpToLatest,
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          width: 0.85.sw,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           decoration: BoxDecoration(
-            color: AppColors.green.withOpacity(0.75),
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 6)],
+            color: Colors.blue.shade600,
+            borderRadius: BorderRadius.circular(30),
+            boxShadow: const [BoxShadow(blurRadius: 10, color: Colors.black26)],
           ),
           child: Row(
             children: [
-              const Icon(Icons.arrow_downward, color: Colors.white, size: 18),
-              const SizedBox(width: 6),
-              Text(
-                '$_unreadNewMessages\n$_unreadNewMessagesText',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
+              const Icon(Icons.arrow_downward, color: Colors.white),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    CustomText(
+                      text: 'ـ$_unreadNewMessages رسالة جديـدة ',
+                      fontFamily: AppFonts.bold,
+                      maxLines: 1,
+                      fontSize: 15.sp,
+                    ),
+
+                    CustomText(
+                      text: _unreadNewMessagesText,
+                      maxLines: 2,
+                      fontSize: 14.sp,
+                      textAlign: TextAlign.end,
+                    ),
+                  ],
                 ),
               ),
             ],
