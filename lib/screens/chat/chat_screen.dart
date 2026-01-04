@@ -87,16 +87,26 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Future<void> _pickAndSendImage() async {
     final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(
+    final XFile? pickedFile = await picker.pickImage(
       source: ImageSource.gallery,
       imageQuality: 50,
-    ); // ضغط الصورة
+      maxWidth: 1024,
+    );
 
     if (pickedFile != null) {
-      final bytes = await pickedFile.readAsBytes();
-      String base64Image = base64Encode(bytes);
+      final Uint8List imageBytes = await pickedFile.readAsBytes();
 
-      // إرسال كرسالة عادية مع تحديد النوع
+      if (imageBytes.lengthInBytes > 1000000) {
+        Utilities().showCustomSnack(
+          context,
+          txt: 'الصورة كبيرة جداً، يرجى اختيار صورة أصغر',
+        );
+
+        return;
+      }
+
+      String base64Image = base64Encode(imageBytes);
+
       await FirebaseFirestore.instance
           .collection('chats')
           .doc('messages')
@@ -105,7 +115,7 @@ class _ChatScreenState extends State<ChatScreen> {
             'name': userName,
             'phone': userPhone,
             'message': base64Image,
-            'type': 'image', // مهم جداً للتفريق
+            'type': 'image',
             'timestamp': FieldValue.serverTimestamp(),
             'seenBy': [],
 
@@ -714,22 +724,33 @@ class _ChatScreenState extends State<ChatScreen> {
               var data = snap.data!;
               return Container(
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(horizontal: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 4,
+                ),
                 color: AppColors.mainColor,
                 child: Row(
                   children: [
-                    const Icon(Icons.push_pin, size: 16, color: Colors.white),
+                    const Icon(Icons.push_pin, size: 20, color: Colors.white),
                     const SizedBox(width: 8),
                     Expanded(
-                      child: Text(
-                        data['text'],
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 13,
-                        ),
+                      child: CustomText(
+                        text: data['text'],
+                        fontSize: 16.sp,
                         maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.end,
                       ),
+
+                      // Column(
+                      //                         crossAxisAlignment: CrossAxisAlignment.start,
+                      //                         children: [
+                      //                           Text("رسالة مثبتة من ${data['sender']}",
+                      //                               style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
+                      //                           Text(data['text'],
+                      //                               maxLines: 1, overflow: TextOverflow.ellipsis,
+                      //                               style: const TextStyle(fontSize: 13)),
+                      //                         ],
+                      //                       ),
                     ),
                     if (userName == 'الآدمن' ||
                         userPhone == '01149504892' ||
