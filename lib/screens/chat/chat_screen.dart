@@ -10,12 +10,11 @@ import 'package:intl/intl.dart' as intl;
 import 'package:screw_calculator/components/custom_text.dart';
 import 'package:screw_calculator/helpers/device_info.dart';
 import 'package:screw_calculator/screens/chat/models/chat_msg_model.dart';
-import 'package:screw_calculator/screens/chat/widgets/typing_dots.dart';
+import 'package:screw_calculator/screens/chat/presentation/widgets/typing_dots.dart';
 import 'package:screw_calculator/utility/app_theme.dart';
 import 'package:screw_calculator/utility/utilities.dart';
 import 'package:sticky_headers/sticky_headers.dart';
 import 'package:swipe_to/swipe_to.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -1292,7 +1291,12 @@ class _ChatScreenState extends State<ChatScreen> {
         children: [
           ListTile(
             leading: const Icon(Icons.push_pin),
-            title: const Text('Pin Message'),
+            title: CustomText(
+              text: 'تثبيت الرسالة',
+              fontSize: 14.sp,
+              color: AppColors.black,
+              textAlign: TextAlign.start,
+            ),
             onTap: () {
               FirebaseFirestore.instance.collection('chats').doc('pinned').set({
                 'text': msg.message,
@@ -1306,7 +1310,12 @@ class _ChatScreenState extends State<ChatScreen> {
           if (msg.name == userName)
             ListTile(
               leading: const Icon(Icons.edit),
-              title: const Text('Edit'),
+              title: CustomText(
+                text: 'تعديل الرسالة',
+                fontSize: 14.sp,
+                color: AppColors.black,
+                textAlign: TextAlign.start,
+              ),
               onTap: () {
                 _setEdit(msg);
                 Navigator.pop(context);
@@ -1315,18 +1324,28 @@ class _ChatScreenState extends State<ChatScreen> {
 
           ListTile(
             leading: const Icon(Icons.reply),
-            title: const Text('Reply'),
+            title: CustomText(
+              text: 'الرد على الرسالة',
+              fontSize: 14.sp,
+              color: AppColors.black,
+              textAlign: TextAlign.start,
+            ),
             onTap: () {
               setState(() => _replyingTo = msg);
               Navigator.pop(context);
             },
           ),
-          if (msg.name == userName ||
-              msg.phoneNumber == '01149504892' ||
-              msg.phoneNumber == '01556464892')
+          if (msg.phoneNumber == userPhone ||
+              userPhone == '01149504892' ||
+              userPhone == '01556464892')
             ListTile(
               leading: const Icon(Icons.delete),
-              title: const Text('Delete'),
+              title: CustomText(
+                text: 'حذف الرسالة',
+                fontSize: 14.sp,
+                color: AppColors.black,
+                textAlign: TextAlign.start,
+              ),
               onTap: () async {
                 Navigator.pop(context);
 
@@ -1338,11 +1357,20 @@ class _ChatScreenState extends State<ChatScreen> {
                     actions: [
                       TextButton(
                         onPressed: () => Navigator.pop(ctx, false),
-                        child: const Text('Cancel'),
+                        child: CustomText(
+                          text: 'إلغاء',
+                          fontSize: 15.sp,
+                          color: AppColors.black,
+                          fontFamily: AppFonts.bold,
+                        ),
                       ),
                       TextButton(
                         onPressed: () => Navigator.pop(ctx, true),
-                        child: const Text('Delete'),
+                        child: CustomText(
+                          text: 'حذف',
+                          fontSize: 15.sp,
+                          color: AppColors.red,
+                        ),
                       ),
                     ],
                   ),
@@ -1407,8 +1435,8 @@ class _ChatScreenState extends State<ChatScreen> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (_) {
-        final String? currentFullReaction = msg.reactions[userPhone];
-        final String? currentEmoji = currentFullReaction?.split('|').last;
+        final dynamic currentFullReaction = msg.reactions[userPhone];
+        final dynamic currentEmoji = currentFullReaction?.split('|').last;
 
         return Container(
           padding: const EdgeInsets.all(16),

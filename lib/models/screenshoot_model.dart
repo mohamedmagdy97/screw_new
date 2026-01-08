@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
- class ScreenShootModel {
+class ScreenShootModel {
   final String id;
   final String title;
   final String description;
   final DateTime datetime;
+  final DateTime timestamp;
   final String? imageBase64;
 
   ScreenShootModel({
@@ -12,11 +13,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
     required this.title,
     required this.description,
     required this.datetime,
+    required this.timestamp,
     this.imageBase64,
   });
 
   factory ScreenShootModel.fromJson(Map<String, dynamic> json, String docId) {
     DateTime parsedDate;
+    DateTime parsedTimestamp;
 
     if (json['datetime'] is Timestamp) {
       parsedDate = (json['datetime'] as Timestamp).toDate();
@@ -26,11 +29,21 @@ import 'package:cloud_firestore/cloud_firestore.dart';
     } else {
       parsedDate = DateTime.now();
     }
+
+    if (json['timestamp'] is Timestamp) {
+      parsedTimestamp = (json['timestamp'] as Timestamp).toDate();
+    } else if (json['timestamp'] is String) {
+      parsedTimestamp =
+          DateTime.tryParse(json['timestamp']!.toString()) ?? DateTime.now();
+    } else {
+      parsedTimestamp = DateTime.now();
+    }
     return ScreenShootModel(
       id: docId,
       title: json['title']!.toString(),
       description: json['description'] ?? "",
       datetime: parsedDate,
+      timestamp: parsedTimestamp,
       imageBase64: json['imageBase64'] != null
           ? json['imageBase64']!.toString()
           : '',
@@ -42,6 +55,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
       'title': title,
       'description': description,
       'datetime': datetime.toIso8601String(),
+      'timestamp': timestamp.toIso8601String(),
       'imageBase64': imageBase64,
       'createdAt': DateTime.now().toIso8601String(),
     };
