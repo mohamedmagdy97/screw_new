@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
@@ -8,9 +9,15 @@ import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:screw_calculator/components/custom_text.dart';
+import 'package:screw_calculator/helpers/date_formatter.dart';
 import 'package:screw_calculator/helpers/device_info.dart';
+import 'package:screw_calculator/helpers/image_helper.dart';
+import 'package:screw_calculator/helpers/phone_mask_helper.dart';
 import 'package:screw_calculator/screens/chat/models/chat_msg_model.dart';
 import 'package:screw_calculator/screens/chat/presentation/widgets/typing_dots.dart';
+import 'package:screw_calculator/screens/chat/track_status.dart';
+import 'package:screw_calculator/screens/chat/widgets/online_users_list.dart';
+import 'package:screw_calculator/screens/chat/widgets/users_status_bottom_sheet.dart';
 import 'package:screw_calculator/utility/app_theme.dart';
 import 'package:screw_calculator/utility/utilities.dart';
 import 'package:sticky_headers/sticky_headers.dart';
@@ -23,7 +30,7 @@ class ChatScreen extends StatefulWidget {
   State<ChatScreen> createState() => _ChatScreenState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
+class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   final _textCtrl = TextEditingController();
   final _scrollCtrl = ScrollController();
 
@@ -31,6 +38,8 @@ class _ChatScreenState extends State<ChatScreen> {
   bool _isLoadingMore = false;
   bool _hasMore = true;
   bool _firstLoad = true;
+  bool _isOnline = false;
+  StreamSubscription<ConnectivityResult>? _connectivitySubscription;
 
   DocumentSnapshot? _lastDoc;
   StreamSubscription? _liveSub;
@@ -61,8 +70,8 @@ class _ChatScreenState extends State<ChatScreen> {
     super.initState();
     userBox = Hive.box('userBox');
     cacheBox = Hive.box('cachedMessages');
-    userName = userBox.get('name')?.toString();
-    userPhone = userBox.get('phone')?.toString();
+    userName = userBox.get('name')?.toString() ?? 'Anonymous';
+    userPhone = userBox.get('phone')?.toString() ?? '';
     userCountry = userBox.get('country')?.toString();
 
     _loadCachedMessages();
@@ -72,27 +81,116 @@ class _ChatScreenState extends State<ChatScreen> {
     _markSeen();
 
     _scrollCtrl.addListener(_onScroll);
+
+    _monitorConnection();
+
+    // Restore draft
+    final draft = userBox.get('chatDraft') as String?;
+    if (draft != null && draft.isNotEmpty) {
+      _textCtrl.text = draft;
+      userBox.delete('chatDraft');
+    }
+
+    if (userName != null && userPhone != null) {
+      UserPresenceManager().startTracking(
+        userName: userName!,
+        userPhone: userPhone!,
+      );
+    }
+
+    // مراقبة حالة التطبيق (foreground/background)
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
+    UserPresenceManager().stopTracking();
+    WidgetsBinding.instance.removeObserver(this);
+
+    _searchCtrl.dispose();
     _liveSub?.cancel();
     _typingSub?.cancel();
     _scrollCtrl.dispose();
     _textCtrl.dispose();
     _updateTyping(false);
+    _connectivitySubscription?.cancel();
+
+    // Save draft before disposing
+    if (_textCtrl.text.isNotEmpty) {
+      userBox.put('chatDraft', _textCtrl.text);
+    }
+
     super.dispose();
   }
 
-  Future<void> _pickAndSendImage() async {
-    final picker = ImagePicker();
-    final XFile? pickedFile = await picker.pickImage(
-      source: ImageSource.gallery,
-      imageQuality: 50,
-      maxWidth: 1024,
-    );
+  // التعامل مع حالة التطبيق
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (userName == null || userPhone == null) return;
 
-    if (pickedFile != null) {
+    switch (state) {
+      case AppLifecycleState.resumed:
+        // المستخدم رجع للتطبيق
+        UserPresenceManager().startTracking(
+          userName: userName!,
+          userPhone: userPhone!,
+        );
+        break;
+      case AppLifecycleState.paused:
+      case AppLifecycleState.inactive:
+        // المستخدم خرج من التطبيق
+        UserPresenceManager().stopTracking();
+        break;
+      default:
+        break;
+    }
+  }
+
+  void _monitorConnection() {
+    // Monitor device connectivity
+    _connectivitySubscription = Connectivity().onConnectivityChanged.listen((
+      ConnectivityResult result,
+    ) {
+      final wasOnline = _isOnline;
+      _isOnline = result != ConnectivityResult.none;
+
+      if (mounted && wasOnline != _isOnline) {
+        setState(() {});
+
+        if (_isOnline) {
+          Utilities().showCustomSnack(
+            context,
+            txt: 'تم استعادة الاتصال بالإنترنت ✓',
+          );
+          _fetchInitialMessages();
+        } else {
+          Utilities().showCustomSnack(context, txt: 'لا يوجد اتصال بالإنترنت');
+        }
+      }
+    });
+
+    // Check initial state
+    Connectivity().checkConnectivity().then((result) {
+      _isOnline = result != ConnectivityResult.none;
+      if (mounted) setState(() {});
+    });
+  }
+
+  Future<void> _pickAndSendImage() async {
+    try {
+      final picker = ImagePicker();
+      final XFile? pickedFile = await picker.pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 50,
+        maxWidth: 1024,
+      );
+
+      if (pickedFile == null) return;
+
+      if (mounted) {
+        Utilities().showCustomSnack(context, txt: 'جاري رفع الصورة...');
+      }
+
       final Uint8List imageBytes = await pickedFile.readAsBytes();
 
       if (imageBytes.lengthInBytes > 1000000) {
@@ -100,7 +198,6 @@ class _ChatScreenState extends State<ChatScreen> {
           context,
           txt: 'الصورة كبيرة جداً، يرجى اختيار صورة أصغر',
         );
-
         return;
       }
 
@@ -125,6 +222,17 @@ class _ChatScreenState extends State<ChatScreen> {
             'reactions': {},
             'isDeleted': false,
           });
+
+      if (mounted) {
+        Utilities().showCustomSnack(context, txt: 'تم إرسال الصورة بنجاح');
+      }
+    } catch (e) {
+      if (mounted) {
+        Utilities().showCustomSnack(
+          context,
+          txt: 'فشل إرسال الصورة، حاول مرة أخرى',
+        );
+      }
     }
   }
 
@@ -160,8 +268,14 @@ class _ChatScreenState extends State<ChatScreen> {
 
     _cacheMessages(fresh);
 
+    if (!mounted) return;
     setState(() {});
     _scrollToBottom(force: true);
+  }
+
+  void _clearOldMessageKeys() {
+    final currentIds = _messages.map((m) => m.id).toSet();
+    _messageKeys.removeWhere((key, value) => !currentIds.contains(key));
   }
 
   Future<void> _fetchOlderMessages() async {
@@ -199,6 +313,7 @@ class _ChatScreenState extends State<ChatScreen> {
     });
 
     _isLoadingMore = false;
+    _clearOldMessageKeys();
   }
 
   // ---------------- LISTEN ----------------
@@ -207,6 +322,7 @@ class _ChatScreenState extends State<ChatScreen> {
         .collection('chats')
         .doc('messages')
         .collection('messages')
+        .where('timestamp', isGreaterThan: _lastDoc?.get('timestamp'))
         .orderBy('timestamp')
         .snapshots()
         .listen((snap) {
@@ -347,11 +463,20 @@ class _ChatScreenState extends State<ChatScreen> {
           .update(data);
       _editingId = null;
     } else {
-      await FirebaseFirestore.instance
-          .collection('chats')
-          .doc('messages')
-          .collection('messages')
-          .add(data);
+      try {
+        await FirebaseFirestore.instance
+            .collection('chats')
+            .doc('messages')
+            .collection('messages')
+            .add(data);
+      } catch (e) {
+        if (mounted) {
+          Utilities().showCustomSnack(
+            context,
+            txt: 'فشل إرسال الرسالة، حاول مرة أخرى',
+          );
+        }
+      }
     }
 
     _textCtrl.clear();
@@ -402,43 +527,6 @@ class _ChatScreenState extends State<ChatScreen> {
       }
       tx.update(docRef, {'reactions': reactions});
     });
-  }
-
-  void _showFullImage(String base64) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => Scaffold(
-          backgroundColor: Colors.black,
-          appBar: AppBar(backgroundColor: Colors.transparent),
-          body: Center(
-            child: InteractiveViewer(
-              // تفعيل الزووم تلقائياً
-              child: Image.memory(base64Decode(base64)),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  String _daySeparator(DateTime dt) {
-    final dateLocal = dt.toLocal();
-    final now = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
-    final messageDate = DateTime(
-      dateLocal.year,
-      dateLocal.month,
-      dateLocal.day,
-    );
-    final int diff = today.difference(messageDate).inDays;
-    if (diff == 0) return 'Today';
-    if (diff == 1) return 'Yesterday';
-
-    if (dateLocal.year == now.year) {
-      return intl.DateFormat('d MMM').format(dateLocal);
-    }
-    return intl.DateFormat('d MMM y').format(dateLocal);
   }
 
   // ---------------- MSG UI ----------------
@@ -515,17 +603,18 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   void _onSearchChanged(String query) {
-    _searchResults.clear();
     if (query.isEmpty) {
-      setState(() {});
+      setState(() {
+        _searchResults.clear();
+        _currentSearchIndex = 0;
+      });
       return;
     }
 
-    for (int i = 0; i < _messages.length; i++) {
-      if (_messages[i].message.toLowerCase().contains(query.toLowerCase())) {
-        _searchResults.add(i);
-      }
-    }
+    final lowerQuery = query.toLowerCase();
+    _searchResults = List.generate(_messages.length, (i) => i)
+        .where((i) => _messages[i].message.toLowerCase().contains(lowerQuery))
+        .toList();
 
     if (_searchResults.isNotEmpty) {
       _currentSearchIndex = 0;
@@ -606,7 +695,9 @@ class _ChatScreenState extends State<ChatScreen> {
                     CustomText(
                       text: _unreadNewMessagesText.length > 1000
                           ? 'صورة جديدة'
-                          : maskPhoneNumbers(_unreadNewMessagesText),
+                          : PhoneMaskHelper.maskPhoneNumbers(
+                              _unreadNewMessagesText,
+                            ),
                       maxLines: 2,
                       fontSize: 14.sp,
                       textAlign: TextAlign.end,
@@ -678,7 +769,58 @@ class _ChatScreenState extends State<ChatScreen> {
                 )
               : CustomText(text: 'الشات', fontSize: 22.sp),
         ),
+        leading: StreamBuilder<QuerySnapshot>(
+          stream: FirebaseFirestore.instance
+              .collection('users_presence')
+              .where('isOnline', isEqualTo: true)
+              .snapshots(),
+          builder: (context, snapshot) {
+            final onlineCount = snapshot.hasData
+                ? snapshot.data!.docs
+                      .where((doc) => (doc.data() as Map)['name'] != userName)
+                      .length
+                : 0;
 
+            return Stack(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.people, color: AppColors.white),
+                  onPressed: () {
+                    UsersStatusBottomSheet.show(
+                      context,
+                      currentUserName: userName,
+                    );
+                  },
+                ),
+                if (onlineCount > 0)
+                  Positioned(
+                    right: 8,
+                    top: 8,
+                    child: Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: const BoxDecoration(
+                        color: Colors.green,
+                        shape: BoxShape.circle,
+                      ),
+                      constraints: const BoxConstraints(
+                        minWidth: 16,
+                        minHeight: 16,
+                      ),
+                      child: Text(
+                        '$onlineCount',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+              ],
+            );
+          },
+        ),
         actions: [
           if (_isSearching && _searchResults.isNotEmpty) ...[
             IconButton(
@@ -715,6 +857,8 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
       body: Column(
         children: [
+          OnlineUsersList(currentUserName: userName),
+
           StreamBuilder<DocumentSnapshot>(
             stream: FirebaseFirestore.instance
                 .collection('chats')
@@ -793,6 +937,8 @@ class _ChatScreenState extends State<ChatScreen> {
                 ListView.builder(
                   controller: _scrollCtrl,
                   cacheExtent: 1000,
+                  addAutomaticKeepAlives: false,
+                  addRepaintBoundaries: true,
                   itemCount: _messages.length,
                   itemBuilder: (c, i) {
                     _messageKeys.putIfAbsent(_messages[i].id, GlobalKey.new);
@@ -904,8 +1050,8 @@ class _ChatScreenState extends State<ChatScreen> {
         _highlightedMessageId == msg.id;
     final bool isFirstInGroup =
         index == 0 ||
-        _daySeparator(_messages[index - 1].timestamp) !=
-            _daySeparator(msg.timestamp);
+        DateFormatter.daySeparatorMain(_messages[index - 1].timestamp) !=
+            DateFormatter.daySeparatorMain(msg.timestamp);
 
     final messageKey = GlobalKey();
     _messageKeys[msg.id] = messageKey;
@@ -950,37 +1096,36 @@ class _ChatScreenState extends State<ChatScreen> {
                     ? CrossAxisAlignment.end
                     : CrossAxisAlignment.start,
                 children: [
-                  if (showDay)
-                    Center(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        child: IntrinsicHeight(
-                          child: Row(
-                            children: [
-                              const Expanded(
-                                child: Divider(
-                                  color: Colors.grey,
-                                  thickness: 0.5,
-                                  endIndent: 10,
-                                ),
-                              ),
-                              Text(
-                                _daySeparator(msg.timestamp),
-                                style: const TextStyle(color: Colors.grey),
-                              ),
-                              const Expanded(
-                                child: Divider(
-                                  color: Colors.grey,
-                                  thickness: 0.5,
-                                  indent: 10,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-
+                  // if (showDay)
+                  //   Center(
+                  //     child: Padding(
+                  //       padding: const EdgeInsets.symmetric(vertical: 8),
+                  //       child: IntrinsicHeight(
+                  //         child: Row(
+                  //           children: [
+                  //             const Expanded(
+                  //               child: Divider(
+                  //                 color: Colors.grey,
+                  //                 thickness: 0.5,
+                  //                 endIndent: 10,
+                  //               ),
+                  //             ),
+                  //             Text(
+                  //               DateFormatter.daySeparatorMain(msg.timestamp),
+                  //               style: const TextStyle(color: Colors.grey),
+                  //             ),
+                  //             const Expanded(
+                  //               child: Divider(
+                  //                 color: Colors.grey,
+                  //                 thickness: 0.5,
+                  //                 indent: 10,
+                  //               ),
+                  //             ),
+                  //           ],
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
                   if (!msg.isDeleted)
                     IntrinsicWidth(
                       child: Container(
@@ -1035,13 +1180,28 @@ class _ChatScreenState extends State<ChatScreen> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         if (showName)
-                                          CustomText(
-                                            text: msg.name,
-                                            fontSize: 14.sp,
-                                            color: isMe
-                                                ? AppColors.mainColor
-                                                : AppColors.secondaryColor,
-                                            fontFamily: AppFonts.bold,
+                                          Row(
+                                            children: [
+                                              // Container(
+                                              //   height: 8,
+                                              //   width: 8,
+                                              //   decoration: BoxDecoration(
+                                              //     color: _isOnline
+                                              //         ? AppColors.green
+                                              //         : AppColors.red,
+                                              //     shape: BoxShape.circle,
+                                              //   ),
+                                              // ),
+                                              // const SizedBox(width: 4),
+                                              CustomText(
+                                                text: msg.name,
+                                                fontSize: 14.sp,
+                                                color: isMe
+                                                    ? AppColors.mainColor
+                                                    : AppColors.secondaryColor,
+                                                fontFamily: AppFonts.bold,
+                                              ),
+                                            ],
                                           ),
                                         if (msg.replyTo != null)
                                           _replyPreview(msg),
@@ -1056,7 +1216,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                                 child: CustomText(
                                                   text: isMe
                                                       ? msg.message
-                                                      : maskPhoneNumbers(
+                                                      : PhoneMaskHelper.maskPhoneNumbers(
                                                           msg.message,
                                                         ),
                                                   fontSize: 14.sp,
@@ -1067,7 +1227,10 @@ class _ChatScreenState extends State<ChatScreen> {
                                             if (msg.type == 'image')
                                               GestureDetector(
                                                 onTap: () =>
-                                                    _showFullImage(msg.message),
+                                                    ImageHelper.showFullImage(
+                                                      context,
+                                                      msg.message,
+                                                    ),
                                                 child: ClipRRect(
                                                   borderRadius:
                                                       BorderRadius.circular(8),
@@ -1077,6 +1240,8 @@ class _ChatScreenState extends State<ChatScreen> {
                                                     height: 0.2.sh,
                                                     fit: BoxFit.cover,
                                                     cacheWidth: 400,
+                                                    // cacheHeight: 400,
+                                                    gaplessPlayback: true,
                                                     errorBuilder:
                                                         (
                                                           context,
@@ -1144,7 +1309,9 @@ class _ChatScreenState extends State<ChatScreen> {
 
     if (isFirstInGroup) {
       return StickyHeader(
-        header: _buildFloatingDateHeader(_daySeparator(msg.timestamp)),
+        header: _buildFloatingDateHeader(
+          DateFormatter.daySeparatorMain(msg.timestamp),
+        ),
         content: messageBubble,
       );
     }
@@ -1172,13 +1339,15 @@ class _ChatScreenState extends State<ChatScreen> {
                 height: 0.1.sh,
                 fit: BoxFit.cover,
                 cacheWidth: 400,
+                // cacheHeight: 400,
+                gaplessPlayback: true,
                 errorBuilder: (context, error, stackTrace) =>
                     const Icon(Icons.broken_image),
               )
             : Text(
                 r.isDeleted
                     ? 'تم الرد على رسالة محذوفة'
-                    : '${r.name == userName ? r.message : maskPhoneNumbers(r.message)}',
+                    : '${r.name == userName ? r.message : PhoneMaskHelper.maskPhoneNumbers(r.message)}',
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
@@ -1202,7 +1371,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   ? 'رد على صورة'
                   : _replyingTo!.name == userName
                   ? _replyingTo!.message
-                  : maskPhoneNumbers(_replyingTo!.message),
+                  : PhoneMaskHelper.maskPhoneNumbers(_replyingTo!.message),
             ),
           ),
           IconButton(
@@ -1518,16 +1687,5 @@ class _ChatScreenState extends State<ChatScreen> {
         ],
       ),
     );
-  }
-
-  String maskPhoneNumbers(String text) {
-    final RegExp phoneRegex = RegExp(
-      r'(?:\+|00)?\d{1,3}[\s\-]?\(?\d{1,5}\)?[\s\-]?\d{1,5}[\s\-]?\d{1,5}',
-    );
-    return text.replaceAllMapped(phoneRegex, (match) {
-      final phone = match.group(0)!;
-      if (phone.length <= 4) return phone;
-      return '${phone.substring(0, 2)}${'*' * (phone.length - 4)}${phone.substring(phone.length - 2)}';
-    });
   }
 }
