@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:screw_calculator/components/bottom_nav_text.dart';
 import 'package:screw_calculator/components/custom_text.dart';
@@ -26,6 +27,7 @@ class _UserScSharingScreenState extends State<UserScSharingScreen> {
   List<ScreenShootModel> _items = [];
   bool _isLoading = false;
   bool _hasMore = true;
+  bool _isDisposed = false;
   StreamSubscription<QuerySnapshot>? _subscription;
 
   @override
@@ -37,9 +39,21 @@ class _UserScSharingScreenState extends State<UserScSharingScreen> {
 
   @override
   void dispose() {
+    _isDisposed = true;
     _scrollController.dispose();
     _subscription?.cancel();
     super.dispose();
+  }
+
+  void _safeSetState(VoidCallback fn) {
+    if (_isDisposed) return;
+    if (mounted) {
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        if (!_isDisposed && mounted) {
+          setState(fn);
+        }
+      });
+    }
   }
 
   void _setupScrollListener() {
@@ -54,7 +68,7 @@ class _UserScSharingScreenState extends State<UserScSharingScreen> {
   Future<void> _loadInitialData() async {
     if (_isLoading) return;
 
-    setState(() {
+    _safeSetState(() {
       _isLoading = true;
     });
 
@@ -66,6 +80,8 @@ class _UserScSharingScreenState extends State<UserScSharingScreen> {
 
       _subscription = query.snapshots().listen(
         (snapshot) {
+          if (_isDisposed) return;
+
           if (snapshot.docs.isNotEmpty) {
             _lastDocument = snapshot.docs.last;
 
@@ -73,25 +89,28 @@ class _UserScSharingScreenState extends State<UserScSharingScreen> {
               return ScreenShootModel.fromJson(doc.data(), doc.id);
             }).toList();
 
-            setState(() {
+            _safeSetState(() {
               _items = newItems;
               _hasMore = snapshot.docs.length == _itemsPerPage;
+              _isLoading = false;
+            });
+          } else {
+            _safeSetState(() {
+              _isLoading = false;
             });
           }
-
-          setState(() {
-            _isLoading = false;
-          });
         },
         onError: (error) {
-          setState(() {
+          if (_isDisposed) return;
+          _safeSetState(() {
             _isLoading = false;
           });
           _showErrorSnackbar(error.toString());
         },
       );
     } catch (error) {
-      setState(() {
+      if (_isDisposed) return;
+      _safeSetState(() {
         _isLoading = false;
       });
       _showErrorSnackbar(error.toString());
@@ -101,7 +120,7 @@ class _UserScSharingScreenState extends State<UserScSharingScreen> {
   Future<void> _loadMoreData() async {
     if (_isLoading || !_hasMore || _lastDocument == null) return;
 
-    setState(() {
+    _safeSetState(() {
       _isLoading = true;
     });
 
@@ -114,6 +133,8 @@ class _UserScSharingScreenState extends State<UserScSharingScreen> {
 
       final snapshot = await query.get();
 
+      if (_isDisposed) return;
+
       if (snapshot.docs.isNotEmpty) {
         _lastDocument = snapshot.docs.last;
 
@@ -121,49 +142,44 @@ class _UserScSharingScreenState extends State<UserScSharingScreen> {
           return ScreenShootModel.fromJson(doc.data(), doc.id);
         }).toList();
 
-        setState(() {
+        _safeSetState(() {
           _items.addAll(newItems);
           _hasMore = snapshot.docs.length == _itemsPerPage;
         });
       } else {
-        setState(() {
+        _safeSetState(() {
           _hasMore = false;
         });
       }
     } catch (error) {
+      if (_isDisposed) return;
       _showErrorSnackbar(error.toString());
     } finally {
-      setState(() {
-        _isLoading = false;
-      });
+      if (!_isDisposed) {
+        _safeSetState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 
   Future<void> _deleteImage(String itemId) async {
-    print("dddddddddddddd == lol=== $itemId");
     try {
-      // Show confirmation dialog
       final shouldDelete = await _showDeleteConfirmationDialog();
 
       if (!shouldDelete) {
-        // setState(() {
-        //   _deletingItemId = null;
-        // });
         return;
       }
 
-      // Remove from Firestore
       await _firestore
           .collection('user_screenshoot_sharing')
           .doc(itemId)
           .delete();
 
-      // Remove from local list
-      setState(() {
+      _safeSetState(() {
         _items.removeWhere((item) => item.id == itemId);
       });
 
-      // Show success message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: CustomText(
@@ -172,12 +188,15 @@ class _UserScSharingScreenState extends State<UserScSharingScreen> {
             textAlign: TextAlign.center,
           ),
           backgroundColor: Colors.green,
-          duration: const Duration(seconds: 2),
+          duration: const Duration(seconds: 3),
         ),
       );
     } catch (error) {
+      if (_isDisposed) return;
       _showErrorSnackbar('فشل في الحذف: ${error.toString()}');
-    } finally {}
+    } finally {
+      if (!_isDisposed) {}
+    }
   }
 
   Future<bool> _showDeleteConfirmationDialog() async {
@@ -238,8 +257,18 @@ class _UserScSharingScreenState extends State<UserScSharingScreen> {
   }
 
   void _showErrorSnackbar(String message) {
+    if (_isDisposed) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), backgroundColor: Colors.red),
+      SnackBar(
+        content: CustomText(text: message, fontSize: 14.sp),
+        backgroundColor: Colors.red,
+        duration: const Duration(seconds: 3),
+        margin: EdgeInsets.only(
+          bottom: MediaQuery.of(context).padding.bottom + 50.h,
+          left: 8.w,
+          right: 8.w,
+        ),
+      ),
     );
   }
 
@@ -267,20 +296,7 @@ class _UserScSharingScreenState extends State<UserScSharingScreen> {
               child: Image.memory(
                 base64Decode(item.imageBase64.toString()),
                 width: 1.sw,
-                // height: 200.h,
                 fit: BoxFit.cover,
-
-                // frameBuilder: (BuildContext context,Widget child, loadingProgress) {
-                //   if (loadingProgress == null) return child;
-                //   return SizedBox(
-                //     height: 200.h,
-                //     child: const Center(
-                //       child: CircularProgressIndicator.adaptive(
-                //
-                //       ),
-                //     ),
-                //   );
-                // },
                 errorBuilder: (context, error, stackTrace) {
                   return Container(
                     height: 200.h,
