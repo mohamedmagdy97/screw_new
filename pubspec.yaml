@@ -18,10 +18,8 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
-  flutter_screenutil: ^5.9.0
-  flutter_bloc: ^9.1.1
+
   equatable: ^2.0.5
-  url_launcher: ^6.3.2
 
   # video
   video_player: ^2.8.1
@@ -32,11 +30,10 @@ dependencies:
   in_app_review: ^2.0.11
   package_info_plus: ^9.0.0
 
-  # firebase
+  # Firebase
   firebase_core: ^4.1.0
   firebase_performance: ^0.11.0+1
   firebase_messaging: ^16.0.1
-  flutter_local_notifications: ^19.4.2
   firebase_remote_config: ^6.0.1
   cloud_firestore: ^6.0.2
 
@@ -44,23 +41,47 @@ dependencies:
   confetti: ^0.8.0
   screenshot: ^3.0.0
   share_plus: ^12.0.0
+
   path_provider: ^2.1.5
-  intl: ^0.20.2
+
   device_info_plus: ^12.1.0
   get: ^4.7.2
   timezone: ^0.10.1
   permission_handler: ^12.0.1
-  swipe_to: ^1.0.2
-  sticky_headers: ^0.3.0+2
-  image_picker:
 
-#  emoji_picker_flutter: ^4.4.0
-#  flutter_slidable: ^4.0.3
+  # State Management
+  flutter_bloc: ^9.1.1
+  get_it: ^9.2.0
 
-  # local database
+  # Local Storage
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   shared_preferences: ^2.2.2
+
+  # Image Picker
+  image_picker: ^1.0.4
+
+  # Screen Responsiveness
+  flutter_screenutil: ^5.9.0
+
+  # Sticky Headers
+  sticky_headers: ^0.3.0+2
+
+  # Swipe to Action
+  swipe_to: ^1.0.6
+
+  # Date Formatting
+  intl: ^0.20.2
+
+  # URL Launcher
+  url_launcher: ^6.3.2
+
+  # Connectivity
+  connectivity_plus: ^5.0.2
+
+  # Local Notifications
+  flutter_local_notifications: ^19.4.2
+
 
 
 dev_dependencies:

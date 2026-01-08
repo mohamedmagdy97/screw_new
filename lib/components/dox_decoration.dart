@@ -3,6 +3,7 @@ import 'package:screw_calculator/utility/app_theme.dart';
 
 BoxDecoration customBoxDecoration({
   Color? color,
+  Color? shadowColor,
   double? radiusBottom,
   double? spreadRadius,
   double? blurRadius,
@@ -26,8 +27,8 @@ BoxDecoration customBoxDecoration({
             end: Alignment.bottomRight,
           ),
     borderRadius: BorderRadius.circular(borderRadius ?? 16),
-    boxShadow: const [
-      BoxShadow(color: Colors.black26, blurRadius: 8, offset: Offset(0, -2)),
+    boxShadow:   [
+      BoxShadow(color: shadowColor ?? Colors.black26, blurRadius: 8, offset: Offset(0, -2)),
     ],
   );
 }

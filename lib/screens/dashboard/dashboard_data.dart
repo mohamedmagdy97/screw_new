@@ -397,6 +397,7 @@ class DashboardData {
         'title': title,
         'imageBase64': base64Image,
         'timestamp': DateTime.now().toIso8601String(),
+        'datetime': FieldValue.serverTimestamp(),
       });
       print('✅ Uploaded image directly to Realtime Database');
     } catch (e) {
