@@ -49,7 +49,7 @@ class OnlineUserAvatar extends StatelessWidget {
               text: user.name,
               maxLines: 1,
               height: 2,
-              color: AppColors.red,
+              color: AppColors.grey,
               // overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
               fontSize: 10,
