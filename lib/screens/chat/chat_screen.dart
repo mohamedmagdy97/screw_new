@@ -18,6 +18,8 @@ import 'package:screw_calculator/screens/chat/presentation/widgets/typing_dots.d
 import 'package:screw_calculator/screens/chat/track_status.dart';
 import 'package:screw_calculator/screens/chat/widgets/chat_app_bar.dart';
 import 'package:screw_calculator/screens/chat/widgets/online_users_list.dart';
+import 'package:screw_calculator/screens/chat/widgets/pinned_message.dart';
+import 'package:screw_calculator/screens/chat/widgets/typing_indicator.dart';
 import 'package:screw_calculator/screens/chat/widgets/users_status_bottom_sheet.dart';
 import 'package:screw_calculator/utility/app_theme.dart';
 import 'package:screw_calculator/utility/utilities.dart';
@@ -742,77 +744,9 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         children: [
           OnlineUsersList(currentUserName: userName),
 
-          StreamBuilder<DocumentSnapshot>(
-            stream: FirebaseFirestore.instance
-                .collection('chats')
-                .doc('pinned')
-                .snapshots(),
-            builder: (context, snap) {
-              if (!snap.hasData || !snap.data!.exists) return const SizedBox();
-              var data = snap.data!;
-              return Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 4,
-                ),
-                color: AppColors.mainColor,
-                child: Row(
-                  children: [
-                    const Icon(Icons.push_pin, size: 20, color: Colors.white),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: CustomText(
-                        text: data['text'],
-                        fontSize: 16.sp,
-                        maxLines: 1,
-                        textAlign: TextAlign.end,
-                      ),
-
-                      // Column(
-                      //                         crossAxisAlignment: CrossAxisAlignment.start,
-                      //                         children: [
-                      //                           Text("رسالة مثبتة من ${data['sender']}",
-                      //                               style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
-                      //                           Text(data['text'],
-                      //                               maxLines: 1, overflow: TextOverflow.ellipsis,
-                      //                               style: const TextStyle(fontSize: 13)),
-                      //                         ],
-                      //                       ),
-                    ),
-                    if (userName == 'الآدمن' ||
-                        userPhone == '01149504892' ||
-                        userPhone == '01556464892') // خيار الإلغاء للآدمن فقط
-                      IconButton(
-                        padding: EdgeInsets.zero,
-                        icon: const Icon(
-                          Icons.close,
-                          color: Colors.white,
-                          size: 20,
-                        ),
-                        onPressed: () => data.reference.delete(),
-                      ),
-                  ],
-                ),
-              );
-            },
-          ),
+          PinnedMessage(userName: userName, userPhone: userPhone),
           if (_usersTyping.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.only(right: 8, left: 8, bottom: 4),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  const TypingDots(),
-                  const SizedBox(width: 4),
-                  CustomText(
-                    text: ' يكتب الأن ${_usersTyping.join(', ')}',
-                    textAlign: TextAlign.end,
-                    fontSize: 12,
-                  ),
-                ],
-              ),
-            ),
+            TypingIndicator(usersTyping: _usersTyping),
 
           Expanded(
             child: Stack(
