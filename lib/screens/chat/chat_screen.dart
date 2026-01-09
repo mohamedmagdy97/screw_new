@@ -14,13 +14,14 @@ import 'package:screw_calculator/helpers/device_info.dart';
 import 'package:screw_calculator/helpers/image_helper.dart';
 import 'package:screw_calculator/helpers/phone_mask_helper.dart';
 import 'package:screw_calculator/screens/chat/models/chat_msg_model.dart';
-import 'package:screw_calculator/screens/chat/presentation/widgets/typing_dots.dart';
 import 'package:screw_calculator/screens/chat/track_status.dart';
+import 'package:screw_calculator/screens/chat/widgets/build_status_icons.dart';
 import 'package:screw_calculator/screens/chat/widgets/chat_app_bar.dart';
+import 'package:screw_calculator/screens/chat/widgets/input_bar.dart';
+import 'package:screw_calculator/screens/chat/widgets/new_msg_indicator.dart';
 import 'package:screw_calculator/screens/chat/widgets/online_users_list.dart';
 import 'package:screw_calculator/screens/chat/widgets/pinned_message.dart';
 import 'package:screw_calculator/screens/chat/widgets/typing_indicator.dart';
-import 'package:screw_calculator/screens/chat/widgets/users_status_bottom_sheet.dart';
 import 'package:screw_calculator/utility/app_theme.dart';
 import 'package:screw_calculator/utility/utilities.dart';
 import 'package:sticky_headers/sticky_headers.dart';
@@ -666,55 +667,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   String _unreadNewMessagesText = '';
   bool _showNewMsgIndicator = false;
 
-  Widget _newMessageIndicator() {
-    return AnimatedScale(
-      duration: const Duration(milliseconds: 250),
-      scale: _showNewMsgIndicator ? 1 : 0,
-      child: GestureDetector(
-        onTap: _jumpToLatest,
-        child: Container(
-          width: 0.85.sw,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          decoration: BoxDecoration(
-            color: Colors.blue.shade600,
-            borderRadius: BorderRadius.circular(30),
-            boxShadow: const [BoxShadow(blurRadius: 10, color: Colors.black26)],
-          ),
-          child: Row(
-            children: [
-              const Icon(Icons.arrow_downward, color: Colors.white),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    CustomText(
-                      text: 'ـ$_unreadNewMessages رسالة جديـدة ',
-                      fontFamily: AppFonts.bold,
-                      maxLines: 1,
-                      fontSize: 15.sp,
-                    ),
-
-                    CustomText(
-                      text: _unreadNewMessagesText.length > 1000
-                          ? 'صورة جديدة'
-                          : PhoneMaskHelper.maskPhoneNumbers(
-                              _unreadNewMessagesText,
-                            ),
-                      maxLines: 2,
-                      fontSize: 14.sp,
-                      textAlign: TextAlign.end,
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   void _jumpToLatest() {
     _scrollToBottom();
 
@@ -772,32 +724,23 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                   Positioned(
                     bottom: 80,
                     right: 16,
-                    child: _newMessageIndicator(),
+                    child: NewMsgIndicator(
+                      showNewMsgIndicator: _showNewMsgIndicator,
+                      unreadNewMessages: _unreadNewMessages,
+                      unreadNewMessagesText: _unreadNewMessagesText,
+                      jumpToLatest: _jumpToLatest,
+                    ),
                   ),
               ],
             ),
           ),
           if (_replyingTo != null) _replyBar(),
-          _inputBar(),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildStatusIcons(ChatMessage msg, bool isMe) {
-    if (!isMe) return const SizedBox();
-
-    return Padding(
-      padding: const EdgeInsets.only(left: 4),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (msg.status == 'sending')
-            const Icon(Icons.access_time, size: 12, color: Colors.grey)
-          else if (msg.seenBy.isNotEmpty)
-            const Icon(Icons.done_all, size: 14, color: Colors.blue)
-          else
-            const Icon(Icons.done_all, size: 14, color: Colors.grey),
+          InputBar(
+            textCtrl: _textCtrl,
+            pickAndSendImage: _pickAndSendImage,
+            sendMessage: _sendMessage,
+            updateTyping: _updateTyping,
+          ),
         ],
       ),
     );
@@ -1084,7 +1027,10 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                                                   ),
                                                 ),
 
-                                                _buildStatusIcons(msg, isMe),
+                                                BuildStatusIcons(
+                                                  msg: msg,
+                                                  isMe: isMe,
+                                                ),
                                                 if (msg.seenBy.isNotEmpty &&
                                                     msg.name == userName)
                                                   Row(
@@ -1164,7 +1110,9 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
             : Text(
                 r.isDeleted
                     ? 'تم الرد على رسالة محذوفة'
-                    : '${r.name == userName ? r.message : PhoneMaskHelper.maskPhoneNumbers(r.message)}',
+                    : r.name == userName
+                    ? r.message
+                    : PhoneMaskHelper.maskPhoneNumbers(r.message),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
@@ -1182,88 +1130,23 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Row(
         children: [
-          Expanded(
-            child: Text(
-              _replyingTo!.message.length > 1000
-                  ? 'رد على صورة'
-                  : _replyingTo!.name == userName
-                  ? _replyingTo!.message
-                  : PhoneMaskHelper.maskPhoneNumbers(_replyingTo!.message),
-            ),
-          ),
           IconButton(
             icon: const Icon(Icons.close),
             onPressed: () => setState(() => _replyingTo = null),
           ),
+          Expanded(
+            child: CustomText(
+              text: _replyingTo!.message.length > 1000
+                  ? 'رد على صورة'
+                  : _replyingTo!.name == userName
+                  ? _replyingTo!.message
+                  : PhoneMaskHelper.maskPhoneNumbers(_replyingTo!.message),
+              fontSize: 14.sp,
+              color: AppColors.black,
+              textAlign: TextAlign.end,
+            ),
+          ),
         ],
-      ),
-    );
-  }
-
-  Widget _inputBar() {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(6),
-        child: Row(
-          children: [
-            CircleAvatar(
-              radius: 24,
-              backgroundColor: AppColors.mainColor,
-              child: IconButton(
-                icon: const Icon(
-                  Icons.camera_alt_outlined,
-                  color: Colors.white,
-                ),
-                onPressed: _pickAndSendImage,
-              ),
-            ),
-
-            const SizedBox(width: 6),
-            Expanded(
-              child: TextField(
-                controller: _textCtrl,
-                textDirection: TextDirection.rtl,
-                decoration: InputDecoration(
-                  hintText: 'اكتب رسالتك ...',
-                  hintStyle: TextStyle(fontFamily: AppFonts.regular),
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 12,
-                  ),
-                  hintTextDirection: TextDirection.rtl,
-                  filled: true,
-                  fillColor: Colors.grey[200],
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(24),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-                maxLines: null,
-                minLines: 1,
-                onChanged: (text) => _updateTyping(text.isNotEmpty),
-              ),
-            ),
-
-            /* const SizedBox(width: 6),
-            GestureDetector(
-              onLongPress: _startRecording,
-              onLongPressUp: _stopRecording,
-              child: CircleAvatar(
-                backgroundColor: _isRecording ? Colors.red : Colors.blue,
-                child: Icon(_isRecording ? Icons.mic : Icons.mic_none),
-              ),
-            ),*/
-            const SizedBox(width: 6),
-            CircleAvatar(
-              radius: 24,
-              backgroundColor: AppColors.mainColor,
-              child: IconButton(
-                icon: const Icon(Icons.send, color: Colors.white),
-                onPressed: _sendMessage,
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
