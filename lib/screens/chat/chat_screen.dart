@@ -771,6 +771,8 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         ),
         leading: StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance
+              .collection('chats')
+              .doc('users_presence')
               .collection('users_presence')
               .where('isOnline', isEqualTo: true)
               .snapshots(),
