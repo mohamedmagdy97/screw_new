@@ -69,6 +69,8 @@ class UsersStatusBottomSheet extends StatelessWidget {
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
+                  .collection('chats')
+                  .doc('users_presence')
                   .collection('users_presence')
                   .orderBy('lastSeen', descending: true)
                   .snapshots(),

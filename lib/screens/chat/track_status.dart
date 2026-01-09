@@ -41,6 +41,8 @@ class UserPresenceManager {
 
     try {
       await FirebaseFirestore.instance
+          .collection('chats')
+          .doc('users_presence')
           .collection('users_presence')
           .doc(_currentUserPhone)
           .set({

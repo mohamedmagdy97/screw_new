@@ -8,6 +8,7 @@ import 'package:screw_calculator/helpers/device_info.dart';
 import 'package:screw_calculator/models/item.dart';
 import 'package:screw_calculator/models/player_model.dart';
 import 'package:screw_calculator/screens/dashboard/dashboard.dart';
+import 'package:screw_calculator/utility/Enums.dart';
 import 'package:uuid/uuid.dart';
 
 HomeData homeData = HomeData();
@@ -68,10 +69,10 @@ class HomeData {
     userName = nameController.text;
     userPhone = phoneController.text;
     userCountry = countryController.text;
-    final id = const Uuid().v4();
+    // final id = const Uuid().v4();
 
     final userData = {
-      'id': id,
+      'id': userPhone,
       'userName': userName,
       'userPhone': userPhone,
       'userCountry': userCountry,
@@ -83,8 +84,57 @@ class HomeData {
         .collection('chats')
         .doc('users')
         .collection('users')
-        .doc(id)
+        .doc(userPhone)
         .set(userData);
+  }
+
+  Future<UserValidationResult> validateUser({
+    required String name,
+    required String phone,
+    required String country,
+  }) async {
+    final queryName = await FirebaseFirestore.instance
+        .collection('chats')
+        .doc('users')
+        .collection('users')
+        // .where('userPhone', isEqualTo: phone)
+        .where('userName', isEqualTo: name)
+        .limit(1)
+        .get();
+    final queryPhone = await FirebaseFirestore.instance
+        .collection('chats')
+        .doc('users')
+        .collection('users')
+        .where('userPhone', isEqualTo: phone)
+        // .where('userName', isEqualTo: name)
+        .limit(1)
+        .get();
+
+    final query = await FirebaseFirestore.instance
+        .collection('chats')
+        .doc('users')
+        .collection('users')
+        .where('userPhone', isEqualTo: phone)
+        .where('userName', isEqualTo: name)
+        .limit(1)
+        .get();
+
+    if (queryName.docs.isEmpty && queryPhone.docs.isEmpty) {
+      return UserValidationResult.notExists;
+    } else if (queryName.docs.isNotEmpty && queryPhone.docs.isEmpty) {
+      return UserValidationResult.existsName;
+    } else if (queryPhone.docs.isNotEmpty && queryName.docs.isEmpty) {
+      return UserValidationResult.existsNumber;
+    }
+
+    final data = query.docs.first.data();
+    final storedCountry = data['userCountry']?.toString().trim();
+
+    if (storedCountry == country.trim()) {
+      return UserValidationResult.existsAndValidOwner;
+    }
+
+    return UserValidationResult.existsButInvalidCountry;
   }
 
   void classicInit() {

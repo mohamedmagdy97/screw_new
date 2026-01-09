@@ -5,6 +5,8 @@ import 'package:screw_calculator/components/custom_text.dart';
 import 'package:screw_calculator/components/text_filed_custom.dart';
 import 'package:screw_calculator/generated/assets.dart';
 import 'package:screw_calculator/screens/chat/chat_screen.dart';
+import 'package:screw_calculator/screens/chat/chat_screen3.dart';
+import 'package:screw_calculator/screens/chat/presentation/screens/chat_screen2.dart';
 import 'package:screw_calculator/screens/contact_us/contact_us.dart';
 import 'package:screw_calculator/screens/history/history.dart';
 import 'package:screw_calculator/screens/home/home_data.dart';
@@ -14,7 +16,9 @@ import 'package:screw_calculator/screens/prayer/screen/prayer_screen.dart';
 import 'package:screw_calculator/screens/rules/rules_screen.dart';
 import 'package:screw_calculator/screens/show_video/show_video_youtube.dart';
 import 'package:screw_calculator/screens/users_screenshoot_sharing/user_sc_sharing_screen.dart';
+import 'package:screw_calculator/utility/Enums.dart';
 import 'package:screw_calculator/utility/app_theme.dart';
+import 'package:screw_calculator/utility/utilities.dart';
 import 'package:screw_calculator/utility/validation_form.dart';
 
 class DrawerWidget extends StatefulWidget {
@@ -173,31 +177,78 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                                 actions: [
                                   CustomButton(
                                     text: ' التالي',
-                                    onPressed: () {
+                                    onPressed: () async {
                                       if (!homeData
                                           .formKeyUserData
                                           .currentState!
-                                          .validate()) {
+                                          .validate())
                                         return;
-                                      }
-                                      if (homeData
-                                              .nameController
-                                              .text
-                                              .isNotEmpty &&
-                                          homeData
-                                              .phoneController
-                                              .text
-                                              .isNotEmpty &&
-                                          homeData
-                                              .countryController
-                                              .text
-                                              .isNotEmpty) {
-                                        homeData.addUserDataToDB();
-                                        Navigator.pop(ctx);
-                                        homeData.routeFromDrawer(
-                                          context,
-                                          const ChatScreen(),
-                                        );
+
+                                      final name = homeData.nameController.text
+                                          .trim();
+                                      final phone = homeData
+                                          .phoneController
+                                          .text
+                                          .trim();
+                                      final country = homeData
+                                          .countryController
+                                          .text
+                                          .trim();
+
+                                      final result = await homeData
+                                          .validateUser(
+                                            name: name,
+                                            phone: phone,
+                                            country: country,
+                                          );
+
+                                      switch (result) {
+                                        case UserValidationResult.notExists:
+                                          await homeData.addUserDataToDB();
+                                          Navigator.pop(ctx);
+                                          homeData.routeFromDrawer(
+                                            context,
+                                            const ChatScreen(),
+                                          );
+                                          break;
+
+                                        case UserValidationResult
+                                            .existsAndValidOwner:
+                                          await homeData.addUserDataToDB();
+
+                                          Navigator.pop(ctx);
+                                          homeData.routeFromDrawer(
+                                            context,
+                                            const ChatScreen(),
+                                          );
+                                          break;
+
+                                        case UserValidationResult
+                                            .existsButInvalidCountry:
+                                          Utilities().showCustomSnack(
+                                            context,
+                                            backgroundColor: AppColors.red,
+                                            txt:
+                                                'هذه البيانات مسجلة بالفعل، يرجى إدخال المدينة كما كانت مسجلة سابقًا',
+                                          );
+                                        case UserValidationResult.existsNumber:
+                                          Utilities().showCustomSnack(
+                                            context,
+                                            backgroundColor: AppColors.red,
+                                            txt:
+                                                'رقم الهاتف مسجل بالفعل، يرجى إدخال الأسم والمدينة كما كانت مسجلة سابقًا',
+                                          );
+
+                                          break;
+                                        case UserValidationResult.existsName:
+                                          Utilities().showCustomSnack(
+                                            context,
+                                            backgroundColor: AppColors.red,
+                                            txt:
+                                                'الاسم مسجل بالفعل، يرجى إدخال رقم الهاتف والمدينة لو كانت مسجلة مسبقًا او ادخل اسم اخر',
+                                          );
+
+                                          break;
                                       }
                                     },
                                   ),
@@ -209,6 +260,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                       );
                     } else {
                       homeData.routeFromDrawer(context, const ChatScreen());
+                      // const ChatScreen2());
                     }
                   },
                 ),

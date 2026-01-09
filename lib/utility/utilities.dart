@@ -4,7 +4,11 @@ import 'package:screw_calculator/components/custom_text.dart';
 import 'package:screw_calculator/utility/app_theme.dart';
 
 class Utilities {
-  void showCustomSnack(BuildContext context, {String? txt}) {
+  void showCustomSnack(
+    BuildContext context, {
+    String? txt,
+    Color? backgroundColor,
+  }) {
     late OverlayEntry entry;
     final controller = AnimationController(
       vsync: Navigator.of(context),
@@ -26,7 +30,7 @@ class Utilities {
           position: animation,
           child: Material(
             elevation: 6,
-            color: AppColors.mainColor,
+            color: backgroundColor ?? AppColors.mainColor,
             borderRadius: BorderRadius.circular(8),
             child: Padding(
               padding: const EdgeInsets.all(12),
