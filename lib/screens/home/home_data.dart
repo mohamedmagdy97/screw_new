@@ -61,6 +61,31 @@ class HomeData {
     userCountry = userBox.get('country')?.toString();
   }
 
+  Future<bool> canUserEnterChat({
+    required String phone,
+    required String name,
+  }) async {
+    final query = await FirebaseFirestore.instance
+        .collection('chats')
+        .doc('users')
+        .collection('users')
+        .where('userPhone', isEqualTo: phone)
+        .where('userName', isEqualTo: name)
+        .limit(1)
+        .get();
+
+    if (query.docs.isEmpty) {
+      // مستخدم جديد → مسموح
+      return true;
+    }
+
+    final data = query.docs.first.data();
+
+    final bool isBlocked = data['isBlocked'] ?? false;
+
+    return !isBlocked ;
+  }
+
   Future<void> addUserDataToDB() async {
     userBox.put('name', nameController.text);
     userBox.put('phone', phoneController.text);
@@ -79,6 +104,7 @@ class HomeData {
       'deviceName': await getDeviceName(),
       'datetime': DateTime.now(),
       'createdAt': FieldValue.serverTimestamp(),
+      'isBlocked': false,
     };
     await FirebaseFirestore.instance
         .collection('chats')

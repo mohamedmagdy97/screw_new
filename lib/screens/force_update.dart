@@ -115,7 +115,7 @@ class _ForceUpdateWrapperState extends State<ForceUpdateWrapper>
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primarySwatch: Colors.purple,
-          fontFamily: 'JannaLT-Regular', // لو عندك خط عربي مخصص
+          fontFamily: AppFonts.regular,
         ),
         home: Scaffold(
           backgroundColor: Colors.blueGrey.shade50,
@@ -189,7 +189,7 @@ class _ForceUpdateWrapperState extends State<ForceUpdateWrapper>
     } else {
       return MaterialApp(
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(fontFamily: 'JannaLT-Regular'),
+        theme: ThemeData(fontFamily: AppFonts.regular),
         home: Stack(
           children: [
             widget.child,
@@ -225,7 +225,6 @@ class _ForceUpdateWrapperState extends State<ForceUpdateWrapper>
                         ],
                       ),
                       child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           const Icon(
                             Icons.celebration,
