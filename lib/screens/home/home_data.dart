@@ -311,8 +311,9 @@ class HomeData {
 
   void routeFromDrawer(BuildContext context, Widget widget) async {
     Navigator.of(context).pop();
-    await Future.delayed(const Duration(milliseconds: 250));
+    await Future.delayed(const Duration(milliseconds: 200));
 
+    if (!context.mounted) return;
     Navigator.of(context).push(buildFancyRoute(widget));
   }
 

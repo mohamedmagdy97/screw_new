@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 Route<T> buildFancyRoute<T>(Widget page) {
   return PageRouteBuilder<T>(
-    transitionDuration: const Duration(milliseconds: 500),
+    transitionDuration: const Duration(milliseconds: 400),
     pageBuilder: (_, animation, secondaryAnimation) => page,
     transitionsBuilder: (_, animation, secondaryAnimation, child) {
       final curved = CurvedAnimation(

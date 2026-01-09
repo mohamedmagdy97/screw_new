@@ -16,6 +16,7 @@ import 'package:screw_calculator/helpers/phone_mask_helper.dart';
 import 'package:screw_calculator/screens/chat/models/chat_msg_model.dart';
 import 'package:screw_calculator/screens/chat/presentation/widgets/typing_dots.dart';
 import 'package:screw_calculator/screens/chat/track_status.dart';
+import 'package:screw_calculator/screens/chat/widgets/chat_app_bar.dart';
 import 'package:screw_calculator/screens/chat/widgets/online_users_list.dart';
 import 'package:screw_calculator/screens/chat/widgets/users_status_bottom_sheet.dart';
 import 'package:screw_calculator/utility/app_theme.dart';
@@ -726,136 +727,16 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.bg,
-      appBar: AppBar(
-        centerTitle: true,
-        automaticallyImplyLeading: false,
-        backgroundColor: AppColors.grayy,
-        title: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 250),
-          switchInCurve: Curves.easeOut,
-          switchOutCurve: Curves.easeIn,
-          transitionBuilder: (child, animation) {
-            return FadeTransition(
-              opacity: animation,
-              child: SlideTransition(
-                position: Tween<Offset>(
-                  begin: const Offset(0.1, 0),
-                  end: Offset.zero,
-                ).animate(animation),
-                child: child,
-              ),
-            );
-          },
-          child: _isSearching
-              ? TextField(
-                  controller: _searchCtrl,
-                  autofocus: true,
-                  cursorColor: AppColors.white,
-                  textDirection: TextDirection.rtl,
-                  style: TextStyle(
-                    color: AppColors.white,
-                    fontFamily: AppFonts.regular,
-                  ),
-                  decoration: InputDecoration(
-                    hintText: 'بحث…',
-                    hintTextDirection: TextDirection.rtl,
-                    hintStyle: TextStyle(
-                      color: AppColors.white,
-                      fontFamily: AppFonts.regular,
-                    ),
-                    border: InputBorder.none,
-                  ),
-                  onChanged: _onSearchChanged,
-                )
-              : CustomText(text: 'الشات', fontSize: 22.sp),
-        ),
-        leading: StreamBuilder<QuerySnapshot>(
-          stream: FirebaseFirestore.instance
-              .collection('chats')
-              .doc('users_presence')
-              .collection('users_presence')
-              .where('isOnline', isEqualTo: true)
-              .snapshots(),
-          builder: (context, snapshot) {
-            final onlineCount = snapshot.hasData
-                ? snapshot.data!.docs
-                      .where((doc) => (doc.data() as Map)['name'] != userName)
-                      .length
-                : 0;
-
-            return Stack(
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.people, color: AppColors.white),
-                  onPressed: () {
-                    UsersStatusBottomSheet.show(
-                      context,
-                      currentUserName: userName,
-                    );
-                  },
-                ),
-                if (onlineCount > 0)
-                  Positioned(
-                    right: 8,
-                    top: 8,
-                    child: Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: const BoxDecoration(
-                        color: Colors.green,
-                        shape: BoxShape.circle,
-                      ),
-                      constraints: const BoxConstraints(
-                        minWidth: 16,
-                        minHeight: 16,
-                      ),
-                      child: Text(
-                        '$onlineCount',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-              ],
-            );
-          },
-        ),
-        actions: [
-          if (_isSearching && _searchResults.isNotEmpty) ...[
-            IconButton(
-              icon: const Icon(Icons.keyboard_arrow_up, color: AppColors.white),
-              onPressed: _prevSearchResult,
-            ),
-            IconButton(
-              icon: const Icon(
-                Icons.keyboard_arrow_down,
-                color: AppColors.white,
-              ),
-              onPressed: _nextSearchResult,
-            ),
-          ],
-
-          IconButton(
-            icon: Icon(
-              _isSearching ? Icons.close : Icons.search,
-              color: AppColors.white,
-            ),
-            onPressed: _toggleSearch,
-          ),
-          IconButton(
-            onPressed: () => Navigator.pop(context),
-            icon: Transform.flip(
-              flipX: true,
-              child: const Icon(
-                Icons.arrow_back_ios_sharp,
-                color: AppColors.white,
-              ),
-            ),
-          ),
-        ],
+      appBar: ChatAppBar(
+        isSearching: _isSearching,
+        searchController: _searchCtrl,
+        onToggleSearch: _toggleSearch,
+        onSearchChanged: _onSearchChanged,
+        onPrevResult: _prevSearchResult,
+        onNextResult: _nextSearchResult,
+        onBackPressed: () => Navigator.pop(context),
+        userName: userName ?? '',
+        searchResults: _searchResults,
       ),
       body: Column(
         children: [
