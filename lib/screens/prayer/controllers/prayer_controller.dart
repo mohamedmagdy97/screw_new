@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:screw_calculator/screens/prayer/core/notification_service.dart';
@@ -8,16 +9,18 @@ import 'package:screw_calculator/utility/local_store.dart';
 import 'package:screw_calculator/utility/local_storge_key.dart';
 
 class PrayerController extends GetxController {
-  final PrayerApiService apiService;
-
-  PrayerController(this.apiService);
+  final PrayerApiService apiService = PrayerApiService();
 
   var prayerTimes = Rxn<PrayerTimeModel>();
   var isLoading = false.obs;
-  late CountryModel city = egyptGovernorates.first;
-  late CountryModel selectedCity = egyptGovernorates.first.obs.value;
+  var hasError = false.obs;
+  var errorMessage = ''.obs;
+  var isOnline = true.obs;
 
-  List<CountryModel> egyptGovernorates = const [
+  late CountryModel city;
+  late CountryModel selectedCity;
+
+  final List<CountryModel> egyptGovernorates = const [
     CountryModel(id: 1, nameAr: 'القاهرة', nameEn: 'Cairo'),
     CountryModel(id: 2, nameAr: 'الجيزة', nameEn: 'Giza'),
     CountryModel(id: 3, nameAr: 'الإسكندرية', nameEn: 'Alexandria'),
@@ -47,60 +50,164 @@ class PrayerController extends GetxController {
     CountryModel(id: 27, nameAr: 'جنوب سيناء', nameEn: 'South Sinai'),
   ];
 
-  Future<void> loadPrayerTimes() async {
-    final String? res = await AppLocalStore.getString(
-      LocalStoreNames.prayerCity,
-    );
-    if (res != null) {
-      selectedCity = egyptGovernorates
-          .where((e) => e.nameEn == res)
-          .toList()
-          .first;
-      city = egyptGovernorates.where((e) => e.nameEn == res).toList().first;
+  @override
+  void onInit() {
+    super.onInit();
 
-      AppLocalStore.setString(LocalStoreNames.prayerCity, selectedCity.nameEn);
+    // تهيئة API Service
+    apiService.init().then((_) {
+      _initializeCity();
+      loadPrayerTimes();
+
+      // مسح الكاش القديم (أقدم من 7 أيام)
+      apiService.clearOldCache();
+    });
+  }
+
+  // تهيئة المدينة من التخزين المحلي
+  void _initializeCity() {
+    final savedCity = AppLocalStore.getString(LocalStoreNames.prayerCity);
+
+    if (savedCity != null && savedCity.toString().isNotEmpty) {
+      try {
+        selectedCity = egyptGovernorates.firstWhere(
+          (e) => e.nameEn == savedCity,
+          orElse: () => egyptGovernorates.first,
+        );
+        city = selectedCity;
+      } catch (e) {
+        debugPrint('Error loading saved city: $e');
+        selectedCity = egyptGovernorates.first;
+        city = egyptGovernorates.first;
+      }
     } else {
-      selectedCity = egyptGovernorates.first.obs.value;
+      selectedCity = egyptGovernorates.first;
       city = egyptGovernorates.first;
     }
+  }
+
+  // تحميل مواقيت الصلاة
+  Future<void> loadPrayerTimes() async {
     try {
       isLoading.value = true;
-      final data = await apiService.fetchPrayerTimes(selectedCity.nameEn);
-      prayerTimes.value = data;
+      hasError.value = false;
+      errorMessage.value = '';
 
-      _scheduleNotifications(data);
+      // التحقق من الاتصال بالإنترنت
+      isOnline.value = await apiService.checkInternetConnection();
+
+      final data = await apiService.fetchPrayerTimes(selectedCity.nameEn);
+
+      if (data != null) {
+        prayerTimes.value = data;
+
+        // عرض معلومات إضافية
+        debugPrint('✅ Current Prayer: ${data.getCurrentPrayer() ?? "None"}');
+        debugPrint('✅ Next Prayer: ${data.getNextPrayer() ?? "Fajr tomorrow"}');
+
+        final timeUntil = data.getTimeUntilNextPrayer();
+        if (timeUntil != null) {
+          final hours = timeUntil.inHours;
+          final minutes = timeUntil.inMinutes % 60;
+          debugPrint('⏰ Time until next: ${hours}h ${minutes}m');
+        }
+
+        await _scheduleNotifications(data);
+
+        // حفظ المدينة المختارة
+        await AppLocalStore.setString(
+          LocalStoreNames.prayerCity,
+          selectedCity.nameEn,
+        );
+      } else {
+        hasError.value = true;
+        errorMessage.value = isOnline.value
+            ? 'لم يتم العثور على مواقيت الصلاة'
+            : 'لا يوجد اتصال بالإنترنت';
+      }
+    } catch (e) {
+      hasError.value = true;
+      errorMessage.value = 'حدث خطأ في تحميل المواقيت';
+      debugPrint('❌ Error loading prayer times: $e');
     } finally {
       isLoading.value = false;
     }
   }
 
-  void _scheduleNotifications(PrayerTimeModel data) {
-    final format = DateFormat('HH:mm');
-    final now = DateTime.now();
+  // جدولة الإشعارات
+  Future<void> _scheduleNotifications(PrayerTimeModel data) async {
+    try {
+      final format = DateFormat('HH:mm');
+      final now = DateTime.now();
 
-    final times = {
-      'الفجر': data.fajr,
-      'الظهر': data.dhuhr,
-      'العصر': data.asr,
-      'المغرب': data.maghrib,
-      'العشاء': data.isha,
-    };
+      final times = {
+        'الفجر': data.fajr,
+        'الظهر': data.dhuhr,
+        'العصر': data.asr,
+        'المغرب': data.maghrib,
+        'العشاء': data.isha,
+      };
 
-    for (var entry in times.entries) {
-      final prayerTime = format.parse(entry.value);
-      final scheduled = DateTime(
-        now.year,
-        now.month,
-        now.day,
-        prayerTime.hour,
-        prayerTime.minute,
-      );
-      if (scheduled.isAfter(now)) {
-        NotificationService.schedulePrayerNotification(
-          prayerName: entry.key,
-          time: scheduled,
-        );
+      // إلغاء جميع الإشعارات السابقة أولاً
+      await NotificationService.cancelAllNotifications();
+
+      // جدولة الإشعارات الجديدة
+      for (var entry in times.entries) {
+        try {
+          final prayerTime = format.parse(entry.value);
+
+          await NotificationService.schedulePrayerNotification(
+            prayerName: entry.key,
+            time: DateTime(
+              now.year,
+              now.month,
+              now.day,
+              prayerTime.hour,
+              prayerTime.minute,
+            ),
+          );
+        } catch (e) {
+          debugPrint('Error scheduling ${entry.key}: $e');
+        }
       }
+
+      // التحقق من الإشعارات المجدولة
+      final pending = await NotificationService.getPendingNotifications();
+      debugPrint('✅ Scheduled ${pending.length} notifications');
+    } catch (e) {
+      debugPrint('Error in _scheduleNotifications: $e');
     }
+  }
+
+  // تغيير المدينة
+  Future<void> changeCity(CountryModel newCity) async {
+    selectedCity = newCity;
+    city = newCity;
+    await loadPrayerTimes();
+  }
+
+  // إعادة المحاولة
+  Future<void> retry() async {
+    await loadPrayerTimes();
+  }
+
+  // عرض معلومات الكاش
+  Future<void> showCacheInfo() async {
+    final info = await apiService.getCacheInfo();
+    debugPrint('📊 Cache Info:\n${info.summary}');
+    return;
+  }
+
+  // مسح الكاش
+  Future<void> clearCache() async {
+    await apiService.clearAllCache();
+    await loadPrayerTimes();
+  }
+
+  @override
+  void onClose() {
+    // يمكنك إلغاء الإشعارات هنا إذا أردت
+    // NotificationService.cancelAllNotifications();
+    super.onClose();
   }
 }
