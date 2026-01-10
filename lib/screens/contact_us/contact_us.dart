@@ -67,28 +67,22 @@ class _ContactUSState extends State<ContactUS> {
                   spacing: 32,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    InkWell(
-                      onTap: () async {
-                        final Uri url = Uri.parse(SocialLinks.linkedin);
-                        if (!await launchUrl(
-                          url,
-                          mode: LaunchMode.externalApplication,
-                        )) {
-                          throw Exception('Could not launch $url');
-                        }
-
-                        // if (await canLaunchUrl(
-                        //   Uri.parse(SocialLinks.linkedin),
-                        // )) {
-                        //   await launchUrl(Uri.parse(SocialLinks.linkedin));
-                        // }
-                      },
-                      child: const Image(
-                        image: AssetImage(Assets.linkedInIcon),
-                        height: 50,
-                        width: 50,
-                      ),
-                    ),
+                    // InkWell(
+                    //   onTap: () async {
+                    //     final Uri url = Uri.parse(SocialLinks.linkedin);
+                    //     if (!await launchUrl(
+                    //       url,
+                    //       mode: LaunchMode.externalApplication,
+                    //     )) {
+                    //       throw Exception('Could not launch $url');
+                    //     }
+                    //   },
+                    //   child: const Image(
+                    //     image: AssetImage(Assets.linkedInIcon),
+                    //     height: 50,
+                    //     width: 50,
+                    //   ),
+                    // ),
                     InkWell(
                       onTap: () async {
                         final Uri url = Uri.parse(SocialLinks.whatsapp);
