@@ -81,7 +81,7 @@ class HomeData {
 
     final data = query.docs.first.data();
 
-    final bool isBlocked = data['isBlocked'] ?? false;
+    final bool isBlocked = data['isBlocked'] as bool? ?? false;
 
     return !isBlocked ;
   }

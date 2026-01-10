@@ -226,9 +226,13 @@ class NotificationsItem extends StatelessWidget {
                     ? ClipRRect(
                         borderRadius: BorderRadiusGeometry.circular(8),
                         child: Image.network(
-                          notifyItem.image!,
+                          notifyItem.image ?? '',
                           width: 40,
                           height: 40,
+                          errorBuilder: (_, __, ___) => const Icon(
+                            Icons.notifications,
+                            color: AppColors.mainColorAccent,
+                          ),
                         ),
                       )
                     : const Icon(Icons.notifications),
