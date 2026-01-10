@@ -4,43 +4,60 @@ import 'package:screw_calculator/components/custom_text.dart';
 import 'package:screw_calculator/utility/app_theme.dart';
 
 class BuildCardWidget extends StatelessWidget {
-  final String name, time;
+  final String title;
+  final String time;
+  final IconData? icon;
 
-  const BuildCardWidget(this.name, this.time, {super.key});
+  const BuildCardWidget(this.title, this.time, [this.icon, Key? key])
+    : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
-      width: 1.sw,
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
+        color: AppColors.grey,
         borderRadius: BorderRadius.circular(12),
-        gradient: LinearGradient(
-          colors: [
-            AppColors.mainColor.withOpacity(0.6),
-            AppColors.mainColor.withOpacity(0.4),
-            AppColors.mainColor.withOpacity(0.2),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
-      child: ListTile(
-        leading: CustomText(
-          text: time,
-          fontWeight: FontWeight.bold,
-          fontSize: 20,
-          textAlign: TextAlign.end,
-        ),
-        title: CustomText(
-          text: name,
-          fontWeight: FontWeight.bold,
-          fontSize: 20,
-          textAlign: TextAlign.end,
-        ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 8),
-        trailing: const Icon(Icons.access_time, color: AppColors.white),
+      child: Row(
+        children: [
+          CustomText(
+            text: time,
+            fontSize: 24,
+            fontFamily: AppFonts.bold,
+            color: AppColors.mainColor,
+          ),
+
+          const SizedBox(width: 16),
+          Expanded(
+            child: CustomText(
+              text: title,
+              fontSize: 20,
+              fontFamily: AppFonts.bold,
+              textAlign: TextAlign.right,
+              color: AppColors.black,
+            ),
+          ),
+          const SizedBox(width: 8),
+
+          if (icon != null)
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: AppColors.mainColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(icon, color: AppColors.mainColor, size: 24),
+            ),
+        ],
       ),
     );
   }
