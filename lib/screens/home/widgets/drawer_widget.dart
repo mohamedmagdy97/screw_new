@@ -68,6 +68,11 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                   onTap: () =>
                       homeData.routeFromDrawer(context, const PrayerScreen()),
                 ),
+                // DrawerItemWidget(
+                //   title: ' test مواقيت الصلاة',
+                //   onTap: () =>
+                //       homeData.routeFromDrawer(context, const RealDeviceTestPage()),
+                // ),
                 DrawerItemWidget(
                   title: 'الاشعارات',
                   onTap: () => homeData.routeFromDrawer(
@@ -185,6 +190,19 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                                               TextFieldValidatorType
                                                   .displayText,
                                         ),
+
+                                        CustomTextField(
+                                          controller: homeData.ageController,
+                                          hintText: 'عندك كام سنة',
+                                          labelText: 'العمر',
+                                          hintColor: AppColors.black,
+                                          fillColor: AppColors.white,
+                                          textColor: AppColors.black,
+                                          containtPaddingRight: 0,
+                                          inputType: TextInputType.number,
+                                          textFieldVaidType:
+                                              TextFieldValidatorType.number,
+                                        ),
                                       ],
                                     ),
                                   ),
@@ -210,12 +228,15 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                                             .countryController
                                             .text
                                             .trim();
+                                        final age = homeData.ageController.text
+                                            .trim();
 
                                         final result = await homeData
                                             .validateUser(
                                               name: name,
                                               phone: phone,
                                               country: country,
+                                              age: age,
                                             );
 
                                         switch (result) {
@@ -246,6 +267,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                                             Utilities().showCustomSnack(
                                               context,
                                               backgroundColor: AppColors.red,
+                                              topPosition: true,
                                               txt:
                                                   'هذه البيانات مسجلة بالفعل، يرجى إدخال المدينة كما كانت مسجلة سابقًا',
                                             );
@@ -254,6 +276,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                                             Utilities().showCustomSnack(
                                               context,
                                               backgroundColor: AppColors.red,
+                                              topPosition: true,
                                               txt:
                                                   'رقم الهاتف مسجل بالفعل، يرجى إدخال الأسم والمدينة كما كانت مسجلة سابقًا',
                                             );
@@ -263,6 +286,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                                             Utilities().showCustomSnack(
                                               context,
                                               backgroundColor: AppColors.red,
+                                              topPosition: true,
                                               txt:
                                                   'الاسم مسجل بالفعل، يرجى إدخال رقم الهاتف والمدينة لو كانت مسجلة مسبقًا او ادخل اسم اخر',
                                             );

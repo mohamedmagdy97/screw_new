@@ -8,6 +8,7 @@ class Utilities {
     BuildContext context, {
     String? txt,
     Color? backgroundColor,
+    bool? topPosition,
   }) {
     late OverlayEntry entry;
     final controller = AnimationController(
@@ -16,16 +17,17 @@ class Utilities {
     );
 
     final animation = Tween<Offset>(
-      begin: const Offset(0, 1),
+      begin: Offset(0, (topPosition ?? false) ? -1 : 1),
       end: Offset.zero, // on-screen
     ).animate(CurvedAnimation(parent: controller, curve: Curves.easeOut));
 
     final overlay = Overlay.of(context);
     entry = OverlayEntry(
       builder: (_) => Positioned(
-        bottom: 20,
+        bottom: (topPosition ?? false) ? null : 20,
         left: 16,
         right: 16,
+        top: (topPosition ?? false) ? 64 : null,
         child: SlideTransition(
           position: animation,
           child: Material(

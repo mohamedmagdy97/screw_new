@@ -18,7 +18,7 @@ class BuildNextPrayerCard extends StatelessWidget {
         (remaining.contains('دقيقة') || remaining.contains('ثانية'));
 
     return Container(
-      margin: const EdgeInsets.only(right: 16, left: 16, bottom: 16),
+      margin: const EdgeInsets.only(right: 16, left: 16, bottom: 12,top: 4),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -56,7 +56,7 @@ class BuildNextPrayerCard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 8),
           CustomText(
             text: info['name'] ?? '--',
             fontSize: 28,

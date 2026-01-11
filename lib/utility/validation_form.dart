@@ -42,15 +42,15 @@ String? validation({
       return 'هذا الحقل مطلوب';
     }
     if (value.length < 2) {
-      return 'عدد حروف الكلمه قصيرة';
+      return 'عدد الحروف الاسم قصيرة';
     }
     if (value.length > 20) {
       return 'عدد حروف الكلمه كبيرة';
     }
 
-    if (!regExpName.hasMatch(value.trim().replaceAll('‎', ''))) {
-      return 'لا يجب ان يحتوي علي حروف خاصة';
-    }
+    // if (!regExpName.hasMatch(value.trim().replaceAll('‎', ''))) {
+    //   return 'لا يجب ان يحتوي علي حروف خاصة';
+    // }
 
     return null;
   } else {

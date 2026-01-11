@@ -32,7 +32,7 @@ class BuildPrayerCard extends StatelessWidget {
       iconColor = AppColors.mainColor;
       textColor = AppColors.white;
       badge = Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
         decoration: BoxDecoration(
           color: AppColors.mainColor,
           borderRadius: BorderRadius.circular(8),
@@ -47,7 +47,7 @@ class BuildPrayerCard extends StatelessWidget {
       cardColor = Colors.blue[50]!;
       iconColor = Colors.blue[700]!;
       badge = Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
         decoration: BoxDecoration(
           color: Colors.blue[700],
           borderRadius: BorderRadius.circular(8),
@@ -66,7 +66,7 @@ class BuildPrayerCard extends StatelessWidget {
     }
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
+      margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
         color: cardColor,
@@ -92,7 +92,7 @@ class BuildPrayerCard extends StatelessWidget {
           const SizedBox(width: 8),
           CustomText(
             text: time,
-            fontSize: 24,
+            fontSize: 22,
             fontFamily: AppFonts.bold,
             color: (isCurrent ?? false) || (isNext ?? false)
                 ? iconColor
@@ -108,7 +108,7 @@ class BuildPrayerCard extends StatelessWidget {
 
                 CustomText(
                   text: title,
-                  fontSize: 18,
+                  fontSize: 16,
                   fontFamily: AppFonts.bold,
                   textAlign: TextAlign.right,
                   color: textColor,
@@ -118,12 +118,12 @@ class BuildPrayerCard extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           Container(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
               color: iconColor.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(10),
             ),
-            child: Icon(icon, color: iconColor, size: 24),
+            child: Icon(icon, color: iconColor, size: 22),
           ),
         ],
       ),

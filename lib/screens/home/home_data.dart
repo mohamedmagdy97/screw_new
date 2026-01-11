@@ -33,11 +33,13 @@ class HomeData {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController countryController = TextEditingController();
+  final TextEditingController ageController = TextEditingController();
   final Box userBox = Hive.box('userBox');
 
   String? userName;
   String? userPhone;
   String? userCountry;
+  int? userAge;
 
   final List<TextEditingController> controllers = List.generate(
     12,
@@ -59,6 +61,7 @@ class HomeData {
     userName = userBox.get('name')?.toString();
     userPhone = userBox.get('phone')?.toString();
     userCountry = userBox.get('country')?.toString();
+    userAge = int.parse((userBox.get('age') ?? 0).toString());
   }
 
   Future<bool> canUserEnterChat({
@@ -83,17 +86,16 @@ class HomeData {
 
     final bool isBlocked = data['isBlocked'] as bool? ?? false;
 
-    return !isBlocked ;
+    return !isBlocked;
   }
 
   Future<void> addUserDataToDB() async {
-    userBox.put('name', nameController.text);
-    userBox.put('phone', phoneController.text);
-    userBox.put('country', countryController.text);
+
 
     userName = nameController.text;
     userPhone = phoneController.text;
     userCountry = countryController.text;
+    userAge = int.parse((ageController.text).toString());
     // final id = const Uuid().v4();
 
     final userData = {
@@ -101,6 +103,7 @@ class HomeData {
       'userName': userName,
       'userPhone': userPhone,
       'userCountry': userCountry,
+      'userAge': userAge,
       'deviceName': await getDeviceName(),
       'datetime': DateTime.now(),
       'createdAt': FieldValue.serverTimestamp(),
@@ -112,12 +115,20 @@ class HomeData {
         .collection('users')
         .doc(userPhone)
         .set(userData);
+
+
+    userBox.put('name', nameController.text);
+    userBox.put('phone', phoneController.text);
+    userBox.put('country', countryController.text);
+    userBox.put('age', ageController.text);
+
   }
 
   Future<UserValidationResult> validateUser({
     required String name,
     required String phone,
     required String country,
+    required String age,
   }) async {
     final queryName = await FirebaseFirestore.instance
         .collection('chats')

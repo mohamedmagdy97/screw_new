@@ -44,7 +44,7 @@ class RemoteConfig {
   }
 
   bool enableCacheView() {
-    final enableCache = remoteConfig.getBool('chat_cache');
+    final enableCache = remoteConfig.getBool('enable_cache_prayer');
 
     return enableCache;
   }
