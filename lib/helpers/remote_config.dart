@@ -42,4 +42,10 @@ class RemoteConfig {
 
     return true;
   }
+
+  bool enableCacheView() {
+    final enableCache = remoteConfig.getBool('chat_cache');
+
+    return enableCache;
+  }
 }

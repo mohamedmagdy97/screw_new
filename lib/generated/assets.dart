@@ -12,5 +12,6 @@ class Assets {
   static const String githubIcon = 'assets/icons/github.png';
   static const String kingIcon = 'assets/icons/king.png';
   static const String videoScrewVideo = 'assets/video/screw_video.mp4';
+  static const String soundsAzan = 'assets/sounds/azan.mp3';
 
 }
