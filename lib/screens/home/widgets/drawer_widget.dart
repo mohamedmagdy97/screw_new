@@ -105,8 +105,8 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                       homeData.routeFromDrawer(context, const ContactUS()),
                 ),
                 if (RemoteConfig().canAccessChat(
-                  phone: homeData.userPhone!,
-                  name: homeData.userName!,
+                  phone: homeData.userPhone ?? '',
+                  name: homeData.userName ?? '',
                 ))
                   DrawerItemWidget(
                     title: 'محادثة عامة',

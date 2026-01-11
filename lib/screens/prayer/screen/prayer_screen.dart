@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -6,6 +8,7 @@ import 'package:screw_calculator/components/bottom_nav_text.dart';
 import 'package:screw_calculator/components/custom_text.dart';
 import 'package:screw_calculator/screens/prayer/controllers/prayer_controller.dart';
 import 'package:screw_calculator/screens/prayer/core/notification_service.dart';
+import 'package:screw_calculator/screens/prayer/data/datasources/prayer_api_service.dart';
 import 'package:screw_calculator/screens/prayer/data/models/country_model.dart';
 import 'package:screw_calculator/screens/prayer/data/models/prayer_time_model.dart';
 import 'package:screw_calculator/screens/prayer/screen/widget/build_card_widget.dart';
@@ -20,13 +23,25 @@ class PrayerScreen extends StatefulWidget {
 
 class _PrayerScreenState extends State<PrayerScreen> {
   late final PrayerController controller;
+  Timer? _updateTimer;
 
   @override
   void initState() {
     super.initState();
-    controller = Get.put(PrayerController());
+    controller = Get.put(PrayerController())..loadPrayerTimes();
 
     NotificationService.init();
+
+    // تحديث الوقت المتبقي كل دقيقة
+    _updateTimer = Timer.periodic(const Duration(minutes: 1), (_) {
+      if (mounted) setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _updateTimer?.cancel();
+    super.dispose();
   }
 
   @override
@@ -35,7 +50,7 @@ class _PrayerScreenState extends State<PrayerScreen> {
       appBar: _buildAppBar(),
       backgroundColor: AppColors.bg,
       bottomNavigationBar: const BottomNavigationText(),
-      body: Obx(() => _buildBody()),
+      body: Obx(_buildBody),
     );
   }
 
@@ -46,24 +61,29 @@ class _PrayerScreenState extends State<PrayerScreen> {
       automaticallyImplyLeading: false,
       backgroundColor: AppColors.grayy,
       title: CustomText(text: 'مواقيت الصلاة', fontSize: 22.sp),
-      leading:
-          // زر الإشعارات
+      leadingWidth: 105.w,
+      leading: Row(
+        children: [
           IconButton(
-            icon: const Icon(
+            icon: Icon(
+              size: 24.sp,
               Icons.notifications_outlined,
               color: AppColors.white,
             ),
             onPressed: _showNotificationSettings,
           ),
-
+          IconButton(
+            icon: Icon(Icons.info_outline, size: 24.sp, color: AppColors.white),
+            onPressed: _showCacheInfoDialog,
+          ),
+        ],
+      ),
       actions: [
         // زر معلومات الكاش
         // IconButton(
         //   icon: const Icon(Icons.info_outline, color: AppColors.white),
         //   onPressed: _showCacheInfoDialog,
         // ),
-
-        // زر الرجوع
         IconButton(
           onPressed: () => Navigator.pop(context),
           icon: Transform.flip(
@@ -163,7 +183,7 @@ class _PrayerScreenState extends State<PrayerScreen> {
   // محدد المدينة
   Widget _buildCitySelector() {
     return Container(
-      margin: const EdgeInsets.only(right: 16, left: 16, top: 16),
+      margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
@@ -180,6 +200,7 @@ class _PrayerScreenState extends State<PrayerScreen> {
           ),
         ],
       ),
+
       child: Row(
         children: [
           const Icon(Icons.location_on, color: AppColors.white),
@@ -220,49 +241,93 @@ class _PrayerScreenState extends State<PrayerScreen> {
   // كارت الصلاة القادمة
   Widget _buildNextPrayerCard(PrayerTimeModel data) {
     final nextPrayer = _getNextPrayer(data);
+    final remaining = nextPrayer['remaining'] ?? '--';
+    final isComingSoon =
+        remaining.contains('دقيقة') || remaining.contains('ثانية');
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      padding: const EdgeInsets.all(12),
+      margin: const EdgeInsets.only(right: 16, left: 16, bottom: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFF1E88E5), Color(0xFF1565C0)],
+        gradient: LinearGradient(
+          colors: isComingSoon
+              ? [const Color(0xFFFF6B6B), const Color(0xFFEE5A6F)]
+              : [const Color(0xFF1E88E5), const Color(0xFF1565C0)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.blue.withOpacity(0.3),
-            blurRadius: 12,
-            offset: const Offset(0, 6),
+            color: (isComingSoon ? Colors.red : Colors.blue).withOpacity(0.4),
+            blurRadius: 16,
+            offset: const Offset(0, 8),
           ),
         ],
       ),
       child: Column(
         children: [
-          const CustomText(
-            text: 'الصلاة القادمة',
-            fontSize: 14,
-            color: Colors.white70,
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                isComingSoon ? Icons.notifications_active : Icons.access_time,
+                color: Colors.white,
+                size: 16,
+              ),
+              const SizedBox(width: 8),
+              const CustomText(
+                text: 'الصلاة القادمة',
+                fontSize: 14,
+                color: Colors.white70,
+              ),
+            ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
           CustomText(
-            text: nextPrayer['name']!,
-            fontSize: 22,
+            text: nextPrayer['name'] ?? '--',
+            fontSize: 28,
             fontFamily: AppFonts.bold,
           ),
-          const SizedBox(height: 4),
-          CustomText(
-            text: nextPrayer['time']!,
-            fontSize: 30,
-            fontFamily: AppFonts.bold,
-          ),
           const SizedBox(height: 8),
-          CustomText(
-            text: nextPrayer['remaining']!,
-            fontSize: 14,
-            color: Colors.white70,
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: CustomText(
+              text: nextPrayer['time'] ?? '--:--',
+              fontSize: 28,
+              fontFamily: AppFonts.bold,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: Colors.black.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  isComingSoon
+                      ? Icons.warning_amber_rounded
+                      : Icons.timer_outlined,
+                  color: Colors.white,
+                  size: 16,
+                ),
+                const SizedBox(width: 6),
+                CustomText(
+                  text: remaining,
+                  fontSize: 14,
+                  fontFamily: AppFonts.bold,
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -271,61 +336,199 @@ class _PrayerScreenState extends State<PrayerScreen> {
 
   // قائمة المواقيت
   Widget _buildPrayersList(PrayerTimeModel data) {
+    final currentPrayer = PrayerTimeModelExtension(data).getCurrentPrayer();
+    final nextPrayer = PrayerTimeModelExtension(data).getNextPrayer();
     return ListView(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       children: [
-        BuildCardWidget('الفجر', data.fajr, Icons.wb_twilight),
-        // BuildCardWidget('الشروق', data.sunrise ?? '--:--', Icons.wb_sunny),
-        BuildCardWidget('الظهر', data.dhuhr, Icons.wb_sunny),
-        BuildCardWidget('العصر', data.asr, Icons.cloud),
-        BuildCardWidget('المغرب', data.maghrib, Icons.nights_stay),
-        BuildCardWidget('العشاء', data.isha, Icons.bedtime),
+        _buildPrayerCard(
+          'الفجر',
+          data.fajr,
+          Icons.wb_twilight,
+          isCurrent: currentPrayer == 'الفجر',
+          isNext: nextPrayer == 'الفجر',
+        ),
+
+        _buildPrayerCard(
+          'الظهر',
+          data.dhuhr,
+          Icons.wb_sunny,
+          isCurrent: currentPrayer == 'الظهر',
+          isNext: nextPrayer == 'الظهر',
+        ),
+        _buildPrayerCard(
+          'العصر',
+          data.asr,
+          Icons.cloud,
+          isCurrent: currentPrayer == 'العصر',
+          isNext: nextPrayer == 'العصر',
+        ),
+        _buildPrayerCard(
+          'المغرب',
+          data.maghrib,
+          Icons.nights_stay,
+          isCurrent: currentPrayer == 'المغرب',
+          isNext: nextPrayer == 'المغرب',
+        ),
+        _buildPrayerCard(
+          'العشاء',
+          data.isha,
+          Icons.bedtime,
+          isCurrent: currentPrayer == 'العشاء',
+          isNext: nextPrayer == 'العشاء',
+        ),
       ],
+    );
+  }
+
+  // كارت الصلاة مع تحسينات
+  Widget _buildPrayerCard(
+    String title,
+    String time,
+    IconData icon, {
+    bool isCurrent = false,
+    bool isNext = false,
+    bool isInfo = false,
+  }) {
+    Color cardColor = Colors.white;
+    Color textColor = AppColors.black;
+    Color iconColor = AppColors.mainColor;
+    Widget? badge;
+
+    if (isCurrent) {
+      cardColor = AppColors.mainColorAccent.withOpacity(0.15);
+      iconColor = AppColors.mainColor;
+      textColor = AppColors.white;
+      badge = Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: AppColors.mainColor,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: const CustomText(
+          text: 'الآن',
+          fontFamily: AppFonts.bold,
+          fontSize: 10,
+        ),
+      );
+    } else if (isNext) {
+      cardColor = Colors.blue[50]!;
+      iconColor = Colors.blue[700]!;
+      badge = Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: Colors.blue[700],
+          borderRadius: BorderRadius.circular(8),
+        ),
+
+        child: const CustomText(
+          text: 'القادمة',
+          fontFamily: AppFonts.bold,
+          fontSize: 10,
+        ),
+      );
+    } else if (isInfo) {
+      cardColor = Colors.grey[100]!;
+      iconColor = Colors.grey[600]!;
+      textColor = Colors.grey[700]!;
+    }
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: cardColor,
+        borderRadius: BorderRadius.circular(16),
+        border: (isCurrent || isNext)
+            ? Border.all(
+                color: isCurrent ? AppColors.mainColor : Colors.blue[700]!,
+                width: 2,
+              )
+            : null,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          const SizedBox(width: 8),
+          CustomText(
+            text: time,
+            fontSize: 24,
+            fontFamily: AppFonts.bold,
+            color: isCurrent || isNext ? iconColor : AppColors.mainColor,
+          ),
+
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                if (badge != null) badge,
+                const SizedBox(width: 8),
+
+                CustomText(
+                  text: title,
+                  fontSize: 18,
+                  fontFamily: AppFonts.bold,
+                  textAlign: TextAlign.right,
+                  color: textColor,
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 8),
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: iconColor.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(icon, color: iconColor, size: 24),
+          ),
+        ],
+      ),
     );
   }
 
   // حساب الصلاة القادمة
   Map<String, String> _getNextPrayer(PrayerTimeModel data) {
-    final format = DateFormat('HH:mm');
-    final now = DateTime.now();
+    try {
+      // استخدام الدالة المحسنة من Model
+      return data.getNextPrayerInfo();
+    } catch (e) {
+      debugPrint('❌ Error in _getNextPrayer: $e');
+      return {'name': 'الفجر', 'time': data.fajr, 'remaining': '--'};
+    }
+  }
 
-    final prayers = [
-      {'name': 'الفجر', 'time': data.fajr},
-      {'name': 'الظهر', 'time': data.dhuhr},
-      {'name': 'العصر', 'time': data.asr},
-      {'name': 'المغرب', 'time': data.maghrib},
-      {'name': 'العشاء', 'time': data.isha},
-    ];
+  // تنسيق الوقت المتبقي
+  String _formatDuration(Duration duration) {
+    if (duration.isNegative) return '--';
 
-    for (var prayer in prayers) {
-      try {
-        final prayerTime = format.parse(prayer['time']!);
-        final prayerDateTime = DateTime(
-          now.year,
-          now.month,
-          now.day,
-          prayerTime.hour,
-          prayerTime.minute,
-        );
+    final hours = duration.inHours;
+    final minutes = duration.inMinutes % 60;
+    final seconds = duration.inSeconds % 60;
 
-        if (prayerDateTime.isAfter(now)) {
-          final diff = prayerDateTime.difference(now);
-          final hours = diff.inHours;
-          final minutes = diff.inMinutes % 60;
-
-          return {
-            'name': prayer['name']!,
-            'time': prayer['time']!,
-            'remaining': 'متبقي $hours ساعة و $minutes دقيقة',
-          };
-        }
-      } catch (e) {
-        debugPrint('Error parsing prayer time: $e');
+    if (hours > 0) {
+      if (minutes > 0) {
+        return 'متبقي $hours ساعة و$minutes دقيقة';
       }
+      return 'متبقي $hours ${hours == 1 ? 'ساعة' : 'ساعات'}';
     }
 
-    // إذا انتهت جميع الصلوات، أعد الفجر لليوم التالي
-    return {'name': 'الفجر', 'time': data.fajr, 'remaining': 'غداً'};
+    if (minutes > 0) {
+      return 'متبقي $minutes ${minutes == 1 ? 'دقيقة' : 'دقائق'}';
+    }
+
+    if (seconds > 0) {
+      return 'متبقي $seconds ${seconds == 1 ? 'ثانية' : 'ثواني'}';
+    }
+
+    return 'الآن';
   }
 
   // إعدادات الإشعارات
@@ -344,17 +547,22 @@ class _PrayerScreenState extends State<PrayerScreen> {
               color: AppColors.black,
             ),
             const SizedBox(height: 24),
-            // ListTile(
-            //   leading: const Icon(Icons.notification_add),
-            //   title: const Text('اختبار الإشعار'),
-            //   onTap: () {
-            //     NotificationService.showInstantNotification(
-            //       title: 'إشعار تجريبي',
-            //       body: 'هذا إشعار تجريبي للتأكد من عمل الإشعارات',
-            //     );
-            //     Navigator.pop(context);
-            //   },
-            // ),
+            ListTile(
+              leading: const Icon(Icons.notification_add),
+              title: const CustomText(
+                text: 'اختبار الإشعار',
+                fontSize: 14,
+                color: AppColors.black,
+                textAlign: TextAlign.end,
+              ),
+              onTap: () {
+                NotificationService.showInstantNotification(
+                  title: 'إشعار تجريبي',
+                  body: 'هذا إشعار تجريبي للتأكد من عمل الإشعارات',
+                );
+                Navigator.pop(context);
+              },
+            ),
             ListTile(
               leading: const Icon(Icons.refresh),
               title: const CustomText(

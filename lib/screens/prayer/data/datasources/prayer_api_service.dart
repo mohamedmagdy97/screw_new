@@ -298,7 +298,7 @@ class PrayerApiService {
     }
   }
 
-  // جلب مواقيت لتاريخ محدد
+  //  مواقيت لتاريخ محدد
   Future<PrayerTimeModel?> fetchPrayerTimesForDate({
     required String city,
     required DateTime date,
@@ -330,7 +330,7 @@ class PrayerApiService {
     }
   }
 
-  // جلب مواقيت الشهر كامل
+  //  مواقيت الشهر كامل
   Future<List<PrayerTimeModel>> fetchMonthlyPrayerTimes({
     required String city,
     required int year,
@@ -376,10 +376,6 @@ class PrayerApiService {
   }
 }
 
-// ============================================
-// Cache Info Model - معلومات الكاش
-// ============================================
-
 class CacheInfo {
   final int totalEntries;
   final int dataEntries;
@@ -410,24 +406,19 @@ class CacheInfo {
   }
 }
 
-// ============================================
-// Prayer Time Model Enhancement - تحسين النموذج
-// ============================================
-
 extension PrayerTimeModelExtension on PrayerTimeModel {
-  // تحويل إلى JSON
+  // تحويل إلى JSON (استخدام الأوقات بصيغة 24 ساعة)
   Map<String, dynamic> toJson() {
     return {
       'code': 200,
       'status': 'OK',
       'data': {
         'timings': {
-          'Fajr': fajr,
-          // 'Sunrise': sunrise,
-          'Dhuhr': dhuhr,
-          'Asr': asr,
-          'Maghrib': maghrib,
-          'Isha': isha,
+          'Fajr': fajr24,
+          'Dhuhr': dhuhr24,
+          'Asr': asr24,
+          'Maghrib': maghrib24,
+          'Isha': isha24,
         },
         'date': {
           'readable': DateFormat('dd MMM yyyy').format(DateTime.now()),
@@ -440,70 +431,47 @@ extension PrayerTimeModelExtension on PrayerTimeModel {
   // الحصول على الصلاة الحالية
   String? getCurrentPrayer() {
     final now = DateTime.now();
-    final format = DateFormat('HH:mm');
 
-    final prayers = {
-      'الفجر': fajr,
-      'الظهر': dhuhr,
-      'العصر': asr,
-      'المغرب': maghrib,
-      'العشاء': isha,
-    };
+    final prayers = [
+      {'name': 'الفجر', 'time': fajr24},
+      {'name': 'الظهر', 'time': dhuhr24},
+      {'name': 'العصر', 'time': asr24},
+      {'name': 'المغرب', 'time': maghrib24},
+      {'name': 'العشاء', 'time': isha24},
+    ];
 
-    String? lastPrayer;
-    for (var entry in prayers.entries) {
-      try {
-        final prayerTime = format.parse(entry.value);
-        final prayerDateTime = DateTime(
-          now.year,
-          now.month,
-          now.day,
-          prayerTime.hour,
-          prayerTime.minute,
-        );
+    String? currentPrayer;
 
-        if (prayerDateTime.isBefore(now)) {
-          lastPrayer = entry.key;
-        } else {
-          break;
-        }
-      } catch (e) {
-        debugPrint('Error parsing prayer time: $e');
+    for (int i = 0; i < prayers.length; i++) {
+      final prayerDateTime = _parseTime24(prayers[i]['time']!, now);
+
+      if (prayerDateTime != null && prayerDateTime.isBefore(now)) {
+        currentPrayer = prayers[i]['name'];
+      } else {
+        break;
       }
     }
 
-    return lastPrayer;
+    return currentPrayer;
   }
 
   // الحصول على الصلاة القادمة
   String? getNextPrayer() {
     final now = DateTime.now();
-    final format = DateFormat('HH:mm');
 
-    final prayers = {
-      'الفجر': fajr,
-      'الظهر': dhuhr,
-      'العصر': asr,
-      'المغرب': maghrib,
-      'العشاء': isha,
-    };
+    final prayers = [
+      {'name': 'الفجر', 'time': fajr24},
+      {'name': 'الظهر', 'time': dhuhr24},
+      {'name': 'العصر', 'time': asr24},
+      {'name': 'المغرب', 'time': maghrib24},
+      {'name': 'العشاء', 'time': isha24},
+    ];
 
-    for (var entry in prayers.entries) {
-      try {
-        final prayerTime = format.parse(entry.value);
-        final prayerDateTime = DateTime(
-          now.year,
-          now.month,
-          now.day,
-          prayerTime.hour,
-          prayerTime.minute,
-        );
+    for (var prayer in prayers) {
+      final prayerDateTime = _parseTime24(prayer['time']!, now);
 
-        if (prayerDateTime.isAfter(now)) {
-          return entry.key;
-        }
-      } catch (e) {
-        debugPrint('Error parsing prayer time: $e');
+      if (prayerDateTime != null && prayerDateTime.isAfter(now)) {
+        return prayer['name'];
       }
     }
 
@@ -513,40 +481,54 @@ extension PrayerTimeModelExtension on PrayerTimeModel {
   // الوقت المتبقي للصلاة القادمة
   Duration? getTimeUntilNextPrayer() {
     final now = DateTime.now();
-    final format = DateFormat('HH:mm');
     final nextPrayer = getNextPrayer();
 
     if (nextPrayer == null) return null;
 
     final prayers = {
-      'الفجر': fajr,
-      'الظهر': dhuhr,
-      'العصر': asr,
-      'المغرب': maghrib,
-      'العشاء': isha,
+      'الفجر': fajr24,
+      'الظهر': dhuhr24,
+      'العصر': asr24,
+      'المغرب': maghrib24,
+      'العشاء': isha24,
     };
 
     final timeStr = prayers[nextPrayer];
     if (timeStr == null) return null;
 
+    var prayerDateTime = _parseTime24(timeStr, now);
+
+    if (prayerDateTime == null) return null;
+
+    // إذا كان الفجر وقد مر وقته اليوم، أضف يوم
+    if (nextPrayer == 'الفجر' && prayerDateTime.isBefore(now)) {
+      prayerDateTime = prayerDateTime.add(const Duration(days: 1));
+    }
+
+    return prayerDateTime.difference(now);
+  }
+
+  // تحليل الوقت بصيغة 24 ساعة
+  DateTime? _parseTime24(String timeStr, DateTime baseDate) {
     try {
-      final prayerTime = format.parse(timeStr);
-      var prayerDateTime = DateTime(
-        now.year,
-        now.month,
-        now.day,
-        prayerTime.hour,
-        prayerTime.minute,
+      final timeParts = timeStr.split(':');
+      if (timeParts.length < 2) return null;
+
+      final hour = int.tryParse(timeParts[0]);
+      final minute = int.tryParse(timeParts[1]);
+
+      if (hour == null || minute == null) return null;
+      if (hour < 0 || hour > 23 || minute < 0 || minute > 59) return null;
+
+      return DateTime(
+        baseDate.year,
+        baseDate.month,
+        baseDate.day,
+        hour,
+        minute,
       );
-
-      // إذا كان الفجر وقد مر وقته اليوم
-      if (nextPrayer == 'الفجر' && prayerDateTime.isBefore(now)) {
-        prayerDateTime = prayerDateTime.add(const Duration(days: 1));
-      }
-
-      return prayerDateTime.difference(now);
     } catch (e) {
-      debugPrint('Error calculating time until next prayer: $e');
+      debugPrint('⚠️ Error parsing time "$timeStr": $e');
       return null;
     }
   }

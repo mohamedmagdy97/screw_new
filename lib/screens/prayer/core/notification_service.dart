@@ -90,7 +90,7 @@ class NotificationService {
         'موعد صلاة $prayerName',
         'حان الآن وقت صلاة $prayerName 🕌',
         tzScheduled,
-        NotificationDetails(
+        const NotificationDetails(
           android: AndroidNotificationDetails(
             'prayer_channel',
             'Prayer Notifications',
@@ -99,19 +99,20 @@ class NotificationService {
             priority: Priority.high,
             playSound: true,
             enableVibration: true,
-            sound: const RawResourceAndroidNotificationSound('azan'),
-            // يمكنك إضافة ملف azan.mp3 في android/app/src/main/res/raw/
+            sound: RawResourceAndroidNotificationSound('azan'),
+            //   ملف azan.mp3 في android/app/src/main/res/raw/
             icon: '@mipmap/ic_launcher',
-            color: const Color(0xFF2196F3),
+            color: Color(0xFF2196F3),
           ),
-          iOS: const DarwinNotificationDetails(
+          iOS: DarwinNotificationDetails(
             presentAlert: true,
             presentBadge: true,
             presentSound: true,
-            sound: 'azan.aiff', // أضف الملف في ios/Runner/
+            sound: 'azan.aiff', //   الملف في ios/Runner/
           ),
         ),
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+
         // uiLocalNotificationDateInterpretation:
         // UILocalNotificationDateInterpretation.absoluteTime,
         matchDateTimeComponents: DateTimeComponents.time,
