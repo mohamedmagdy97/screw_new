@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:screw_calculator/components/bottom_nav_text.dart';
+import 'package:screw_calculator/components/custom_appbar.dart';
 import 'package:screw_calculator/components/custom_text.dart';
 import 'package:screw_calculator/components/dox_decoration.dart';
 import 'package:screw_calculator/models/screenshoot_model.dart';
@@ -357,24 +358,7 @@ class _UserScSharingScreenState extends State<UserScSharingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        automaticallyImplyLeading: false,
-        backgroundColor: AppColors.grayy,
-        title: CustomText(text: 'مشاركات الاخرين', fontSize: 22.sp),
-        actions: [
-          IconButton(
-            onPressed: () => Navigator.pop(context),
-            icon: Transform.flip(
-              flipX: true,
-              child: const Icon(
-                Icons.arrow_back_ios_sharp,
-                color: AppColors.white,
-              ),
-            ),
-          ),
-        ],
-      ),
+      appBar: const CustomAppBar(title: 'مشاركات الاخرين'),
       backgroundColor: AppColors.bg,
       bottomNavigationBar: const BottomNavigationText(),
       body: _items.isEmpty && !_isLoading

@@ -93,7 +93,7 @@ class HistoryData {
                 text: 'سيتم حذف الجولة رقم ${index + 1}',
                 fontSize: 18.sp,
               ),
-                const SizedBox(height: 40),
+              const SizedBox(height: 40),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -126,7 +126,7 @@ class HistoryData {
   void clearDB(BuildContext context) {
     showDialog(
       context: context,
-      builder: (_) => Dialog(
+      builder: (ctx) => Dialog(
         backgroundColor: AppColors.bg,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 32),
@@ -145,7 +145,7 @@ class HistoryData {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   TextButton(
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () => Navigator.pop(ctx),
                     child: const CustomText(text: 'لا', fontSize: 18),
                   ),
                   CustomButton(
@@ -156,7 +156,7 @@ class HistoryData {
                     onPressed: () {
                       AppLocalStore.removeString(LocalStoreNames.gamesHistory);
                       gamesCubit.update(data: []);
-                      Navigator.pop(context);
+                      Navigator.pop(ctx);
                     },
                   ),
                 ],
