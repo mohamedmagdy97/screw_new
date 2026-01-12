@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:screw_calculator/components/custom_text.dart';
-import 'package:screw_calculator/screens/chat/presentation/widgets/typing_dots.dart';
+import 'package:screw_calculator/screens/chat/widgets/typing_dots.dart';
 
 class TypingIndicator extends StatelessWidget {
   const TypingIndicator({super.key, required Set<String> usersTyping})

@@ -11,10 +11,10 @@ import 'package:screw_calculator/screens/chat/chat_screen.dart';
 import 'package:screw_calculator/screens/history/history.dart';
 import 'package:screw_calculator/screens/home/home_data.dart';
 import 'package:screw_calculator/screens/home/widgets/drawer_item_widget.dart';
-import 'package:screw_calculator/screens/notifications/notifications_screen.dart';
-import 'package:screw_calculator/screens/rules/rules_screen.dart';
-import 'package:screw_calculator/screens/show_video/show_video_youtube.dart';
-import 'package:screw_calculator/screens/users_screenshoot_sharing/user_sc_sharing_screen.dart';
+import 'package:screw_calculator/screens/notifications/notifications.dart';
+import 'package:screw_calculator/screens/rules/presentation/screens/rules_screen.dart';
+import 'package:screw_calculator/screens/show_video/presentation/screens/show_video_screen.dart';
+import 'package:screw_calculator/screens/users_screenshoot_sharing/presentation/screens/user_sc_sharing_screen.dart';
 import 'package:screw_calculator/utility/Enums.dart';
 import 'package:screw_calculator/utility/app_theme.dart';
 import 'package:screw_calculator/utility/utilities.dart';
@@ -104,8 +104,10 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                 ),
                 DrawerItemWidget(
                   title: 'للاقتراحات والتواصل معنا',
-                  onTap: () =>
-                      homeData.routeFromDrawer(context, const ContactUsScreen()),
+                  onTap: () => homeData.routeFromDrawer(
+                    context,
+                    const ContactUsScreen(),
+                  ),
                 ),
                 if (RemoteConfig().canAccessChat(
                   phone: homeData.userPhone ?? '',
