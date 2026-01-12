@@ -3,11 +3,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:screw_calculator/components/custom_button.dart';
 import 'package:screw_calculator/components/custom_text.dart';
 import 'package:screw_calculator/components/text_filed_custom.dart';
+import 'package:screw_calculator/features/contact_us/contact_us.dart';
 import 'package:screw_calculator/features/prayer/screen/prayer_screen.dart';
 import 'package:screw_calculator/generated/assets.dart';
 import 'package:screw_calculator/helpers/remote_config.dart';
 import 'package:screw_calculator/screens/chat/chat_screen.dart';
-import 'package:screw_calculator/screens/contact_us/contact_us.dart';
 import 'package:screw_calculator/screens/history/history.dart';
 import 'package:screw_calculator/screens/home/home_data.dart';
 import 'package:screw_calculator/screens/home/widgets/drawer_item_widget.dart';
@@ -105,7 +105,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                 DrawerItemWidget(
                   title: 'للاقتراحات والتواصل معنا',
                   onTap: () =>
-                      homeData.routeFromDrawer(context, const ContactUS()),
+                      homeData.routeFromDrawer(context, const ContactUsScreen()),
                 ),
                 if (RemoteConfig().canAccessChat(
                   phone: homeData.userPhone ?? '',

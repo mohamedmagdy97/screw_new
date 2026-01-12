@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:screw_calculator/components/custom_button.dart';
 import 'package:screw_calculator/components/custom_text.dart';
+import 'package:screw_calculator/features/contact_us/contact_us.dart';
 import 'package:screw_calculator/models/notification_model.dart';
-import 'package:screw_calculator/screens/contact_us/contact_us.dart';
 import 'package:screw_calculator/screens/notifications/notifications_data.dart';
 import 'package:screw_calculator/utility/app_theme.dart';
 import 'package:screw_calculator/utility/format_date_to_String.dart';
@@ -170,7 +170,7 @@ class NotificationsItem extends StatelessWidget {
                 Navigator.of(context).push(
                   PageRouteBuilder(
                     transitionDuration: const Duration(milliseconds: 750),
-                    pageBuilder: (_, _, _) => const ContactUS(),
+                    pageBuilder: (_, _, _) => const ContactUsScreen(),
                   ),
                 );
               } else if (notifyItem.type == 'action') {
