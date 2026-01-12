@@ -124,7 +124,7 @@ class _DashboardState extends State<Dashboard> {
                             color: AppColors.mainColorLight,
                             fontSize: 18,
                           ),
-                          enums.ModeClass.mode == enums.GameMode.classic ||
+                          enums.ModeClass.mode == enums.GameModeEnum.classic ||
                                   widget.fromHistory == true
                               ? Expanded(
                                   child: SingleChildScrollView(

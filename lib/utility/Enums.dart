@@ -1,8 +1,8 @@
 class ModeClass {
-  static GameMode mode = GameMode.classic;
+  static GameModeEnum mode = GameModeEnum.classic;
 }
 
-enum GameMode { classic, friendly }
+enum GameModeEnum { classic, friendly }
 
 enum UserValidationResult {
   notExists,

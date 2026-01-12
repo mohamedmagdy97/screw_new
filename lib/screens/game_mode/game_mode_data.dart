@@ -26,11 +26,11 @@ class GameModeData {
 
   void onSelect(BuildContext context, int index) {
     if (index == 1) {
-      ModeClass.mode = GameMode.friendly;
+      ModeClass.mode = GameModeEnum.friendly;
       // return Utilities()
       //     .customSnackBarTerms(context, txt: "قريبا سيتم الاضافه");
     } else {
-      ModeClass.mode = GameMode.classic;
+      ModeClass.mode = GameModeEnum.classic;
     }
     listCubit.state.data!.map((e) => e.isActive = false).toList();
     listCubit.update(data: listCubit.state.data!);

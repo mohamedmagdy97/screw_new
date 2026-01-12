@@ -8,7 +8,7 @@ import 'package:screw_calculator/features/prayer/screen/prayer_screen.dart';
 import 'package:screw_calculator/generated/assets.dart';
 import 'package:screw_calculator/helpers/remote_config.dart';
 import 'package:screw_calculator/screens/chat/chat_screen.dart';
-import 'package:screw_calculator/screens/history/history.dart';
+import 'package:screw_calculator/screens/history/presentation/screens/history_screen.dart';
 import 'package:screw_calculator/screens/home/home_data.dart';
 import 'package:screw_calculator/screens/home/widgets/drawer_item_widget.dart';
 import 'package:screw_calculator/screens/notifications/notifications.dart';

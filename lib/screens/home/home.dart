@@ -75,7 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
         bottomNavigationBar: const BottomNavigationText(),
         body: Form(
           key: homeData.formKey,
-          child: ModeClass.mode == GameMode.classic
+          child: ModeClass.mode == GameModeEnum.classic
               ? const ClassicMode()
               : const FriendsMode(),
         ),
