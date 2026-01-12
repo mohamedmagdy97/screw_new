@@ -14,13 +14,13 @@ class PinnedMessage extends StatelessWidget {
     required this.userName,
     required this.userPhone,
     required this.messageKeys,
-    required this.highlightedMessageIdCubitCubit,
+    required this.highlightedMessageIdCubit,
   });
 
   final String? userName;
   final String? userPhone;
   final Map<String, GlobalKey> messageKeys;
-  final GenericCubit<String?> highlightedMessageIdCubitCubit;
+  final GenericCubit<String?> highlightedMessageIdCubit;
 
   @override
   Widget build(BuildContext context) {
@@ -37,11 +37,6 @@ class PinnedMessage extends StatelessWidget {
         return InkWell(
           onTap: () async {
             final key = messageKeys[snap.data!['id']];
-
-            print("ddddddddddd=1=${key}");
-            print("ddddddddddd=2=${snap.data!}");
-            print("ddddddddddd=4=${highlightedMessageIdCubitCubit.state.data}");
-            print("ddddddddddd=3=${snap.data!['id']}");
             if (key == null || key.currentContext == null) {
               Utilities().showCustomSnack(
                 context,
@@ -50,7 +45,7 @@ class PinnedMessage extends StatelessWidget {
 
               return;
             }
-            highlightedMessageIdCubitCubit.update(
+            highlightedMessageIdCubit.update(
               data: snap.data!['id'].toString(),
             );
 
@@ -66,7 +61,7 @@ class PinnedMessage extends StatelessWidget {
             }
 
             Future.delayed(const Duration(seconds: 2), () {
-              highlightedMessageIdCubitCubit.update(data: null);
+              highlightedMessageIdCubit.update(data: null);
             });
           },
           child: Container(

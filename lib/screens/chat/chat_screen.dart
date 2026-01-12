@@ -39,8 +39,8 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
-  final _textCtrl = TextEditingController();
-  final _scrollCtrl = ScrollController();
+  final TextEditingController _textCtrl = TextEditingController();
+  final ScrollController _scrollCtrl = ScrollController();
 
   final int _pageSize = 20;
   bool _isLoadingMore = false;
@@ -541,31 +541,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     });
   }
 
-  // ---------------- MSG UI ----------------
-  Widget _messageContent(ChatMessage msg, int index, bool isMe) {
-    switch (msg.type) {
-      case 'voice':
-        return Text(msg.message);
-      // case 'image':
-      //   return GestureDetector(
-      //     onTap: () => _showFullImage(msg.message),
-      //     child: ClipRRect(
-      //       borderRadius: BorderRadius.circular(8),
-      //       child: Image.memory(
-      //         base64Decode(msg.message),
-      //         width: 200,
-      //         height: 200,
-      //         fit: BoxFit.cover,
-      //       ),
-      //     ),
-      //   );
-      // return _voiceBubble(msg, isMe);
-      default:
-        return _buildMessage(msg, index);
-      // return Text(msg.message);
-    }
-  }
-
   // ---------------- SCROLL ----------------
   void _onScroll() {
     if (!_scrollCtrl.hasClients) return;
@@ -700,69 +675,65 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         userName: userName ?? '',
         searchResults: _searchResults,
       ),
-      body: BlocBuilder<GenericCubit<String?>, GenericState<String?>>(
-        bloc: highlightedMessageIdCubit,
-        builder: (context, stateHighLightMsg) {
-          return Column(
-            children: [
-              OnlineUsersList(currentUserName: userName),
+      body: Column(
+        children: [
+          OnlineUsersList(currentUserName: userName),
 
-              PinnedMessage(
-                userName: userName,
-                userPhone: userPhone,
-                messageKeys: _messageKeys,
-                highlightedMessageIdCubitCubit: highlightedMessageIdCubit,
-              ),
-              if (_usersTyping.isNotEmpty)
-                TypingIndicator(usersTyping: _usersTyping),
+          PinnedMessage(
+            userName: userName,
+            userPhone: userPhone,
+            messageKeys: _messageKeys,
+            highlightedMessageIdCubit: highlightedMessageIdCubit,
+          ),
+          if (_usersTyping.isNotEmpty)
+            TypingIndicator(usersTyping: _usersTyping),
 
-              Expanded(
-                child: Stack(
-                  children: [
-                    ListView.builder(
-                      controller: _scrollCtrl,
-                      cacheExtent: 1000,
-                      addAutomaticKeepAlives: false,
-                      addRepaintBoundaries: true,
-                      itemCount: _messages.length,
-                      itemBuilder: (c, i) {
-                        _messageKeys.putIfAbsent(
-                          _messages[i].id,
-                          GlobalKey.new,
-                        );
+          Expanded(
+            child: Stack(
+              children: [
+                ListView.builder(
+                  controller: _scrollCtrl,
+                  cacheExtent: 1000,
+                  addAutomaticKeepAlives: false,
+                  addRepaintBoundaries: true,
+                  itemCount: _messages.length,
+                  itemBuilder: (c, i) {
+                    _messageKeys.putIfAbsent(_messages[i].id, GlobalKey.new);
 
-                        return _messageContent(
-                          _messages[i],
-                          i,
-                          _messages[i].name == userName,
-                        );
+                    return BlocBuilder<
+                      GenericCubit<String?>,
+                      GenericState<String?>
+                    >(
+                      bloc: highlightedMessageIdCubit,
+                      builder: (context, stateHighLightMsg) {
+                        return _buildMessage(_messages[i], i);
                       },
-                    ),
-
-                    if (_showNewMsgIndicator)
-                      Positioned(
-                        bottom: 80,
-                        right: 16,
-                        child: NewMsgIndicator(
-                          showNewMsgIndicator: _showNewMsgIndicator,
-                          unreadNewMessages: _unreadNewMessages,
-                          unreadNewMessagesText: _unreadNewMessagesText,
-                          jumpToLatest: _jumpToLatest,
-                        ),
-                      ),
-                  ],
+                    );
+                  },
                 ),
-              ),
-              if (_replyingTo != null) _replyBar(),
-              InputBar(
-                textCtrl: _textCtrl,
-                pickAndSendImage: _pickAndSendImage,
-                sendMessage: _sendMessage,
-                updateTyping: _updateTyping,
-              ),
-            ],
-          );
-        },
+
+                if (_showNewMsgIndicator)
+                  Positioned(
+                    bottom: 80,
+                    right: 16,
+                    child: NewMsgIndicator(
+                      showNewMsgIndicator: _showNewMsgIndicator,
+                      unreadNewMessages: _unreadNewMessages,
+                      unreadNewMessagesText: _unreadNewMessagesText,
+                      jumpToLatest: _jumpToLatest,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          if (_replyingTo != null) _replyBar(),
+          InputBar(
+            textCtrl: _textCtrl,
+            pickAndSendImage: _pickAndSendImage,
+            sendMessage: _sendMessage,
+            updateTyping: _updateTyping,
+          ),
+        ],
       ),
     );
   }
@@ -1107,18 +1078,15 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                 errorBuilder: (context, error, stackTrace) =>
                     const Icon(Icons.broken_image),
               )
-            : Text(
-                r.isDeleted
+            : CustomText(
+                text: r.isDeleted
                     ? 'تم الرد على رسالة محذوفة'
                     : r.name == userName
                     ? r.message
                     : PhoneMaskHelper.maskPhoneNumbers(r.message),
                 maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  fontSize: 12,
-                  fontStyle: FontStyle.italic,
-                ),
+                fontSize: 12,
+                color: AppColors.grayy,
               ),
       ),
     );
