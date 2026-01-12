@@ -4,17 +4,21 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:screw_calculator/components/custom_text.dart';
+import 'package:screw_calculator/cubits/generic_cubit/generic_cubit.dart';
 import 'package:screw_calculator/helpers/date_formatter.dart';
 import 'package:screw_calculator/helpers/device_info.dart';
 import 'package:screw_calculator/helpers/image_helper.dart';
 import 'package:screw_calculator/helpers/phone_mask_helper.dart';
 import 'package:screw_calculator/screens/chat/models/chat_msg_model.dart';
 import 'package:screw_calculator/screens/chat/track_status.dart';
+import 'package:screw_calculator/screens/chat/widgets/build_floating_date_header.dart';
+import 'package:screw_calculator/screens/chat/widgets/build_reactions__users.dart';
 import 'package:screw_calculator/screens/chat/widgets/build_status_icons.dart';
 import 'package:screw_calculator/screens/chat/widgets/chat_app_bar.dart';
 import 'package:screw_calculator/screens/chat/widgets/input_bar.dart';
@@ -58,6 +62,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
 
   String? userName;
   String? userPhone;
+  int? userAge;
   String? userCountry;
   Set<String> _usersTyping = {};
 
@@ -67,7 +72,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   int _currentSearchIndex = 0;
 
   final Map<String, GlobalKey> _messageKeys = {};
-  String? _highlightedMessageId;
+  GenericCubit<String?> highlightedMessageIdCubit = GenericCubit<String?>();
 
   @override
   void initState() {
@@ -77,6 +82,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     userName = userBox.get('name')?.toString() ?? 'Anonymous';
     userPhone = userBox.get('phone')?.toString() ?? '';
     userCountry = userBox.get('country')?.toString();
+    userAge = int.parse(userBox.get('age')!.toString());
 
     _loadCachedMessages();
     _fetchInitialMessages();
@@ -198,10 +204,12 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       final Uint8List imageBytes = await pickedFile.readAsBytes();
 
       if (imageBytes.lengthInBytes > 1000000) {
-        Utilities().showCustomSnack(
-          context,
-          txt: 'الصورة كبيرة جداً، يرجى اختيار صورة أصغر',
-        );
+        if (mounted) {
+          Utilities().showCustomSnack(
+            context,
+            txt: 'الصورة كبيرة جداً، يرجى اختيار صورة أصغر',
+          );
+        }
         return;
       }
 
@@ -214,11 +222,11 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
           .add({
             'name': userName,
             'phone': userPhone,
+            'age': userAge,
             'message': base64Image,
             'type': 'image',
             'timestamp': FieldValue.serverTimestamp(),
             'seenBy': [],
-
             'country': userCountry,
             'deviceName': await getDeviceName(),
             'datetime': DateTime.now(),
@@ -692,56 +700,69 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         userName: userName ?? '',
         searchResults: _searchResults,
       ),
-      body: Column(
-        children: [
-          OnlineUsersList(currentUserName: userName),
+      body: BlocBuilder<GenericCubit<String?>, GenericState<String?>>(
+        bloc: highlightedMessageIdCubit,
+        builder: (context, stateHighLightMsg) {
+          return Column(
+            children: [
+              OnlineUsersList(currentUserName: userName),
 
-          PinnedMessage(userName: userName, userPhone: userPhone),
-          if (_usersTyping.isNotEmpty)
-            TypingIndicator(usersTyping: _usersTyping),
+              PinnedMessage(
+                userName: userName,
+                userPhone: userPhone,
+                messageKeys: _messageKeys,
+                highlightedMessageIdCubitCubit: highlightedMessageIdCubit,
+              ),
+              if (_usersTyping.isNotEmpty)
+                TypingIndicator(usersTyping: _usersTyping),
 
-          Expanded(
-            child: Stack(
-              children: [
-                ListView.builder(
-                  controller: _scrollCtrl,
-                  cacheExtent: 1000,
-                  addAutomaticKeepAlives: false,
-                  addRepaintBoundaries: true,
-                  itemCount: _messages.length,
-                  itemBuilder: (c, i) {
-                    _messageKeys.putIfAbsent(_messages[i].id, GlobalKey.new);
+              Expanded(
+                child: Stack(
+                  children: [
+                    ListView.builder(
+                      controller: _scrollCtrl,
+                      cacheExtent: 1000,
+                      addAutomaticKeepAlives: false,
+                      addRepaintBoundaries: true,
+                      itemCount: _messages.length,
+                      itemBuilder: (c, i) {
+                        _messageKeys.putIfAbsent(
+                          _messages[i].id,
+                          GlobalKey.new,
+                        );
 
-                    return _messageContent(
-                      _messages[i],
-                      i,
-                      _messages[i].name == userName,
-                    );
-                  },
-                ),
-
-                if (_showNewMsgIndicator)
-                  Positioned(
-                    bottom: 80,
-                    right: 16,
-                    child: NewMsgIndicator(
-                      showNewMsgIndicator: _showNewMsgIndicator,
-                      unreadNewMessages: _unreadNewMessages,
-                      unreadNewMessagesText: _unreadNewMessagesText,
-                      jumpToLatest: _jumpToLatest,
+                        return _messageContent(
+                          _messages[i],
+                          i,
+                          _messages[i].name == userName,
+                        );
+                      },
                     ),
-                  ),
-              ],
-            ),
-          ),
-          if (_replyingTo != null) _replyBar(),
-          InputBar(
-            textCtrl: _textCtrl,
-            pickAndSendImage: _pickAndSendImage,
-            sendMessage: _sendMessage,
-            updateTyping: _updateTyping,
-          ),
-        ],
+
+                    if (_showNewMsgIndicator)
+                      Positioned(
+                        bottom: 80,
+                        right: 16,
+                        child: NewMsgIndicator(
+                          showNewMsgIndicator: _showNewMsgIndicator,
+                          unreadNewMessages: _unreadNewMessages,
+                          unreadNewMessagesText: _unreadNewMessagesText,
+                          jumpToLatest: _jumpToLatest,
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              if (_replyingTo != null) _replyBar(),
+              InputBar(
+                textCtrl: _textCtrl,
+                pickAndSendImage: _pickAndSendImage,
+                sendMessage: _sendMessage,
+                updateTyping: _updateTyping,
+              ),
+            ],
+          );
+        },
       ),
     );
   }
@@ -757,9 +778,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
 
       return;
     }
-    setState(() {
-      _highlightedMessageId = replyToMessageId;
-    });
+    highlightedMessageIdCubit.update(data: replyToMessageId);
 
     try {
       await Scrollable.ensureVisible(
@@ -773,27 +792,8 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     }
 
     Future.delayed(const Duration(seconds: 2), () {
-      if (mounted) {
-        setState(() => _highlightedMessageId = null);
-      }
+      highlightedMessageIdCubit.update(data: null);
     });
-  }
-
-  Widget _buildFloatingDateHeader(String dateText) {
-    return Center(
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 12),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-        decoration: BoxDecoration(
-          color: AppColors.grayy.withOpacity(0.8),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Text(
-          dateText,
-          style: const TextStyle(color: Colors.white, fontSize: 11),
-        ),
-      ),
-    );
   }
 
   Widget _buildMessage(ChatMessage msg, int index) {
@@ -807,7 +807,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     final isHighlighted =
         (_searchResults.contains(index) &&
             _searchResults[_currentSearchIndex] == index) ||
-        _highlightedMessageId == msg.id;
+        highlightedMessageIdCubit.state.data == msg.id;
     final bool isFirstInGroup =
         index == 0 ||
         DateFormatter.daySeparatorMain(_messages[index - 1].timestamp) !=
@@ -1072,8 +1072,8 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
 
     if (isFirstInGroup) {
       return StickyHeader(
-        header: _buildFloatingDateHeader(
-          DateFormatter.daySeparatorMain(msg.timestamp),
+        header: BuildFloatingDateHeader(
+          dateText: DateFormatter.daySeparatorMain(msg.timestamp),
         ),
         content: messageBubble,
       );
@@ -1350,41 +1350,10 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (_) => Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: CustomText(
-              text: 'المتفاعلون بـ $emojiـ',
-              fontSize: 14.sp,
-              fontFamily: AppFonts.bold,
-              color: AppColors.black,
-            ),
-          ),
-          const Divider(),
-          Flexible(
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: reactingDetails.length,
-              itemBuilder: (context, index) {
-                final nName = reactingDetails[index];
-                return ListTile(
-                  leading: const CircleAvatar(child: Icon(Icons.person)),
-                  title: CustomText(
-                    text: nName == userName
-                        ? 'أنا (أنت)'
-                        : reactingDetails[index],
-                    fontSize: 16.sp,
-                    color: AppColors.black,
-                    textAlign: TextAlign.start,
-                  ),
-                  trailing: Text(emoji, style: TextStyle(fontSize: 16.sp)),
-                );
-              },
-            ),
-          ),
-        ],
+      builder: (_) => BuildReactionsUsers(
+        reactingDetails: reactingDetails,
+        userName: userName,
+        emoji: emoji,
       ),
     );
   }
