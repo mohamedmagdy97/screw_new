@@ -148,7 +148,7 @@ class PrayerApiService {
     try {
       final cachedJson = _cacheBox.get('${cacheKey}_data');
       if (cachedJson != null) {
-        final Map<String, dynamic> data = jsonDecode(cachedJson);
+        final Map<String, dynamic> data = jsonDecode(cachedJson) as Map<String, dynamic>;
         return PrayerTimeModel.fromJson(data);
       }
       return null;
@@ -348,7 +348,7 @@ class PrayerApiService {
       if (response.statusCode == 200) {
         final body = json.decode(response.body);
         if (body['code'] == 200 && body['status'] == 'OK') {
-          final List<dynamic> data = body['data'];
+          final List<dynamic> data = body['data'] as List<dynamic>;
           return data
               .map((json) => PrayerTimeModel.fromJson({'data': json}))
               .toList();
