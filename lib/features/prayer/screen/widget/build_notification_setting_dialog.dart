@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:screw_calculator/components/custom_text.dart';
-import 'package:screw_calculator/screens/prayer/controllers/prayer_controller.dart';
-import 'package:screw_calculator/screens/prayer/core/notification_service.dart';
+import 'package:screw_calculator/features/prayer/controllers/prayer_controller.dart';
+import 'package:screw_calculator/features/prayer/core/notification_service.dart';
 import 'package:screw_calculator/utility/app_theme.dart';
 
 class BuildNotificationSettingsDialog extends StatelessWidget {

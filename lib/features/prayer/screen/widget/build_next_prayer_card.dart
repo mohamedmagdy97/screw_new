@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:screw_calculator/components/custom_text.dart';
-import 'package:screw_calculator/screens/prayer/data/models/prayer_time_model.dart';
+import 'package:screw_calculator/features/prayer/data/models/prayer_time_model.dart';
 import 'package:screw_calculator/utility/app_theme.dart';
 
 class BuildNextPrayerCard extends StatelessWidget {
@@ -18,7 +18,7 @@ class BuildNextPrayerCard extends StatelessWidget {
         (remaining.contains('دقيقة') || remaining.contains('ثانية'));
 
     return Container(
-      margin: const EdgeInsets.only(right: 16, left: 16, bottom: 12,top: 4),
+      margin: const EdgeInsets.only(right: 16, left: 16, bottom: 12, top: 4),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
         gradient: LinearGradient(

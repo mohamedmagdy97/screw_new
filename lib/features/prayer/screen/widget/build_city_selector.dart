@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:screw_calculator/components/custom_text.dart';
-import 'package:screw_calculator/screens/prayer/controllers/prayer_controller.dart';
-import 'package:screw_calculator/screens/prayer/data/models/country_model.dart';
+import 'package:screw_calculator/features/prayer/controllers/prayer_controller.dart';
+import 'package:screw_calculator/features/prayer/data/models/country_model.dart';
 import 'package:screw_calculator/utility/app_theme.dart';
 
 class BuildCitySelector extends StatelessWidget {

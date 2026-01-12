@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:screw_calculator/screens/prayer/core/notification_service.dart';
-import 'package:screw_calculator/screens/prayer/data/datasources/prayer_api_service.dart';
-import 'package:screw_calculator/screens/prayer/data/models/country_model.dart';
-import 'package:screw_calculator/screens/prayer/data/models/prayer_time_model.dart';
+import 'package:screw_calculator/features/prayer/core/notification_service.dart';
+import 'package:screw_calculator/features/prayer/data/datasources/prayer_api_service.dart';
+import 'package:screw_calculator/features/prayer/data/models/country_model.dart';
+import 'package:screw_calculator/features/prayer/data/models/prayer_time_model.dart';
 import 'package:screw_calculator/utility/local_store.dart';
 import 'package:screw_calculator/utility/local_storge_key.dart';
 
