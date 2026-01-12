@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class ChatMessage {
   final String id;
   final String name;
+  final int age;
   final String phoneNumber;
   final String message;
   final String? replyTo;
@@ -22,6 +23,7 @@ class ChatMessage {
   ChatMessage({
     required this.id,
     required this.name,
+    required this.age,
     required this.phoneNumber,
     required this.message,
     required this.timestamp,
@@ -44,6 +46,7 @@ class ChatMessage {
     return ChatMessage(
       id: d.id,
       name: m['name'],
+      age: m['age'] != null ? m['age'] : 0,
       phoneNumber: m['phone'] ?? '01149504892',
       message: m['message'] ?? '',
       timestamp:
@@ -69,7 +72,8 @@ class ChatMessage {
     return ChatMessage(
       id: m['id'],
       name: m['name'],
-      phoneNumber: m['phone'] ?? '01149504892',
+      age: m['age'] != null ? m['age'] : 0,
+      phoneNumber: m['phone'] ?? '',
       message: m['message'],
       timestamp: DateTime.parse(m['timestamp']),
       reactions: Map<String, dynamic>.from(m['reactions'] ?? {}),
@@ -90,6 +94,7 @@ class ChatMessage {
   Map<String, dynamic> toMap() => {
     'id': id,
     'name': name,
+    'age': age,
     'phone': phoneNumber,
     'message': message,
     'timestamp': timestamp.toIso8601String(),

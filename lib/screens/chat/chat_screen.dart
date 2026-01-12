@@ -82,7 +82,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     userName = userBox.get('name')?.toString() ?? 'Anonymous';
     userPhone = userBox.get('phone')?.toString() ?? '';
     userCountry = userBox.get('country')?.toString();
-    userAge = int.parse((userBox.get('age') ??'0').toString());
+    userAge = int.parse((userBox.get('age') ?? '0').toString());
 
     _loadCachedMessages();
     _fetchInitialMessages();
@@ -223,16 +223,16 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
             'name': userName,
             'phone': userPhone,
             'age': userAge,
+            'country': userCountry,
             'message': base64Image,
             'type': 'image',
-            'timestamp': FieldValue.serverTimestamp(),
             'seenBy': [],
-            'country': userCountry,
-            'deviceName': await getDeviceName(),
             'datetime': DateTime.now(),
+            'timestamp': FieldValue.serverTimestamp(),
             'replyTo': _replyingTo?.id,
             'reactions': {},
             'isDeleted': false,
+            'deviceName': await getDeviceName(),
           });
 
       if (mounted) {
@@ -455,15 +455,16 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     final data = {
       'name': userName ?? 'Anonymous',
       'phone': userPhone,
+      'age': userAge,
       'country': userCountry,
       'message': _textCtrl.text.trim(),
-      'deviceName': await getDeviceName(),
       'datetime': DateTime.now(),
       'timestamp': FieldValue.serverTimestamp(),
       'seenBy': [],
       'replyTo': _replyingTo?.id,
       'reactions': {},
       'isDeleted': false,
+      'deviceName': await getDeviceName(),
     };
 
     if (_editingId != null) {
