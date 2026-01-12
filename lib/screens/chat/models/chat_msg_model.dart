@@ -1,9 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-enum MessageStatus { sending, sent, delivered, read, error }
-
-enum MessageType { text, image, voice, file }
-
 class ChatMessage {
   final String id;
   final String name;
@@ -111,81 +107,3 @@ class ChatMessage {
   };
 }
 
-// class ChatMessage {
-//   final String id;
-//   final String name;
-//   final String phoneNumber;
-//   final String message;
-//   final String type;
-//   final dynamic replyPreview;
-//   final dynamic replyTo;
-//   final dynamic reactions;
-//   final DateTime timestamp;
-//   final List<String> seenBy;
-//   final dynamic audio;
-//   final bool deleted;
-//
-//   ChatMessage({
-//     required this.id,
-//     required this.name,
-//     required this.phoneNumber,
-//     required this.message,
-//     required this.type,
-//     required this.timestamp,
-//     required this.replyTo,
-//     required this.replyPreview,
-//     required this.reactions,
-//     required this.seenBy,
-//     required this.audio,
-//     required this.deleted,
-//   });
-//
-//   factory ChatMessage.fromFirestore(DocumentSnapshot doc) {
-//     final data = doc.data() as Map<String, dynamic>;
-//     return ChatMessage(
-//       id: doc.id,
-//       name: data['name'] ?? '',
-//       phoneNumber: data['phone'] ?? '',
-//       replyPreview: data['replyPreview'] ?? '',
-//       replyTo: data['replyTo'] ?? '',
-//       reactions: data['reactions'] ?? {},
-//       message: data['message'] ?? '',
-//       type: data['type'] ?? '',
-//       timestamp: (data['timestamp'] as Timestamp?)?.toDate() ?? DateTime.now(),
-//       seenBy: List<String>.from(data['seenBy'] ?? []),
-//       audio: data['audio'] ?? '',
-//       deleted: data['deleted'] != null
-//           ? (data['deleted'] == "false" ? false : true)
-//           : false,
-//     );
-//   }
-//
-//   factory ChatMessage.fromHive(Map data) {
-//     return ChatMessage(
-//       id: data['id'],
-//       name: data['name'],
-//       phoneNumber: data['phone'] != null ? data['phone'] : "",
-//       replyTo: data['replyTo'],
-//       replyPreview: data['replyPreview'],
-//       reactions: data['reactions'] != null ? data['reactions'] : {"": []},
-//       message: data['message'],
-//       type: data['type'] ?? "text",
-//       timestamp: DateTime.parse(data['timestamp']),
-//       seenBy: List<String>.from(data['seenBy']),
-//       audio: data['audio'],
-//       deleted: data['deleted'] != null
-//           ? (data['deleted'] == "false" ? false : true)
-//           : false,
-//     );
-//   }
-//
-//   Map<String, dynamic> toHive() => {
-//     'id': id,
-//     'name': name,
-//     'message': message,
-//     'timestamp': timestamp.toIso8601String(),
-//     'seenBy': seenBy,
-//     'audio': audio,
-//     'deleted': deleted,
-//   };
-// }

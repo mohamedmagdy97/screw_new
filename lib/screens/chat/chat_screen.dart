@@ -82,7 +82,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     userName = userBox.get('name')?.toString() ?? 'Anonymous';
     userPhone = userBox.get('phone')?.toString() ?? '';
     userCountry = userBox.get('country')?.toString();
-    userAge = int.parse(userBox.get('age')!.toString());
+    userAge = int.parse((userBox.get('age') ??'0').toString());
 
     _loadCachedMessages();
     _fetchInitialMessages();
