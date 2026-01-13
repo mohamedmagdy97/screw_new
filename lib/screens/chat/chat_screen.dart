@@ -94,7 +94,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
 
     _monitorConnection();
 
-    // Restore draft
     final draft = userBox.get('chatDraft') as String?;
     if (draft != null && draft.isNotEmpty) {
       _textCtrl.text = draft;
@@ -108,7 +107,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       );
     }
 
-    // مراقبة حالة التطبيق (foreground/background)
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -125,7 +123,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     _updateTyping(false);
     _connectivitySubscription?.cancel();
 
-    // Save draft before disposing
     if (_textCtrl.text.isNotEmpty) {
       userBox.put('chatDraft', _textCtrl.text);
     }
@@ -133,14 +130,12 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     super.dispose();
   }
 
-  // التعامل مع حالة التطبيق
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (userName == null || userPhone == null) return;
 
     switch (state) {
       case AppLifecycleState.resumed:
-        // المستخدم رجع للتطبيق
         UserPresenceManager().startTracking(
           userName: userName!,
           userPhone: userPhone!,
@@ -148,7 +143,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         break;
       case AppLifecycleState.paused:
       case AppLifecycleState.inactive:
-        // المستخدم خرج من التطبيق
         UserPresenceManager().stopTracking();
         break;
       default:
@@ -157,7 +151,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   }
 
   void _monitorConnection() {
-    // Monitor device connectivity
     _connectivitySubscription = Connectivity().onConnectivityChanged.listen((
       ConnectivityResult result,
     ) {
@@ -179,7 +172,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       }
     });
 
-    // Check initial state
     Connectivity().checkConnectivity().then((result) {
       _isOnline = result != ConnectivityResult.none;
       if (mounted) setState(() {});
@@ -757,7 +749,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         key.currentContext!,
         duration: const Duration(milliseconds: 600),
         curve: Curves.fastOutSlowIn,
-        alignment: 0.5, // وضع الرسالة في منتصف الشاشة بالضبط
+        alignment: 0.5,
       );
     } catch (e) {
       debugPrint('Scroll error: $e');
@@ -828,36 +820,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                     ? CrossAxisAlignment.end
                     : CrossAxisAlignment.start,
                 children: [
-                  // if (showDay)
-                  //   Center(
-                  //     child: Padding(
-                  //       padding: const EdgeInsets.symmetric(vertical: 8),
-                  //       child: IntrinsicHeight(
-                  //         child: Row(
-                  //           children: [
-                  //             const Expanded(
-                  //               child: Divider(
-                  //                 color: Colors.grey,
-                  //                 thickness: 0.5,
-                  //                 endIndent: 10,
-                  //               ),
-                  //             ),
-                  //             Text(
-                  //               DateFormatter.daySeparatorMain(msg.timestamp),
-                  //               style: const TextStyle(color: Colors.grey),
-                  //             ),
-                  //             const Expanded(
-                  //               child: Divider(
-                  //                 color: Colors.grey,
-                  //                 thickness: 0.5,
-                  //                 indent: 10,
-                  //               ),
-                  //             ),
-                  //           ],
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   ),
                   if (!msg.isDeleted)
                     IntrinsicWidth(
                       child: Container(
@@ -888,7 +850,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                                     : CrossAxisAlignment.start,
                                 children: [
                                   Container(
-                                    // width: double.infinity,
                                     padding: const EdgeInsets.all(10),
                                     decoration: BoxDecoration(
                                       color: isHighlighted
@@ -914,17 +875,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                                         if (showName)
                                           Row(
                                             children: [
-                                              // Container(
-                                              //   height: 8,
-                                              //   width: 8,
-                                              //   decoration: BoxDecoration(
-                                              //     color: _isOnline
-                                              //         ? AppColors.green
-                                              //         : AppColors.red,
-                                              //     shape: BoxShape.circle,
-                                              //   ),
-                                              // ),
-                                              // const SizedBox(width: 4),
                                               CustomText(
                                                 text: msg.name,
                                                 fontSize: 14.sp,
@@ -972,7 +922,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                                                     height: 0.2.sh,
                                                     fit: BoxFit.cover,
                                                     cacheWidth: 400,
-                                                    // cacheHeight: 400,
                                                     gaplessPlayback: true,
                                                     errorBuilder:
                                                         (
@@ -1074,7 +1023,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                 height: 0.1.sh,
                 fit: BoxFit.cover,
                 cacheWidth: 400,
-                // cacheHeight: 400,
                 gaplessPlayback: true,
                 errorBuilder: (context, error, stackTrace) =>
                     const Icon(Icons.broken_image),
@@ -1145,7 +1093,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
               Navigator.pop(context);
             },
           ),
-          if (msg.name == userName)
+          if (msg.name == userName && msg.type != 'image')
             ListTile(
               leading: const Icon(Icons.edit),
               title: CustomText(
@@ -1309,9 +1257,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   void _showReactionUsers(ChatMessage msg, String emoji) {
     final reactingDetails = msg.reactions.entries
         .where((e) => e.value.toString().split('|').last == emoji)
-        .map(
-          (e) => e.value.toString().split('|').first,
-        ) // نأخذ الجزء الأول وهو الاسم
+        .map((e) => e.value.toString().split('|').first)
         .toList();
 
     showModalBottomSheet(
