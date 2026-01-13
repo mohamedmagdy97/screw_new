@@ -12,7 +12,6 @@ import 'package:screw_calculator/screens/notifications/presentation/cubit/notifi
 import 'package:screw_calculator/screens/notifications/presentation/widgets/notify_item.dart';
 import 'package:screw_calculator/utility/app_theme.dart';
 
-/// Notifications screen following clean architecture
 class NotificationsScreen extends StatelessWidget {
   const NotificationsScreen({super.key});
 

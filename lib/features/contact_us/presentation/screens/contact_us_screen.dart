@@ -12,7 +12,6 @@ import 'package:screw_calculator/generated/assets.dart';
 import 'package:screw_calculator/utility/app_theme.dart';
 import 'package:screw_calculator/utility/sochial_links.dart';
 
-/// Contact Us screen following clean architecture
 class ContactUsScreen extends StatelessWidget {
   const ContactUsScreen({super.key});
 
