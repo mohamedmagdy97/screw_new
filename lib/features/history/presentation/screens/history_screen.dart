@@ -3,17 +3,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:screw_calculator/components/bottom_nav_text.dart';
 import 'package:screw_calculator/components/custom_appbar.dart';
 import 'package:screw_calculator/components/custom_text.dart';
-import 'package:screw_calculator/screens/dashboard/dashboard.dart';
 import 'package:screw_calculator/features/history/data/datasources/history_data_source.dart';
 import 'package:screw_calculator/features/history/data/repositories/history_repository_impl.dart';
+import 'package:screw_calculator/features/history/domain/entities/game_history_entity.dart';
 import 'package:screw_calculator/features/history/domain/usecases/clear_all_games_usecase.dart';
 import 'package:screw_calculator/features/history/domain/usecases/get_games_usecase.dart';
 import 'package:screw_calculator/features/history/domain/usecases/remove_game_usecase.dart';
-import 'package:screw_calculator/features/history/domain/entities/game_history_entity.dart';
 import 'package:screw_calculator/features/history/presentation/cubit/history_cubit.dart';
 import 'package:screw_calculator/features/history/presentation/widgets/clear_all_confirmation_dialog.dart';
 import 'package:screw_calculator/features/history/presentation/widgets/delete_confirmation_dialog.dart';
 import 'package:screw_calculator/features/history/presentation/widgets/history_item.dart';
+import 'package:screw_calculator/screens/dashboard/dashboard.dart';
 import 'package:screw_calculator/utility/app_theme.dart';
 
 class HistoryScreen extends StatelessWidget {
@@ -27,7 +27,6 @@ class HistoryScreen extends StatelessWidget {
     );
   }
 
-  /// Creates and configures HistoryCubit with all dependencies
   HistoryCubit _createHistoryCubit() {
     final dataSource = HistoryDataSourceImpl();
     final repository = HistoryRepositoryImpl(dataSource: dataSource);

@@ -3,7 +3,6 @@ import 'package:screw_calculator/screens/notifications/data/mappers/notification
 import 'package:screw_calculator/screens/notifications/domain/entities/notification_entity.dart';
 import 'package:screw_calculator/screens/notifications/domain/repositories/notification_repository.dart';
 
-/// Implementation of NotificationRepository
 class NotificationRepositoryImpl implements NotificationRepository {
   final NotificationDataSource _dataSource;
 

@@ -4,19 +4,14 @@ import 'package:screw_calculator/models/game_model.dart';
 import 'package:screw_calculator/utility/local_store.dart';
 import 'package:screw_calculator/utility/local_storge_key.dart';
 
-/// Data source interface for history operations
 abstract class HistoryDataSource {
-  /// Gets all saved games from local storage
   Future<List<GameModel>> getGames();
 
-  /// Saves games to local storage
   Future<bool> saveGames(List<GameModel> games);
 
-  /// Clears all games from local storage
   Future<bool> clearAllGames();
 }
 
-/// Implementation of HistoryDataSource using local storage
 class HistoryDataSourceImpl implements HistoryDataSource {
   @override
   Future<List<GameModel>> getGames() async {

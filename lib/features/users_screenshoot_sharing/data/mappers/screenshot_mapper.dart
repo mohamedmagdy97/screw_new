@@ -1,9 +1,7 @@
-import 'package:screw_calculator/models/screenshoot_model.dart';
 import 'package:screw_calculator/features/users_screenshoot_sharing/domain/entities/screenshot_entity.dart';
+import 'package:screw_calculator/models/screenshoot_model.dart';
 
-/// Mapper for converting between ScreenShootModel and ScreenshotEntity
 class ScreenshotMapper {
-  /// Converts ScreenShootModel to ScreenshotEntity
   static ScreenshotEntity toEntity(ScreenShootModel model) {
     return ScreenshotEntity(
       id: model.id,
@@ -15,7 +13,6 @@ class ScreenshotMapper {
     );
   }
 
-  /// Converts ScreenshotEntity to ScreenShootModel
   static ScreenShootModel toModel(ScreenshotEntity entity) {
     return ScreenShootModel(
       id: entity.id,
@@ -27,4 +24,3 @@ class ScreenshotMapper {
     );
   }
 }
-

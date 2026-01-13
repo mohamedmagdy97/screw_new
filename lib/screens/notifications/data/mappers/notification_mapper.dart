@@ -1,9 +1,7 @@
 import 'package:screw_calculator/models/notification_model.dart';
 import 'package:screw_calculator/screens/notifications/domain/entities/notification_entity.dart';
 
-/// Mapper for converting between NotificationModel and NotificationEntity
 class NotificationMapper {
-  /// Converts NotificationModel to NotificationEntity
   static NotificationEntity toEntity(NotificationModel model) {
     return NotificationEntity(
       id: model.id,
@@ -21,7 +19,6 @@ class NotificationMapper {
     );
   }
 
-  /// Converts NotificationEntity to NotificationModel
   static NotificationModel toModel(NotificationEntity entity) {
     return NotificationModel(
       id: entity.id,

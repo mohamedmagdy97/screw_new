@@ -1,4 +1,3 @@
-/// Screenshot entity representing a screenshot in the domain layer
 class ScreenshotEntity {
   final String id;
   final String title;

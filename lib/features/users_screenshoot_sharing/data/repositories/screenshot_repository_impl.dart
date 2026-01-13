@@ -3,7 +3,6 @@ import 'package:screw_calculator/features/users_screenshoot_sharing/data/mappers
 import 'package:screw_calculator/features/users_screenshoot_sharing/domain/entities/screenshot_entity.dart';
 import 'package:screw_calculator/features/users_screenshoot_sharing/domain/repositories/screenshot_repository.dart';
 
-/// Implementation of ScreenshotRepository
 class ScreenshotRepositoryImpl implements ScreenshotRepository {
   final ScreenshotDataSource _dataSource;
 

@@ -3,7 +3,6 @@ import 'package:screw_calculator/features/contact_us/domain/usecases/launch_cont
 
 part 'contact_state.dart';
 
-/// Cubit for managing contact screen state
 class ContactCubit extends Cubit<ContactState> {
   final LaunchContactUrlUseCase _launchContactUrlUseCase;
 
@@ -12,7 +11,6 @@ class ContactCubit extends Cubit<ContactState> {
   })  : _launchContactUrlUseCase = launchContactUrlUseCase,
         super(ContactInitial());
 
-  /// Launches a contact URL (WhatsApp, LinkedIn, etc.)
   Future<void> launchContactUrl(String url) async {
     emit(ContactLoading());
     try {

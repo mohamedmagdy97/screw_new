@@ -6,7 +6,6 @@ import 'package:screw_calculator/screens/notifications/domain/usecases/mark_noti
 
 part 'notification_state.dart';
 
-/// Cubit for managing notification screen state
 class NotificationCubit extends Cubit<NotificationState> {
   final GetNotificationsUseCase _getNotificationsUseCase;
   final DeleteNotificationUseCase _deleteNotificationUseCase;
@@ -23,7 +22,6 @@ class NotificationCubit extends Cubit<NotificationState> {
     _loadNotifications();
   }
 
-  /// Loads notifications stream
   void _loadNotifications() {
     emit(NotificationLoading());
     _getNotificationsUseCase.call().listen(
@@ -40,7 +38,6 @@ class NotificationCubit extends Cubit<NotificationState> {
     );
   }
 
-  /// Deletes a notification
   Future<void> deleteNotification(String notificationId) async {
     emit(NotificationDeleting());
     try {
@@ -57,7 +54,6 @@ class NotificationCubit extends Cubit<NotificationState> {
     }
   }
 
-  /// Marks a notification as read
   Future<void> markAsRead(String notificationId) async {
     try {
       await _markNotificationReadUseCase.call(notificationId);

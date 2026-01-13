@@ -3,19 +3,19 @@ import 'package:screw_calculator/features/history/data/mappers/game_history_mapp
 import 'package:screw_calculator/features/history/domain/entities/game_history_entity.dart';
 import 'package:screw_calculator/features/history/domain/repositories/history_repository.dart';
 
-/// Implementation of HistoryRepository
 class HistoryRepositoryImpl implements HistoryRepository {
   final HistoryDataSource _dataSource;
   List<GameHistoryEntity> _cachedGames = [];
 
-  HistoryRepositoryImpl({
-    required HistoryDataSource dataSource,
-  }) : _dataSource = dataSource;
+  HistoryRepositoryImpl({required HistoryDataSource dataSource})
+    : _dataSource = dataSource;
 
   @override
   Future<List<GameHistoryEntity>> getGames() async {
     final models = await _dataSource.getGames();
-    _cachedGames = models.map((model) => GameHistoryMapper.toEntity(model)).toList();
+    _cachedGames = models
+        .map((model) => GameHistoryMapper.toEntity(model))
+        .toList();
     return _cachedGames;
   }
 
@@ -26,9 +26,10 @@ class HistoryRepositoryImpl implements HistoryRepository {
     }
 
     _cachedGames.removeAt(index);
-    
-    // Convert back to models and save
-    final models = _cachedGames.map((e) => GameHistoryMapper.toModel(e)).toList();
+
+    final models = _cachedGames
+        .map((e) => GameHistoryMapper.toModel(e))
+        .toList();
     return await _dataSource.saveGames(models);
   }
 
@@ -38,4 +39,3 @@ class HistoryRepositoryImpl implements HistoryRepository {
     return await _dataSource.clearAllGames();
   }
 }
-

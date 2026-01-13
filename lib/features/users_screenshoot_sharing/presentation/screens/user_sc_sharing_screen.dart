@@ -25,7 +25,6 @@ class UserScSharingScreen extends StatelessWidget {
     );
   }
 
-  /// Creates and configures ScreenshotCubit with all dependencies
   ScreenshotCubit _createScreenshotCubit() {
     final dataSource = ScreenshotDataSourceImpl();
     final repository = ScreenshotRepositoryImpl(dataSource: dataSource);

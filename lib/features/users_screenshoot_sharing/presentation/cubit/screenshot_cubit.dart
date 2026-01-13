@@ -8,7 +8,6 @@ import 'package:screw_calculator/features/users_screenshoot_sharing/domain/useca
 
 part 'screenshot_state.dart';
 
-/// Cubit for managing screenshot sharing screen state
 class ScreenshotCubit extends Cubit<ScreenshotState> {
   final GetScreenshotsUseCase _getScreenshotsUseCase;
   final LoadMoreScreenshotsUseCase _loadMoreScreenshotsUseCase;
@@ -21,46 +20,50 @@ class ScreenshotCubit extends Cubit<ScreenshotState> {
     required GetScreenshotsUseCase getScreenshotsUseCase,
     required LoadMoreScreenshotsUseCase loadMoreScreenshotsUseCase,
     required DeleteScreenshotUseCase deleteScreenshotUseCase,
-  })  : _getScreenshotsUseCase = getScreenshotsUseCase,
-        _loadMoreScreenshotsUseCase = loadMoreScreenshotsUseCase,
-        _deleteScreenshotUseCase = deleteScreenshotUseCase,
-        super(ScreenshotInitial()) {
+  }) : _getScreenshotsUseCase = getScreenshotsUseCase,
+       _loadMoreScreenshotsUseCase = loadMoreScreenshotsUseCase,
+       _deleteScreenshotUseCase = deleteScreenshotUseCase,
+       super(ScreenshotInitial()) {
     _loadScreenshots();
   }
 
-  /// Loads screenshots stream
   void _loadScreenshots() {
     emit(ScreenshotLoading());
-    _subscription = _getScreenshotsUseCase.call(limit: _itemsPerPage).listen(
-      (screenshots) {
-        if (screenshots.isEmpty) {
-          emit(ScreenshotEmpty());
-        } else {
-          emit(ScreenshotLoaded(
-            screenshots: screenshots,
-            hasMore: screenshots.length == _itemsPerPage,
-            lastDocumentId: screenshots.last.id,
-          ));
-        }
-      },
-      onError: (error) {
-        emit(ScreenshotError('حدث خطأ أثناء تحميل المشاركات'));
-      },
-    );
+    _subscription = _getScreenshotsUseCase
+        .call(limit: _itemsPerPage)
+        .listen(
+          (screenshots) {
+            if (screenshots.isEmpty) {
+              emit(ScreenshotEmpty());
+            } else {
+              emit(
+                ScreenshotLoaded(
+                  screenshots: screenshots,
+                  hasMore: screenshots.length == _itemsPerPage,
+                  lastDocumentId: screenshots.last.id,
+                ),
+              );
+            }
+          },
+          onError: (error) {
+            emit(ScreenshotError('حدث خطأ أثناء تحميل المشاركات'));
+          },
+        );
   }
 
-  /// Loads more screenshots for pagination
   Future<void> loadMore() async {
     final currentState = state;
     if (currentState is! ScreenshotLoaded || !currentState.hasMore) {
       return;
     }
 
-    emit(ScreenshotLoadingMore(
-      screenshots: currentState.screenshots,
-      hasMore: currentState.hasMore,
-      lastDocumentId: currentState.lastDocumentId,
-    ));
+    emit(
+      ScreenshotLoadingMore(
+        screenshots: currentState.screenshots,
+        hasMore: currentState.hasMore,
+        lastDocumentId: currentState.lastDocumentId,
+      ),
+    );
 
     try {
       final newScreenshots = await _loadMoreScreenshotsUseCase.call(
@@ -69,28 +72,31 @@ class ScreenshotCubit extends Cubit<ScreenshotState> {
       );
 
       if (newScreenshots.isEmpty) {
-        emit(ScreenshotLoaded(
-          screenshots: currentState.screenshots,
-          hasMore: false,
-          lastDocumentId: currentState.lastDocumentId,
-        ));
+        emit(
+          ScreenshotLoaded(
+            screenshots: currentState.screenshots,
+            hasMore: false,
+            lastDocumentId: currentState.lastDocumentId,
+          ),
+        );
       } else {
         final updatedScreenshots = [
           ...currentState.screenshots,
           ...newScreenshots,
         ];
-        emit(ScreenshotLoaded(
-          screenshots: updatedScreenshots,
-          hasMore: newScreenshots.length == _itemsPerPage,
-          lastDocumentId: newScreenshots.last.id,
-        ));
+        emit(
+          ScreenshotLoaded(
+            screenshots: updatedScreenshots,
+            hasMore: newScreenshots.length == _itemsPerPage,
+            lastDocumentId: newScreenshots.last.id,
+          ),
+        );
       }
     } catch (e) {
       emit(ScreenshotError('حدث خطأ أثناء تحميل المزيد من المشاركات'));
     }
   }
 
-  /// Deletes a screenshot
   Future<void> deleteScreenshot(String screenshotId) async {
     final currentState = state;
     if (currentState is! ScreenshotLoaded) return;
@@ -108,7 +114,6 @@ class ScreenshotCubit extends Cubit<ScreenshotState> {
           emit(ScreenshotEmpty());
         } else {
           emit(ScreenshotDeleted(updatedScreenshots));
-          // Reload to get fresh data
           _loadScreenshots();
         }
       } else {
@@ -125,4 +130,3 @@ class ScreenshotCubit extends Cubit<ScreenshotState> {
     return super.close();
   }
 }
-

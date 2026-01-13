@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-/// Widget for displaying a social media button
 class SocialMediaButton extends StatelessWidget {
   final String assetPath;
   final VoidCallback onTap;

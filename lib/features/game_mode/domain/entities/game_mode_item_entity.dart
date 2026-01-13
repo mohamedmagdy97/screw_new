@@ -1,4 +1,3 @@
-/// Game mode item entity representing a game mode option
 class GameModeItemEntity {
   final int key;
   final String value;

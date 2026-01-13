@@ -5,7 +5,6 @@ import 'package:video_player/video_player.dart';
 
 part 'video_state.dart';
 
-/// Cubit for managing video player state
 class VideoCubit extends Cubit<VideoState> {
   VideoPlayerController? _videoController;
   ChewieController? _chewieController;
@@ -14,7 +13,6 @@ class VideoCubit extends Cubit<VideoState> {
     _initializeVideo();
   }
 
-  /// Initializes the video player
   Future<void> _initializeVideo() async {
     emit(VideoLoading());
     try {
@@ -38,7 +36,6 @@ class VideoCubit extends Cubit<VideoState> {
     }
   }
 
-  /// Skips the video by specified seconds
   void skip(int seconds) {
     if (_videoController != null && state is VideoLoaded) {
       final currentPosition = _videoController!.value.position;

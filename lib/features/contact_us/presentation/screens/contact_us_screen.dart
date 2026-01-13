@@ -23,7 +23,6 @@ class ContactUsScreen extends StatelessWidget {
     );
   }
 
-  /// Creates and configures ContactCubit with all dependencies
   ContactCubit _createContactCubit() {
     final dataSource = UrlLauncherDataSourceImpl();
     final repository = ContactRepositoryImpl(dataSource: dataSource);

@@ -6,7 +6,6 @@ import 'package:screw_calculator/features/history/domain/usecases/remove_game_us
 
 part 'history_state.dart';
 
-/// Cubit for managing history screen state
 class HistoryCubit extends Cubit<HistoryState> {
   final GetGamesUseCase _getGamesUseCase;
   final RemoveGameUseCase _removeGameUseCase;
@@ -23,7 +22,6 @@ class HistoryCubit extends Cubit<HistoryState> {
     loadGames();
   }
 
-  /// Loads games from local storage
   Future<void> loadGames() async {
     emit(HistoryLoading());
     try {
@@ -38,7 +36,6 @@ class HistoryCubit extends Cubit<HistoryState> {
     }
   }
 
-  /// Removes a game by index
   Future<void> removeGame(int index) async {
     final currentState = state;
     if (currentState is! HistoryLoaded) return;
@@ -57,7 +54,6 @@ class HistoryCubit extends Cubit<HistoryState> {
     }
   }
 
-  /// Clears all games
   Future<void> clearAllGames() async {
     final currentState = state;
     if (currentState is! HistoryLoaded) return;

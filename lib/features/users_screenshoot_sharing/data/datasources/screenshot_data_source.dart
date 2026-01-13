@@ -1,22 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:screw_calculator/models/screenshoot_model.dart';
 
-/// Data source interface for screenshot operations
 abstract class ScreenshotDataSource {
-  /// Streams screenshots from Firestore
   Stream<List<ScreenShootModel>> getScreenshots({required int limit});
 
-  /// Loads more screenshots for pagination
   Future<List<ScreenShootModel>> loadMoreScreenshots({
     required String lastDocumentId,
     required int limit,
   });
 
-  /// Deletes a screenshot from Firestore
   Future<bool> deleteScreenshot(String screenshotId);
 }
 
-/// Implementation of ScreenshotDataSource using Firestore
 class ScreenshotDataSourceImpl implements ScreenshotDataSource {
   final FirebaseFirestore _firestore;
 
