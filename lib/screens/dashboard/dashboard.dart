@@ -477,10 +477,15 @@ class _DashboardState extends State<Dashboard> {
 
   List<Widget> buildGameSaveSection() {
     return [
+      const CustomText(
+        text: 'الان يمكنك حفظ الجولة واستكمالها لاحقا',
+        fontSize: 14,
+        color: Colors.red,
+      ),
       Padding(
-        padding: const EdgeInsets.only(bottom: 4.0),
+        padding: const EdgeInsets.only(bottom: 4.0, top: 2),
         child: CustomButton(
-          text: 'حفظ',
+          text: '💾 حفظ النتيجة',
           onPressed: () => dashboardData.saveGame(widget.players, context),
         ),
       ),

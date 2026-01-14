@@ -12,6 +12,7 @@ import 'package:screw_calculator/cubits/generic_cubit/generic_cubit.dart';
 import 'package:screw_calculator/models/game_model.dart';
 import 'package:screw_calculator/models/player_model.dart';
 import 'package:screw_calculator/models/team_model_new.dart';
+import 'package:screw_calculator/screens/dashboard/screenshot_preview_dialog.dart';
 import 'package:screw_calculator/utility/app_theme.dart';
 import 'package:screw_calculator/utility/local_store.dart';
 import 'package:screw_calculator/utility/local_storge_key.dart';
@@ -315,10 +316,10 @@ class DashboardData {
   }
 
   void saveGame(List<PlayerModel> listPlayers, BuildContext context) {
-    if (listPlayers.last.gw5 != null &&
+    if (true/*listPlayers.last.gw5 != null &&
         listPlayers.last.gw5!.isNotEmpty &&
         listPlayers.first.gw5 != null &&
-        listPlayers.first.gw5!.isNotEmpty) {
+        listPlayers.first.gw5!.isNotEmpty*/) {
       listGames.add(GameModel(game: listPlayers));
       addGameToDB();
       Utilities().showCustomSnack(context, txt: 'تم حفظ الجولة');
@@ -353,7 +354,7 @@ class DashboardData {
         listPlayers.first.gw4!.isEmpty) {
       return Utilities().showCustomSnack(
         context,
-        txt: 'لمشاركة النتائج يجب ادخال جميع الجولات',
+        txt: 'لمشاركة النتائج يجب ادخال 4 جولات على الاقل',
       );
     }
     final Uint8List? imageBytes;
@@ -369,7 +370,16 @@ class DashboardData {
           '${directory.path}/screenshot${DateTime.now().toString().replaceAll(' ', '_')}.png';
       final file = File(filePath);
       await file.writeAsBytes(imageBytes);
-      uploadImageToDatabase(title: filePath, imageFile: file);
+
+      await showDialog(
+        context: context,
+        builder: (_) => ScreenshotPreviewDialog(
+          imageBytes: imageBytes!,
+          onShare: () async {
+            await uploadImageToDatabase(title: filePath, imageFile: file);
+          },
+        ),
+      );
 
       await Share.shareXFiles([
         XFile(filePath),

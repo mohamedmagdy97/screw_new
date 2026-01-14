@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:screw_calculator/components/custom_text.dart';
 
 class ImageHelper {
   static Future<String?> pickAndCompressImage({
@@ -37,7 +38,12 @@ class ImageHelper {
     }
   }
 
-  static void showFullImage(BuildContext context, String base64) {
+  static void showFullImage(
+    BuildContext context,
+    String base64, {
+    double? padding,
+    String? title,
+  }) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -45,13 +51,28 @@ class ImageHelper {
           backgroundColor: Colors.black,
           appBar: AppBar(
             backgroundColor: Colors.black12,
-            leading: IconButton(
-              onPressed: () => Navigator.pop(context),
-              icon: Icon(Icons.arrow_back_ios, color: Colors.white),
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(top: 60.0, right: 16),
+                child: IconButton(
+                  onPressed: () => Navigator.pop(context),
+                  icon: const Icon(Icons.close, color: Colors.white),
+                ),
+              ),
+            ],
+            title: Padding(
+              padding: const EdgeInsets.only(top: 60),
+              child: CustomText(text: title ?? '', fontSize: 20),
             ),
+            toolbarHeight: 100,
           ),
           body: Center(
-            child: InteractiveViewer(child: Image.memory(base64Decode(base64))),
+            child: Padding(
+              padding: EdgeInsets.all(padding ?? 0),
+              child: InteractiveViewer(
+                child: Image.memory(base64Decode(base64)),
+              ),
+            ),
           ),
         ),
       ),

@@ -19,11 +19,11 @@ class ShareScreenBtn extends StatelessWidget {
       child: Column(
         spacing: 12,
         children: [
-          CustomText(
-            text:
-                'عند عمل مشاركة سيتم مشاركة نتيجتك مع الاخرين في صفحة مشاركات الاخرين وأيضا مع اصدقائك على السوشيال ميديا',
-            fontSize: 14.sp,
-          ),
+          // CustomText(
+          //   text:
+          //       'عند عمل مشاركة سيتم مشاركة نتيجتك مع الاخرين في صفحة مشاركات الاخرين وأيضا مع اصدقائك على السوشيال ميديا',
+          //   fontSize: 14.sp,
+          // ),
           InkWell(
             onTap: () => dashboardData.captureAndShare(context,players),
             child: Container(
@@ -39,7 +39,7 @@ class ShareScreenBtn extends StatelessWidget {
               // heroTag: null,
               child:
                   // Text("📲")
-                  const CustomText(text: '📲 مشاركة', fontSize: 18),
+                  const CustomText(text: '📲 مشاركة النتيجة', fontSize: 18),
             ),
           ),
         ],
