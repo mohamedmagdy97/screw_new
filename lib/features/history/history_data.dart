@@ -76,7 +76,7 @@ class HistoryData {
   void removeGame(BuildContext context, int index) {
     showDialog(
       context: context,
-      builder: (_) => Dialog(
+      builder: (ctx) => Dialog(
         backgroundColor: AppColors.bg,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 32),
@@ -98,7 +98,7 @@ class HistoryData {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   TextButton(
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () => Navigator.pop(ctx),
                     child: const CustomText(text: 'لا', fontSize: 18),
                   ),
                   CustomButton(
@@ -111,7 +111,7 @@ class HistoryData {
                       gamesCubit.update(data: gamesCubit.state.data!);
                       listGames.removeAt(index);
                       updateGameDB();
-                      Navigator.pop(context);
+                      Navigator.pop(ctx);
                     },
                   ),
                 ],

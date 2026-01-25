@@ -17,8 +17,19 @@ class PrayerController extends GetxController {
   var errorMessage = ''.obs;
   var isOnline = true.obs;
 
-  late CountryModel city;
-  late CountryModel selectedCity;
+  CountryModel selectedCity = const CountryModel(
+    id: 1,
+    nameAr: 'القاهرة',
+    nameEn: 'Cairo',
+  );
+  CountryModel city = const CountryModel(
+    id: 1,
+    nameAr: 'القاهرة',
+    nameEn: 'Cairo',
+  );
+
+  // late CountryModel city;
+  // late CountryModel selectedCity;
 
   final List<CountryModel> egyptGovernorates = const [
     CountryModel(id: 1, nameAr: 'القاهرة', nameEn: 'Cairo'),
@@ -53,47 +64,39 @@ class PrayerController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-
-    // تهيئة API Service
-    apiService.init().then((_) {
-      _initializeCity();
-      loadPrayerTimes();
-
-      // مسح الكاش القديم (أقدم من 7 أيام)
-      apiService.clearOldCache();
-    });
+    _init();
   }
 
-  // تهيئة المدينة من التخزين المحلي
-  void _initializeCity() {
-    final savedCity = AppLocalStore.getString(LocalStoreNames.prayerCity);
+  Future<void> _init() async {
+    isLoading.value = true;
+    _initializeCity();
+    await apiService.init();
+    await loadPrayerTimes();
+    await apiService.clearOldCache();
+    isLoading.value = false;
+  }
 
-    if (savedCity != null && savedCity.toString().isNotEmpty) {
-      try {
-        selectedCity = egyptGovernorates.firstWhere(
-          (e) => e.nameEn == savedCity,
-          orElse: () => egyptGovernorates.first,
-        );
-        city = selectedCity;
-      } catch (e) {
-        debugPrint('Error loading saved city: $e');
-        selectedCity = egyptGovernorates.first;
-        city = egyptGovernorates.first;
-      }
-    } else {
-      selectedCity = egyptGovernorates.first;
-      city = egyptGovernorates.first;
+  Future<void> _initializeCity() async {
+    final String? savedCity = await AppLocalStore.getString(
+      LocalStoreNames.prayerCity,
+    );
+
+    if (savedCity != null && savedCity.isNotEmpty) {
+      selectedCity = egyptGovernorates.firstWhere(
+        (e) => e.nameEn == savedCity,
+        orElse: () => egyptGovernorates.first,
+      );
+      city = selectedCity;
     }
+    update();
   }
 
-  // تحميل مواقيت الصلاة
   Future<void> loadPrayerTimes() async {
     try {
       isLoading.value = true;
       hasError.value = false;
       errorMessage.value = '';
 
-      // التحقق من الاتصال بالإنترنت
       isOnline.value = await apiService.checkInternetConnection();
 
       final data = await apiService.fetchPrayerTimes(selectedCity.nameEn);
@@ -101,24 +104,17 @@ class PrayerController extends GetxController {
       if (data != null) {
         prayerTimes.value = data;
 
-        // عرض معلومات إضافية
-        debugPrint('✅ Current Prayer: ${data.getCurrentPrayer() ?? "None"}');
-        debugPrint('✅ Next Prayer: ${data.getNextPrayer() ?? "Fajr tomorrow"}');
-
         final timeUntil = data.getTimeUntilNextPrayer();
         if (timeUntil != null) {
           final hours = timeUntil.inHours;
           final minutes = timeUntil.inMinutes % 60;
           debugPrint('⏰ Time until next: ${hours}h ${minutes}m');
         }
-
-        await _scheduleNotifications(data);
-
-        // حفظ المدينة المختارة
         await AppLocalStore.setString(
           LocalStoreNames.prayerCity,
           selectedCity.nameEn,
         );
+        await _scheduleNotifications(data);
       } else {
         hasError.value = true;
         errorMessage.value = isOnline.value

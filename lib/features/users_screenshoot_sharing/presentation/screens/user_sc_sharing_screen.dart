@@ -182,10 +182,10 @@ class _UserScSharingViewState extends State<_UserScSharingView> {
                     padding: EdgeInsets.symmetric(horizontal: 12.w),
                     sliver: SliverGrid(
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2, // صورتين في الصف
+                        crossAxisCount: 1,
                         mainAxisSpacing: 10.h,
                         crossAxisSpacing: 10.w,
-                        // childAspectRatio: 2.5, // تحكم في طول الكارت
+                        childAspectRatio: 2.5, // card height
                       ),
                       delegate: SliverChildBuilderDelegate(
                         (context, index) => ScreenshotItem(

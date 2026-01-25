@@ -1,8 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:screw_calculator/components/custom_text.dart';
+import 'package:screw_calculator/components/dox_decoration.dart';
+import 'package:screw_calculator/utility/app_theme.dart';
 
 class ImageHelper {
   static Future<String?> pickAndCompressImage({
@@ -67,10 +70,20 @@ class ImageHelper {
             toolbarHeight: 100,
           ),
           body: Center(
-            child: Padding(
-              padding: EdgeInsets.all(padding ?? 0),
-              child: InteractiveViewer(
-                child: Image.memory(base64Decode(base64)),
+            child: Container(
+              decoration: customBoxDecoration(
+                borderRadius: 8.r,
+                shadowColor: Colors.black.withOpacity(0.1),
+              ),
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 8.w),
+                decoration: BoxDecoration(
+                  color: AppColors.opacity_1.withOpacity(0.75),
+                  borderRadius: BorderRadius.circular(4.r),
+                ),
+                child: InteractiveViewer(
+                  child: Image.memory(base64Decode(base64)),
+                ),
               ),
             ),
           ),

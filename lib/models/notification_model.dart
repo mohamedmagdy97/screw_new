@@ -38,23 +38,27 @@ class NotificationModel {
     } else if (json['datetime'] is String) {
       parsedDate =
           DateTime.tryParse(json['datetime']!.toString()) ?? DateTime.now();
+    } else if (json['datetime'] == null) {
+      parsedDate = DateTime.now();
     } else {
       parsedDate = DateTime.now();
     }
     return NotificationModel(
       id: docId,
       title: json['title']!.toString(),
-      description: json['description']!.toString(),
+      description: json['description'] != null
+          ? json['description']!.toString()
+          : '',
       datetime: parsedDate /*(json['datetime'] != null)
           ? DateTime.parse(json['datetime']!.toString())
           : DateTime.now()*/,
       type: json['type']!.toString(),
-      image: json['image']!.toString(),
+      image: json['image'] != null ? json['image']!.toString() : '',
       isRead: json['isRead'] is bool
           ? json['isRead'] as bool
           : json['isRead'].toString().toLowerCase() == 'true',
-      priority: json['priority']!.toString(),
-      actionUrl: json['actionUrl']!.toString(),
+      priority: json['priority'] != null ? json['priority']!.toString() : '',
+      actionUrl: json['actionUrl'] != null ? json['actionUrl']!.toString() : '',
       createdAt: json['createdAt']!.toString(),
       messageId: json['messageId'] != null ? json['messageId']!.toString() : '',
       token: json['token'] != null ? json['token']!.toString() : '',

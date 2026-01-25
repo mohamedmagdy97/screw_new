@@ -47,7 +47,7 @@ class ScreenshotItem extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12.r),
                   child: Image.memory(
                     base64Decode(screenshot.imageBase64!),
-                    fit: BoxFit.cover,
+                    fit: BoxFit.fitWidth,
                     width: double.infinity,
                     height: double.infinity,
                   ),
