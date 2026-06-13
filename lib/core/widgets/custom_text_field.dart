@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/utils/validation_form.dart';
 
@@ -68,17 +69,18 @@ class CustomTextField extends StatefulWidget {
 class _CustomTextFieldState extends State<CustomTextField> {
   @override
   Widget build(BuildContext context) {
+    final palette = context.palette;
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: Theme(
         data: Theme.of(
           context,
-        ).copyWith(hintColor: AppColors.secondaryColor.withOpacity(.9)),
+        ).copyWith(hintColor: palette.textSecondary),
         child: Directionality(
           textDirection: TextDirection.rtl,
           child: TextFormField(
             autovalidateMode: AutovalidateMode.onUserInteraction,
-            cursorColor: AppColors.mainColor,
+            cursorColor: palette.brand,
             // cursorHeight: 12,
             controller: widget.controller,
             maxLength: widget.maxLength,
@@ -110,9 +112,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 fontSize: 12.sp,
                 color: AppColors.red,
               ),
-              fillColor: widget.isDisable
-                  ? widget.fillColor ?? AppColors.cardColor
-                  : widget.fillColor ?? AppColors.grayy,
+              fillColor: widget.fillColor ?? palette.surface,
               filled: true,
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(
@@ -123,12 +123,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                       : 15.sp,
                 ),
                 borderSide: BorderSide(
-                  color: widget.fillColor == null
-                      ? widget.isDisable
-                            ? Colors.transparent
-                            : widget.fillBorderColor ??
-                                  AppColors.mainColorAccent
-                      : widget.fillBorderColor ?? AppColors.mainColorAccent,
+                  color: widget.fillBorderColor ?? palette.border,
                 ),
                 gapPadding: 10,
               ),
@@ -148,14 +143,13 @@ class _CustomTextFieldState extends State<CustomTextField> {
               labelText: widget.labelText,
               labelStyle: TextStyle(
                 fontSize: widget.hintFontSize ?? 16.sp,
-                color: widget.hintColor ?? AppColors.white,
-
+                color: widget.hintColor ?? palette.textSecondary,
                 fontFamily: AppFonts.regular,
                 fontWeight: AppFonts.w400,
               ),
               hintStyle: TextStyle(
                 fontSize: widget.hintFontSize ?? 12.sp,
-                color: widget.hintColor ?? AppColors.textColorHint,
+                color: widget.hintColor ?? palette.textSecondary,
                 fontFamily: AppFonts.regular,
                 fontWeight: AppFonts.w400,
               ),
@@ -169,7 +163,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                       : 15.sp,
                 ),
                 borderSide: BorderSide(
-                  color: widget.fillBorderColor ?? AppColors.grey,
+                  color: widget.fillBorderColor ?? palette.border,
                 ),
                 gapPadding: 10,
               ),
@@ -181,14 +175,14 @@ class _CustomTextFieldState extends State<CustomTextField> {
                       ? 12.sp
                       : 15.sp,
                 ),
-                borderSide: const BorderSide(color: AppColors.grey),
+                borderSide: BorderSide(color: palette.brand, width: 1.6),
                 gapPadding: 10,
               ),
             ),
             style: TextStyle(
               fontSize: 16.sp,
               height: 1.4,
-              color: widget.textColor ?? AppColors.white,
+              color: widget.textColor ?? palette.textPrimary,
               fontFamily: AppFonts.regular,
             ),
           ),

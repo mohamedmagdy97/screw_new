@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:screw_calculator/core/theme/app_palette.dart';
 
 part 'app_colors.dart';
 
@@ -32,63 +33,73 @@ abstract final class AppTheme {
 
   static ThemeData _build(Brightness brightness) {
     final bool isDark = brightness == Brightness.dark;
+    final AppPalette p = isDark ? AppPalette.dark : AppPalette.light;
 
     final ColorScheme scheme =
         ColorScheme.fromSeed(
-          seedColor: AppColors.mainColor,
+          seedColor: p.brand,
           brightness: brightness,
         ).copyWith(
-          primary: AppColors.mainColor,
-          secondary: AppColors.secondaryColor,
-          surface: isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
+          primary: p.brand,
+          onPrimary: Colors.white,
+          secondary: p.accent,
+          onSecondary: isDark ? const Color(0xFF06222B) : Colors.white,
+          surface: p.surface,
+          onSurface: p.textPrimary,
+          error: p.lose,
+          outline: p.border,
         );
-
-    final Color scaffoldBg = isDark ? AppColors.bg : AppColors.bgLight;
-    final Color onSurface = isDark ? AppColors.white : AppColors.textColorTitle;
 
     return ThemeData(
       useMaterial3: true,
       brightness: brightness,
       colorScheme: scheme,
       fontFamily: _fontFamily,
-      scaffoldBackgroundColor: scaffoldBg,
-      splashFactory: InkSparkle.splashFactory,
-      appBarTheme: const AppBarTheme(
+      scaffoldBackgroundColor: p.screen,
+      splashColor: p.brand.withValues(alpha: 0.12),
+      extensions: <ThemeExtension<dynamic>>[p],
+      appBarTheme: AppBarTheme(
         centerTitle: true,
         elevation: 0,
         scrolledUnderElevation: 0,
-        backgroundColor: AppColors.mainColor,
-        foregroundColor: AppColors.white,
+        backgroundColor: p.screen,
+        surfaceTintColor: Colors.transparent,
+        foregroundColor: p.textPrimary,
         titleTextStyle: TextStyle(
-          color: AppColors.white,
+          color: p.textPrimary,
           fontSize: 20,
           fontFamily: AppFonts.bold,
         ),
       ),
       cardTheme: CardThemeData(
         elevation: 0,
-        color: isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
+        color: p.surface,
+        surfaceTintColor: Colors.transparent,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppRadii.lg),
+          side: BorderSide(color: p.border),
         ),
         clipBehavior: Clip.antiAlias,
       ),
       dialogTheme: DialogThemeData(
-        backgroundColor: isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
+        backgroundColor: p.surfaceElevated,
+        surfaceTintColor: Colors.transparent,
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppRadii.xl),
+          side: BorderSide(color: p.border),
         ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.mainColor,
-          foregroundColor: AppColors.white,
+          backgroundColor: p.brand,
+          foregroundColor: Colors.white,
           elevation: 0,
           padding: const EdgeInsets.symmetric(
             horizontal: AppSpacing.xl,
             vertical: AppSpacing.md,
           ),
+          textStyle: const TextStyle(fontFamily: AppFonts.bold, fontSize: 16),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppRadii.md),
           ),
@@ -96,39 +107,37 @@ abstract final class AppTheme {
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: isDark ? AppColors.surfaceDark : AppColors.white,
+        fillColor: isDark ? p.surfaceElevated : p.surface,
+        hintStyle: TextStyle(color: p.textSecondary),
+        labelStyle: TextStyle(color: p.textSecondary),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: AppSpacing.lg,
           vertical: AppSpacing.md,
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppRadii.md),
-          borderSide: BorderSide.none,
+          borderSide: BorderSide(color: p.border),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppRadii.md),
-          borderSide: BorderSide(color: AppColors.mainColor.withValues(alpha: 0.3)),
+          borderSide: BorderSide(color: p.border),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppRadii.md),
-          borderSide: const BorderSide(color: AppColors.mainColor, width: 1.6),
+          borderSide: BorderSide(color: p.brand, width: 1.6),
         ),
       ),
       snackBarTheme: SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
-        backgroundColor: AppColors.mainColor,
-        contentTextStyle: const TextStyle(color: AppColors.white),
+        backgroundColor: p.brand,
+        contentTextStyle: const TextStyle(color: Colors.white),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppRadii.md),
         ),
       ),
-      dividerTheme: DividerThemeData(
-        color: onSurface.withValues(alpha: 0.12),
-        thickness: 1,
-      ),
-      progressIndicatorTheme: const ProgressIndicatorThemeData(
-        color: AppColors.mainColor,
-      ),
+      dividerTheme: DividerThemeData(color: p.border, thickness: 1),
+      iconTheme: IconThemeData(color: p.textPrimary),
+      progressIndicatorTheme: ProgressIndicatorThemeData(color: p.brand),
     );
   }
 }

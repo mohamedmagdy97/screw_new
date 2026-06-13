@@ -45,7 +45,6 @@ class _NotificationsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const CustomAppBar(title: 'الإشعارات'),
-      backgroundColor: AppColors.bg,
       bottomNavigationBar: const BottomNavigationText(),
       body: BlocBuilder<NotificationCubit, NotificationState>(
         builder: (context, state) {

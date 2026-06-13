@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:screw_calculator/app/di/service_locator.dart';
 import 'package:screw_calculator/core/helpers/remote_config.dart';
+import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/theme/theme_cubit.dart';
 import 'package:screw_calculator/core/utils/enums.dart';
@@ -46,7 +47,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
       padding: EdgeInsets.only(top: 55.h, bottom: 54.h),
       child: SafeArea(
         child: Drawer(
-          backgroundColor: AppColors.drawerBg,
+          backgroundColor: context.palette.surface,
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: Column(
@@ -149,7 +150,6 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                                   title: CustomText(
                                     text: 'ادخل بياناتك',
                                     fontSize: 16.sp,
-                                    color: AppColors.black,
                                   ),
                                   content: Form(
                                     key: homeData.formKeyUserData,
@@ -160,9 +160,6 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                                           controller: homeData.nameController,
                                           hintText: 'الاسم الاول',
                                           labelText: 'الاسم',
-                                          hintColor: AppColors.black,
-                                          fillColor: AppColors.white,
-                                          textColor: AppColors.black,
                                           containtPaddingRight: 0,
                                           inputType: TextInputType.text,
                                           textFieldVaidType:
@@ -172,9 +169,6 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                                           controller: homeData.phoneController,
                                           hintText: '01*********',
                                           labelText: 'رقم الموبايل',
-                                          hintColor: AppColors.black,
-                                          fillColor: AppColors.white,
-                                          textColor: AppColors.black,
                                           containtPaddingRight: 0,
                                           inputType: TextInputType.phone,
                                           textFieldVaidType:
@@ -186,9 +180,6 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                                               homeData.countryController,
                                           hintText: 'اسم المدينة أو المحافظة',
                                           labelText: 'المدينة',
-                                          hintColor: AppColors.black,
-                                          fillColor: AppColors.white,
-                                          textColor: AppColors.black,
                                           containtPaddingRight: 0,
                                           inputType: TextInputType.text,
                                           textFieldVaidType:
@@ -200,9 +191,6 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                                           controller: homeData.ageController,
                                           hintText: 'عندك كام سنة',
                                           labelText: 'العمر',
-                                          hintColor: AppColors.black,
-                                          fillColor: AppColors.white,
-                                          textColor: AppColors.black,
                                           containtPaddingRight: 0,
                                           inputType: TextInputType.number,
                                           textFieldVaidType:
@@ -323,13 +311,11 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                               title: CustomText(
                                 text: 'غير متاح',
                                 fontSize: 16,
-                                color: AppColors.black,
                                 fontFamily: AppFonts.bold,
                               ),
                               content: CustomText(
                                 text: 'الدخول للشات غير متاح حاليًا',
                                 fontSize: 18,
-                                color: AppColors.black,
                               ),
                             ),
                           );

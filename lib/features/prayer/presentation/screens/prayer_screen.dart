@@ -78,7 +78,6 @@ class _PrayerViewState extends State<_PrayerView> {
           ],
         ),
       ),
-      backgroundColor: AppColors.bg,
       bottomNavigationBar: const BottomNavigationText(),
       body: BlocBuilder<PrayerCubit, PrayerState>(
         builder: (context, state) => _buildBody(cubit, state),

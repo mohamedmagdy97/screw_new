@@ -101,7 +101,6 @@ class _ScoreInputDialogState extends State<ScoreInputDialog> {
           text: title,
           fontSize: 14.sp,
           textAlign: TextAlign.center,
-          color: AppColors.black,
         ),
       ),
       content: Form(
@@ -115,9 +114,6 @@ class _ScoreInputDialogState extends State<ScoreInputDialog> {
               labelText: '',
               containtPaddingRight: 0,
               inputType: TextInputType.number,
-              fillColor: Colors.white,
-              textColor: Colors.black,
-              fillBorderColor: AppColors.grayy,
               textFieldVaidType: TextFieldValidatorType.number,
             ),
             const SizedBox(height: 16),

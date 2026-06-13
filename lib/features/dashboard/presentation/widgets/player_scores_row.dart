@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:screw_calculator/core/models/player_model.dart';
-import 'package:screw_calculator/core/theme/app_theme.dart';
+import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/features/dashboard/presentation/cubit/dashboard_cubit.dart';
 import 'package:screw_calculator/features/dashboard/presentation/widgets/score_input_dialog.dart';
@@ -87,7 +87,7 @@ class _IconAction extends StatelessWidget {
       borderRadius: BorderRadius.circular(50),
       child: Padding(
         padding: const EdgeInsets.all(6),
-        child: Icon(icon, color: AppColors.white, size: size),
+        child: Icon(icon, color: context.palette.accent, size: size),
       ),
     );
   }

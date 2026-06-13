@@ -24,11 +24,9 @@ class _ShowVideoView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.bg,
       appBar: AppBar(
         centerTitle: true,
         automaticallyImplyLeading: false,
-        backgroundColor: AppColors.grayy,
         title: CustomText(text: 'شرح قواعد اللعبة', fontSize: 22.sp),
         actions: [
           IconButton(

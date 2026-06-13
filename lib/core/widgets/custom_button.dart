@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
 
@@ -38,32 +39,33 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final palette = context.palette;
+    final bool flat = isSecondButton || isButtonBorder;
     return Container(
       height: height ?? 52,
       width: width,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(borderRadius ?? 12.sp),
-        gradient: LinearGradient(
-          colors: isSecondButton || isButtonBorder
-              ? [Colors.transparent, Colors.transparent]
-              : [
-                  color ?? Colors.purple.shade600,
-                  color ?? Colors.purple.shade800,
-                ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        // color: isSecondButton
-        //     ? AppColors.secondaryColorOpacity
-        //     : isButtonBorder
-        //         ? Colors.transparent
-        //         : color ?? AppColors.mainColor,
+        borderRadius: BorderRadius.circular(borderRadius ?? 14.sp),
+        gradient: flat
+            ? null
+            : (color != null
+                  ? LinearGradient(
+                      colors: [color!, color!],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    )
+                  : palette.brandGradient),
+        boxShadow: flat
+            ? null
+            : [
+                BoxShadow(
+                  color: (color ?? palette.brand).withValues(alpha: 0.35),
+                  blurRadius: 16,
+                  offset: const Offset(0, 6),
+                ),
+              ],
         border: isButtonBorder
-            ? Border.all(
-                color: borderColor == null
-                    ? AppColors.secondaryColor
-                    : borderColor!,
-              )
+            ? Border.all(color: borderColor ?? palette.accent, width: 1.5)
             : null,
       ),
       child: Material(
@@ -89,7 +91,9 @@ class CustomButton extends StatelessWidget {
                 height: 1,
                 //  .8.h,
                 color: isSecondButton
-                    ? AppColors.secondaryColor
+                    ? palette.accent
+                    : isButtonBorder
+                    ? (borderColor ?? palette.accent)
                     : colorFont ?? Colors.white,
                 maxLines: 1,
               ),

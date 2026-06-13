@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:screw_calculator/core/models/player_model.dart';
 import 'package:screw_calculator/core/routing/fade_animation.dart';
+import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/features/dashboard/presentation/cubit/dashboard_cubit.dart';
@@ -25,24 +26,30 @@ class PlayerCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final palette = context.palette;
     final bool isWinner = winnerTotal?.toString() == player.total;
     final bool isLoser = loserTotal?.toString() == player.total;
 
     final Color? bgColor = isWinner
-        ? AppColors.green.withValues(alpha: 0.75)
+        ? palette.win.withValues(alpha: 0.20)
         : isLoser
-        ? AppColors.red.withValues(alpha: 0.75)
-        : null;
+        ? palette.lose.withValues(alpha: 0.18)
+        : palette.surface;
+    final Color borderColor = isWinner
+        ? palette.win
+        : isLoser
+        ? palette.lose
+        : palette.border;
 
     return FadeSlide(
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8),
+        padding: const EdgeInsets.symmetric(vertical: 6),
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
           decoration: BoxDecoration(
             color: bgColor,
-            borderRadius: BorderRadius.circular(AppRadii.md),
-            border: Border.all(color: AppColors.grayy),
+            borderRadius: BorderRadius.circular(AppRadii.lg),
+            border: Border.all(color: borderColor, width: 1.4),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -65,10 +72,10 @@ class PlayerCard extends StatelessWidget {
                     ),
                 ],
               ),
-              const SizedBox(
+              SizedBox(
                 width: 20,
                 height: 2,
-                child: Divider(color: AppColors.white),
+                child: Divider(color: palette.textSecondary),
               ),
               const SizedBox(height: 4),
               PlayerScoresRow(cubit: cubit, player: player),

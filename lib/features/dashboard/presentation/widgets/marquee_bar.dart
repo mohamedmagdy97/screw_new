@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:screw_calculator/core/theme/app_theme.dart';
+import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/core/widgets/marquee_widget.dart';
 import 'package:screw_calculator/features/dashboard/presentation/cubit/dashboard_cubit.dart';
@@ -22,21 +22,29 @@ class MarqueeBar extends StatelessWidget {
       buildWhen: (a, b) => a.marqueeVisible != b.marqueeVisible,
       builder: (context, state) {
         if (!state.marqueeVisible) return const SizedBox.shrink();
+        final palette = context.palette;
         return Container(
           width: 1.sw,
-          padding: const EdgeInsets.all(8),
-          color: AppColors.black,
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          decoration: BoxDecoration(
+            color: palette.brand.withValues(alpha: 0.12),
+            border: Border(bottom: BorderSide(color: palette.border)),
+          ),
           alignment: Alignment.centerLeft,
           child: Row(
             children: [
-              const Expanded(
+              Expanded(
                 child: MarqueeWidget(
-                  child: CustomText(text: _dhikr, fontSize: 16),
+                  child: CustomText(
+                    text: _dhikr,
+                    fontSize: 16,
+                    color: palette.brandSoft,
+                  ),
                 ),
               ),
               IconButton(
                 onPressed: () => context.read<DashboardCubit>().hideMarquee(),
-                icon: const Icon(Icons.close, color: AppColors.white),
+                icon: Icon(Icons.close, color: palette.textSecondary),
               ),
             ],
           ),

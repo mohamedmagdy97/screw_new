@@ -85,10 +85,8 @@ class _GameModeView extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         automaticallyImplyLeading: false,
-        backgroundColor: AppColors.grayy,
         title: CustomText(text: 'سكرو حاسبة', fontSize: 22.sp),
       ),
-      backgroundColor: AppColors.bg,
       bottomNavigationBar: const BottomNavigationText(),
       body: BlocBuilder<GameModeCubit, GameModeState>(
         builder: (context, state) {

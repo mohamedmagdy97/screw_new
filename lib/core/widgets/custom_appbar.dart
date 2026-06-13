@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:screw_calculator/core/theme/app_theme.dart';
+import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -11,23 +11,23 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final palette = context.palette;
     return AppBar(
       centerTitle: true,
       automaticallyImplyLeading: false,
-      backgroundColor: AppColors.grayy,
-      title: CustomText(text: title, fontSize: 22.sp),
+      foregroundColor: Colors.white,
+      flexibleSpace: Container(
+        decoration: BoxDecoration(gradient: palette.brandGradient),
+      ),
+      title: CustomText(text: title, fontSize: 22.sp, color: Colors.white),
       leadingWidth: leading != null ? 105.w : null,
       leading: leading ?? const SizedBox(),
-
       actions: [
         IconButton(
           onPressed: () => Navigator.pop(context),
           icon: Transform.flip(
             flipX: true,
-            child: const Icon(
-              Icons.arrow_back_ios_sharp,
-              color: AppColors.white,
-            ),
+            child: const Icon(Icons.arrow_back_ios_sharp, color: Colors.white),
           ),
         ),
       ],

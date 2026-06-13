@@ -14,7 +14,6 @@ class RulesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       appBar: CustomAppBar(title: 'قوانين اللعبة'),
-      backgroundColor: AppColors.bg,
       bottomNavigationBar: BottomNavigationText(),
       body: _RulesContent(),
     );

@@ -92,7 +92,6 @@ class NotificationsItem extends StatelessWidget {
                   child: Opacity(
                     opacity: anim.value,
                     child: Dialog(
-                      backgroundColor: AppColors.bg,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 16.0,

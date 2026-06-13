@@ -15,7 +15,6 @@ class DeleteGameConfirmationDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      backgroundColor: AppColors.bg,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 32),
         child: Column(

@@ -94,7 +94,6 @@ class _DashboardViewState extends State<_DashboardView> {
               fromHistory: widget.fromHistory,
               onResetConfirmed: cubit.resetGame,
             ),
-            backgroundColor: AppColors.bg,
             bottomNavigationBar: const BottomNavigationText(),
             body: Column(
               children: [

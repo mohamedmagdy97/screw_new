@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/widgets/custom_button.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
@@ -23,23 +24,26 @@ class DashboardAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       centerTitle: true,
       automaticallyImplyLeading: false,
-      backgroundColor: AppColors.grayy,
+      foregroundColor: Colors.white,
+      flexibleSpace: Container(
+        decoration: BoxDecoration(gradient: context.palette.brandGradient),
+      ),
       leading: fromHistory
           ? const SizedBox()
           : IconButton(
               onPressed: () => _showResetDialog(context),
-              icon: const Icon(Icons.refresh, color: AppColors.white),
+              icon: const Icon(Icons.refresh, color: Colors.white),
             ),
       actions: [
         IconButton(
           onPressed: () => Navigator.pop(context, true),
           icon: Transform.flip(
             flipX: true,
-            child: const Icon(Icons.arrow_back_ios, color: AppColors.white),
+            child: const Icon(Icons.arrow_back_ios, color: Colors.white),
           ),
         ),
       ],
-      title: CustomText(text: 'النتائج', fontSize: 22.sp),
+      title: CustomText(text: 'النتائج', fontSize: 22.sp, color: Colors.white),
     );
   }
 
@@ -70,16 +74,16 @@ class _ResetDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      backgroundColor: AppColors.bg,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppRadii.lg),
-      ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 32),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            CustomText(text: 'تحذير', fontSize: 18.sp, color: AppColors.mainColor),
+            CustomText(
+              text: 'تحذير',
+              fontSize: 18.sp,
+              color: context.palette.brand,
+            ),
             const SizedBox(height: 40),
             CustomText(text: 'هل تريد إعادة بدأ الجولة؟', fontSize: 18.sp),
             const SizedBox(height: 40),

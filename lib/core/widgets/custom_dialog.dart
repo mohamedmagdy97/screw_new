@@ -27,7 +27,6 @@ Future<Object?> customAlertAnimation({
         child: Opacity(
           opacity: anim.value,
           child: Dialog(
-            backgroundColor: AppColors.bg,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
             ),

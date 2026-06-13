@@ -104,7 +104,6 @@ class _UserScSharingViewState extends State<_UserScSharingView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const CustomAppBar(title: 'مشاركات الاخرين'),
-      backgroundColor: AppColors.bg,
       bottomNavigationBar: const BottomNavigationText(),
       body: BlocConsumer<ScreenshotCubit, ScreenshotState>(
         listener: (context, state) {

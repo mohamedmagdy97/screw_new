@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:screw_calculator/core/models/player_model.dart';
 import 'package:screw_calculator/core/models/team_model_new.dart';
 import 'package:screw_calculator/core/routing/fade_animation.dart';
+import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/features/dashboard/presentation/cubit/dashboard_cubit.dart';
@@ -23,25 +24,40 @@ class TeamCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final palette = context.palette;
     return FadeSlide(
       child: Container(
-        padding: const EdgeInsets.all(8),
-        margin: const EdgeInsets.symmetric(vertical: 4),
+        padding: const EdgeInsets.all(12),
+        margin: const EdgeInsets.symmetric(vertical: 5),
         decoration: BoxDecoration(
-          color: isWinning ? AppColors.mainColor : Colors.transparent,
-          borderRadius: BorderRadius.circular(AppRadii.md),
-          border: Border.all(color: AppColors.grayy),
+          color: isWinning
+              ? palette.brand.withValues(alpha: 0.16)
+              : palette.surface,
+          borderRadius: BorderRadius.circular(AppRadii.lg),
+          border: Border.all(
+            color: isWinning ? palette.brand : palette.border,
+            width: 1.4,
+          ),
         ),
         child: Column(
           children: [
             CustomText(
-              text: team.name,
+              text: '${isWinning ? '👑 ' : ''}${team.name}',
               fontSize: 18.sp,
               fontWeight: FontWeight.bold,
+              color: isWinning ? palette.brandSoft : null,
             ),
-            _TeamPlayerRow(cubit: cubit, name: team.playerOne.name, player: team.playerOne),
-            _TeamPlayerRow(cubit: cubit, name: team.playerTwo.name, player: team.playerTwo),
-            const Divider(),
+            _TeamPlayerRow(
+              cubit: cubit,
+              name: team.playerOne.name,
+              player: team.playerOne,
+            ),
+            _TeamPlayerRow(
+              cubit: cubit,
+              name: team.playerTwo.name,
+              player: team.playerTwo,
+            ),
+            Divider(color: palette.border),
             CustomText(
               text: 'المجموع: ${team.totalScore}',
               fontSize: 20.sp,

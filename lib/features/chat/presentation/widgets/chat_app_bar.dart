@@ -34,7 +34,6 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       centerTitle: true,
       automaticallyImplyLeading: false,
-      backgroundColor: AppColors.grayy,
       title: AnimatedSwitcher(
         duration: const Duration(milliseconds: 250),
         switchInCurve: Curves.easeOut,

@@ -656,7 +656,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.bg,
       appBar: ChatAppBar(
         isSearching: _isSearching,
         searchController: _searchCtrl,

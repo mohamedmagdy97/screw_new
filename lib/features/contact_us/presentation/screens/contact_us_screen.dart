@@ -38,7 +38,6 @@ class _ContactUsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const CustomAppBar(title: 'للتواصل وتقديم الاقتراحات'),
-      backgroundColor: AppColors.bg,
       bottomNavigationBar: const BottomNavigationText(),
       body: BlocListener<ContactCubit, ContactState>(
         listener: (context, state) {

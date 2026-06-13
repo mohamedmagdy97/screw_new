@@ -89,7 +89,6 @@ class _HistoryView extends StatelessWidget {
           icon: const Icon(Icons.delete_outline, color: AppColors.white),
         ),
       ),
-      backgroundColor: AppColors.bg,
       bottomNavigationBar: const BottomNavigationText(),
       body: BlocBuilder<HistoryCubit, HistoryState>(
         builder: (context, state) {

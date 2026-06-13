@@ -17,7 +17,7 @@ class ThemeCubit extends Cubit<ThemeMode> {
     return switch (saved) {
       'light' => ThemeMode.light,
       'dark' => ThemeMode.dark,
-      _ => ThemeMode.dark, // الوضع الافتراضي الحالي للتطبيق داكن
+      _ => ThemeMode.dark, // الوضع الافتراضي للتطبيق داكن
     };
   }
 
