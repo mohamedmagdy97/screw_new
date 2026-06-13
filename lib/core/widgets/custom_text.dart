@@ -16,7 +16,7 @@ class CustomText extends StatelessWidget {
   const CustomText({
     super.key,
     required this.text,
-    this.color = AppColors.white,
+    this.color,
     this.fontWeight = FontWeight.normal,
     required this.fontSize,
     this.fontFamily,
@@ -28,6 +28,8 @@ class CustomText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // عند عدم تمرير لون، يُشتق من الثيم ليتكيّف مع الوضع الفاتح/الداكن.
+    final resolvedColor = color ?? Theme.of(context).colorScheme.onSurface;
     return Text(
       text.toString(),
       textAlign: textAlign ?? TextAlign.center,
@@ -36,10 +38,9 @@ class CustomText extends StatelessWidget {
         height: height ?? 1.4,
         fontSize: fontSize,
         fontFamily: fontFamily ?? AppFonts.regular,
-        color: color,
+        color: resolvedColor,
         decoration: underline! ? TextDecoration.underline : TextDecoration.none,
-        decorationColor: color,
-        // fontWeight: bold ? AppFonts.w700 : fontWeight,
+        decorationColor: resolvedColor,
       ),
       maxLines: maxLines,
     );
