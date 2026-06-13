@@ -1,8 +1,8 @@
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:screw_calculator/components/custom_text.dart';
-import 'package:screw_calculator/utility/app_theme.dart';
+import 'package:screw_calculator/core/theme/app_theme.dart';
+import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ForceUpdateWrapper extends StatefulWidget {
@@ -245,7 +245,7 @@ class _ForceUpdateWrapperState extends State<ForceUpdateWrapper>
                           ElevatedButton.icon(
                             onPressed: _openStore,
                             icon: const Icon(Icons.arrow_back_ios, size: 16),
-                            label: CustomText(
+                            label: const CustomText(
                               text: 'تحديث',
                               fontSize: 14,
                               color: AppColors.mainColor,

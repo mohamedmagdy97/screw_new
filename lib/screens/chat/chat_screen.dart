@@ -1,20 +1,23 @@
 import 'dart:async';
 import 'dart:convert';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart' as intl;
-import 'package:screw_calculator/components/custom_text.dart';
-import 'package:screw_calculator/cubits/generic_cubit/generic_cubit.dart';
-import 'package:screw_calculator/helpers/date_formatter.dart';
-import 'package:screw_calculator/helpers/device_info.dart';
-import 'package:screw_calculator/helpers/image_helper.dart';
-import 'package:screw_calculator/helpers/phone_mask_helper.dart';
+import 'package:screw_calculator/core/helpers/date_formatter.dart';
+import 'package:screw_calculator/core/helpers/device_info.dart';
+import 'package:screw_calculator/core/helpers/image_helper.dart';
+import 'package:screw_calculator/core/helpers/phone_mask_helper.dart';
+import 'package:screw_calculator/core/state/generic_cubit/generic_cubit.dart';
+import 'package:screw_calculator/core/theme/app_theme.dart';
+import 'package:screw_calculator/core/utils/utilities.dart';
+import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/screens/chat/models/chat_msg_model.dart';
 import 'package:screw_calculator/screens/chat/track_status.dart';
 import 'package:screw_calculator/screens/chat/widgets/build_floating_date_header.dart';
@@ -26,8 +29,6 @@ import 'package:screw_calculator/screens/chat/widgets/new_msg_indicator.dart';
 import 'package:screw_calculator/screens/chat/widgets/online_users_list.dart';
 import 'package:screw_calculator/screens/chat/widgets/pinned_message.dart';
 import 'package:screw_calculator/screens/chat/widgets/typing_indicator.dart';
-import 'package:screw_calculator/utility/app_theme.dart';
-import 'package:screw_calculator/utility/utilities.dart';
 import 'package:sticky_headers/sticky_headers.dart';
 import 'package:swipe_to/swipe_to.dart';
 
@@ -205,7 +206,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         return;
       }
 
-      String base64Image = base64Encode(imageBytes);
+      final String base64Image = base64Encode(imageBytes);
 
       await FirebaseFirestore.instance
           .collection('chats')
@@ -405,8 +406,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         .where(
           (m) =>
               m.name != userName &&
-              !(m.seenBy ?? []).contains(userName) &&
-              m.id != null,
+              !(m.seenBy ?? []).contains(userName),
         )
         .take(10)
         .toList();
@@ -688,7 +688,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                   controller: _scrollCtrl,
                   cacheExtent: 1000,
                   addAutomaticKeepAlives: false,
-                  addRepaintBoundaries: true,
                   itemCount: _messages.length,
                   itemBuilder: (c, i) {
                     _messageKeys.putIfAbsent(_messages[i].id, GlobalKey.new);

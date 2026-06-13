@@ -13,7 +13,7 @@ class ScreenshotRepositoryImpl implements ScreenshotRepository {
   @override
   Stream<List<ScreenshotEntity>> getScreenshots({required int limit}) {
     return _dataSource.getScreenshots(limit: limit).map((models) {
-      return models.map((model) => ScreenshotMapper.toEntity(model)).toList();
+      return models.map(ScreenshotMapper.toEntity).toList();
     });
   }
 
@@ -26,7 +26,7 @@ class ScreenshotRepositoryImpl implements ScreenshotRepository {
       lastDocumentId: lastDocumentId,
       limit: limit,
     );
-    return models.map((model) => ScreenshotMapper.toEntity(model)).toList();
+    return models.map(ScreenshotMapper.toEntity).toList();
   }
 
   @override

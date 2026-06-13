@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:screw_calculator/components/custom_button.dart';
-import 'package:screw_calculator/components/custom_text.dart';
-import 'package:screw_calculator/components/text_filed_custom.dart';
-import 'package:screw_calculator/cubits/generic_cubit/generic_cubit.dart';
+import 'package:screw_calculator/core/state/generic_cubit/generic_cubit.dart';
+import 'package:screw_calculator/core/theme/app_theme.dart';
+import 'package:screw_calculator/core/utils/validation_form.dart';
+import 'package:screw_calculator/core/widgets/custom_button.dart';
+import 'package:screw_calculator/core/widgets/custom_text.dart';
+import 'package:screw_calculator/core/widgets/custom_text_field.dart';
 import 'package:screw_calculator/models/item.dart';
 import 'package:screw_calculator/screens/home/home_data.dart';
-import 'package:screw_calculator/utility/app_theme.dart';
-import 'package:screw_calculator/utility/validation_form.dart';
 
 class ClassicMode extends StatelessWidget {
   const ClassicMode({super.key});

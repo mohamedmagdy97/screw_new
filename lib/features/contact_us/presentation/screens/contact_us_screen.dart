@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:screw_calculator/components/bottom_nav_text.dart';
-import 'package:screw_calculator/components/custom_appbar.dart';
-import 'package:screw_calculator/components/custom_text.dart';
+import 'package:screw_calculator/core/constants/social_links.dart';
+import 'package:screw_calculator/core/theme/app_theme.dart';
+import 'package:screw_calculator/core/widgets/bottom_nav_text.dart';
+import 'package:screw_calculator/core/widgets/custom_appbar.dart';
+import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/features/contact_us/data/datasources/url_launcher_data_source.dart';
 import 'package:screw_calculator/features/contact_us/data/repositories/contact_repository_impl.dart';
 import 'package:screw_calculator/features/contact_us/domain/usecases/launch_contact_url_usecase.dart';
 import 'package:screw_calculator/features/contact_us/presentation/cubit/contact_cubit.dart';
 import 'package:screw_calculator/features/contact_us/presentation/widgets/social_media_button.dart';
 import 'package:screw_calculator/generated/assets.dart';
-import 'package:screw_calculator/utility/app_theme.dart';
-import 'package:screw_calculator/utility/sochial_links.dart';
 
 class ContactUsScreen extends StatelessWidget {
   const ContactUsScreen({super.key});

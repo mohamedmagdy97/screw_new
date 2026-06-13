@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:screw_calculator/components/custom_button.dart';
-import 'package:screw_calculator/components/custom_text.dart';
+import 'package:screw_calculator/core/theme/app_theme.dart';
+import 'package:screw_calculator/core/utils/format_date_to_string.dart';
+import 'package:screw_calculator/core/utils/utilities.dart';
+import 'package:screw_calculator/core/widgets/custom_button.dart';
+import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/features/contact_us/contact_us.dart';
 import 'package:screw_calculator/screens/notifications/domain/entities/notification_entity.dart';
-import 'package:screw_calculator/utility/app_theme.dart';
-import 'package:screw_calculator/utility/format_date_to_String.dart';
-import 'package:screw_calculator/utility/utilities.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class NotificationsItem extends StatelessWidget {
@@ -75,7 +75,6 @@ class NotificationsItem extends StatelessWidget {
           } else {
             return await showGeneralDialog(
               context: context,
-              barrierDismissible: false,
               barrierColor: Colors.black54,
               transitionDuration: const Duration(milliseconds: 450),
               pageBuilder: (_, _, _) => const SizedBox.shrink(),
@@ -172,7 +171,7 @@ class NotificationsItem extends StatelessWidget {
                 Navigator.of(context).push(
                   PageRouteBuilder<void>(
                     transitionDuration: const Duration(milliseconds: 750),
-                    pageBuilder: (_, __, ___) => const ContactUsScreen(),
+                    pageBuilder: (_, _, _) => const ContactUsScreen(),
                   ),
                 );
               } else if (notification.type == 'action') {
@@ -228,7 +227,7 @@ class NotificationsItem extends StatelessWidget {
                     notification.image ?? '',
                     width: 40,
                     height: 40,
-                    errorBuilder: (_, __, ___) => const Icon(
+                    errorBuilder: (_, _, _) => const Icon(
                       Icons.notifications,
                       color: AppColors.mainColorAccent,
                     ),

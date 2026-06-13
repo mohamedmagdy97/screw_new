@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
-import 'package:screw_calculator/components/bottom_nav_text.dart';
-import 'package:screw_calculator/components/custom_appbar.dart';
-import 'package:screw_calculator/components/custom_text.dart';
+import 'package:screw_calculator/core/helpers/image_helper.dart';
+import 'package:screw_calculator/core/theme/app_theme.dart';
+import 'package:screw_calculator/core/utils/utilities.dart';
+import 'package:screw_calculator/core/widgets/bottom_nav_text.dart';
+import 'package:screw_calculator/core/widgets/custom_appbar.dart';
+import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/features/users_screenshoot_sharing/data/datasources/screenshot_data_source.dart';
 import 'package:screw_calculator/features/users_screenshoot_sharing/data/repositories/screenshot_repository_impl.dart';
 import 'package:screw_calculator/features/users_screenshoot_sharing/domain/entities/screenshot_entity.dart';
@@ -16,9 +19,6 @@ import 'package:screw_calculator/features/users_screenshoot_sharing/presentation
 import 'package:screw_calculator/features/users_screenshoot_sharing/presentation/widgets/empty_data.dart';
 import 'package:screw_calculator/features/users_screenshoot_sharing/presentation/widgets/loading_indicator.dart';
 import 'package:screw_calculator/features/users_screenshoot_sharing/presentation/widgets/screenshot_item.dart';
-import 'package:screw_calculator/helpers/image_helper.dart';
-import 'package:screw_calculator/utility/app_theme.dart';
-import 'package:screw_calculator/utility/utilities.dart';
 
 class UserScSharingScreen extends StatelessWidget {
   const UserScSharingScreen({super.key});
@@ -91,7 +91,6 @@ class _UserScSharingViewState extends State<_UserScSharingView> {
     final shouldDelete =
         await showDialog<bool>(
           context: context,
-          barrierDismissible: true,
           builder: (context) => const DeleteConfirmationDialog(),
         ) ??
         false;

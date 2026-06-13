@@ -1,14 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:screw_calculator/components/bottom_nav_text.dart';
-import 'package:screw_calculator/components/custom_text.dart';
+import 'package:screw_calculator/core/theme/app_theme.dart';
+import 'package:screw_calculator/core/utils/enums.dart';
+import 'package:screw_calculator/core/widgets/bottom_nav_text.dart';
+import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/screens/home/home_data.dart';
 import 'package:screw_calculator/screens/home/widgets/classic_mode.dart';
 import 'package:screw_calculator/screens/home/widgets/drawer_widget.dart';
 import 'package:screw_calculator/screens/home/widgets/friends_mode.dart';
-import 'package:screw_calculator/utility/Enums.dart';
-import 'package:screw_calculator/utility/app_theme.dart';
 
 class MyHomePage extends StatefulWidget {
   final int index;
@@ -57,7 +57,6 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Icon(CupertinoIcons.back, color: Colors.white),
             ),
           ),
-          automaticallyImplyLeading: true,
           backgroundColor: AppColors.grayy,
           title: CustomText(text: 'سكرو حاسبة', fontSize: 22.sp),
           actions: [

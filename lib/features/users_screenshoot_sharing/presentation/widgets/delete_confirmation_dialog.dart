@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:screw_calculator/components/custom_text.dart';
-import 'package:screw_calculator/utility/app_theme.dart';
+import 'package:screw_calculator/core/theme/app_theme.dart';
+import 'package:screw_calculator/core/widgets/custom_text.dart';
 
 class DeleteConfirmationDialog extends StatelessWidget {
   const DeleteConfirmationDialog({super.key});
@@ -52,7 +52,6 @@ class DeleteConfirmationDialog extends StatelessWidget {
           child: CustomText(
             text: 'حذف',
             fontSize: 16.sp,
-            color: Colors.white,
           ),
         ),
       ],

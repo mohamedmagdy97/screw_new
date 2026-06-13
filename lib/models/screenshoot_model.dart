@@ -41,7 +41,7 @@ class ScreenShootModel {
     return ScreenShootModel(
       id: docId,
       title: json['title']!.toString(),
-      description: json['description'] ?? "",
+      description: json['description'] ?? '',
       datetime: parsedDate,
       timestamp: parsedTimestamp,
       imageBase64: json['imageBase64'] != null

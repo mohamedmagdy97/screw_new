@@ -3,9 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:screw_calculator/components/bottom_nav_text.dart';
-import 'package:screw_calculator/components/custom_appbar.dart';
-import 'package:screw_calculator/components/custom_text.dart';
+import 'package:screw_calculator/core/helpers/remote_config.dart';
+import 'package:screw_calculator/core/theme/app_theme.dart';
+import 'package:screw_calculator/core/widgets/bottom_nav_text.dart';
+import 'package:screw_calculator/core/widgets/custom_appbar.dart';
+import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/features/prayer/controllers/prayer_controller.dart';
 import 'package:screw_calculator/features/prayer/core/notification_service.dart';
 import 'package:screw_calculator/features/prayer/data/datasources/prayer_api_service.dart';
@@ -14,8 +16,6 @@ import 'package:screw_calculator/features/prayer/screen/widget/build_card_widget
 import 'package:screw_calculator/features/prayer/screen/widget/build_city_selector.dart';
 import 'package:screw_calculator/features/prayer/screen/widget/build_next_prayer_card.dart';
 import 'package:screw_calculator/features/prayer/screen/widget/build_notification_setting_dialog.dart';
-import 'package:screw_calculator/helpers/remote_config.dart';
-import 'package:screw_calculator/utility/app_theme.dart';
 
 class PrayerScreen extends StatefulWidget {
   const PrayerScreen({super.key});

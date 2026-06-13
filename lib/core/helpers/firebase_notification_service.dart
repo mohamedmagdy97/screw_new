@@ -4,10 +4,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:screw_calculator/components/custom_dialog.dart';
-import 'package:screw_calculator/helpers/app_print.dart';
-import 'package:screw_calculator/helpers/device_info.dart';
-import 'package:screw_calculator/helpers/firbase_handling.dart';
+import 'package:screw_calculator/core/helpers/app_print.dart';
+import 'package:screw_calculator/core/helpers/device_info.dart';
+import 'package:screw_calculator/core/helpers/firbase_handling.dart';
+import 'package:screw_calculator/core/widgets/custom_dialog.dart';
 import 'package:uuid/uuid.dart';
 
 /// Plugin Instance
@@ -274,10 +274,7 @@ class FirebaseNotificationService {
 
     // Request permission
     settings = await _firebaseMessaging.requestPermission(
-      alert: true,
-      badge: true,
-      sound: true,
-      provisional: false,
+      
     );
 
     Printing.info('🔔 Permission status: ${settings.authorizationStatus}');

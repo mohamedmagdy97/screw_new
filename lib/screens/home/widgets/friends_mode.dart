@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:screw_calculator/components/custom_button.dart';
-import 'package:screw_calculator/components/custom_text.dart';
-import 'package:screw_calculator/cubits/generic_cubit/generic_cubit.dart';
+import 'package:screw_calculator/core/state/generic_cubit/generic_cubit.dart';
+import 'package:screw_calculator/core/theme/app_theme.dart';
+import 'package:screw_calculator/core/widgets/custom_button.dart';
+import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/models/item.dart';
 import 'package:screw_calculator/screens/home/home_data.dart';
 import 'package:screw_calculator/screens/home/widgets/build_team_field.dart';
-import 'package:screw_calculator/utility/app_theme.dart';
 
 class FriendsMode extends StatelessWidget {
   const FriendsMode({super.key});

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:screw_calculator/components/custom_text.dart';
+import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/screens/chat/widgets/typing_dots.dart';
 
 class TypingIndicator extends StatelessWidget {

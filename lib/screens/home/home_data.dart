@@ -2,14 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:in_app_review/in_app_review.dart';
-import 'package:screw_calculator/components/build_fancy_route.dart';
-import 'package:screw_calculator/cubits/generic_cubit/generic_cubit.dart';
-import 'package:screw_calculator/helpers/device_info.dart';
+import 'package:screw_calculator/core/helpers/device_info.dart';
+import 'package:screw_calculator/core/routing/build_fancy_route.dart';
+import 'package:screw_calculator/core/state/generic_cubit/generic_cubit.dart';
+import 'package:screw_calculator/core/utils/enums.dart';
 import 'package:screw_calculator/models/item.dart';
 import 'package:screw_calculator/models/player_model.dart';
 import 'package:screw_calculator/screens/dashboard/dashboard.dart';
-import 'package:screw_calculator/utility/Enums.dart';
-import 'package:uuid/uuid.dart';
 
 HomeData homeData = HomeData();
 
@@ -57,7 +56,7 @@ class HomeData {
     rateMyApp();
   }
 
-  initChatData() {
+  void initChatData() {
     userName = userBox.get('name')?.toString();
     userPhone = userBox.get('phone')?.toString();
     userCountry = userBox.get('country')?.toString();
@@ -178,7 +177,7 @@ class HomeData {
     listCubit.update(
       data: List.generate(
         11,
-        (index) => Item(key: index + 2, value: '${index + 2}', isActive: false),
+        (index) => Item(key: index + 2, value: '${index + 2}'),
       ),
     );
 
@@ -190,7 +189,7 @@ class HomeData {
     listTeamsCubit.update(
       data: List.generate(
         3,
-        (index) => Item(key: index + 2, value: '${index + 2}', isActive: false),
+        (index) => Item(key: index + 2, value: '${index + 2}'),
       ),
     );
 
@@ -304,7 +303,6 @@ class HomeData {
     await Navigator.of(context).push(
       PageRouteBuilder(
         transitionDuration: const Duration(milliseconds: 400),
-        reverseTransitionDuration: const Duration(milliseconds: 300),
         pageBuilder: (context, animation, secondaryAnimation) => FadeTransition(
           opacity: animation,
           child: SlideTransition(
@@ -336,14 +334,14 @@ class HomeData {
   }
 
   void clearValues() {
-    players.forEach((element) {
+    for (var element in players) {
       element.gw1 = '';
       element.gw2 = '';
       element.gw3 = '';
       element.gw4 = '';
       element.gw5 = '';
       element.total = '0';
-    });
+    }
   }
 
   void routeFromDrawer(BuildContext context, Widget widget) async {

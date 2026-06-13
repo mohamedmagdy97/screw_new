@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:screw_calculator/utility/app_theme.dart';
+import 'package:screw_calculator/core/theme/app_theme.dart';
 
 class CustomText extends StatelessWidget {
   final String text;

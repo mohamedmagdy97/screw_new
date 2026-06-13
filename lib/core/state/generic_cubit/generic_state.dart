@@ -13,8 +13,7 @@ class GenericInitial<T> extends GenericState<T> {
 }
 
 class GenericUpdate<T> extends GenericState<T> {
-  const GenericUpdate({required bool change, required T data})
-      : super(change: change, data: data);
+  const GenericUpdate({required super.change, required T super.data});
   @override
   List<Object> get props => [change];
 }

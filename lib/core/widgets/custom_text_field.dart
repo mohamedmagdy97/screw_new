@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:screw_calculator/utility/validation_form.dart';
-
-import '../../utility/app_theme.dart';
+import 'package:screw_calculator/core/theme/app_theme.dart';
+import 'package:screw_calculator/core/utils/validation_form.dart';
 
 // ignore: must_be_immutable
 class CustomTextField extends StatefulWidget {
@@ -82,7 +81,6 @@ class _CustomTextFieldState extends State<CustomTextField> {
             cursorColor: AppColors.mainColor,
             // cursorHeight: 12,
             controller: widget.controller,
-            autofocus: false,
             maxLength: widget.maxLength,
             maxLines: widget.maxLines,
             // textAlign: TextAlign.end,

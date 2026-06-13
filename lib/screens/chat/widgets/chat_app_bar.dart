@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:screw_calculator/components/custom_text.dart';
+import 'package:screw_calculator/core/theme/app_theme.dart';
+import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/screens/chat/widgets/users_status_bottom_sheet.dart';
-import 'package:screw_calculator/utility/app_theme.dart';
 
 class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool isSearching;
@@ -57,11 +57,11 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
                 autofocus: true,
                 cursorColor: AppColors.white,
                 textDirection: TextDirection.rtl,
-                style: TextStyle(
+                style: const TextStyle(
                   color: AppColors.white,
                   fontFamily: AppFonts.regular,
                 ),
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'بحث…',
                   hintTextDirection: TextDirection.rtl,
                   hintStyle: TextStyle(

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:screw_calculator/components/custom_text.dart';
-import 'package:screw_calculator/components/text_filed_custom.dart';
-import 'package:screw_calculator/utility/validation_form.dart';
+import 'package:screw_calculator/core/utils/validation_form.dart';
+import 'package:screw_calculator/core/widgets/custom_text.dart';
+import 'package:screw_calculator/core/widgets/custom_text_field.dart';
 
 class BuildTeamFields extends StatelessWidget {
   final String teamName;

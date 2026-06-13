@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:screw_calculator/components/custom_text.dart';
+import 'package:screw_calculator/core/theme/app_theme.dart';
+import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/features/history/domain/entities/game_history_entity.dart';
-import 'package:screw_calculator/utility/app_theme.dart';
 
 class HistoryItem extends StatelessWidget {
   final GameHistoryEntity game;

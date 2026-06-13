@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:screw_calculator/components/custom_button.dart';
-import 'package:screw_calculator/components/custom_text.dart';
-import 'package:screw_calculator/components/text_filed_custom.dart';
+import 'package:screw_calculator/core/theme/app_theme.dart';
+import 'package:screw_calculator/core/utils/validation_form.dart';
+import 'package:screw_calculator/core/widgets/custom_button.dart';
+import 'package:screw_calculator/core/widgets/custom_text.dart';
+import 'package:screw_calculator/core/widgets/custom_text_field.dart';
 import 'package:screw_calculator/models/player_model.dart';
 import 'package:screw_calculator/screens/dashboard/dashboard_data.dart';
-import 'package:screw_calculator/utility/app_theme.dart';
-import 'package:screw_calculator/utility/validation_form.dart';
 
 class AddValueDialog extends StatelessWidget {
   final DashboardData dashboardData;

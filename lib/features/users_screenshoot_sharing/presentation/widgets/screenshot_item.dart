@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
-import 'package:screw_calculator/components/custom_text.dart';
-import 'package:screw_calculator/components/dox_decoration.dart';
+import 'package:screw_calculator/core/theme/app_theme.dart';
+import 'package:screw_calculator/core/widgets/custom_text.dart';
+import 'package:screw_calculator/core/widgets/dox_decoration.dart';
 import 'package:screw_calculator/features/users_screenshoot_sharing/domain/entities/screenshot_entity.dart';
-import 'package:screw_calculator/utility/app_theme.dart';
 
 class ScreenshotItem extends StatelessWidget {
   final ScreenshotEntity screenshot;

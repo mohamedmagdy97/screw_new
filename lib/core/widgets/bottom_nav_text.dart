@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:screw_calculator/components/custom_text.dart';
+import 'package:screw_calculator/core/widgets/custom_text.dart';
 
 class BottomNavigationText extends StatelessWidget {
   const BottomNavigationText({super.key});

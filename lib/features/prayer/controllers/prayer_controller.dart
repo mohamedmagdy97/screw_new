@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:screw_calculator/core/constants/local_storage_keys.dart';
+import 'package:screw_calculator/core/utils/local_store.dart';
 import 'package:screw_calculator/features/prayer/core/notification_service.dart';
 import 'package:screw_calculator/features/prayer/data/datasources/prayer_api_service.dart';
 import 'package:screw_calculator/features/prayer/data/models/country_model.dart';
 import 'package:screw_calculator/features/prayer/data/models/prayer_time_model.dart';
-import 'package:screw_calculator/utility/local_store.dart';
-import 'package:screw_calculator/utility/local_storge_key.dart';
 
 class PrayerController extends GetxController {
   final PrayerApiService apiService = PrayerApiService();
@@ -105,12 +105,10 @@ class PrayerController extends GetxController {
         prayerTimes.value = data;
 
         final timeUntil = data.getTimeUntilNextPrayer();
-        if (timeUntil != null) {
-          final hours = timeUntil.inHours;
-          final minutes = timeUntil.inMinutes % 60;
-          debugPrint('⏰ Time until next: ${hours}h ${minutes}m');
-        }
-        await AppLocalStore.setString(
+        final hours = timeUntil.inHours;
+        final minutes = timeUntil.inMinutes % 60;
+        debugPrint('⏰ Time until next: ${hours}h ${minutes}m');
+              await AppLocalStore.setString(
           LocalStoreNames.prayerCity,
           selectedCity.nameEn,
         );

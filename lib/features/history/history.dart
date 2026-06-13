@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:screw_calculator/components/bottom_nav_text.dart';
-import 'package:screw_calculator/components/custom_appbar.dart';
-import 'package:screw_calculator/components/custom_text.dart';
-import 'package:screw_calculator/cubits/generic_cubit/generic_cubit.dart';
+import 'package:screw_calculator/core/state/generic_cubit/generic_cubit.dart';
+import 'package:screw_calculator/core/theme/app_theme.dart';
+import 'package:screw_calculator/core/widgets/bottom_nav_text.dart';
+import 'package:screw_calculator/core/widgets/custom_appbar.dart';
+import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/features/history/history_data.dart';
 import 'package:screw_calculator/models/game_model.dart';
 import 'package:screw_calculator/screens/dashboard/dashboard.dart';
-import 'package:screw_calculator/utility/app_theme.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});

@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:screw_calculator/components/custom_text.dart';
+import 'package:flutter/material.dart';
+import 'package:screw_calculator/core/theme/app_theme.dart';
+import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/screens/chat/models/user_presence_model.dart';
 import 'package:screw_calculator/screens/chat/widgets/users_status_item.dart';
-import 'package:screw_calculator/utility/app_theme.dart';
 
 class UsersStatusBottomSheet extends StatelessWidget {
   final String? currentUserName;
@@ -51,7 +51,7 @@ class UsersStatusBottomSheet extends StatelessWidget {
                   icon: const Icon(Icons.close),
                   onPressed: () => Navigator.pop(context),
                 ),
-                CustomText(
+                const CustomText(
                   text: 'حالة المستخدمين',
                   fontSize: 18,
                   color: AppColors.black,

@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:screw_calculator/components/bottom_nav_text.dart';
-import 'package:screw_calculator/components/custom_button.dart';
-import 'package:screw_calculator/components/custom_text.dart';
+import 'package:screw_calculator/core/helpers/firebase_notification_service.dart';
+import 'package:screw_calculator/core/theme/app_theme.dart';
+import 'package:screw_calculator/core/utils/enums.dart';
+import 'package:screw_calculator/core/utils/utilities.dart';
+import 'package:screw_calculator/core/widgets/bottom_nav_text.dart';
+import 'package:screw_calculator/core/widgets/custom_button.dart';
+import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/features/game_mode/domain/entities/game_mode_item_entity.dart';
 import 'package:screw_calculator/features/game_mode/presentation/cubit/game_mode_cubit.dart';
-import 'package:screw_calculator/helpers/firebase_notification_service.dart';
 import 'package:screw_calculator/screens/home/home.dart';
-import 'package:screw_calculator/utility/Enums.dart';
-import 'package:screw_calculator/utility/app_theme.dart';
-import 'package:screw_calculator/utility/utilities.dart';
 
 class GameMode extends StatefulWidget {
   const GameMode({super.key});
@@ -74,7 +74,7 @@ class _GameModeView extends StatelessWidget {
     Navigator.of(context).push(
       PageRouteBuilder<void>(
         transitionDuration: const Duration(milliseconds: 750),
-        pageBuilder: (_, __, ___) => MyHomePage(index: selectedKey),
+        pageBuilder: (_, _, _) => MyHomePage(index: selectedKey),
       ),
     );
   }
@@ -129,7 +129,6 @@ class _GameModeView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     SingleChildScrollView(
-                      scrollDirection: Axis.vertical,
                       child: Hero(
                         tag:
                             'gameMode-${state.gameModes.firstWhere((e) => e.isActive).key}',

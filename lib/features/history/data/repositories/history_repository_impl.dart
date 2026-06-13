@@ -14,7 +14,7 @@ class HistoryRepositoryImpl implements HistoryRepository {
   Future<List<GameHistoryEntity>> getGames() async {
     final models = await _dataSource.getGames();
     _cachedGames = models
-        .map((model) => GameHistoryMapper.toEntity(model))
+        .map(GameHistoryMapper.toEntity)
         .toList();
     return _cachedGames;
   }
@@ -28,7 +28,7 @@ class HistoryRepositoryImpl implements HistoryRepository {
     _cachedGames.removeAt(index);
 
     final models = _cachedGames
-        .map((e) => GameHistoryMapper.toModel(e))
+        .map(GameHistoryMapper.toModel)
         .toList();
     return await _dataSource.saveGames(models);
   }

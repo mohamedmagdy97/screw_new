@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:screw_calculator/components/custom_button.dart';
-import 'package:screw_calculator/components/custom_text.dart';
-import 'package:screw_calculator/utility/app_theme.dart';
+import 'package:screw_calculator/core/theme/app_theme.dart';
+import 'package:screw_calculator/core/widgets/custom_button.dart';
+import 'package:screw_calculator/core/widgets/custom_text.dart';
 
 class DashBoardAppBar extends PreferredSize {
   final bool fromHistory;
@@ -22,7 +22,6 @@ class DashBoardAppBar extends PreferredSize {
               onPressed: () {
                 showGeneralDialog(
                   context: context,
-                  barrierDismissible: false,
                   barrierColor: Colors.black54,
                   transitionDuration: const Duration(milliseconds: 450),
                   pageBuilder: (_, _, _) => const SizedBox.shrink(),

@@ -1,4 +1,4 @@
-import 'package:screw_calculator/utility/reg_exp.dart';
+import 'package:screw_calculator/core/utils/reg_exp.dart';
 
 enum TextFieldValidatorType { name, displayText, optional, number, phoneNumber }
 

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:screw_calculator/components/bottom_nav_text.dart';
-import 'package:screw_calculator/components/custom_appbar.dart';
-import 'package:screw_calculator/components/custom_text.dart';
+import 'package:screw_calculator/core/theme/app_theme.dart';
+import 'package:screw_calculator/core/widgets/bottom_nav_text.dart';
+import 'package:screw_calculator/core/widgets/custom_appbar.dart';
+import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/screens/notifications/data/datasources/notification_data_source.dart';
 import 'package:screw_calculator/screens/notifications/data/repositories/notification_repository_impl.dart';
 import 'package:screw_calculator/screens/notifications/domain/usecases/delete_notification_usecase.dart';
@@ -10,7 +11,6 @@ import 'package:screw_calculator/screens/notifications/domain/usecases/get_notif
 import 'package:screw_calculator/screens/notifications/domain/usecases/mark_notification_read_usecase.dart';
 import 'package:screw_calculator/screens/notifications/presentation/cubit/notification_cubit.dart';
 import 'package:screw_calculator/screens/notifications/presentation/widgets/notify_item.dart';
-import 'package:screw_calculator/utility/app_theme.dart';
 
 class NotificationsScreen extends StatelessWidget {
   const NotificationsScreen({super.key});

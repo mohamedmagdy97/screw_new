@@ -1,12 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:screw_calculator/components/custom_text.dart';
-import 'package:screw_calculator/cubits/generic_cubit/generic_cubit.dart';
-import 'package:screw_calculator/helpers/phone_mask_helper.dart';
-import 'package:screw_calculator/utility/app_theme.dart';
-import 'package:screw_calculator/utility/utilities.dart';
+import 'package:screw_calculator/core/helpers/phone_mask_helper.dart';
+import 'package:screw_calculator/core/state/generic_cubit/generic_cubit.dart';
+import 'package:screw_calculator/core/theme/app_theme.dart';
+import 'package:screw_calculator/core/utils/utilities.dart';
+import 'package:screw_calculator/core/widgets/custom_text.dart';
 
 class PinnedMessage extends StatelessWidget {
   const PinnedMessage({
@@ -33,7 +32,7 @@ class PinnedMessage extends StatelessWidget {
           .snapshots(),
       builder: (context, snap) {
         if (!snap.hasData || !snap.data!.exists) return const SizedBox();
-        var data = snap.data!;
+        final data = snap.data!;
         return InkWell(
           onTap: () async {
             final key = messageKeys[snap.data!['id']];

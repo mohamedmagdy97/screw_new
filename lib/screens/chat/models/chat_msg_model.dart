@@ -46,11 +46,11 @@ class ChatMessage {
     return ChatMessage(
       id: d.id,
       name: m['name'],
-      age: m['age'] != null ? m['age'] : 0,
+      age: m['age'] ?? 0,
       phoneNumber: m['phone'] ?? '01149504892',
       message: m['message'] ?? '',
       timestamp:
-          ((m['timestamp'] != null ? m['timestamp'] : Timestamp.now())
+          ((m['timestamp'] ?? Timestamp.now())
                   as Timestamp)
               .toDate(),
       reactions: Map<String, dynamic>.from(m['reactions'] ?? {}),
@@ -72,7 +72,7 @@ class ChatMessage {
     return ChatMessage(
       id: m['id'],
       name: m['name'],
-      age: m['age'] != null ? m['age'] : 0,
+      age: m['age'] ?? 0,
       phoneNumber: m['phone'] ?? '',
       message: m['message'],
       timestamp: DateTime.parse(m['timestamp']),

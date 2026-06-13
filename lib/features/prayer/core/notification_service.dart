@@ -21,9 +21,7 @@ class NotificationService {
 
       // إعدادات iOS (إذا كنت تدعمها)
       const iOS = DarwinInitializationSettings(
-        requestAlertPermission: true,
-        requestBadgePermission: true,
-        requestSoundPermission: true,
+        
       );
 
       const settings = InitializationSettings(android: android, iOS: iOS);
@@ -97,8 +95,6 @@ class NotificationService {
             channelDescription: 'إشعارات مواقيت الصلاة',
             importance: Importance.max,
             priority: Priority.high,
-            playSound: true,
-            enableVibration: true,
             sound: RawResourceAndroidNotificationSound('azan'),
             //   ملف azan.mp3 في android/app/src/main/res/raw/
             icon: '@mipmap/ic_launcher',

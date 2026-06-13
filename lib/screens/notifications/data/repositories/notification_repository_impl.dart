@@ -13,7 +13,7 @@ class NotificationRepositoryImpl implements NotificationRepository {
   @override
   Stream<List<NotificationEntity>> getNotifications() {
     return _dataSource.getNotifications().map((models) {
-      return models.map((model) => NotificationMapper.toEntity(model)).toList();
+      return models.map(NotificationMapper.toEntity).toList();
     });
   }
 

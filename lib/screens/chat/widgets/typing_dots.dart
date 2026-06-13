@@ -24,7 +24,7 @@ class TypingDotsState extends State<TypingDots>
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: _c,
-      builder: (_, __) {
+      builder: (_, _) {
         final d = ((_c.value * 3).floor() % 3) + 1;
         return Text(
           '.' * d,

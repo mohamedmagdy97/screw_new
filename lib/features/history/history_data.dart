@@ -3,13 +3,13 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:screw_calculator/components/custom_button.dart';
-import 'package:screw_calculator/components/custom_text.dart';
-import 'package:screw_calculator/cubits/generic_cubit/generic_cubit.dart';
+import 'package:screw_calculator/core/constants/local_storage_keys.dart';
+import 'package:screw_calculator/core/state/generic_cubit/generic_cubit.dart';
+import 'package:screw_calculator/core/theme/app_theme.dart';
+import 'package:screw_calculator/core/utils/local_store.dart';
+import 'package:screw_calculator/core/widgets/custom_button.dart';
+import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/models/game_model.dart';
-import 'package:screw_calculator/utility/app_theme.dart';
-import 'package:screw_calculator/utility/local_store.dart';
-import 'package:screw_calculator/utility/local_storge_key.dart';
 
 class HistoryData {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
@@ -47,7 +47,7 @@ class HistoryData {
             .toList();
 
         listGames = jsonData
-            .map<GameModel>((json) => GameModel.fromJson(json))
+            .map<GameModel>(GameModel.fromJson)
             .toList();
       } else {
         listGames = [];
@@ -169,7 +169,7 @@ class HistoryData {
   }
 
   void updateGameDB() {
-    var list = listGames
+    final list = listGames
         // .where((element) => element.isFavorite == true)
         .map((e) => e)
         .toList();

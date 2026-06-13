@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:screw_calculator/components/custom_text.dart';
-import 'package:screw_calculator/components/dox_decoration.dart';
+import 'package:screw_calculator/core/theme/app_theme.dart';
+import 'package:screw_calculator/core/widgets/custom_text.dart';
+import 'package:screw_calculator/core/widgets/dox_decoration.dart';
 import 'package:screw_calculator/models/player_model.dart';
 import 'package:screw_calculator/screens/dashboard/dashboard_data.dart';
-import 'package:screw_calculator/utility/app_theme.dart';
 
 class ShareScreenBtn extends StatelessWidget {
   const ShareScreenBtn({super.key, required this.dashboardData, required this.players});

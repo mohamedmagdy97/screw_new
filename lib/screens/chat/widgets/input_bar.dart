@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:screw_calculator/utility/app_theme.dart';
+import 'package:screw_calculator/core/theme/app_theme.dart';
 
 class InputBar extends StatelessWidget {
   final TextEditingController textCtrl;
@@ -42,7 +41,7 @@ class InputBar extends StatelessWidget {
                 textDirection: TextDirection.rtl,
                 decoration: InputDecoration(
                   hintText: 'اكتب رسالتك ...',
-                  hintStyle: TextStyle(fontFamily: AppFonts.regular),
+                  hintStyle: const TextStyle(fontFamily: AppFonts.regular),
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: 16,
                     vertical: 12,

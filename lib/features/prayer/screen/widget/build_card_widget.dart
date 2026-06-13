@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:screw_calculator/components/custom_text.dart';
-import 'package:screw_calculator/utility/app_theme.dart';
+import 'package:screw_calculator/core/theme/app_theme.dart';
+import 'package:screw_calculator/core/widgets/custom_text.dart';
 
 class BuildPrayerCard extends StatelessWidget {
   final String title;

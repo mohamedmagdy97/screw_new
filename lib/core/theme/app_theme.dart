@@ -3,14 +3,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 part 'app_colors.dart';
 
-part 'app_fonts.dart';
+part 'app_text_styles.dart';
 
 final ThemeData appTheme = ThemeData(
   primaryColor: AppColors.mainColor,
   colorScheme: ColorScheme.fromSwatch().copyWith(secondary: AppColors.white),
   appBarTheme: AppBarTheme(
       centerTitle: true,
-      color: AppColors.white,
+      backgroundColor: AppColors.white,
       elevation: 0,
       titleTextStyle:
           TextStyle(color: AppColors.secondaryColor, fontSize: 20.sp)),
@@ -29,8 +29,6 @@ class AppStyle {
 
   static LinearGradient bgLinearGradientBrand() {
     return const LinearGradient(
-        begin: Alignment.centerLeft,
-        end: Alignment.centerRight,
         colors: [
           Color.fromRGBO(192, 0, 111, 1),
           Color.fromRGBO(255, 14, 157, 1)

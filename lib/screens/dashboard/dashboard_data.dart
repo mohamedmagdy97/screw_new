@@ -1,22 +1,23 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
-import 'package:screw_calculator/components/custom_button.dart';
-import 'package:screw_calculator/components/custom_text.dart';
-import 'package:screw_calculator/cubits/generic_cubit/generic_cubit.dart';
+import 'package:screw_calculator/core/constants/local_storage_keys.dart';
+import 'package:screw_calculator/core/state/generic_cubit/generic_cubit.dart';
+import 'package:screw_calculator/core/theme/app_theme.dart';
+import 'package:screw_calculator/core/utils/local_store.dart';
+import 'package:screw_calculator/core/utils/utilities.dart';
+import 'package:screw_calculator/core/widgets/custom_button.dart';
+import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/models/game_model.dart';
 import 'package:screw_calculator/models/player_model.dart';
 import 'package:screw_calculator/models/team_model_new.dart';
 import 'package:screw_calculator/screens/dashboard/screenshot_preview_dialog.dart';
-import 'package:screw_calculator/utility/app_theme.dart';
-import 'package:screw_calculator/utility/local_store.dart';
-import 'package:screw_calculator/utility/local_storge_key.dart';
-import 'package:screw_calculator/utility/utilities.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:uuid/uuid.dart';
 
@@ -248,7 +249,6 @@ class DashboardData {
   Future<void> reloadGame(BuildContext context, Function? onPressed) {
     return showGeneralDialog(
       context: context,
-      barrierDismissible: false,
       barrierColor: Colors.black54,
       transitionDuration: const Duration(milliseconds: 450),
       pageBuilder: (_, _, _) => const SizedBox.shrink(),
@@ -395,13 +395,13 @@ class DashboardData {
   }) async {
     final id = const Uuid().v4();
 
-    final _db = FirebaseFirestore.instance;
+    final db = FirebaseFirestore.instance;
 
     try {
       final bytes = await imageFile.readAsBytes();
       final base64Image = base64Encode(bytes);
 
-      final ref = _db.collection('user_screenshoot_sharing').doc(id);
+      final ref = db.collection('user_screenshoot_sharing').doc(id);
       await ref.set({
         'id': id,
         'title': title,

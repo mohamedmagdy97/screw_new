@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:screw_calculator/components/custom_text.dart';
-import 'package:screw_calculator/cubits/generic_cubit/generic_cubit.dart';
+import 'package:screw_calculator/core/state/generic_cubit/generic_cubit.dart';
+import 'package:screw_calculator/core/theme/app_theme.dart';
+import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/screens/dashboard/dashboard_data.dart';
 import 'package:screw_calculator/screens/home/widgets/marquee_widget.dart';
-import 'package:screw_calculator/utility/app_theme.dart';
 
 class MarqueeBar extends StatelessWidget {
   final DashboardData dashboardData;
@@ -27,7 +27,6 @@ class MarqueeBar extends StatelessWidget {
               children: [
                 const Expanded(
                   child: MarqueeWidget(
-                    direction: Axis.horizontal,
                     child: CustomText(
                       text:
                           '      صلي على النبي, لا اله الا الله وحده لا شريك له, له الملك وله الحمد يحي ويميت وهو على كل شيء قدير, سبحان الله والحمد لله ولا اله الا الله ولا حول ولا قوة الا بالله, استغفر الله العظيم وأتوب اليه, لا اله الا انت سبحانك اني كنت من الظالمين     ',

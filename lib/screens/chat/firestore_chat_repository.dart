@@ -17,7 +17,7 @@ class FirestoreChatRepository implements ChatRepository {
     if (after != null) q = q.where('timestamp', isGreaterThan: after);
 
     return q.snapshots().map(
-      (snap) => snap.docs.map((doc) => ChatMessage.fromDoc(doc)).toList(),
+      (snap) => snap.docs.map(ChatMessage.fromDoc).toList(),
     );
   }
 

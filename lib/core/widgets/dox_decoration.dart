@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:screw_calculator/utility/app_theme.dart';
+import 'package:screw_calculator/core/theme/app_theme.dart';
 
 BoxDecoration customBoxDecoration({
   Color? color,
@@ -28,7 +28,7 @@ BoxDecoration customBoxDecoration({
           ),
     borderRadius: BorderRadius.circular(borderRadius ?? 16),
     boxShadow:   [
-      BoxShadow(color: shadowColor ?? Colors.black26, blurRadius: 8, offset: Offset(0, -2)),
+      BoxShadow(color: shadowColor ?? Colors.black26, blurRadius: 8, offset: const Offset(0, -2)),
     ],
   );
 }

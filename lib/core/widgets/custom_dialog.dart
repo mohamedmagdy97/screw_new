@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:screw_calculator/components/custom_button.dart';
-import 'package:screw_calculator/components/custom_text.dart';
-import 'package:screw_calculator/utility/app_theme.dart';
+import 'package:screw_calculator/core/theme/app_theme.dart';
+import 'package:screw_calculator/core/widgets/custom_button.dart';
+import 'package:screw_calculator/core/widgets/custom_text.dart';
 
 Future<Object?> customAlertAnimation({
   required BuildContext context,
@@ -17,7 +17,6 @@ Future<Object?> customAlertAnimation({
 }) {
   return showGeneralDialog(
     context: context,
-    barrierDismissible: false,
     barrierColor: Colors.black54,
     transitionDuration: const Duration(milliseconds: 450),
     pageBuilder: (_, _, _) => const SizedBox.shrink(),

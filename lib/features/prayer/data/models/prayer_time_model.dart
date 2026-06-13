@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class PrayerTimeModel {
@@ -137,8 +136,9 @@ class PrayerTimeModel {
   }
 
   String _formatDuration(Duration d) {
-    if (d.inHours > 0)
+    if (d.inHours > 0) {
       return 'متبقي ${d.inHours} ساعة و${d.inMinutes % 60} دقيقة';
+    }
     if (d.inMinutes > 0) return 'متبقي ${d.inMinutes} دقيقة';
     return 'متبقي ${d.inSeconds} ثانية';
   }

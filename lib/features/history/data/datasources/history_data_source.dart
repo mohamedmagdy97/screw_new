@@ -1,8 +1,8 @@
 import 'dart:convert';
 
+import 'package:screw_calculator/core/constants/local_storage_keys.dart';
+import 'package:screw_calculator/core/utils/local_store.dart';
 import 'package:screw_calculator/models/game_model.dart';
-import 'package:screw_calculator/utility/local_store.dart';
-import 'package:screw_calculator/utility/local_storge_key.dart';
 
 abstract class HistoryDataSource {
   Future<List<GameModel>> getGames();
@@ -35,7 +35,7 @@ class HistoryDataSourceImpl implements HistoryDataSource {
               .toList();
 
           return jsonData
-              .map<GameModel>((json) => GameModel.fromJson(json))
+              .map<GameModel>(GameModel.fromJson)
               .toList();
         }
       }

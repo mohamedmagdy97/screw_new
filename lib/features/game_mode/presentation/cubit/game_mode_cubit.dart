@@ -16,7 +16,6 @@ class GameModeCubit extends Cubit<GameModeState> {
         GameModeItemEntity(
           key: 1,
           value: 'صاحب صاحبه\n ( زوجي )',
-          isActive: false,
         ),
       ];
 
