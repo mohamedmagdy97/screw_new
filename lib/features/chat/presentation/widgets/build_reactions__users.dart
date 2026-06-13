@@ -26,7 +26,6 @@ class BuildReactionsUsers extends StatelessWidget {
             text: 'المتفاعلون بـ $emojiـ',
             fontSize: 14.sp,
             fontFamily: AppFonts.bold,
-            color: AppColors.black,
           ),
         ),
         const Divider(),
@@ -43,7 +42,6 @@ class BuildReactionsUsers extends StatelessWidget {
                       ? 'أنا (أنت)'
                       : reactingDetails[index],
                   fontSize: 16.sp,
-                  color: AppColors.black,
                   textAlign: TextAlign.start,
                 ),
                 trailing: Text(

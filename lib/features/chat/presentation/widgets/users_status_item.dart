@@ -43,7 +43,6 @@ class UserStatusItem extends StatelessWidget {
       ),
       title: CustomText(
         text: user.name,
-        color: AppColors.black,
         fontSize: 16,
         textAlign: TextAlign.right,
       ),

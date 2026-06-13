@@ -901,7 +901,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                                                         ),
                                                   fontSize: 14.sp,
                                                   textAlign: TextAlign.start,
-                                                  color: AppColors.black,
                                                 ),
                                               ),
                                             if (msg.type == 'image')
@@ -1057,7 +1056,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                   ? _replyingTo!.message
                   : PhoneMaskHelper.maskPhoneNumbers(_replyingTo!.message),
               fontSize: 14.sp,
-              color: AppColors.black,
               textAlign: TextAlign.end,
             ),
           ),
@@ -1078,7 +1076,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
             title: CustomText(
               text: 'تثبيت الرسالة',
               fontSize: 14.sp,
-              color: AppColors.black,
               textAlign: TextAlign.start,
             ),
             onTap: () {
@@ -1097,7 +1094,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
               title: CustomText(
                 text: 'تعديل الرسالة',
                 fontSize: 14.sp,
-                color: AppColors.black,
                 textAlign: TextAlign.start,
               ),
               onTap: () {
@@ -1111,7 +1107,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
             title: CustomText(
               text: 'الرد على الرسالة',
               fontSize: 14.sp,
-              color: AppColors.black,
               textAlign: TextAlign.start,
             ),
             onTap: () {
@@ -1127,7 +1122,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
               title: CustomText(
                 text: 'حذف الرسالة',
                 fontSize: 14.sp,
-                color: AppColors.black,
                 textAlign: TextAlign.start,
               ),
               onTap: () async {
@@ -1144,7 +1138,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                         child: CustomText(
                           text: 'إلغاء',
                           fontSize: 15.sp,
-                          color: AppColors.black,
                           fontFamily: AppFonts.bold,
                         ),
                       ),

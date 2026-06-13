@@ -143,7 +143,6 @@ class _ForceUpdateWrapperState extends State<ForceUpdateWrapper>
                       const CustomText(
                         text: 'تحديث إجباري',
                         fontSize: 22,
-                        color: AppColors.black,
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 12),
@@ -153,7 +152,6 @@ class _ForceUpdateWrapperState extends State<ForceUpdateWrapper>
                             'للاستمرار في استخدام جميع المميزات.',
                         textAlign: TextAlign.center,
                         fontSize: 16,
-                        color: AppColors.black,
                       ),
                       const SizedBox(height: 28),
                       ElevatedButton.icon(

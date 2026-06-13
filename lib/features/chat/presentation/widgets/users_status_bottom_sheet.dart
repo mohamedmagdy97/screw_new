@@ -54,7 +54,6 @@ class UsersStatusBottomSheet extends StatelessWidget {
                 const CustomText(
                   text: 'حالة المستخدمين',
                   fontSize: 18,
-                  color: AppColors.black,
 
                   fontFamily: AppFonts.bold,
                 ),

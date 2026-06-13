@@ -20,7 +20,6 @@ class BuildNotificationSettingsDialog extends StatelessWidget {
             text: 'إعدادات الإشعارات',
             fontSize: 20,
             fontFamily: AppFonts.bold,
-            color: AppColors.black,
           ),
           const SizedBox(height: 24),
           ListTile(
@@ -28,7 +27,6 @@ class BuildNotificationSettingsDialog extends StatelessWidget {
             title: const CustomText(
               text: 'اختبار الإشعار',
               fontSize: 14,
-              color: AppColors.black,
               textAlign: TextAlign.end,
             ),
             onTap: () {
@@ -44,7 +42,6 @@ class BuildNotificationSettingsDialog extends StatelessWidget {
             title: const CustomText(
               text: 'إعادة جدولة الإشعارات',
               fontSize: 14,
-              color: AppColors.black,
               textAlign: TextAlign.end,
             ),
             onTap: () {
@@ -57,7 +54,6 @@ class BuildNotificationSettingsDialog extends StatelessWidget {
             title: const CustomText(
               text: 'إلغاء جميع الإشعارات',
               fontSize: 14,
-              color: AppColors.black,
               textAlign: TextAlign.end,
             ),
             onTap: () async {

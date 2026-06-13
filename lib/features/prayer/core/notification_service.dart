@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -19,9 +21,11 @@ class NotificationService {
       // إعدادات Android
       const android = AndroidInitializationSettings('@mipmap/ic_launcher');
 
-      // إعدادات iOS (إذا كنت تدعمها)
+      // إعدادات iOS — طلب صلاحيات التنبيه/الصوت/الشارة.
       const iOS = DarwinInitializationSettings(
-        
+        requestAlertPermission: true,
+        requestBadgePermission: true,
+        requestSoundPermission: true,
       );
 
       const settings = InitializationSettings(android: android, iOS: iOS);
@@ -104,7 +108,7 @@ class NotificationService {
             presentAlert: true,
             presentBadge: true,
             presentSound: true,
-            sound: 'azan.aiff', //   الملف في ios/Runner/
+            // الصوت الافتراضي — لا يوجد ملف azan.aiff مضمّن في حزمة iOS.
           ),
         ),
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
@@ -133,15 +137,10 @@ class NotificationService {
         }
       }
 
-      // أذونات الإشعارات المجدولة بدقة (Android 12+)
-      if (await Permission.scheduleExactAlarm.isDenied) {
-        final status = await Permission.scheduleExactAlarm.request();
-        if (!status.isGranted) {
-          debugPrint('⚠️ Exact alarm permission denied');
-          // يمكنك توجيه المستخدم للإعدادات
-          await openAppSettings();
-          return false;
-        }
+      // أذونات الإشعارات المجدولة بدقة (Android 12+ فقط).
+      if (Platform.isAndroid &&
+          await Permission.scheduleExactAlarm.isDenied) {
+        await Permission.scheduleExactAlarm.request();
       }
 
       debugPrint('✅ All permissions granted');
@@ -194,6 +193,11 @@ class NotificationService {
             'Instant Notifications',
             importance: Importance.max,
             priority: Priority.high,
+          ),
+          iOS: DarwinNotificationDetails(
+            presentAlert: true,
+            presentBadge: true,
+            presentSound: true,
           ),
         ),
       );

@@ -212,7 +212,6 @@ class _PrayerViewState extends State<_PrayerView> {
           text: 'معلومات الكاش',
           fontSize: 18,
           fontFamily: AppFonts.bold,
-          color: AppColors.grayy,
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
