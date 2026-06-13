@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
-import 'package:screw_calculator/screens/chat/widgets/users_status_bottom_sheet.dart';
+import 'package:screw_calculator/features/chat/presentation/widgets/users_status_bottom_sheet.dart';
 
 class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool isSearching;

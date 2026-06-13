@@ -17,7 +17,7 @@ import 'package:screw_calculator/features/rules/presentation/screens/rules_scree
 import 'package:screw_calculator/features/show_video/presentation/screens/show_video_screen.dart';
 import 'package:screw_calculator/features/users_screenshoot_sharing/presentation/screens/user_sc_sharing_screen.dart';
 import 'package:screw_calculator/generated/assets.dart';
-import 'package:screw_calculator/screens/chat/chat_screen.dart';
+import 'package:screw_calculator/features/chat/presentation/screens/chat_screen.dart';
 import 'package:screw_calculator/app/di/service_locator.dart';
 import 'package:screw_calculator/features/home/presentation/controller/home_controller.dart';
 import 'package:screw_calculator/features/home/presentation/widgets/drawer_item_widget.dart';

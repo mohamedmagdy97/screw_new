@@ -1,7 +1,7 @@
 
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:screw_calculator/screens/chat/models/chat_msg_model.dart';
+import 'package:screw_calculator/features/chat/data/models/chat_msg_model.dart';
 
 abstract class ChatRepository {
   Stream<List<ChatMessage>> liveMessages({DateTime? after});

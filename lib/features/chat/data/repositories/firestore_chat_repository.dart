@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:screw_calculator/screens/chat/chat_repository.dart';
-import 'package:screw_calculator/screens/chat/models/chat_msg_model.dart';
+import 'package:screw_calculator/features/chat/domain/repositories/chat_repository.dart';
+import 'package:screw_calculator/features/chat/data/models/chat_msg_model.dart';
 
 class FirestoreChatRepository implements ChatRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;

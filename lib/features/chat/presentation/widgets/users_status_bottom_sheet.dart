@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
-import 'package:screw_calculator/screens/chat/models/user_presence_model.dart';
-import 'package:screw_calculator/screens/chat/widgets/users_status_item.dart';
+import 'package:screw_calculator/features/chat/data/models/user_presence_model.dart';
+import 'package:screw_calculator/features/chat/presentation/widgets/users_status_item.dart';
 
 class UsersStatusBottomSheet extends StatelessWidget {
   final String? currentUserName;

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:screw_calculator/screens/chat/models/chat_msg_model.dart';
+import 'package:screw_calculator/features/chat/data/models/chat_msg_model.dart';
 
 class BuildStatusIcons extends StatelessWidget {
   final ChatMessage msg;

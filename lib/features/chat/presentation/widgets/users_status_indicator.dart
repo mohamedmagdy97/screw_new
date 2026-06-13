@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:screw_calculator/screens/chat/models/user_presence_model.dart';
+import 'package:screw_calculator/features/chat/data/models/user_presence_model.dart';
 
 class UserStatusIndicator extends StatelessWidget {
   final String userName;

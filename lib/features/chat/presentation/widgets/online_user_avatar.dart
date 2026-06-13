@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
-import 'package:screw_calculator/screens/chat/models/user_presence_model.dart';
+import 'package:screw_calculator/features/chat/data/models/user_presence_model.dart';
 
 class OnlineUserAvatar extends StatelessWidget {
   final UserPresence user;

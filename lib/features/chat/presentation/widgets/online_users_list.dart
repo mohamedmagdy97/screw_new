@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
-import 'package:screw_calculator/screens/chat/models/user_presence_model.dart';
-import 'package:screw_calculator/screens/chat/widgets/online_user_avatar.dart';
+import 'package:screw_calculator/features/chat/data/models/user_presence_model.dart';
+import 'package:screw_calculator/features/chat/presentation/widgets/online_user_avatar.dart';
 
 class OnlineUsersList extends StatelessWidget {
   final String? currentUserName;
