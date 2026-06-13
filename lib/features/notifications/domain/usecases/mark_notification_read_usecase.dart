@@ -1,4 +1,4 @@
-import 'package:screw_calculator/screens/notifications/domain/repositories/notification_repository.dart';
+import 'package:screw_calculator/features/notifications/domain/repositories/notification_repository.dart';
 
 /// Use case for marking a notification as read
 class MarkNotificationReadUseCase {

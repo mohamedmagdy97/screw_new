@@ -1,5 +1,5 @@
-import 'package:screw_calculator/screens/notifications/domain/entities/notification_entity.dart';
-import 'package:screw_calculator/screens/notifications/domain/repositories/notification_repository.dart';
+import 'package:screw_calculator/features/notifications/domain/entities/notification_entity.dart';
+import 'package:screw_calculator/features/notifications/domain/repositories/notification_repository.dart';
 
 /// Use case for getting notifications stream
 class GetNotificationsUseCase {

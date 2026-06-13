@@ -4,13 +4,13 @@ import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/widgets/bottom_nav_text.dart';
 import 'package:screw_calculator/core/widgets/custom_appbar.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
-import 'package:screw_calculator/screens/notifications/data/datasources/notification_data_source.dart';
-import 'package:screw_calculator/screens/notifications/data/repositories/notification_repository_impl.dart';
-import 'package:screw_calculator/screens/notifications/domain/usecases/delete_notification_usecase.dart';
-import 'package:screw_calculator/screens/notifications/domain/usecases/get_notifications_usecase.dart';
-import 'package:screw_calculator/screens/notifications/domain/usecases/mark_notification_read_usecase.dart';
-import 'package:screw_calculator/screens/notifications/presentation/cubit/notification_cubit.dart';
-import 'package:screw_calculator/screens/notifications/presentation/widgets/notify_item.dart';
+import 'package:screw_calculator/features/notifications/data/datasources/notification_data_source.dart';
+import 'package:screw_calculator/features/notifications/data/repositories/notification_repository_impl.dart';
+import 'package:screw_calculator/features/notifications/domain/usecases/delete_notification_usecase.dart';
+import 'package:screw_calculator/features/notifications/domain/usecases/get_notifications_usecase.dart';
+import 'package:screw_calculator/features/notifications/domain/usecases/mark_notification_read_usecase.dart';
+import 'package:screw_calculator/features/notifications/presentation/cubit/notification_cubit.dart';
+import 'package:screw_calculator/features/notifications/presentation/widgets/notify_item.dart';
 
 class NotificationsScreen extends StatelessWidget {
   const NotificationsScreen({super.key});

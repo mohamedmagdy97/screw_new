@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:screw_calculator/screens/notifications/domain/entities/notification_entity.dart';
-import 'package:screw_calculator/screens/notifications/domain/usecases/delete_notification_usecase.dart';
-import 'package:screw_calculator/screens/notifications/domain/usecases/get_notifications_usecase.dart';
-import 'package:screw_calculator/screens/notifications/domain/usecases/mark_notification_read_usecase.dart';
+import 'package:screw_calculator/features/notifications/domain/entities/notification_entity.dart';
+import 'package:screw_calculator/features/notifications/domain/usecases/delete_notification_usecase.dart';
+import 'package:screw_calculator/features/notifications/domain/usecases/get_notifications_usecase.dart';
+import 'package:screw_calculator/features/notifications/domain/usecases/mark_notification_read_usecase.dart';
 
 part 'notification_state.dart';
 

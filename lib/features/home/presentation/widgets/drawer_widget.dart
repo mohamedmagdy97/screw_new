@@ -21,7 +21,7 @@ import 'package:screw_calculator/features/chat/presentation/screens/chat_screen.
 import 'package:screw_calculator/app/di/service_locator.dart';
 import 'package:screw_calculator/features/home/presentation/controller/home_controller.dart';
 import 'package:screw_calculator/features/home/presentation/widgets/drawer_item_widget.dart';
-import 'package:screw_calculator/screens/notifications/presentation/screens/notifications_screen.dart';
+import 'package:screw_calculator/features/notifications/presentation/screens/notifications_screen.dart';
 
 class DrawerWidget extends StatefulWidget {
   const DrawerWidget({super.key});

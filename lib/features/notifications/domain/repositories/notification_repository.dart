@@ -1,4 +1,4 @@
-import 'package:screw_calculator/screens/notifications/domain/entities/notification_entity.dart';
+import 'package:screw_calculator/features/notifications/domain/entities/notification_entity.dart';
 
 abstract class NotificationRepository {
   Stream<List<NotificationEntity>> getNotifications();

@@ -1,7 +1,7 @@
-import 'package:screw_calculator/screens/notifications/data/datasources/notification_data_source.dart';
-import 'package:screw_calculator/screens/notifications/data/mappers/notification_mapper.dart';
-import 'package:screw_calculator/screens/notifications/domain/entities/notification_entity.dart';
-import 'package:screw_calculator/screens/notifications/domain/repositories/notification_repository.dart';
+import 'package:screw_calculator/features/notifications/data/datasources/notification_data_source.dart';
+import 'package:screw_calculator/features/notifications/data/mappers/notification_mapper.dart';
+import 'package:screw_calculator/features/notifications/domain/entities/notification_entity.dart';
+import 'package:screw_calculator/features/notifications/domain/repositories/notification_repository.dart';
 
 class NotificationRepositoryImpl implements NotificationRepository {
   final NotificationDataSource _dataSource;
