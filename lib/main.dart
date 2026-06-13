@@ -2,8 +2,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:screw_calculator/app/app.dart';
+import 'package:screw_calculator/app/di/service_locator.dart';
 import 'package:screw_calculator/features/prayer/core/notification_service.dart';
-import 'package:screw_calculator/my_app.dart';
 import 'package:screw_calculator/screens/force_update.dart';
 
 void main() async {
@@ -14,6 +15,8 @@ void main() async {
   await Hive.openBox('prayerCache');
   await Hive.openBox('userBox');
   await Hive.openBox('cachedMessages');
+
+  await setupLocator();
 
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(const ForceUpdateWrapper(child: MyApp()));

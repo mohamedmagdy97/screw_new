@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:screw_calculator/core/helpers/remote_config.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
+import 'package:screw_calculator/core/theme/theme_cubit.dart';
 import 'package:screw_calculator/core/utils/enums.dart';
 import 'package:screw_calculator/core/utils/utilities.dart';
 import 'package:screw_calculator/core/utils/validation_form.dart';
@@ -337,6 +339,14 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                 DrawerItemWidget(
                   title: '⭐ قيمنا',
                   onTap: () => homeData.rateMyApp(),
+                ),
+                BlocBuilder<ThemeCubit, ThemeMode>(
+                  builder: (context, mode) => DrawerItemWidget(
+                    title: mode == ThemeMode.dark
+                        ? '☀️ الوضع الفاتح'
+                        : '🌙 الوضع الداكن',
+                    onTap: () => context.read<ThemeCubit>().toggle(),
+                  ),
                 ),
 
                 const Spacer(),

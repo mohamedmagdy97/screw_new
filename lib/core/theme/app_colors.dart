@@ -30,4 +30,13 @@ class AppColors {
   static const Color white = Colors.white;
   static const Color red = Color(0xffFF0000);
   static const Color redDark = Color(0xffE11414);
+
+  // ---- Semantic surface/background tokens (Light + Dark) ----
+  /// خلفية الوضع الداكن (الحالية).
+  // bg = 0xff121212 (معرّفة بالأعلى)
+  static const Color surfaceDark = Color(0xff1E1B22);
+
+  /// خلفية وأسطح الوضع الفاتح.
+  static const Color bgLight = Color(0xffF4F2F8);
+  static const Color surfaceLight = Colors.white;
 }
