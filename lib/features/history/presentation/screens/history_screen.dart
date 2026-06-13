@@ -14,7 +14,7 @@ import 'package:screw_calculator/features/history/presentation/cubit/history_cub
 import 'package:screw_calculator/features/history/presentation/widgets/clear_all_confirmation_dialog.dart';
 import 'package:screw_calculator/features/history/presentation/widgets/delete_confirmation_dialog.dart';
 import 'package:screw_calculator/features/history/presentation/widgets/history_item.dart';
-import 'package:screw_calculator/screens/dashboard/dashboard.dart';
+import 'package:screw_calculator/features/dashboard/presentation/screens/dashboard_screen.dart';
 
 class HistoryScreen extends StatelessWidget {
   const HistoryScreen({super.key});
@@ -70,11 +70,11 @@ class _HistoryView extends StatelessWidget {
     }
   }
 
-  void _navigateToDashboard(BuildContext context, GameHistoryEntity game) {
+  void _navigateToDashboardScreen(BuildContext context, GameHistoryEntity game) {
     Navigator.push<void>(
       context,
       MaterialPageRoute<void>(
-        builder: (_) => Dashboard(players: game.players, fromHistory: true),
+        builder: (_) => DashboardScreen(players: game.players, fromHistory: true),
       ),
     );
   }
@@ -142,7 +142,7 @@ class _HistoryView extends StatelessWidget {
                 return HistoryItem(
                   game: games[index],
                   index: index,
-                  onTap: () => _navigateToDashboard(context, games[index]),
+                  onTap: () => _navigateToDashboardScreen(context, games[index]),
                   onDelete: () => _handleDeleteGame(context, index),
                 );
               },

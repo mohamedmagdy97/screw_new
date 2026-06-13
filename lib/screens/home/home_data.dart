@@ -6,9 +6,9 @@ import 'package:screw_calculator/core/helpers/device_info.dart';
 import 'package:screw_calculator/core/routing/build_fancy_route.dart';
 import 'package:screw_calculator/core/state/generic_cubit/generic_cubit.dart';
 import 'package:screw_calculator/core/utils/enums.dart';
-import 'package:screw_calculator/models/item.dart';
-import 'package:screw_calculator/models/player_model.dart';
-import 'package:screw_calculator/screens/dashboard/dashboard.dart';
+import 'package:screw_calculator/core/models/item.dart';
+import 'package:screw_calculator/core/models/player_model.dart';
+import 'package:screw_calculator/features/dashboard/presentation/screens/dashboard_screen.dart';
 
 HomeData homeData = HomeData();
 
@@ -250,7 +250,7 @@ class HomeData {
                     curve: Curves.easeOutCubic,
                   ),
                 ),
-            child: Dashboard(players: players, teamsMode: teamsMode), // false
+            child: DashboardScreen(players: players, teamsMode: teamsMode), // false
           ),
         ),
       ),
@@ -316,7 +316,7 @@ class HomeData {
                     curve: Curves.easeOutCubic,
                   ),
                 ),
-            child: Dashboard(players: players, teamsMode: true),
+            child: DashboardScreen(players: players, teamsMode: true),
           ),
         ),
       ),

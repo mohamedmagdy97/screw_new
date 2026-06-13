@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:screw_calculator/models/screenshoot_model.dart';
+import 'package:screw_calculator/core/models/screenshoot_model.dart';
 
 abstract class ScreenshotDataSource {
   Stream<List<ScreenShootModel>> getScreenshots({required int limit});

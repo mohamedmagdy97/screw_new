@@ -98,6 +98,87 @@ class PlayerModel {
       roundScores[round] = score;
     }
   }
+
+  // ===== منطق احتساب الجولات (Screw) =====
+  // الجولات الخمس مرتّبة: الفهرس 0..4 يقابل gw1..gw5.
+
+  /// قيم الجولات الخمس بالترتيب.
+  List<String> get roundValues => [
+    gw1 ?? '',
+    gw2 ?? '',
+    gw3 ?? '',
+    gw4 ?? '',
+    gw5 ?? '',
+  ];
+
+  void _setRoundValue(int index, String value) {
+    switch (index) {
+      case 0:
+        gw1 = value;
+      case 1:
+        gw2 = value;
+      case 2:
+        gw3 = value;
+      case 3:
+        gw4 = value;
+      case 4:
+        gw5 = value;
+    }
+  }
+
+  int get _firstEmptyRoundIndex => roundValues.indexWhere((v) => v.isEmpty);
+
+  int get _lastFilledRoundIndex {
+    final values = roundValues;
+    for (var i = values.length - 1; i >= 0; i--) {
+      if (values[i].isNotEmpty) return i;
+    }
+    return -1;
+  }
+
+  /// عدد الجولات المُدخلة حتى الآن.
+  int get filledRoundsCount => roundValues.where((v) => v.isNotEmpty).length;
+
+  /// هل اكتملت كل جولات اللاعب الخمس؟
+  bool get isComplete => _firstEmptyRoundIndex < 0;
+
+  /// يعيد احتساب المجموع من قيم الجولات المُدخلة.
+  void recomputeTotal() {
+    total = roundValues
+        .where((v) => v.isNotEmpty)
+        .map((v) => int.tryParse(v) ?? 0)
+        .fold<int>(0, (a, b) => a + b)
+        .toString();
+  }
+
+  /// يضيف نتيجة في أول جولة فارغة ثم يحدّث المجموع.
+  /// يعيد false إذا كانت كل الجولات ممتلئة.
+  bool addRoundScore(int value) {
+    final index = _firstEmptyRoundIndex;
+    if (index < 0) return false;
+    _setRoundValue(index, value.toString());
+    recomputeTotal();
+    return true;
+  }
+
+  /// يعدّل آخر جولة تم إدخالها ثم يحدّث المجموع.
+  bool editLastRoundScore(int value) {
+    final index = _lastFilledRoundIndex;
+    if (index < 0) return false;
+    _setRoundValue(index, value.toString());
+    recomputeTotal();
+    return true;
+  }
+
+  /// يصفّر كل جولات اللاعب والمجموع (لإعادة بدء الجولة).
+  void resetRounds() {
+    gw1 = '';
+    gw2 = '';
+    gw3 = '';
+    gw4 = '';
+    gw5 = '';
+    total = '0';
+  }
 }
 
 class TeamModel {

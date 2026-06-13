@@ -1,4 +1,4 @@
-import 'package:screw_calculator/models/player_model.dart';
+import 'package:screw_calculator/core/models/player_model.dart';
 
 class GameHistoryEntity {
   final List<PlayerModel> players;

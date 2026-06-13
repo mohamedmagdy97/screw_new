@@ -9,7 +9,7 @@ import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/utils/local_store.dart';
 import 'package:screw_calculator/core/widgets/custom_button.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
-import 'package:screw_calculator/models/game_model.dart';
+import 'package:screw_calculator/core/models/game_model.dart';
 
 class HistoryData {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();

@@ -5,7 +5,7 @@ import 'package:screw_calculator/core/state/generic_cubit/generic_cubit.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/widgets/custom_button.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
-import 'package:screw_calculator/models/item.dart';
+import 'package:screw_calculator/core/models/item.dart';
 import 'package:screw_calculator/screens/home/home_data.dart';
 import 'package:screw_calculator/screens/home/widgets/build_team_field.dart';
 

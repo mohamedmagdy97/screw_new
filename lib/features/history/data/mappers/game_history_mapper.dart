@@ -1,5 +1,5 @@
 import 'package:screw_calculator/features/history/domain/entities/game_history_entity.dart';
-import 'package:screw_calculator/models/game_model.dart';
+import 'package:screw_calculator/core/models/game_model.dart';
 
 class GameHistoryMapper {
   static GameHistoryEntity toEntity(GameModel model) {

@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:screw_calculator/models/notification_model.dart';
+import 'package:screw_calculator/core/models/notification_model.dart';
 
 abstract class NotificationDataSource {
   Stream<List<NotificationModel>> getNotifications();

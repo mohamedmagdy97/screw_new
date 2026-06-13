@@ -6,8 +6,8 @@ import 'package:screw_calculator/core/widgets/bottom_nav_text.dart';
 import 'package:screw_calculator/core/widgets/custom_appbar.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/features/history/history_data.dart';
-import 'package:screw_calculator/models/game_model.dart';
-import 'package:screw_calculator/screens/dashboard/dashboard.dart';
+import 'package:screw_calculator/core/models/game_model.dart';
+import 'package:screw_calculator/features/dashboard/presentation/screens/dashboard_screen.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
@@ -60,7 +60,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => Dashboard(
+                            builder: (_) => DashboardScreen(
                               players: state.data![index].game!,
                               fromHistory: true,
                             ),

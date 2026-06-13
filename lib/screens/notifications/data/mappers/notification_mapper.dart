@@ -1,4 +1,4 @@
-import 'package:screw_calculator/models/notification_model.dart';
+import 'package:screw_calculator/core/models/notification_model.dart';
 import 'package:screw_calculator/screens/notifications/domain/entities/notification_entity.dart';
 
 class NotificationMapper {

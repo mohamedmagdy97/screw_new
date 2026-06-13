@@ -7,7 +7,7 @@ import 'package:screw_calculator/core/utils/validation_form.dart';
 import 'package:screw_calculator/core/widgets/custom_button.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/core/widgets/custom_text_field.dart';
-import 'package:screw_calculator/models/item.dart';
+import 'package:screw_calculator/core/models/item.dart';
 import 'package:screw_calculator/screens/home/home_data.dart';
 
 class ClassicMode extends StatelessWidget {

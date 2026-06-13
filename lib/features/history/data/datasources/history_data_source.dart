@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:screw_calculator/core/constants/local_storage_keys.dart';
 import 'package:screw_calculator/core/utils/local_store.dart';
-import 'package:screw_calculator/models/game_model.dart';
+import 'package:screw_calculator/core/models/game_model.dart';
 
 abstract class HistoryDataSource {
   Future<List<GameModel>> getGames();
