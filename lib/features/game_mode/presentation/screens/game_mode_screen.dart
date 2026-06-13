@@ -10,7 +10,7 @@ import 'package:screw_calculator/core/widgets/custom_button.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/features/game_mode/domain/entities/game_mode_item_entity.dart';
 import 'package:screw_calculator/features/game_mode/presentation/cubit/game_mode_cubit.dart';
-import 'package:screw_calculator/screens/home/home.dart';
+import 'package:screw_calculator/features/home/presentation/screens/home_screen.dart';
 
 class GameMode extends StatefulWidget {
   const GameMode({super.key});
@@ -74,7 +74,7 @@ class _GameModeView extends StatelessWidget {
     Navigator.of(context).push(
       PageRouteBuilder<void>(
         transitionDuration: const Duration(milliseconds: 750),
-        pageBuilder: (_, _, _) => MyHomePage(index: selectedKey),
+        pageBuilder: (_, _, _) => HomeScreen(index: selectedKey),
       ),
     );
   }

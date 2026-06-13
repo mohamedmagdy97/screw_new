@@ -9,6 +9,11 @@ import 'package:screw_calculator/features/dashboard/domain/usecases/save_game_us
 import 'package:screw_calculator/features/dashboard/domain/usecases/upload_screenshot_usecase.dart';
 import 'package:screw_calculator/features/dashboard/presentation/cubit/dashboard_cubit.dart';
 import 'package:screw_calculator/features/history/data/datasources/history_data_source.dart';
+import 'package:screw_calculator/features/home/data/datasources/home_local_data_source.dart';
+import 'package:screw_calculator/features/home/data/datasources/home_remote_data_source.dart';
+import 'package:screw_calculator/features/home/data/repositories/home_repository_impl.dart';
+import 'package:screw_calculator/features/home/domain/repositories/home_repository.dart';
+import 'package:screw_calculator/features/home/presentation/controller/home_controller.dart';
 
 /// مُحدِّد الخدمات (Dependency Injection) للتطبيق بالكامل.
 ///
@@ -21,6 +26,7 @@ final GetIt sl = GetIt.instance;
 Future<void> setupLocator() async {
   _registerExternals();
   _registerCore();
+  _registerHome();
   _registerDashboard();
   // تُضاف تسجيلات الـ features هنا تباعًا مع إعادة هيكلتها.
 }
@@ -34,6 +40,23 @@ void _registerExternals() {
 /// تبعيات الطبقة المشتركة (core).
 void _registerCore() {
   sl.registerLazySingleton<ThemeCubit>(() => ThemeCubit());
+}
+
+/// تبعيات الشاشة الرئيسية (home).
+void _registerHome() {
+  sl
+    ..registerLazySingleton<HomeRemoteDataSource>(
+      () => HomeRemoteDataSourceImpl(firestore: sl()),
+    )
+    ..registerLazySingleton<HomeLocalDataSource>(
+      () => HomeLocalDataSourceImpl(userBox: sl(instanceName: 'userBox')),
+    )
+    ..registerLazySingleton<HomeRepository>(
+      () => HomeRepositoryImpl(remoteDataSource: sl(), localDataSource: sl()),
+    )
+    ..registerLazySingleton<HomeController>(
+      () => HomeController(repository: sl()),
+    );
 }
 
 /// تبعيات لوحة النتائج (dashboard).

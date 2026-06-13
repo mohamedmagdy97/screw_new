@@ -6,14 +6,16 @@ import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/widgets/custom_button.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/core/models/item.dart';
-import 'package:screw_calculator/screens/home/home_data.dart';
-import 'package:screw_calculator/screens/home/widgets/build_team_field.dart';
+import 'package:screw_calculator/app/di/service_locator.dart';
+import 'package:screw_calculator/features/home/presentation/controller/home_controller.dart';
+import 'package:screw_calculator/features/home/presentation/widgets/build_team_field.dart';
 
 class FriendsMode extends StatelessWidget {
   const FriendsMode({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final homeData = sl<HomeController>();
     return ListView(
       padding: const EdgeInsets.all(24),
       children: [

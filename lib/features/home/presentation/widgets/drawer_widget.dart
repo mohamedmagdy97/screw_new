@@ -18,8 +18,9 @@ import 'package:screw_calculator/features/show_video/presentation/screens/show_v
 import 'package:screw_calculator/features/users_screenshoot_sharing/presentation/screens/user_sc_sharing_screen.dart';
 import 'package:screw_calculator/generated/assets.dart';
 import 'package:screw_calculator/screens/chat/chat_screen.dart';
-import 'package:screw_calculator/screens/home/home_data.dart';
-import 'package:screw_calculator/screens/home/widgets/drawer_item_widget.dart';
+import 'package:screw_calculator/app/di/service_locator.dart';
+import 'package:screw_calculator/features/home/presentation/controller/home_controller.dart';
+import 'package:screw_calculator/features/home/presentation/widgets/drawer_item_widget.dart';
 import 'package:screw_calculator/screens/notifications/presentation/screens/notifications_screen.dart';
 
 class DrawerWidget extends StatefulWidget {
@@ -30,6 +31,8 @@ class DrawerWidget extends StatefulWidget {
 }
 
 class _DrawerWidgetState extends State<DrawerWidget> {
+  final HomeController homeData = sl<HomeController>();
+
   @override
   void initState() {
     RemoteConfig().getConfig();

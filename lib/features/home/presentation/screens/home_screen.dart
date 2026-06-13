@@ -1,46 +1,33 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:screw_calculator/app/di/service_locator.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/utils/enums.dart';
 import 'package:screw_calculator/core/widgets/bottom_nav_text.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
-import 'package:screw_calculator/screens/home/home_data.dart';
-import 'package:screw_calculator/screens/home/widgets/classic_mode.dart';
-import 'package:screw_calculator/screens/home/widgets/drawer_widget.dart';
-import 'package:screw_calculator/screens/home/widgets/friends_mode.dart';
+import 'package:screw_calculator/features/home/presentation/controller/home_controller.dart';
+import 'package:screw_calculator/features/home/presentation/widgets/classic_mode.dart';
+import 'package:screw_calculator/features/home/presentation/widgets/drawer_widget.dart';
+import 'package:screw_calculator/features/home/presentation/widgets/friends_mode.dart';
 
-class MyHomePage extends StatefulWidget {
+class HomeScreen extends StatefulWidget {
   final int index;
 
-  const MyHomePage({super.key, required this.index});
+  const HomeScreen({super.key, required this.index});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _HomeScreenState extends State<HomeScreen> {
+  final HomeController homeData = sl<HomeController>();
+
   @override
   void initState() {
-    // WidgetsBinding.instance.addObserver(
-    //   LifecycleEventHandler(
-    //     resumeCallBack: () async => setState(
-    //           () {
-    //         // print('looooooooooool ===');
-    //       },
-    //     ),
-    //   ),
-    // );
     homeData.init();
     super.initState();
   }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-  }
-
-  // final AdSize adSize = const AdSize(width: 300, height: 50);
 
   @override
   Widget build(BuildContext context) {
