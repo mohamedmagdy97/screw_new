@@ -4,6 +4,7 @@ import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/widgets/bottom_nav_text.dart';
 import 'package:screw_calculator/core/widgets/custom_appbar.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
+import 'package:screw_calculator/features/dashboard/presentation/screens/dashboard_screen.dart';
 import 'package:screw_calculator/features/history/data/datasources/history_data_source.dart';
 import 'package:screw_calculator/features/history/data/repositories/history_repository_impl.dart';
 import 'package:screw_calculator/features/history/domain/entities/game_history_entity.dart';
@@ -14,7 +15,6 @@ import 'package:screw_calculator/features/history/presentation/cubit/history_cub
 import 'package:screw_calculator/features/history/presentation/widgets/clear_all_confirmation_dialog.dart';
 import 'package:screw_calculator/features/history/presentation/widgets/delete_confirmation_dialog.dart';
 import 'package:screw_calculator/features/history/presentation/widgets/history_item.dart';
-import 'package:screw_calculator/features/dashboard/presentation/screens/dashboard_screen.dart';
 
 class HistoryScreen extends StatelessWidget {
   const HistoryScreen({super.key});

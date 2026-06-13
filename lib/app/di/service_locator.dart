@@ -42,7 +42,7 @@ void _registerExternals() {
 
 /// تبعيات الطبقة المشتركة (core).
 void _registerCore() {
-  sl.registerLazySingleton<ThemeCubit>(() => ThemeCubit());
+  sl.registerLazySingleton<ThemeCubit>(ThemeCubit.new);
 }
 
 /// تبعيات الشاشة الرئيسية (home).
@@ -65,7 +65,7 @@ void _registerHome() {
 /// تبعيات لوحة النتائج (dashboard).
 void _registerDashboard() {
   sl
-    ..registerLazySingleton<HistoryDataSource>(() => HistoryDataSourceImpl())
+    ..registerLazySingleton<HistoryDataSource>(HistoryDataSourceImpl.new)
     ..registerLazySingleton<DashboardRemoteDataSource>(
       () => DashboardRemoteDataSourceImpl(firestore: sl()),
     )
@@ -86,6 +86,6 @@ void _registerDashboard() {
 /// تبعيات مواقيت الصلاة (prayer).
 void _registerPrayer() {
   sl
-    ..registerLazySingleton<PrayerApiService>(() => PrayerApiService())
+    ..registerLazySingleton<PrayerApiService>(PrayerApiService.new)
     ..registerFactory<PrayerCubit>(() => PrayerCubit(apiService: sl()));
 }

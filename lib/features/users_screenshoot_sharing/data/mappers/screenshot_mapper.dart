@@ -1,5 +1,5 @@
-import 'package:screw_calculator/features/users_screenshoot_sharing/domain/entities/screenshot_entity.dart';
 import 'package:screw_calculator/core/models/screenshoot_model.dart';
+import 'package:screw_calculator/features/users_screenshoot_sharing/domain/entities/screenshot_entity.dart';
 
 class ScreenshotMapper {
   static ScreenshotEntity toEntity(ScreenShootModel model) {

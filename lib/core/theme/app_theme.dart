@@ -53,13 +53,13 @@ abstract final class AppTheme {
       fontFamily: _fontFamily,
       scaffoldBackgroundColor: scaffoldBg,
       splashFactory: InkSparkle.splashFactory,
-      appBarTheme: AppBarTheme(
+      appBarTheme: const AppBarTheme(
         centerTitle: true,
         elevation: 0,
         scrolledUnderElevation: 0,
         backgroundColor: AppColors.mainColor,
         foregroundColor: AppColors.white,
-        titleTextStyle: const TextStyle(
+        titleTextStyle: TextStyle(
           color: AppColors.white,
           fontSize: 20,
           fontFamily: AppFonts.bold,

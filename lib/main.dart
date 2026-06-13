@@ -4,8 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:screw_calculator/app/app.dart';
 import 'package:screw_calculator/app/di/service_locator.dart';
-import 'package:screw_calculator/features/prayer/core/notification_service.dart';
 import 'package:screw_calculator/features/force_update/presentation/screens/force_update.dart';
+import 'package:screw_calculator/features/prayer/core/notification_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

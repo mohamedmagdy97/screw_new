@@ -4,9 +4,9 @@ import 'package:screw_calculator/core/models/player_model.dart';
 import 'package:screw_calculator/core/routing/fade_animation.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
-import 'package:screw_calculator/generated/assets.dart';
 import 'package:screw_calculator/features/dashboard/presentation/cubit/dashboard_cubit.dart';
 import 'package:screw_calculator/features/dashboard/presentation/widgets/player_scores_row.dart';
+import 'package:screw_calculator/generated/assets.dart';
 
 /// بطاقة لاعب في الوضع الكلاسيكي تعرض اسمه ونتائجه ومجموعه.
 class PlayerCard extends StatelessWidget {

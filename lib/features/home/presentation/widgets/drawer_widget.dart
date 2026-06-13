@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:screw_calculator/app/di/service_locator.dart';
 import 'package:screw_calculator/core/helpers/remote_config.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/theme/theme_cubit.dart';
@@ -10,18 +11,17 @@ import 'package:screw_calculator/core/utils/validation_form.dart';
 import 'package:screw_calculator/core/widgets/custom_button.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/core/widgets/custom_text_field.dart';
+import 'package:screw_calculator/features/chat/presentation/screens/chat_screen.dart';
 import 'package:screw_calculator/features/contact_us/presentation/screens/contact_us_screen.dart';
 import 'package:screw_calculator/features/history/presentation/screens/history_screen.dart';
+import 'package:screw_calculator/features/home/presentation/controller/home_controller.dart';
+import 'package:screw_calculator/features/home/presentation/widgets/drawer_item_widget.dart';
+import 'package:screw_calculator/features/notifications/presentation/screens/notifications_screen.dart';
 import 'package:screw_calculator/features/prayer/presentation/screens/prayer_screen.dart';
 import 'package:screw_calculator/features/rules/presentation/screens/rules_screen.dart';
 import 'package:screw_calculator/features/show_video/presentation/screens/show_video_screen.dart';
 import 'package:screw_calculator/features/users_screenshoot_sharing/presentation/screens/user_sc_sharing_screen.dart';
 import 'package:screw_calculator/generated/assets.dart';
-import 'package:screw_calculator/features/chat/presentation/screens/chat_screen.dart';
-import 'package:screw_calculator/app/di/service_locator.dart';
-import 'package:screw_calculator/features/home/presentation/controller/home_controller.dart';
-import 'package:screw_calculator/features/home/presentation/widgets/drawer_item_widget.dart';
-import 'package:screw_calculator/features/notifications/presentation/screens/notifications_screen.dart';
 
 class DrawerWidget extends StatefulWidget {
   const DrawerWidget({super.key});
@@ -341,7 +341,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                   ),
                 DrawerItemWidget(
                   title: '⭐ قيمنا',
-                  onTap: () => homeData.rateMyApp(),
+                  onTap: homeData.rateMyApp,
                 ),
                 BlocBuilder<ThemeCubit, ThemeMode>(
                   builder: (context, mode) => DrawerItemWidget(
