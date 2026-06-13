@@ -5,7 +5,7 @@ import 'package:screw_calculator/core/utils/format_date_to_string.dart';
 import 'package:screw_calculator/core/utils/utilities.dart';
 import 'package:screw_calculator/core/widgets/custom_button.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
-import 'package:screw_calculator/features/contact_us/contact_us.dart';
+import 'package:screw_calculator/features/contact_us/presentation/screens/contact_us_screen.dart';
 import 'package:screw_calculator/features/notifications/domain/entities/notification_entity.dart';
 import 'package:url_launcher/url_launcher.dart';
 
