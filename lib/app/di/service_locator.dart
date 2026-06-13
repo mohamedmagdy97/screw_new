@@ -14,6 +14,8 @@ import 'package:screw_calculator/features/home/data/datasources/home_remote_data
 import 'package:screw_calculator/features/home/data/repositories/home_repository_impl.dart';
 import 'package:screw_calculator/features/home/domain/repositories/home_repository.dart';
 import 'package:screw_calculator/features/home/presentation/controller/home_controller.dart';
+import 'package:screw_calculator/features/prayer/data/datasources/prayer_api_service.dart';
+import 'package:screw_calculator/features/prayer/presentation/cubit/prayer_cubit.dart';
 
 /// مُحدِّد الخدمات (Dependency Injection) للتطبيق بالكامل.
 ///
@@ -28,6 +30,7 @@ Future<void> setupLocator() async {
   _registerCore();
   _registerHome();
   _registerDashboard();
+  _registerPrayer();
   // تُضاف تسجيلات الـ features هنا تباعًا مع إعادة هيكلتها.
 }
 
@@ -78,4 +81,11 @@ void _registerDashboard() {
         uploadScreenshotUseCase: UploadScreenshotUseCase(sl()),
       ),
     );
+}
+
+/// تبعيات مواقيت الصلاة (prayer).
+void _registerPrayer() {
+  sl
+    ..registerLazySingleton<PrayerApiService>(() => PrayerApiService())
+    ..registerFactory<PrayerCubit>(() => PrayerCubit(apiService: sl()));
 }

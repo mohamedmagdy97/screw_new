@@ -1,5 +1,6 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:screw_calculator/core/constants/local_storage_keys.dart';
 import 'package:screw_calculator/core/utils/local_store.dart';
@@ -8,28 +9,19 @@ import 'package:screw_calculator/features/prayer/data/datasources/prayer_api_ser
 import 'package:screw_calculator/features/prayer/data/models/country_model.dart';
 import 'package:screw_calculator/features/prayer/data/models/prayer_time_model.dart';
 
-class PrayerController extends GetxController {
-  final PrayerApiService apiService = PrayerApiService();
+part 'prayer_state.dart';
 
-  var prayerTimes = Rxn<PrayerTimeModel>();
-  var isLoading = false.obs;
-  var hasError = false.obs;
-  var errorMessage = ''.obs;
-  var isOnline = true.obs;
+class PrayerCubit extends Cubit<PrayerState> {
+  PrayerCubit({required this.apiService})
+    : super(const PrayerState(selectedCity: _defaultCity));
 
-  CountryModel selectedCity = const CountryModel(
+  final PrayerApiService apiService;
+
+  static const CountryModel _defaultCity = CountryModel(
     id: 1,
     nameAr: 'القاهرة',
     nameEn: 'Cairo',
   );
-  CountryModel city = const CountryModel(
-    id: 1,
-    nameAr: 'القاهرة',
-    nameEn: 'Cairo',
-  );
-
-  // late CountryModel city;
-  // late CountryModel selectedCity;
 
   final List<CountryModel> egyptGovernorates = const [
     CountryModel(id: 1, nameAr: 'القاهرة', nameEn: 'Cairo'),
@@ -61,79 +53,71 @@ class PrayerController extends GetxController {
     CountryModel(id: 27, nameAr: 'جنوب سيناء', nameEn: 'South Sinai'),
   ];
 
-  @override
-  void onInit() {
-    super.onInit();
-    _init();
-  }
-
-  Future<void> _init() async {
-    isLoading.value = true;
-    _initializeCity();
+  Future<void> init() async {
+    emit(state.copyWith(status: PrayerStatus.loading));
+    await _initializeCity();
     await apiService.init();
     await loadPrayerTimes();
     await apiService.clearOldCache();
-    isLoading.value = false;
   }
 
   Future<void> _initializeCity() async {
-    final String? savedCity = await AppLocalStore.getString(
-      LocalStoreNames.prayerCity,
-    );
-
+    final savedCity = await AppLocalStore.getString(LocalStoreNames.prayerCity);
     if (savedCity != null && savedCity.isNotEmpty) {
-      selectedCity = egyptGovernorates.firstWhere(
+      final city = egyptGovernorates.firstWhere(
         (e) => e.nameEn == savedCity,
-        orElse: () => egyptGovernorates.first,
+        orElse: () => _defaultCity,
       );
-      city = selectedCity;
+      emit(state.copyWith(selectedCity: city));
     }
-    update();
   }
 
   Future<void> loadPrayerTimes() async {
     try {
-      isLoading.value = true;
-      hasError.value = false;
-      errorMessage.value = '';
+      emit(state.copyWith(status: PrayerStatus.loading, errorMessage: ''));
 
-      isOnline.value = await apiService.checkInternetConnection();
-
-      final data = await apiService.fetchPrayerTimes(selectedCity.nameEn);
+      final isOnline = await apiService.checkInternetConnection();
+      final data = await apiService.fetchPrayerTimes(state.selectedCity.nameEn);
 
       if (data != null) {
-        prayerTimes.value = data;
-
-        final timeUntil = data.getTimeUntilNextPrayer();
-        final hours = timeUntil.inHours;
-        final minutes = timeUntil.inMinutes % 60;
-        debugPrint('⏰ Time until next: ${hours}h ${minutes}m');
-              await AppLocalStore.setString(
+        await AppLocalStore.setString(
           LocalStoreNames.prayerCity,
-          selectedCity.nameEn,
+          state.selectedCity.nameEn,
         );
         await _scheduleNotifications(data);
+        emit(
+          state.copyWith(
+            status: PrayerStatus.loaded,
+            prayerTimes: data,
+            isOnline: isOnline,
+          ),
+        );
       } else {
-        hasError.value = true;
-        errorMessage.value = isOnline.value
-            ? 'لم يتم العثور على مواقيت الصلاة'
-            : 'لا يوجد اتصال بالإنترنت';
+        emit(
+          state.copyWith(
+            status: PrayerStatus.error,
+            isOnline: isOnline,
+            errorMessage: isOnline
+                ? 'لم يتم العثور على مواقيت الصلاة'
+                : 'لا يوجد اتصال بالإنترنت',
+          ),
+        );
       }
     } catch (e) {
-      hasError.value = true;
-      errorMessage.value = 'حدث خطأ في تحميل المواقيت';
-      debugPrint('❌ Error loading prayer times: $e');
-    } finally {
-      isLoading.value = false;
+      emit(
+        state.copyWith(
+          status: PrayerStatus.error,
+          errorMessage: 'حدث خطأ في تحميل المواقيت',
+        ),
+      );
+      debugPrint('Error loading prayer times: $e');
     }
   }
 
-  // جدولة الإشعارات
   Future<void> _scheduleNotifications(PrayerTimeModel data) async {
     try {
       final format = DateFormat('HH:mm');
       final now = DateTime.now();
-
       final times = {
         'الفجر': data.fajr,
         'الظهر': data.dhuhr,
@@ -142,14 +126,10 @@ class PrayerController extends GetxController {
         'العشاء': data.isha,
       };
 
-      // إلغاء جميع الإشعارات السابقة أولاً
       await NotificationService.cancelAllNotifications();
-
-      // جدولة الإشعارات الجديدة
-      for (var entry in times.entries) {
+      for (final entry in times.entries) {
         try {
           final prayerTime = format.parse(entry.value);
-
           await NotificationService.schedulePrayerNotification(
             prayerName: entry.key,
             time: DateTime(
@@ -164,44 +144,20 @@ class PrayerController extends GetxController {
           debugPrint('Error scheduling ${entry.key}: $e');
         }
       }
-
-      // التحقق من الإشعارات المجدولة
-      final pending = await NotificationService.getPendingNotifications();
-      debugPrint('✅ Scheduled ${pending.length} notifications');
     } catch (e) {
       debugPrint('Error in _scheduleNotifications: $e');
     }
   }
 
-  // تغيير المدينة
   Future<void> changeCity(CountryModel newCity) async {
-    selectedCity = newCity;
-    city = newCity;
+    emit(state.copyWith(selectedCity: newCity));
     await loadPrayerTimes();
   }
 
-  // إعادة المحاولة
-  Future<void> retry() async {
-    await loadPrayerTimes();
-  }
+  Future<void> retry() => loadPrayerTimes();
 
-  // عرض معلومات الكاش
-  Future<void> showCacheInfo() async {
-    final info = await apiService.getCacheInfo();
-    debugPrint('📊 Cache Info:\n${info.summary}');
-    return;
-  }
-
-  // مسح الكاش
   Future<void> clearCache() async {
     await apiService.clearAllCache();
     await loadPrayerTimes();
-  }
-
-  @override
-  void onClose() {
-    // يمكنك إلغاء الإشعارات هنا إذا أردت
-    // NotificationService.cancelAllNotifications();
-    super.onClose();
   }
 }

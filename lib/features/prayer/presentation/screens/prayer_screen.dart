@@ -1,41 +1,48 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
+import 'package:screw_calculator/app/di/service_locator.dart';
 import 'package:screw_calculator/core/helpers/remote_config.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/widgets/bottom_nav_text.dart';
 import 'package:screw_calculator/core/widgets/custom_appbar.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
-import 'package:screw_calculator/features/prayer/controllers/prayer_controller.dart';
-import 'package:screw_calculator/features/prayer/core/notification_service.dart';
 import 'package:screw_calculator/features/prayer/data/datasources/prayer_api_service.dart';
 import 'package:screw_calculator/features/prayer/data/models/prayer_time_model.dart';
-import 'package:screw_calculator/features/prayer/screen/widget/build_card_widget.dart';
-import 'package:screw_calculator/features/prayer/screen/widget/build_city_selector.dart';
-import 'package:screw_calculator/features/prayer/screen/widget/build_next_prayer_card.dart';
-import 'package:screw_calculator/features/prayer/screen/widget/build_notification_setting_dialog.dart';
+import 'package:screw_calculator/features/prayer/presentation/cubit/prayer_cubit.dart';
+import 'package:screw_calculator/features/prayer/presentation/widgets/build_card_widget.dart';
+import 'package:screw_calculator/features/prayer/presentation/widgets/build_city_selector.dart';
+import 'package:screw_calculator/features/prayer/presentation/widgets/build_next_prayer_card.dart';
+import 'package:screw_calculator/features/prayer/presentation/widgets/build_notification_setting_dialog.dart';
 
-class PrayerScreen extends StatefulWidget {
+class PrayerScreen extends StatelessWidget {
   const PrayerScreen({super.key});
 
   @override
-  State<PrayerScreen> createState() => _PrayerScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider<PrayerCubit>(
+      create: (_) => sl<PrayerCubit>()..init(),
+      child: const _PrayerView(),
+    );
+  }
 }
 
-class _PrayerScreenState extends State<PrayerScreen> {
-  late final PrayerController controller;
+class _PrayerView extends StatefulWidget {
+  const _PrayerView();
+
+  @override
+  State<_PrayerView> createState() => _PrayerViewState();
+}
+
+class _PrayerViewState extends State<_PrayerView> {
   Timer? _updateTimer;
 
   @override
   void initState() {
     super.initState();
-    controller = Get.put(PrayerController())..loadPrayerTimes();
-
-    NotificationService.init();
-
-    // تحديث الوقت المتبقي كل دقيقة
+    // تحديث الوقت المتبقي للصلاة القادمة كل دقيقة.
     _updateTimer = Timer.periodic(const Duration(minutes: 1), (_) {
       if (mounted) setState(() {});
     });
@@ -49,6 +56,7 @@ class _PrayerScreenState extends State<PrayerScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final cubit = context.read<PrayerCubit>();
     return Scaffold(
       appBar: CustomAppBar(
         title: 'مواقيت الصلاة',
@@ -56,45 +64,36 @@ class _PrayerScreenState extends State<PrayerScreen> {
           children: [
             if (RemoteConfig().enableCacheView())
               IconButton(
-                icon: Icon(
-                  Icons.info_outline,
-                  size: 24.sp,
-                  color: AppColors.white,
-                ),
-                onPressed: _showCacheInfoDialog,
+                icon: Icon(Icons.info_outline, size: 24.sp, color: AppColors.white),
+                onPressed: () => _showCacheInfoDialog(cubit),
               ),
             IconButton(
               icon: Icon(
-                size: 24.sp,
                 Icons.notifications_outlined,
+                size: 24.sp,
                 color: AppColors.white,
               ),
-              onPressed: _showNotificationSettings,
+              onPressed: () => _showNotificationSettings(cubit),
             ),
           ],
         ),
       ),
       backgroundColor: AppColors.bg,
       bottomNavigationBar: const BottomNavigationText(),
-      body: Obx(_buildBody),
+      body: BlocBuilder<PrayerCubit, PrayerState>(
+        builder: (context, state) => _buildBody(cubit, state),
+      ),
     );
   }
 
-  // بناء محتوى الشاشة
-  Widget _buildBody() {
-    if (controller.isLoading.value) {
-      return _buildLoadingState();
-    }
+  Widget _buildBody(PrayerCubit cubit, PrayerState state) {
+    if (state.status == PrayerStatus.loading) return _buildLoadingState();
+    if (state.status == PrayerStatus.error) return _buildErrorState(cubit, state);
 
-    if (controller.hasError.value) {
-      return _buildErrorState();
-    }
-
-    final data = controller.prayerTimes.value;
-
+    final data = state.prayerTimes;
     return Column(
       children: [
-        BuildCitySelector(controller: controller),
+        BuildCitySelector(cubit: cubit),
         if (data != null) ...[
           BuildNextPrayerCard(data: data),
           Expanded(child: _buildPrayersList(data)),
@@ -104,7 +103,6 @@ class _PrayerScreenState extends State<PrayerScreen> {
     );
   }
 
-  // حالة التحميل
   Widget _buildLoadingState() {
     return const Center(
       child: Column(
@@ -118,35 +116,25 @@ class _PrayerScreenState extends State<PrayerScreen> {
     );
   }
 
-  // حالة الخطأ
-  Widget _buildErrorState() {
+  Widget _buildErrorState(PrayerCubit cubit, PrayerState state) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Icon(Icons.error_outline, size: 64, color: Colors.red),
           const SizedBox(height: 16),
-          CustomText(
-            text: controller.errorMessage.value,
-            fontSize: 16,
-            color: Colors.red,
-          ),
+          CustomText(text: state.errorMessage, fontSize: 16, color: Colors.red),
           const SizedBox(height: 24),
           ElevatedButton.icon(
-            onPressed: controller.retry,
+            onPressed: cubit.retry,
             icon: const Icon(Icons.refresh),
             label: const Text('إعادة المحاولة'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.mainColor,
-              foregroundColor: Colors.white,
-            ),
           ),
         ],
       ),
     );
   }
 
-  // حالة فارغة
   Widget _buildEmptyState() {
     return const Expanded(
       child: Center(
@@ -162,7 +150,6 @@ class _PrayerScreenState extends State<PrayerScreen> {
     );
   }
 
-  // قائمة المواقيت
   Widget _buildPrayersList(PrayerTimeModel data) {
     final currentPrayer = PrayerTimeModelExtension(data).getCurrentPrayer();
     final nextPrayer = PrayerTimeModelExtension(data).getNextPrayer();
@@ -176,7 +163,6 @@ class _PrayerScreenState extends State<PrayerScreen> {
           isCurrent: currentPrayer == 'الفجر',
           isNext: nextPrayer == 'الفجر',
         ),
-
         BuildPrayerCard(
           title: 'الظهر',
           time: data.dhuhr,
@@ -209,50 +195,20 @@ class _PrayerScreenState extends State<PrayerScreen> {
     );
   }
 
-  // تنسيق الوقت المتبقي
-  String _formatDuration(Duration duration) {
-    if (duration.isNegative) return '--';
-
-    final hours = duration.inHours;
-    final minutes = duration.inMinutes % 60;
-    final seconds = duration.inSeconds % 60;
-
-    if (hours > 0) {
-      if (minutes > 0) {
-        return 'متبقي $hours ساعة و$minutes دقيقة';
-      }
-      return 'متبقي $hours ${hours == 1 ? 'ساعة' : 'ساعات'}';
-    }
-
-    if (minutes > 0) {
-      return 'متبقي $minutes ${minutes == 1 ? 'دقيقة' : 'دقائق'}';
-    }
-
-    if (seconds > 0) {
-      return 'متبقي $seconds ${seconds == 1 ? 'ثانية' : 'ثواني'}';
-    }
-
-    return 'الآن';
-  }
-
-  // إعدادات الإشعارات
-  void _showNotificationSettings() {
-    showModalBottomSheet(
+  void _showNotificationSettings(PrayerCubit cubit) {
+    showModalBottomSheet<void>(
       context: context,
-      builder: (context) =>
-          BuildNotificationSettingsDialog(controller: controller),
+      builder: (_) => BuildNotificationSettingsDialog(cubit: cubit),
     );
   }
 
-  // عرض معلومات الكاش
-  void _showCacheInfoDialog() async {
-    final info = await controller.apiService.getCacheInfo();
-
+  Future<void> _showCacheInfoDialog(PrayerCubit cubit) async {
+    final info = await cubit.apiService.getCacheInfo();
     if (!mounted) return;
 
-    showDialog(
+    showDialog<void>(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         title: const CustomText(
           text: 'معلومات الكاش',
           fontSize: 18,
@@ -263,42 +219,27 @@ class _PrayerScreenState extends State<PrayerScreen> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            BuildInfoRow(
-              label: 'إجمالي المدخلات',
-              value: '${info.totalEntries}',
-            ),
-            BuildInfoRow(
-              label: 'البيانات المحفوظة',
-              value: '${info.dataEntries}',
-            ),
-            BuildInfoRow(
-              label: 'البيانات الصالحة',
-              value: '${info.validEntries}',
-            ),
+            BuildInfoRow(label: 'إجمالي المدخلات', value: '${info.totalEntries}'),
+            BuildInfoRow(label: 'البيانات المحفوظة', value: '${info.dataEntries}'),
+            BuildInfoRow(label: 'البيانات الصالحة', value: '${info.validEntries}'),
             const SizedBox(height: 8),
             const Divider(),
             const SizedBox(height: 8),
             BuildInfoRow(
               label: 'أقدم بيانات',
-              value: _formatAge(
-                DateTime.now().difference(info.oldestCacheDate),
-              ),
+              value: _formatAge(DateTime.now().difference(info.oldestCacheDate)),
             ),
             const SizedBox(height: 8),
-            Obx(
-              () => BuildInfoRow(
-                label: 'حالة الاتصال',
-                value: controller.isOnline.value ? 'متصل' : 'غير متصل',
-                valueColor: controller.isOnline.value
-                    ? Colors.green
-                    : Colors.red,
-              ),
+            BuildInfoRow(
+              label: 'حالة الاتصال',
+              value: cubit.state.isOnline ? 'متصل' : 'غير متصل',
+              valueColor: cubit.state.isOnline ? Colors.green : Colors.red,
             ),
           ],
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pop(dialogContext),
             child: const CustomText(
               text: 'إغلاق',
               fontSize: 14,
@@ -308,8 +249,8 @@ class _PrayerScreenState extends State<PrayerScreen> {
           ),
           TextButton(
             onPressed: () async {
-              await controller.clearCache();
-              if (context.mounted) Navigator.pop(context);
+              await cubit.clearCache();
+              if (dialogContext.mounted) Navigator.pop(dialogContext);
             },
             child: const CustomText(
               text: 'مسح الكاش',
@@ -332,7 +273,6 @@ class _PrayerScreenState extends State<PrayerScreen> {
 
 class BuildInfoRow extends StatelessWidget {
   final String label;
-
   final String value;
   final Color? valueColor;
 

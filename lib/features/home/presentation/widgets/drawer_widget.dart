@@ -12,7 +12,7 @@ import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/core/widgets/custom_text_field.dart';
 import 'package:screw_calculator/features/contact_us/contact_us.dart';
 import 'package:screw_calculator/features/history/history.dart';
-import 'package:screw_calculator/features/prayer/screen/prayer_screen.dart';
+import 'package:screw_calculator/features/prayer/presentation/screens/prayer_screen.dart';
 import 'package:screw_calculator/features/rules/presentation/screens/rules_screen.dart';
 import 'package:screw_calculator/features/show_video/presentation/screens/show_video_screen.dart';
 import 'package:screw_calculator/features/users_screenshoot_sharing/presentation/screens/user_sc_sharing_screen.dart';

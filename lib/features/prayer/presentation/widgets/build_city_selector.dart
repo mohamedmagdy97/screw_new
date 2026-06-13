@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
-import 'package:screw_calculator/features/prayer/controllers/prayer_controller.dart';
 import 'package:screw_calculator/features/prayer/data/models/country_model.dart';
+import 'package:screw_calculator/features/prayer/presentation/cubit/prayer_cubit.dart';
 
 class BuildCitySelector extends StatelessWidget {
-  const BuildCitySelector({super.key, required this.controller});
+  const BuildCitySelector({super.key, required this.cubit});
 
-  final PrayerController controller;
+  final PrayerCubit cubit;
 
   @override
   Widget build(BuildContext context) {
@@ -16,35 +16,37 @@ class BuildCitySelector extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppRadii.md),
         gradient: LinearGradient(
-          colors: [AppColors.mainColor, AppColors.mainColor.withOpacity(0.7)],
+          colors: [
+            AppColors.mainColor,
+            AppColors.mainColor.withValues(alpha: 0.7),
+          ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.mainColor.withOpacity(0.3),
+            color: AppColors.mainColor.withValues(alpha: 0.3),
             blurRadius: 8,
             offset: const Offset(0, 4),
           ),
         ],
       ),
-
       child: Row(
         children: [
           const Icon(Icons.location_on, color: AppColors.white),
           const SizedBox(width: 12),
           Expanded(
             child: DropdownButton<CountryModel>(
-              value: controller.city,
-              borderRadius: BorderRadius.circular(12),
+              value: cubit.state.selectedCity,
+              borderRadius: BorderRadius.circular(AppRadii.md),
               icon: const Icon(Icons.arrow_drop_down, color: AppColors.white),
               isExpanded: true,
               underline: const SizedBox(),
               menuMaxHeight: 0.75.sh,
               dropdownColor: AppColors.mainColor,
-              items: controller.egyptGovernorates
+              items: cubit.egyptGovernorates
                   .map(
                     (c) => DropdownMenuItem(
                       value: c,
@@ -57,9 +59,7 @@ class BuildCitySelector extends StatelessWidget {
                   )
                   .toList(),
               onChanged: (v) {
-                if (v != null) {
-                  controller.changeCity(v);
-                }
+                if (v != null) cubit.changeCity(v);
               },
             ),
           ),

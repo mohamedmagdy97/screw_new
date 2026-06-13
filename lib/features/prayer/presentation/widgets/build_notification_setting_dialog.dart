@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
-import 'package:screw_calculator/features/prayer/controllers/prayer_controller.dart';
+import 'package:screw_calculator/features/prayer/presentation/cubit/prayer_cubit.dart';
 import 'package:screw_calculator/features/prayer/core/notification_service.dart';
 
 class BuildNotificationSettingsDialog extends StatelessWidget {
-  const BuildNotificationSettingsDialog({super.key, required this.controller});
+  const BuildNotificationSettingsDialog({super.key, required this.cubit});
 
-  final PrayerController controller;
+  final PrayerCubit cubit;
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +48,7 @@ class BuildNotificationSettingsDialog extends StatelessWidget {
               textAlign: TextAlign.end,
             ),
             onTap: () {
-              controller.loadPrayerTimes();
+              cubit.loadPrayerTimes();
               Navigator.pop(context);
             },
           ),
