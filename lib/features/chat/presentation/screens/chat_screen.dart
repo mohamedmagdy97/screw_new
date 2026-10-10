@@ -15,6 +15,7 @@ import 'package:screw_calculator/core/helpers/device_info.dart';
 import 'package:screw_calculator/core/helpers/image_helper.dart';
 import 'package:screw_calculator/core/helpers/phone_mask_helper.dart';
 import 'package:screw_calculator/core/state/generic_cubit/generic_cubit.dart';
+import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/utils/utilities.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
@@ -797,13 +798,13 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                       margin: const EdgeInsets.only(top: 8, right: 8, left: 8),
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        border: Border.all(color: AppColors.grayy2),
+                        border: Border.all(color: context.palette.border),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: CustomText(
                         text: 'تم حذف هذه الرسالة',
                         fontSize: 12,
-                        color: AppColors.grey,
+                        color: context.palette.textSecondary,
                         textAlign: msg.name == userName
                             ? TextAlign.end
                             : TextAlign.start,
@@ -850,10 +851,20 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                                     padding: const EdgeInsets.all(10),
                                     decoration: BoxDecoration(
                                       color: isHighlighted
-                                          ? Colors.green[200]
+                                          ? Color.alphaBlend(
+                                              context.palette.win.withValues(
+                                                alpha: 0.30,
+                                              ),
+                                              context.palette.surface,
+                                            )
                                           : isMe
-                                          ? Colors.blue[100]
-                                          : Colors.grey[200],
+                                          ? Color.alphaBlend(
+                                              context.palette.brand.withValues(
+                                                alpha: 0.22,
+                                              ),
+                                              context.palette.surface,
+                                            )
+                                          : context.palette.surfaceElevated,
                                       borderRadius: BorderRadius.only(
                                         topLeft: const Radius.circular(12),
                                         topRight: const Radius.circular(12),
@@ -1039,7 +1050,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
 
   Widget _replyBar() {
     return Container(
-      color: Colors.grey[300],
+      color: context.palette.surfaceElevated,
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Row(
         children: [

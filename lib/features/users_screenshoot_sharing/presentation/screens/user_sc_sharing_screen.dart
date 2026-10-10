@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:screw_calculator/app/di/service_locator.dart';
 import 'package:screw_calculator/core/helpers/image_helper.dart';
+import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/utils/utilities.dart';
 import 'package:screw_calculator/core/widgets/bottom_nav_text.dart';
 import 'package:screw_calculator/core/widgets/custom_appbar.dart';
@@ -106,9 +107,7 @@ class _UserScSharingViewState extends State<_UserScSharingView> {
         builder: (context, state) {
           if (state is ScreenshotInitial || state is ScreenshotLoading) {
             return const Center(
-              child: CircularProgressIndicator.adaptive(
-                strokeWidth: 4,
-              ),
+              child: CircularProgressIndicator.adaptive(strokeWidth: 4),
             );
           }
 
@@ -193,7 +192,7 @@ class _UserScSharingViewState extends State<_UserScSharingView> {
                         child: CustomText(
                           text: 'تم عرض جميع النتائج',
                           fontSize: 14.sp,
-                          color: Colors.grey[600],
+                          color: context.palette.textSecondary,
                         ),
                       ),
                     ),

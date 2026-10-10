@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/features/prayer/data/models/country_model.dart';
@@ -17,14 +18,7 @@ class BuildCitySelector extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(AppRadii.md),
-        gradient: LinearGradient(
-          colors: [
-            AppColors.mainColor,
-            AppColors.mainColor.withValues(alpha: 0.7),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        gradient: context.palette.brandGradient,
         boxShadow: [
           BoxShadow(
             color: AppColors.mainColor.withValues(alpha: 0.3),
@@ -53,6 +47,7 @@ class BuildCitySelector extends StatelessWidget {
                       child: CustomText(
                         text: c.nameAr,
                         fontSize: 18,
+                        color: Colors.white,
                         textAlign: TextAlign.right,
                       ),
                     ),

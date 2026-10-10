@@ -2,9 +2,9 @@ part of 'app_theme.dart';
 
 class AppColors {
   // static const Color mainColor = Color(0xff7942ba);
-  static const Color mainColor = Colors.purple;
-  static const Color mainColorAccent = Colors.purpleAccent;
-  static const Color mainColorLight = Color(0xFFE583FC);
+  static const Color mainColor = Color(0xFF7C3AED);
+  static const Color mainColorAccent = Color(0xFFA78BFA);
+  static const Color mainColorLight = Color(0xFFC4B5FD);
   static const Color secondaryColor = Color(0xffFF782C);
   static const Color secondaryColor2 = Color(0xffd50e0e);
   static const Color secondaryColorLight = Color(0xffF49864);

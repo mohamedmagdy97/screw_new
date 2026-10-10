@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 
 class InputBar extends StatelessWidget {
@@ -48,7 +49,7 @@ class InputBar extends StatelessWidget {
                   ),
                   hintTextDirection: TextDirection.rtl,
                   filled: true,
-                  fillColor: Colors.grey[200],
+                  fillColor: context.palette.surfaceElevated,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(24),
                     borderSide: BorderSide.none,

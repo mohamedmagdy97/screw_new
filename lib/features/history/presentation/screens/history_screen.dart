@@ -81,9 +81,7 @@ class _HistoryView extends StatelessWidget {
         builder: (context, state) {
           if (state is HistoryInitial || state is HistoryLoading) {
             return const Center(
-              child: CircularProgressIndicator.adaptive(
-                strokeWidth: 4,
-              ),
+              child: CircularProgressIndicator.adaptive(strokeWidth: 4),
             );
           }
 

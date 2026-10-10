@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:screw_calculator/core/models/item.dart';
 import 'package:screw_calculator/core/models/player_model.dart';
@@ -56,7 +57,7 @@ class HomeController {
     classicInit();
     friendsInit();
     loadCachedUser();
-    rateMyApp();
+    _maybeAskForReview();
   }
 
   void loadCachedUser() {
@@ -203,6 +204,37 @@ class HomeController {
     await Navigator.of(context).push(buildFancyRoute<void>(widget));
   }
 
+  static const String _launchCountKey = 'launchCount';
+  static const String _lastReviewPromptKey = 'lastReviewPrompt';
+  static const int _launchesBeforeReview = 5;
+  static const Duration _reviewCooldown = Duration(days: 60);
+
+  /// يطلب التقييم تلقائيًا بعد عدة مرات فتح، وبحد أقصى مرة كل [_reviewCooldown].
+  Future<void> _maybeAskForReview() async {
+    final box = Hive.box<dynamic>('userBox');
+    final launches = ((box.get(_launchCountKey) as int?) ?? 0) + 1;
+    await box.put(_launchCountKey, launches);
+    if (launches < _launchesBeforeReview) return;
+
+    final lastMs = box.get(_lastReviewPromptKey) as int?;
+    final last = lastMs == null
+        ? null
+        : DateTime.fromMillisecondsSinceEpoch(lastMs);
+    if (last != null && DateTime.now().difference(last) < _reviewCooldown) {
+      return;
+    }
+
+    final inAppReview = InAppReview.instance;
+    if (await inAppReview.isAvailable()) {
+      await box.put(
+        _lastReviewPromptKey,
+        DateTime.now().millisecondsSinceEpoch,
+      );
+      await inAppReview.requestReview();
+    }
+  }
+
+  /// زر "قيمنا" اليدوي: يفتح نافذة التقييم أو صفحة المتجر.
   Future<void> rateMyApp() async {
     final inAppReview = InAppReview.instance;
     if (await inAppReview.isAvailable()) {

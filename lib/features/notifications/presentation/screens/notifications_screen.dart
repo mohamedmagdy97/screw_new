@@ -33,9 +33,7 @@ class _NotificationsView extends StatelessWidget {
         builder: (context, state) {
           if (state is NotificationLoading || state is NotificationInitial) {
             return const Center(
-              child: CircularProgressIndicator.adaptive(
-                strokeWidth: 4,
-              ),
+              child: CircularProgressIndicator.adaptive(strokeWidth: 4),
             );
           }
 
@@ -80,9 +78,7 @@ class _NotificationsView extends StatelessWidget {
 
           if (state is NotificationDeleting) {
             return const Center(
-              child: CircularProgressIndicator.adaptive(
-                strokeWidth: 4,
-              ),
+              child: CircularProgressIndicator.adaptive(strokeWidth: 4),
             );
           }
 

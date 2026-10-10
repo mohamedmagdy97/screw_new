@@ -308,7 +308,7 @@ class BuildInfoRow extends StatelessWidget {
           CustomText(
             text: value,
             fontSize: 14,
-            color: valueColor ?? Colors.black,
+            color: valueColor,
             fontFamily: AppFonts.bold,
           ),
           CustomText(text: label, fontSize: 14, color: AppColors.grayy2),

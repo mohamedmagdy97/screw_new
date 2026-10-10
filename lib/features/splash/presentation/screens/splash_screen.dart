@@ -67,9 +67,7 @@ class _SplashScreenState extends State<SplashScreen> {
             const CustomText(text: 'صلي على النبي', fontSize: 16),
 
             SizedBox(height: 0.45.sh),
-            const CircularProgressIndicator.adaptive(
-              strokeWidth: 4,
-            ),
+            const CircularProgressIndicator.adaptive(strokeWidth: 4),
           ],
         ),
       ),

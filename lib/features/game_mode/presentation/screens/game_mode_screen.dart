@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:screw_calculator/app/di/service_locator.dart';
 import 'package:screw_calculator/core/helpers/firebase_notification_service.dart';
+import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/utils/enums.dart';
 import 'package:screw_calculator/core/utils/utilities.dart';
@@ -99,9 +100,7 @@ class _GameModeView extends StatelessWidget {
         builder: (context, state) {
           if (state is GameModeInitial || state is GameModeLoading) {
             return const Center(
-              child: CircularProgressIndicator.adaptive(
-                strokeWidth: 4,
-              ),
+              child: CircularProgressIndicator.adaptive(strokeWidth: 4),
             );
           }
 
@@ -186,7 +185,10 @@ class _GameModeView extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         gradient: LinearGradient(
           colors: gameMode.isActive
-              ? [Colors.purple.shade600, Colors.purple.shade800]
+              ? [
+                  context.palette.brand,
+                  context.palette.brand.withValues(alpha: 0.82),
+                ]
               : [Colors.transparent, Colors.transparent],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -214,7 +216,11 @@ class _GameModeView extends StatelessWidget {
               color: gameMode.isActive ? Colors.white : AppColors.black,
             ),
             duration: const Duration(milliseconds: 300),
-            child: CustomText(text: gameMode.value, fontSize: 22),
+            child: CustomText(
+              text: gameMode.value,
+              fontSize: 22,
+              color: gameMode.isActive ? Colors.white : null,
+            ),
           ),
         ),
       ),

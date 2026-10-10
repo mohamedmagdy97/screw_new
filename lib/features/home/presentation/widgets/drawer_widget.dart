@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:screw_calculator/app/di/service_locator.dart';
 import 'package:screw_calculator/core/helpers/remote_config.dart';
 import 'package:screw_calculator/core/theme/app_palette.dart';
@@ -360,7 +361,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                       Row(
                         children: [
                           CustomText(text: 'version - ', fontSize: 16),
-                          CustomText(text: 'v3.0', fontSize: 13),
+                          _AppVersionText(),
                         ],
                       ),
                     ],
@@ -371,6 +372,23 @@ class _DrawerWidgetState extends State<DrawerWidget> {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// يعرض رقم إصدار التطبيق الفعلي من `pubspec` بدل قيمة ثابتة.
+class _AppVersionText extends StatelessWidget {
+  const _AppVersionText();
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<PackageInfo>(
+      future: PackageInfo.fromPlatform(),
+      builder: (context, snapshot) {
+        final info = snapshot.data;
+        final label = info == null ? '' : 'v${info.version}';
+        return CustomText(text: label, fontSize: 13);
+      },
     );
   }
 }

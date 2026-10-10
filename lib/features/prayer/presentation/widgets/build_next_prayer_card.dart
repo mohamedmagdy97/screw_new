@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/features/prayer/data/models/prayer_time_model.dart';
@@ -17,22 +18,24 @@ class BuildNextPrayerCard extends StatelessWidget {
         !remaining.contains('ساعة') &&
         (remaining.contains('دقيقة') || remaining.contains('ثانية'));
 
+    final palette = context.palette;
     return Container(
+      width: double.infinity,
       margin: const EdgeInsets.only(right: 16, left: 16, bottom: 12, top: 4),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: isComingSoon
-              ? [const Color(0xFFFF6B6B), const Color(0xFFEE5A6F)]
-              : [const Color(0xFF1E88E5), const Color(0xFF1565C0)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(20),
+        gradient: isComingSoon
+            ? LinearGradient(
+                colors: [palette.lose, palette.lose.withValues(alpha: 0.78)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              )
+            : palette.brandGradient,
+        borderRadius: BorderRadius.circular(AppRadii.xl),
         boxShadow: [
           BoxShadow(
-            color: (isComingSoon ? Colors.red : Colors.blue).withValues(
-              alpha: 0.4,
+            color: (isComingSoon ? palette.lose : palette.brand).withValues(
+              alpha: 0.35,
             ),
             blurRadius: 16,
             offset: const Offset(0, 8),
@@ -63,6 +66,7 @@ class BuildNextPrayerCard extends StatelessWidget {
             text: info['name'] ?? '--',
             fontSize: 28,
             fontFamily: AppFonts.bold,
+            color: Colors.white,
           ),
           const SizedBox(height: 8),
           Container(
@@ -75,6 +79,7 @@ class BuildNextPrayerCard extends StatelessWidget {
               text: info['time'] ?? '--:--',
               fontSize: 28,
               fontFamily: AppFonts.bold,
+              color: Colors.white,
             ),
           ),
           const SizedBox(height: 12),
@@ -99,6 +104,7 @@ class BuildNextPrayerCard extends StatelessWidget {
                   text: remaining,
                   fontSize: 14,
                   fontFamily: AppFonts.bold,
+                  color: Colors.white,
                 ),
               ],
             ),

@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:screw_calculator/app/di/service_locator.dart';
 import 'package:screw_calculator/core/models/item.dart';
 import 'package:screw_calculator/core/state/generic_cubit/generic_cubit.dart';
+import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/utils/validation_form.dart';
 import 'package:screw_calculator/core/widgets/custom_button.dart';
@@ -55,8 +56,10 @@ class ClassicMode extends StatelessWidget {
                               gradient: LinearGradient(
                                 colors: state.data![index].isActive!
                                     ? [
-                                        Colors.purple.shade600,
-                                        Colors.purple.shade800,
+                                        context.palette.brand,
+                                        context.palette.brand.withValues(
+                                          alpha: 0.82,
+                                        ),
                                       ]
                                     : [Colors.transparent, Colors.transparent],
                                 begin: Alignment.topLeft,
@@ -74,6 +77,9 @@ class ClassicMode extends StatelessWidget {
                             child: CustomText(
                               text: state.data![index].value.toString(),
                               fontSize: 18.sp,
+                              color: state.data![index].isActive!
+                                  ? Colors.white
+                                  : null,
                             ),
                           ),
                         ),

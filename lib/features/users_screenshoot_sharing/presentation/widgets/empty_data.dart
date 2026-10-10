@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
 
 class EmptyData extends StatelessWidget {
@@ -16,7 +17,7 @@ class EmptyData extends StatelessWidget {
           CustomText(
             text: 'لا توجد مشاركات حالياً',
             fontSize: 16.sp,
-            color: Colors.grey[600],
+            color: context.palette.textSecondary,
           ),
         ],
       ),
