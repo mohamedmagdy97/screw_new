@@ -7,11 +7,10 @@ class MarkNotificationReadUseCase {
   MarkNotificationReadUseCase(this._repository);
 
   /// Executes the use case to mark a notification as read
-  /// 
+  ///
   /// [notificationId] - The ID of the notification to mark as read
   /// Returns true if successful, false otherwise
   Future<bool> call(String notificationId) async {
     return await _repository.markAsRead(notificationId);
   }
 }
-

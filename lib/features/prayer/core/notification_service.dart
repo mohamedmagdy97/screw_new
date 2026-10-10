@@ -22,11 +22,7 @@ class NotificationService {
       const android = AndroidInitializationSettings('@mipmap/ic_launcher');
 
       // إعدادات iOS — طلب صلاحيات التنبيه/الصوت/الشارة.
-      const iOS = DarwinInitializationSettings(
-        requestAlertPermission: true,
-        requestBadgePermission: true,
-        requestSoundPermission: true,
-      );
+      const iOS = DarwinInitializationSettings();
 
       const settings = InitializationSettings(android: android, iOS: iOS);
 
@@ -138,8 +134,7 @@ class NotificationService {
       }
 
       // أذونات الإشعارات المجدولة بدقة (Android 12+ فقط).
-      if (Platform.isAndroid &&
-          await Permission.scheduleExactAlarm.isDenied) {
+      if (Platform.isAndroid && await Permission.scheduleExactAlarm.isDenied) {
         await Permission.scheduleExactAlarm.request();
       }
 

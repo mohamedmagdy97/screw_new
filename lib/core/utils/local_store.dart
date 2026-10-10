@@ -8,8 +8,8 @@ class AppLocalStore {
 
   static Future<int?> getIntNotifications(String key) async {
     final prefs = await SharedPreferences.getInstance();
-    final int? num=prefs.getInt(key);
-    if (num== null) {
+    final int? num = prefs.getInt(key);
+    if (num == null) {
       return -1;
     }
     return num;
@@ -27,6 +27,7 @@ class AppLocalStore {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString(key, value);
   }
+
   static Future<void> setBool(String key, bool value) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setBool(key, value);
@@ -37,5 +38,3 @@ class AppLocalStore {
     return await prefs.remove(key);
   }
 }
-
-

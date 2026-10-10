@@ -43,9 +43,17 @@ class DashboardCubit extends Cubit<DashboardState> {
       Team(name: 'الفريق الأول', playerOne: players[0], playerTwo: players[1]),
       Team(name: 'الفريق الثاني', playerOne: players[2], playerTwo: players[3]),
       if (players.length > 4)
-        Team(name: 'الفريق الثالث', playerOne: players[4], playerTwo: players[5]),
+        Team(
+          name: 'الفريق الثالث',
+          playerOne: players[4],
+          playerTwo: players[5],
+        ),
       if (players.length > 6)
-        Team(name: 'الفريق الرابع', playerOne: players[6], playerTwo: players[7]),
+        Team(
+          name: 'الفريق الرابع',
+          playerOne: players[6],
+          playerTwo: players[7],
+        ),
     ];
   }
 
@@ -73,7 +81,9 @@ class DashboardCubit extends Cubit<DashboardState> {
     emit(state.copyWith(status: DashboardStatus.saving));
     try {
       await _saveGameUseCase(state.players);
-      emit(state.copyWith(status: DashboardStatus.saved, message: 'تم حفظ الجولة'));
+      emit(
+        state.copyWith(status: DashboardStatus.saved, message: 'تم حفظ الجولة'),
+      );
     } catch (_) {
       emit(
         state.copyWith(
@@ -95,9 +105,7 @@ class DashboardCubit extends Cubit<DashboardState> {
   /// أول جولة (1..5) لم يُدخلها كل اللاعبين، أو [kGameFinishedRound] لو اكتملت.
   int get currentRound {
     for (int round = 1; round <= 5; round++) {
-      final anyEmpty = state.players.any(
-        (p) => p.getRoundScore(round).isEmpty,
-      );
+      final anyEmpty = state.players.any((p) => p.getRoundScore(round).isEmpty);
       if (anyEmpty) return round;
     }
     return kGameFinishedRound;

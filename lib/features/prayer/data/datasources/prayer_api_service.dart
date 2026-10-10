@@ -26,7 +26,7 @@ class PrayerApiService {
   // Calculation method (Egyptian General Authority of Survey)
   static const int _calculationMethod = 5;
 
-  late Box _cacheBox;
+  late Box<dynamic> _cacheBox;
   bool _isInitialized = false;
 
   // تهيئة الـ Cache Box
@@ -34,7 +34,7 @@ class PrayerApiService {
     if (_isInitialized) return;
 
     try {
-      _cacheBox = await Hive.openBox(_cacheBoxName);
+      _cacheBox = await Hive.openBox<dynamic>(_cacheBoxName);
       _isInitialized = true;
       debugPrint('✅ Prayer API Service initialized');
     } catch (e) {
@@ -109,7 +109,7 @@ class PrayerApiService {
           .timeout(_requestTimeout);
 
       if (response.statusCode == 200) {
-        final body = json.decode(response.body);
+        final body = json.decode(response.body) as Map<String, dynamic>;
 
         // التحقق من صحة البيانات
         if (body['code'] == 200 && body['status'] == 'OK') {
@@ -148,7 +148,8 @@ class PrayerApiService {
     try {
       final cachedJson = _cacheBox.get('${cacheKey}_data');
       if (cachedJson != null) {
-        final Map<String, dynamic> data = jsonDecode(cachedJson) as Map<String, dynamic>;
+        final Map<String, dynamic> data =
+            jsonDecode(cachedJson as String) as Map<String, dynamic>;
         return PrayerTimeModel.fromJson(data);
       }
       return null;
@@ -179,7 +180,7 @@ class PrayerApiService {
       final timestampStr = _cacheBox.get('${cacheKey}_timestamp');
       if (timestampStr == null) return false;
 
-      final cachedTime = DateTime.parse(timestampStr);
+      final cachedTime = DateTime.parse(timestampStr as String);
       final now = DateTime.now();
       final difference = now.difference(cachedTime);
 
@@ -209,7 +210,7 @@ class PrayerApiService {
           final timestampStr = _cacheBox.get(key);
           if (timestampStr != null) {
             try {
-              final cachedTime = DateTime.parse(timestampStr);
+              final cachedTime = DateTime.parse(timestampStr as String);
               if (now.difference(cachedTime) > const Duration(days: 7)) {
                 final baseKey = key.toString().replaceAll('_timestamp', '');
                 keysToDelete.add(baseKey);
@@ -265,7 +266,7 @@ class PrayerApiService {
           final timestampStr = _cacheBox.get(key);
           if (timestampStr != null) {
             try {
-              final cachedTime = DateTime.parse(timestampStr);
+              final cachedTime = DateTime.parse(timestampStr as String);
 
               if (now.difference(cachedTime) < _cacheValidDuration) {
                 validEntries++;
@@ -314,7 +315,7 @@ class PrayerApiService {
       final response = await http.get(url).timeout(_requestTimeout);
 
       if (response.statusCode == 200) {
-        final body = json.decode(response.body);
+        final body = json.decode(response.body) as Map<String, dynamic>;
         if (body['code'] == 200 && body['status'] == 'OK') {
           debugPrint(
             '✅ Fetched prayer times for $city on ${DateFormat('yyyy-MM-dd').format(date)}',
@@ -346,7 +347,7 @@ class PrayerApiService {
       final response = await http.get(url).timeout(const Duration(seconds: 30));
 
       if (response.statusCode == 200) {
-        final body = json.decode(response.body);
+        final body = json.decode(response.body) as Map<String, dynamic>;
         if (body['code'] == 200 && body['status'] == 'OK') {
           final List<dynamic> data = body['data'] as List<dynamic>;
           return data

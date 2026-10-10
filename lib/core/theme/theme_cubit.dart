@@ -4,15 +4,15 @@ import 'package:hive/hive.dart';
 
 /// يدير وضع الثيم (فاتح/داكن/تلقائي) ويحفظ اختيار المستخدم في Hive.
 class ThemeCubit extends Cubit<ThemeMode> {
-  ThemeCubit({Box? box})
-    : _box = box ?? Hive.box('userBox'),
-      super(_read(box ?? Hive.box('userBox')));
+  ThemeCubit({Box<dynamic>? box})
+    : _box = box ?? Hive.box<dynamic>('userBox'),
+      super(_read(box ?? Hive.box<dynamic>('userBox')));
 
   static const String _key = 'themeMode';
 
-  final Box _box;
+  final Box<dynamic> _box;
 
-  static ThemeMode _read(Box box) {
+  static ThemeMode _read(Box<dynamic> box) {
     final String? saved = box.get(_key) as String?;
     return switch (saved) {
       'light' => ThemeMode.light,

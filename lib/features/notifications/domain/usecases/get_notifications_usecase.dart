@@ -12,4 +12,3 @@ class GetNotificationsUseCase {
     return _repository.getNotifications();
   }
 }
-

@@ -44,9 +44,7 @@ class PinnedMessage extends StatelessWidget {
 
               return;
             }
-            highlightedMessageIdCubit.update(
-              data: snap.data!['id'].toString(),
-            );
+            highlightedMessageIdCubit.update(data: snap.data!['id'].toString());
 
             try {
               await Scrollable.ensureVisible(

@@ -62,7 +62,8 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
       return UserValidationResult.existsButInvalidCountry;
     }
 
-    final storedCountry = match.docs.first.data()['userCountry']
+    final storedCountry = match.docs.first
+        .data()['userCountry']
         ?.toString()
         .trim();
     return storedCountry == country.trim()

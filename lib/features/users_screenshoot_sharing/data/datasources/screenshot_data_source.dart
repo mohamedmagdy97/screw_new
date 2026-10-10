@@ -16,7 +16,7 @@ class ScreenshotDataSourceImpl implements ScreenshotDataSource {
   final FirebaseFirestore _firestore;
 
   ScreenshotDataSourceImpl({FirebaseFirestore? firestore})
-      : _firestore = firestore ?? FirebaseFirestore.instance;
+    : _firestore = firestore ?? FirebaseFirestore.instance;
 
   @override
   Stream<List<ScreenShootModel>> getScreenshots({required int limit}) {
@@ -26,10 +26,10 @@ class ScreenshotDataSourceImpl implements ScreenshotDataSource {
         .limit(limit)
         .snapshots()
         .map((snapshot) {
-      return snapshot.docs.map((doc) {
-        return ScreenShootModel.fromJson(doc.data(), doc.id);
-      }).toList();
-    });
+          return snapshot.docs.map((doc) {
+            return ScreenShootModel.fromJson(doc.data(), doc.id);
+          }).toList();
+        });
   }
 
   @override
@@ -71,4 +71,3 @@ class ScreenshotDataSourceImpl implements ScreenshotDataSource {
     }
   }
 }
-

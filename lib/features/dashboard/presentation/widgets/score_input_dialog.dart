@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:screw_calculator/core/models/player_model.dart';
-import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/utils/validation_form.dart';
 import 'package:screw_calculator/core/widgets/custom_button.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
@@ -28,11 +27,7 @@ Future<void> showScoreInputDialog({
         scale: curved,
         child: Opacity(
           opacity: anim.value,
-          child: ScoreInputDialog(
-            cubit: cubit,
-            player: player,
-            isEdit: isEdit,
-          ),
+          child: ScoreInputDialog(cubit: cubit, player: player, isEdit: isEdit),
         ),
       );
     },

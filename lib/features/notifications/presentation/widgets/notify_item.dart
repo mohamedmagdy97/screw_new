@@ -31,7 +31,7 @@ class NotificationsItem extends StatelessWidget {
           margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [Colors.red.shade800.withOpacity(0.3), Colors.red],
+              colors: [Colors.red.shade800.withValues(alpha: 0.3), Colors.red],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -52,7 +52,10 @@ class NotificationsItem extends StatelessWidget {
           margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [Colors.blue.shade800.withOpacity(0.3), Colors.blue],
+              colors: [
+                Colors.blue.shade800.withValues(alpha: 0.3),
+                Colors.blue,
+              ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -80,15 +83,16 @@ class NotificationsItem extends StatelessWidget {
               pageBuilder: (_, _, _) => const SizedBox.shrink(),
               transitionBuilder: (ctx, anim, _, child) {
                 return SlideTransition(
-                  position: Tween<Offset>(
-                    begin: const Offset(0, 1),
-                    end: Offset.zero,
-                  ).animate(
-                    CurvedAnimation(
-                      parent: anim,
-                      curve: Curves.easeOutCubic,
-                    ),
-                  ),
+                  position:
+                      Tween<Offset>(
+                        begin: const Offset(0, 1),
+                        end: Offset.zero,
+                      ).animate(
+                        CurvedAnimation(
+                          parent: anim,
+                          curve: Curves.easeOutCubic,
+                        ),
+                      ),
                   child: Opacity(
                     opacity: anim.value,
                     child: Dialog(
@@ -149,8 +153,8 @@ class NotificationsItem extends StatelessWidget {
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                Colors.purple.shade600.withOpacity(0.3),
-                Colors.purple.shade800.withOpacity(0.3),
+                Colors.purple.shade600.withValues(alpha: 0.3),
+                Colors.purple.shade800.withValues(alpha: 0.3),
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -221,17 +225,17 @@ class NotificationsItem extends StatelessWidget {
                 const SizedBox(width: 8),
                 notification.image != null
                     ? ClipRRect(
-                  borderRadius: BorderRadiusGeometry.circular(8),
-                  child: Image.network(
-                    notification.image ?? '',
-                    width: 40,
-                    height: 40,
-                    errorBuilder: (_, _, _) => const Icon(
-                      Icons.notifications,
-                      color: AppColors.mainColorAccent,
-                    ),
-                  ),
-                )
+                        borderRadius: BorderRadiusGeometry.circular(8),
+                        child: Image.network(
+                          notification.image ?? '',
+                          width: 40,
+                          height: 40,
+                          errorBuilder: (_, _, _) => const Icon(
+                            Icons.notifications,
+                            color: AppColors.mainColorAccent,
+                          ),
+                        ),
+                      )
                     : const Icon(Icons.notifications),
               ],
             ),
@@ -241,4 +245,3 @@ class NotificationsItem extends StatelessWidget {
     );
   }
 }
-

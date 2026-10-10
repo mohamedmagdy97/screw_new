@@ -2,18 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:screw_calculator/app/di/service_locator.dart';
 import 'package:screw_calculator/core/helpers/image_helper.dart';
-import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/utils/utilities.dart';
 import 'package:screw_calculator/core/widgets/bottom_nav_text.dart';
 import 'package:screw_calculator/core/widgets/custom_appbar.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
-import 'package:screw_calculator/features/users_screenshoot_sharing/data/datasources/screenshot_data_source.dart';
-import 'package:screw_calculator/features/users_screenshoot_sharing/data/repositories/screenshot_repository_impl.dart';
 import 'package:screw_calculator/features/users_screenshoot_sharing/domain/entities/screenshot_entity.dart';
-import 'package:screw_calculator/features/users_screenshoot_sharing/domain/usecases/delete_screenshot_usecase.dart';
-import 'package:screw_calculator/features/users_screenshoot_sharing/domain/usecases/get_screenshots_usecase.dart';
-import 'package:screw_calculator/features/users_screenshoot_sharing/domain/usecases/load_more_screenshots_usecase.dart';
 import 'package:screw_calculator/features/users_screenshoot_sharing/presentation/cubit/screenshot_cubit.dart';
 import 'package:screw_calculator/features/users_screenshoot_sharing/presentation/widgets/delete_confirmation_dialog.dart';
 import 'package:screw_calculator/features/users_screenshoot_sharing/presentation/widgets/empty_data.dart';
@@ -26,21 +21,8 @@ class UserScSharingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => _createScreenshotCubit(),
+      create: (_) => sl<ScreenshotCubit>(),
       child: const _UserScSharingView(),
-    );
-  }
-
-  ScreenshotCubit _createScreenshotCubit() {
-    final dataSource = ScreenshotDataSourceImpl();
-    final repository = ScreenshotRepositoryImpl(dataSource: dataSource);
-    final getScreenshotsUseCase = GetScreenshotsUseCase(repository);
-    final loadMoreScreenshotsUseCase = LoadMoreScreenshotsUseCase(repository);
-    final deleteScreenshotUseCase = DeleteScreenshotUseCase(repository);
-    return ScreenshotCubit(
-      getScreenshotsUseCase: getScreenshotsUseCase,
-      loadMoreScreenshotsUseCase: loadMoreScreenshotsUseCase,
-      deleteScreenshotUseCase: deleteScreenshotUseCase,
     );
   }
 }
@@ -95,7 +77,7 @@ class _UserScSharingViewState extends State<_UserScSharingView> {
         ) ??
         false;
 
-    if (shouldDelete) {
+    if (shouldDelete && mounted) {
       context.read<ScreenshotCubit>().deleteScreenshot(screenshotId);
     }
   }
@@ -126,8 +108,6 @@ class _UserScSharingViewState extends State<_UserScSharingView> {
             return const Center(
               child: CircularProgressIndicator.adaptive(
                 strokeWidth: 4,
-                backgroundColor: AppColors.mainColor,
-                valueColor: AlwaysStoppedAnimation<Color>(AppColors.bg),
               ),
             );
           }

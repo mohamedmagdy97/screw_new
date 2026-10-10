@@ -2,6 +2,7 @@ import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:screw_calculator/app/di/service_locator.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/features/show_video/presentation/cubit/video_cubit.dart';
@@ -12,7 +13,7 @@ class YoutubeLikePlayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => VideoCubit(),
+      create: (_) => sl<VideoCubit>(),
       child: const _ShowVideoView(),
     );
   }

@@ -12,7 +12,8 @@ import 'package:screw_calculator/features/home/domain/repositories/home_reposito
 /// ويفوّض عمليات البيانات (تسجيل/تحقق المستخدم) إلى [HomeRepository] بدل الوصول
 /// المباشر لـ Firebase — تحقيقًا لمبدأ Dependency Inversion.
 class HomeController {
-  HomeController({required HomeRepository repository}) : _repository = repository;
+  HomeController({required HomeRepository repository})
+    : _repository = repository;
 
   final HomeRepository _repository;
 
@@ -148,7 +149,9 @@ class HomeController {
 
     await Navigator.push(
       context,
-      buildFancyRoute(DashboardScreen(players: players, teamsMode: teamsMode)),
+      buildFancyRoute<void>(
+        DashboardScreen(players: players, teamsMode: teamsMode),
+      ),
     );
 
     players.clear();
@@ -180,9 +183,9 @@ class HomeController {
 
     players.removeWhere((element) => element.id! > playersCount);
 
-    await Navigator.of(
-      context,
-    ).push(buildFancyRoute(DashboardScreen(players: players, teamsMode: true)));
+    await Navigator.of(context).push(
+      buildFancyRoute<void>(DashboardScreen(players: players, teamsMode: true)),
+    );
     players.clear();
   }
 
@@ -197,7 +200,7 @@ class HomeController {
     Navigator.of(context).pop();
     await Future<void>.delayed(const Duration(milliseconds: 200));
     if (!context.mounted) return;
-    await Navigator.of(context).push(buildFancyRoute(widget));
+    await Navigator.of(context).push(buildFancyRoute<void>(widget));
   }
 
   Future<void> rateMyApp() async {

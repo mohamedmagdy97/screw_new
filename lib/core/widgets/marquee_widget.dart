@@ -15,7 +15,7 @@ class MarqueeWidget extends StatefulWidget {
   });
 
   @override
-  _MarqueeWidgetState createState() => _MarqueeWidgetState();
+  State<MarqueeWidget> createState() => _MarqueeWidgetState();
 }
 
 class _MarqueeWidgetState extends State<MarqueeWidget> {
@@ -46,7 +46,7 @@ class _MarqueeWidgetState extends State<MarqueeWidget> {
 
   void scroll(_) async {
     while (scrollController.hasClients) {
-      await Future.delayed(widget.pauseDuration);
+      await Future<void>.delayed(widget.pauseDuration);
       if (scrollController.hasClients) {
         await scrollController.animateTo(
           scrollController.position.maxScrollExtent,
@@ -54,7 +54,7 @@ class _MarqueeWidgetState extends State<MarqueeWidget> {
           curve: Curves.ease,
         );
       }
-      await Future.delayed(widget.pauseDuration);
+      await Future<void>.delayed(widget.pauseDuration);
       if (scrollController.hasClients) {
         await scrollController.animateTo(
           0.0,

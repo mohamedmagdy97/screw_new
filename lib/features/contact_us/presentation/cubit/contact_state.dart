@@ -13,4 +13,3 @@ class ContactError extends ContactState {
 
   ContactError(this.message);
 }
-

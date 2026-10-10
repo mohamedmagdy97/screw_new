@@ -54,9 +54,12 @@ class ShareScreenBtn extends StatelessWidget {
         ),
       );
 
-      await Share.shareXFiles([
-        XFile(filePath),
-      ], text: '📸 شوف نتيجتي! من تطبيق سكرو حاسبة');
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [XFile(filePath)],
+          text: '📸 شوف نتيجتي! من تطبيق سكرو حاسبة',
+        ),
+      );
     } catch (e) {
       debugPrint('خطأ أثناء مشاركة الصورة: $e');
     }

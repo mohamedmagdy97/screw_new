@@ -12,9 +12,9 @@ void main() async {
   await Firebase.initializeApp();
   await NotificationService.init();
   await Hive.initFlutter();
-  await Hive.openBox('prayerCache');
-  await Hive.openBox('userBox');
-  await Hive.openBox('cachedMessages');
+  await Hive.openBox<dynamic>('prayerCache');
+  await Hive.openBox<dynamic>('userBox');
+  await Hive.openBox<dynamic>('cachedMessages');
 
   await setupLocator();
 

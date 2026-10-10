@@ -58,6 +58,7 @@ class BuildNotificationSettingsDialog extends StatelessWidget {
             ),
             onTap: () async {
               await NotificationService.cancelAllNotifications();
+              if (!context.mounted) return;
               Navigator.pop(context);
             },
           ),

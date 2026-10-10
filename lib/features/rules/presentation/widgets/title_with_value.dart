@@ -56,8 +56,8 @@ class TitleWithValue extends StatelessWidget {
                     ]
                   : highlight!
                   ? [
-                      AppColors.mainColor.withOpacity(0.5),
-                      AppColors.mainColor.withOpacity(0.1),
+                      AppColors.mainColor.withValues(alpha: 0.5),
+                      AppColors.mainColor.withValues(alpha: 0.1),
                     ]
                   : [Colors.transparent, Colors.transparent],
               begin: Alignment.topLeft,

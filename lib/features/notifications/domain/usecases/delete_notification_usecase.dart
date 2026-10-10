@@ -7,11 +7,10 @@ class DeleteNotificationUseCase {
   DeleteNotificationUseCase(this._repository);
 
   /// Executes the use case to delete a notification
-  /// 
+  ///
   /// [notificationId] - The ID of the notification to delete
   /// Returns true if successful, false otherwise
   Future<bool> call(String notificationId) async {
     return await _repository.deleteNotification(notificationId);
   }
 }
-

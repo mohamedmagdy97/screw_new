@@ -4,13 +4,11 @@ import 'package:screw_calculator/features/contact_us/domain/repositories/contact
 class ContactRepositoryImpl implements ContactRepository {
   final UrlLauncherDataSource _dataSource;
 
-  ContactRepositoryImpl({
-    required UrlLauncherDataSource dataSource,
-  }) : _dataSource = dataSource;
+  ContactRepositoryImpl({required UrlLauncherDataSource dataSource})
+    : _dataSource = dataSource;
 
   @override
   Future<bool> launchUrl(String url) async {
     return await _dataSource.launchUrl(url);
   }
 }
-

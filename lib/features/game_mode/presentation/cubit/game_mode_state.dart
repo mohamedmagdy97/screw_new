@@ -17,4 +17,3 @@ class GameModeError extends GameModeState {
 
   GameModeError(this.message);
 }
-

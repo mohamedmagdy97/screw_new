@@ -34,8 +34,9 @@ class DashboardScreen extends StatelessWidget {
     final bool showTeamsView =
         ModeClass.mode == GameModeEnum.friendly && !fromHistory;
     return BlocProvider<DashboardCubit>(
-      create: (_) => sl<DashboardCubit>()
-        ..start(players: players, showTeamsView: showTeamsView),
+      create: (_) =>
+          sl<DashboardCubit>()
+            ..start(players: players, showTeamsView: showTeamsView),
       child: _DashboardView(fromHistory: fromHistory),
     );
   }
@@ -57,7 +58,9 @@ class _DashboardViewState extends State<_DashboardView> {
   @override
   void initState() {
     super.initState();
-    _confettiController = ConfettiController(duration: const Duration(seconds: 5));
+    _confettiController = ConfettiController(
+      duration: const Duration(seconds: 5),
+    );
   }
 
   @override
@@ -125,7 +128,10 @@ class _DashboardViewState extends State<_DashboardView> {
                                     Screenshot(
                                       controller: _screenshotController,
                                       child: state.showTeamsView
-                                          ? _TeamsBoard(cubit: cubit, state: state)
+                                          ? _TeamsBoard(
+                                              cubit: cubit,
+                                              state: state,
+                                            )
                                           : _PlayersBoard(
                                               cubit: cubit,
                                               state: state,
@@ -133,7 +139,8 @@ class _DashboardViewState extends State<_DashboardView> {
                                     ),
                                     ShareScreenBtn(
                                       cubit: cubit,
-                                      screenshotController: _screenshotController,
+                                      screenshotController:
+                                          _screenshotController,
                                     ),
                                     if (state.showTeamsView)
                                       _ResetSection(onReset: cubit.resetGame)

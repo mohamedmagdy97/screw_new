@@ -6,9 +6,8 @@ import 'package:screw_calculator/features/users_screenshoot_sharing/domain/repos
 class ScreenshotRepositoryImpl implements ScreenshotRepository {
   final ScreenshotDataSource _dataSource;
 
-  ScreenshotRepositoryImpl({
-    required ScreenshotDataSource dataSource,
-  }) : _dataSource = dataSource;
+  ScreenshotRepositoryImpl({required ScreenshotDataSource dataSource})
+    : _dataSource = dataSource;
 
   @override
   Stream<List<ScreenshotEntity>> getScreenshots({required int limit}) {
@@ -34,4 +33,3 @@ class ScreenshotRepositoryImpl implements ScreenshotRepository {
     return await _dataSource.deleteScreenshot(screenshotId);
   }
 }
-

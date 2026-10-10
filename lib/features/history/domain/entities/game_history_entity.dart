@@ -5,4 +5,3 @@ class GameHistoryEntity {
 
   GameHistoryEntity({required this.players});
 }
-

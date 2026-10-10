@@ -148,7 +148,10 @@ class AppStyle {
     return const LinearGradient(
       begin: Alignment.centerRight,
       end: Alignment.centerLeft,
-      colors: [Color.fromRGBO(90, 91, 92, 1.0), Color.fromRGBO(90, 91, 92, 1.0)],
+      colors: [
+        Color.fromRGBO(90, 91, 92, 1.0),
+        Color.fromRGBO(90, 91, 92, 1.0),
+      ],
     );
   }
 

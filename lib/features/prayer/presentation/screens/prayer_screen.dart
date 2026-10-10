@@ -64,7 +64,11 @@ class _PrayerViewState extends State<_PrayerView> {
           children: [
             if (RemoteConfig().enableCacheView())
               IconButton(
-                icon: Icon(Icons.info_outline, size: 24.sp, color: AppColors.white),
+                icon: Icon(
+                  Icons.info_outline,
+                  size: 24.sp,
+                  color: AppColors.white,
+                ),
                 onPressed: () => _showCacheInfoDialog(cubit),
               ),
             IconButton(
@@ -87,7 +91,9 @@ class _PrayerViewState extends State<_PrayerView> {
 
   Widget _buildBody(PrayerCubit cubit, PrayerState state) {
     if (state.status == PrayerStatus.loading) return _buildLoadingState();
-    if (state.status == PrayerStatus.error) return _buildErrorState(cubit, state);
+    if (state.status == PrayerStatus.error) {
+      return _buildErrorState(cubit, state);
+    }
 
     final data = state.prayerTimes;
     return Column(
@@ -217,15 +223,26 @@ class _PrayerViewState extends State<_PrayerView> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            BuildInfoRow(label: 'إجمالي المدخلات', value: '${info.totalEntries}'),
-            BuildInfoRow(label: 'البيانات المحفوظة', value: '${info.dataEntries}'),
-            BuildInfoRow(label: 'البيانات الصالحة', value: '${info.validEntries}'),
+            BuildInfoRow(
+              label: 'إجمالي المدخلات',
+              value: '${info.totalEntries}',
+            ),
+            BuildInfoRow(
+              label: 'البيانات المحفوظة',
+              value: '${info.dataEntries}',
+            ),
+            BuildInfoRow(
+              label: 'البيانات الصالحة',
+              value: '${info.validEntries}',
+            ),
             const SizedBox(height: 8),
             const Divider(),
             const SizedBox(height: 8),
             BuildInfoRow(
               label: 'أقدم بيانات',
-              value: _formatAge(DateTime.now().difference(info.oldestCacheDate)),
+              value: _formatAge(
+                DateTime.now().difference(info.oldestCacheDate),
+              ),
             ),
             const SizedBox(height: 8),
             BuildInfoRow(

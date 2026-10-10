@@ -9,11 +9,7 @@ class GameModeItemEntity {
     this.isActive = false,
   });
 
-  GameModeItemEntity copyWith({
-    int? key,
-    String? value,
-    bool? isActive,
-  }) {
+  GameModeItemEntity copyWith({int? key, String? value, bool? isActive}) {
     return GameModeItemEntity(
       key: key ?? this.key,
       value: value ?? this.value,
@@ -21,4 +17,3 @@ class GameModeItemEntity {
     );
   }
 }
-

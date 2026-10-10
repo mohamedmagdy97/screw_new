@@ -6,10 +6,9 @@ part 'contact_state.dart';
 class ContactCubit extends Cubit<ContactState> {
   final LaunchContactUrlUseCase _launchContactUrlUseCase;
 
-  ContactCubit({
-    required LaunchContactUrlUseCase launchContactUrlUseCase,
-  })  : _launchContactUrlUseCase = launchContactUrlUseCase,
-        super(ContactInitial());
+  ContactCubit({required LaunchContactUrlUseCase launchContactUrlUseCase})
+    : _launchContactUrlUseCase = launchContactUrlUseCase,
+      super(ContactInitial());
 
   Future<void> launchContactUrl(String url) async {
     emit(ContactLoading());
@@ -25,4 +24,3 @@ class ContactCubit extends Cubit<ContactState> {
     }
   }
 }
-

@@ -13,10 +13,7 @@ class GameModeCubit extends Cubit<GameModeState> {
     try {
       final gameModes = [
         GameModeItemEntity(key: 0, value: 'كلاسيك\n ( فردي )', isActive: true),
-        GameModeItemEntity(
-          key: 1,
-          value: 'صاحب صاحبه\n ( زوجي )',
-        ),
+        GameModeItemEntity(key: 1, value: 'صاحب صاحبه\n ( زوجي )'),
       ];
 
       emit(GameModeLoaded(gameModes));

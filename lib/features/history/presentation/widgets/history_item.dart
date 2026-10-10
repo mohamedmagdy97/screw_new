@@ -20,10 +20,12 @@ class HistoryItem extends StatelessWidget {
   String _getWinnerName() {
     if (game.players.isEmpty) return '';
     return game.players
-        .reduce((curr, next) =>
-            int.parse(curr.total ?? '0') < int.parse(next.total ?? '0')
-                ? curr
-                : next)
+        .reduce(
+          (curr, next) =>
+              int.parse(curr.total ?? '0') < int.parse(next.total ?? '0')
+              ? curr
+              : next,
+        )
         .name
         .toString();
   }
@@ -39,10 +41,7 @@ class HistoryItem extends StatelessWidget {
           children: [
             IconButton(
               onPressed: onDelete,
-              icon: const Icon(
-                Icons.delete_outline,
-                color: AppColors.white,
-              ),
+              icon: const Icon(Icons.delete_outline, color: AppColors.white),
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -66,4 +65,3 @@ class HistoryItem extends StatelessWidget {
     );
   }
 }
-

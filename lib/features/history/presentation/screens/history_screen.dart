@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:screw_calculator/app/di/service_locator.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/widgets/bottom_nav_text.dart';
 import 'package:screw_calculator/core/widgets/custom_appbar.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/features/dashboard/presentation/screens/dashboard_screen.dart';
-import 'package:screw_calculator/features/history/data/datasources/history_data_source.dart';
-import 'package:screw_calculator/features/history/data/repositories/history_repository_impl.dart';
 import 'package:screw_calculator/features/history/domain/entities/game_history_entity.dart';
-import 'package:screw_calculator/features/history/domain/usecases/clear_all_games_usecase.dart';
-import 'package:screw_calculator/features/history/domain/usecases/get_games_usecase.dart';
-import 'package:screw_calculator/features/history/domain/usecases/remove_game_usecase.dart';
 import 'package:screw_calculator/features/history/presentation/cubit/history_cubit.dart';
 import 'package:screw_calculator/features/history/presentation/widgets/clear_all_confirmation_dialog.dart';
 import 'package:screw_calculator/features/history/presentation/widgets/delete_confirmation_dialog.dart';
@@ -22,21 +18,8 @@ class HistoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => _createHistoryCubit(),
+      create: (_) => sl<HistoryCubit>(),
       child: const _HistoryView(),
-    );
-  }
-
-  HistoryCubit _createHistoryCubit() {
-    final dataSource = HistoryDataSourceImpl();
-    final repository = HistoryRepositoryImpl(dataSource: dataSource);
-    final getGamesUseCase = GetGamesUseCase(repository);
-    final removeGameUseCase = RemoveGameUseCase(repository);
-    final clearAllGamesUseCase = ClearAllGamesUseCase(repository);
-    return HistoryCubit(
-      getGamesUseCase: getGamesUseCase,
-      removeGameUseCase: removeGameUseCase,
-      clearAllGamesUseCase: clearAllGamesUseCase,
     );
   }
 }
@@ -52,7 +35,7 @@ class _HistoryView extends StatelessWidget {
         ) ??
         false;
 
-    if (shouldDelete) {
+    if (shouldDelete && context.mounted) {
       context.read<HistoryCubit>().removeGame(index);
     }
   }
@@ -65,16 +48,20 @@ class _HistoryView extends StatelessWidget {
         ) ??
         false;
 
-    if (shouldClear) {
+    if (shouldClear && context.mounted) {
       context.read<HistoryCubit>().clearAllGames();
     }
   }
 
-  void _navigateToDashboardScreen(BuildContext context, GameHistoryEntity game) {
+  void _navigateToDashboardScreen(
+    BuildContext context,
+    GameHistoryEntity game,
+  ) {
     Navigator.push<void>(
       context,
       MaterialPageRoute<void>(
-        builder: (_) => DashboardScreen(players: game.players, fromHistory: true),
+        builder: (_) =>
+            DashboardScreen(players: game.players, fromHistory: true),
       ),
     );
   }
@@ -96,8 +83,6 @@ class _HistoryView extends StatelessWidget {
             return const Center(
               child: CircularProgressIndicator.adaptive(
                 strokeWidth: 4,
-                backgroundColor: AppColors.mainColor,
-                valueColor: AlwaysStoppedAnimation<Color>(AppColors.bg),
               ),
             );
           }
@@ -141,7 +126,8 @@ class _HistoryView extends StatelessWidget {
                 return HistoryItem(
                   game: games[index],
                   index: index,
-                  onTap: () => _navigateToDashboardScreen(context, games[index]),
+                  onTap: () =>
+                      _navigateToDashboardScreen(context, games[index]),
                   onDelete: () => _handleDeleteGame(context, index),
                 );
               },

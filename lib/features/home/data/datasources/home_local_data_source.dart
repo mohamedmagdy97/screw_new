@@ -25,7 +25,7 @@ abstract class HomeLocalDataSource {
 class HomeLocalDataSourceImpl implements HomeLocalDataSource {
   HomeLocalDataSourceImpl({required this.userBox});
 
-  final Box userBox;
+  final Box<dynamic> userBox;
 
   @override
   CachedUser getCachedUser() {

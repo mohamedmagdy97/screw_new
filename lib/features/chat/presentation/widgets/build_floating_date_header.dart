@@ -13,7 +13,7 @@ class BuildFloatingDateHeader extends StatelessWidget {
         margin: const EdgeInsets.symmetric(vertical: 12),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
         decoration: BoxDecoration(
-          color: AppColors.grayy.withOpacity(0.8),
+          color: AppColors.grayy.withValues(alpha: 0.8),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Text(

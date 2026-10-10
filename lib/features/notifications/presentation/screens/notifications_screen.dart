@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:screw_calculator/core/theme/app_theme.dart';
+import 'package:screw_calculator/app/di/service_locator.dart';
 import 'package:screw_calculator/core/widgets/bottom_nav_text.dart';
 import 'package:screw_calculator/core/widgets/custom_appbar.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
-import 'package:screw_calculator/features/notifications/data/datasources/notification_data_source.dart';
-import 'package:screw_calculator/features/notifications/data/repositories/notification_repository_impl.dart';
-import 'package:screw_calculator/features/notifications/domain/usecases/delete_notification_usecase.dart';
-import 'package:screw_calculator/features/notifications/domain/usecases/get_notifications_usecase.dart';
-import 'package:screw_calculator/features/notifications/domain/usecases/mark_notification_read_usecase.dart';
 import 'package:screw_calculator/features/notifications/presentation/cubit/notification_cubit.dart';
 import 'package:screw_calculator/features/notifications/presentation/widgets/notify_item.dart';
 
@@ -18,24 +13,12 @@ class NotificationsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => _createNotificationCubit(),
+      create: (_) => sl<NotificationCubit>(),
       child: const _NotificationsView(),
     );
   }
 
   /// Creates and configures NotificationCubit with all dependencies
-  NotificationCubit _createNotificationCubit() {
-    final dataSource = NotificationDataSourceImpl();
-    final repository = NotificationRepositoryImpl(dataSource: dataSource);
-    final getNotificationsUseCase = GetNotificationsUseCase(repository);
-    final deleteNotificationUseCase = DeleteNotificationUseCase(repository);
-    final markNotificationReadUseCase = MarkNotificationReadUseCase(repository);
-    return NotificationCubit(
-      getNotificationsUseCase: getNotificationsUseCase,
-      deleteNotificationUseCase: deleteNotificationUseCase,
-      markNotificationReadUseCase: markNotificationReadUseCase,
-    );
-  }
 }
 
 class _NotificationsView extends StatelessWidget {
@@ -52,8 +35,6 @@ class _NotificationsView extends StatelessWidget {
             return const Center(
               child: CircularProgressIndicator.adaptive(
                 strokeWidth: 4,
-                backgroundColor: AppColors.mainColor,
-                valueColor: AlwaysStoppedAnimation<Color>(AppColors.bg),
               ),
             );
           }
@@ -101,8 +82,6 @@ class _NotificationsView extends StatelessWidget {
             return const Center(
               child: CircularProgressIndicator.adaptive(
                 strokeWidth: 4,
-                backgroundColor: AppColors.mainColor,
-                valueColor: AlwaysStoppedAnimation<Color>(AppColors.bg),
               ),
             );
           }

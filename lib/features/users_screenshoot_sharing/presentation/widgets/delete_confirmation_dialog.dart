@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:screw_calculator/core/theme/app_theme.dart';
+import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
 
 class DeleteConfirmationDialog extends StatelessWidget {
@@ -9,14 +9,9 @@ class DeleteConfirmationDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: AppColors.textColorTitle,
       title: Row(
         children: [
-          Icon(
-            Icons.warning_amber_rounded,
-            color: Colors.orange,
-            size: 24.sp,
-          ),
+          Icon(Icons.warning_amber_rounded, color: Colors.orange, size: 24.sp),
           SizedBox(width: 8.w),
           CustomText(
             text: 'تأكيد الحذف',
@@ -29,16 +24,14 @@ class DeleteConfirmationDialog extends StatelessWidget {
         text: 'هل أنت متأكد أنك تريد حذف هذه المشاركة؟',
         fontSize: 16.sp,
       ),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12.r),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(false),
           child: CustomText(
             text: 'إلغاء',
             fontSize: 16.sp,
-            color: Colors.grey[600],
+            color: context.palette.textSecondary,
           ),
         ),
         ElevatedButton(
@@ -49,13 +42,9 @@ class DeleteConfirmationDialog extends StatelessWidget {
               borderRadius: BorderRadius.circular(8.r),
             ),
           ),
-          child: CustomText(
-            text: 'حذف',
-            fontSize: 16.sp,
-          ),
+          child: CustomText(text: 'حذف', fontSize: 16.sp),
         ),
       ],
     );
   }
 }
-

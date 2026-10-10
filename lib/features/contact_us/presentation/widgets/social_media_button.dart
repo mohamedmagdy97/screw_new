@@ -14,12 +14,7 @@ class SocialMediaButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      child: Image(
-        image: AssetImage(assetPath),
-        height: 50,
-        width: 50,
-      ),
+      child: Image(image: AssetImage(assetPath), height: 50, width: 50),
     );
   }
 }
-

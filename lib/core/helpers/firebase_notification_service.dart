@@ -41,6 +41,7 @@ class FirebaseNotificationService {
   static Future<void> init(BuildContext context) async {
     try {
       await setupLocalNotifications();
+      if (!context.mounted) return;
       await _checkNotificationPermissions(context);
       await _registerForegroundHandler();
       await _registerBackgroundHandlers();
@@ -273,13 +274,12 @@ class FirebaseNotificationService {
     }
 
     // Request permission
-    settings = await _firebaseMessaging.requestPermission(
-      
-    );
+    settings = await _firebaseMessaging.requestPermission();
 
     Printing.info('🔔 Permission status: ${settings.authorizationStatus}');
 
-    if (settings.authorizationStatus != AuthorizationStatus.authorized) {
+    if (settings.authorizationStatus != AuthorizationStatus.authorized &&
+        context.mounted) {
       await _showPermissionDialog(context);
     }
   }

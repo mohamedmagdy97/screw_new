@@ -8,7 +8,7 @@ class NewMsgIndicator extends StatelessWidget {
   final bool showNewMsgIndicator;
   final int unreadNewMessages;
   final String unreadNewMessagesText;
-  final Function()? jumpToLatest;
+  final VoidCallback? jumpToLatest;
 
   const NewMsgIndicator({
     super.key,

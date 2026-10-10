@@ -52,7 +52,7 @@ class _RulesContent extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(8),
           margin: const EdgeInsets.only(bottom: 20),
-          color: AppColors.mainColor.withOpacity(0.2),
+          color: AppColors.mainColor.withValues(alpha: 0.2),
           child: const CustomText(
             text:
                 'كروت الباور عشان تتفعل لازم تكون مسحوبة من الورق لكن لو من ضمن ورقك المقلوب حاول تتخلص منها عشان قيمتها 10 نقط',

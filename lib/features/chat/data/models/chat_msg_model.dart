@@ -41,53 +41,54 @@ class ChatMessage {
     this.isMe,
   });
 
-  factory ChatMessage.fromDoc(DocumentSnapshot d) {
-    final m = d.data() as Map<String, dynamic>;
-    return ChatMessage(
+  factory ChatMessage.fromDoc(DocumentSnapshot<Object?> d) {
+    final m = d.data()! as Map<String, dynamic>;
+    return ChatMessage._fromJson(
+      m,
       id: d.id,
-      name: m['name'],
-      age: m['age'] ?? 0,
-      phoneNumber: m['phone'] ?? '01149504892',
-      message: m['message'] ?? '',
-      timestamp:
-          ((m['timestamp'] ?? Timestamp.now())
-                  as Timestamp)
-              .toDate(),
-      reactions: Map<String, dynamic>.from(m['reactions'] ?? {}),
-      seenBy: List<String>.from(m['seenBy'] ?? []),
-      isDeleted: m['isDeleted'] ?? false,
-      isPinned: m['isPinned'] ?? false,
-      isMe: m['isMe'] ?? false,
-      status: m['status'],
-      replyTo: m['replyTo'],
-      audioUrl: m['audioUrl'],
-      audioDuration: m['audioDuration'],
-      type: m['type'],
-      country: m['country'],
-      deviceName: m['deviceName'],
+      timestamp: ((m['timestamp'] ?? Timestamp.now()) as Timestamp).toDate(),
+      defaultPhone: '01149504892',
     );
   }
 
   factory ChatMessage.fromMap(Map<String, dynamic> m) {
+    return ChatMessage._fromJson(
+      m,
+      id: m['id'] as String,
+      timestamp: DateTime.parse(m['timestamp'] as String),
+      defaultPhone: '',
+    );
+  }
+
+  factory ChatMessage._fromJson(
+    Map<String, dynamic> m, {
+    required String id,
+    required DateTime timestamp,
+    required String defaultPhone,
+  }) {
     return ChatMessage(
-      id: m['id'],
-      name: m['name'],
-      age: m['age'] ?? 0,
-      phoneNumber: m['phone'] ?? '',
-      message: m['message'],
-      timestamp: DateTime.parse(m['timestamp']),
-      reactions: Map<String, dynamic>.from(m['reactions'] ?? {}),
-      seenBy: List<String>.from(m['seenBy']),
-      isDeleted: m['isDeleted'] ?? false,
-      isPinned: m['isPinned'] ?? false,
-      isMe: m['isMe'] ?? false,
-      status: m['status'],
-      replyTo: m['replyTo'],
-      audioUrl: m['audioUrl'],
-      audioDuration: m['audioDuration'],
-      type: m['type'],
-      country: m['country'],
-      deviceName: m['deviceName'],
+      id: id,
+      name: m['name'] as String,
+      age: (m['age'] as int?) ?? 0,
+      phoneNumber: (m['phone'] as String?) ?? defaultPhone,
+      message: (m['message'] as String?) ?? '',
+      timestamp: timestamp,
+      reactions: Map<String, dynamic>.from(
+        (m['reactions'] as Map<dynamic, dynamic>?) ?? <String, dynamic>{},
+      ),
+      seenBy: List<String>.from(
+        (m['seenBy'] as Iterable<dynamic>?) ?? <String>[],
+      ),
+      isDeleted: (m['isDeleted'] as bool?) ?? false,
+      isPinned: (m['isPinned'] as bool?) ?? false,
+      isMe: (m['isMe'] as bool?) ?? false,
+      status: m['status'] as String?,
+      replyTo: m['replyTo'] as String?,
+      audioUrl: m['audioUrl'] as String?,
+      audioDuration: m['audioDuration'] as String?,
+      type: m['type'] as String?,
+      country: m['country'] as String?,
+      deviceName: m['deviceName'] as String?,
     );
   }
 
@@ -111,4 +112,3 @@ class ChatMessage {
     'country': country,
   };
 }
-

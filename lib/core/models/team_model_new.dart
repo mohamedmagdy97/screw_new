@@ -5,11 +5,7 @@ class Team {
   final PlayerModel playerOne;
   final PlayerModel playerTwo;
 
-  Team({
-    required this.name,
-    required this.playerOne,
-    required this.playerTwo,
-  });
+  Team({required this.name, required this.playerOne, required this.playerTwo});
 
   int get totalScore =>
       (int.tryParse(playerOne.total ?? '0') ?? 0) +

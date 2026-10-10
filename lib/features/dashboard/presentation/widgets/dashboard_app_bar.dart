@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:screw_calculator/core/theme/app_palette.dart';
-import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/widgets/custom_button.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
 
@@ -59,7 +58,10 @@ class DashboardAppBar extends StatelessWidget implements PreferredSizeWidget {
             begin: const Offset(0, 1),
             end: Offset.zero,
           ).animate(CurvedAnimation(parent: anim, curve: Curves.easeOutCubic)),
-          child: Opacity(opacity: anim.value, child: _ResetDialog(onConfirm: onResetConfirmed)),
+          child: Opacity(
+            opacity: anim.value,
+            child: _ResetDialog(onConfirm: onResetConfirmed),
+          ),
         );
       },
     );

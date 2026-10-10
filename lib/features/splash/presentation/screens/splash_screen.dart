@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/features/game_mode/presentation/screens/game_mode_screen.dart';
 import 'package:screw_calculator/generated/assets.dart';
@@ -20,7 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
       }
 
       await Navigator.of(context).pushAndRemoveUntil(
-        PageRouteBuilder(
+        PageRouteBuilder<void>(
           transitionDuration: const Duration(milliseconds: 400),
           // reverseTransitionDuration: const Duration(milliseconds: 300),
           pageBuilder: (context, animation, secondaryAnimation) =>
@@ -70,8 +69,6 @@ class _SplashScreenState extends State<SplashScreen> {
             SizedBox(height: 0.45.sh),
             const CircularProgressIndicator.adaptive(
               strokeWidth: 4,
-              backgroundColor: AppColors.mainColor,
-              valueColor: AlwaysStoppedAnimation<Color>(AppColors.bg),
             ),
           ],
         ),

@@ -6,9 +6,8 @@ import 'package:screw_calculator/features/notifications/domain/repositories/noti
 class NotificationRepositoryImpl implements NotificationRepository {
   final NotificationDataSource _dataSource;
 
-  NotificationRepositoryImpl({
-    required NotificationDataSource dataSource,
-  }) : _dataSource = dataSource;
+  NotificationRepositoryImpl({required NotificationDataSource dataSource})
+    : _dataSource = dataSource;
 
   @override
   Stream<List<NotificationEntity>> getNotifications() {
@@ -27,4 +26,3 @@ class NotificationRepositoryImpl implements NotificationRepository {
     return await _dataSource.markAsRead(notificationId);
   }
 }
-

@@ -86,7 +86,9 @@ class _TeamPlayerRow extends StatelessWidget {
     return Row(
       children: [
         CustomText(text: '${name ?? ''} | ', fontSize: 16.sp),
-        Expanded(child: PlayerScoresRow(cubit: cubit, player: player)),
+        Expanded(
+          child: PlayerScoresRow(cubit: cubit, player: player),
+        ),
       ],
     );
   }

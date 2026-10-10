@@ -21,10 +21,7 @@ class ClearAllConfirmationDialog extends StatelessWidget {
               color: AppColors.mainColor,
             ),
             const SizedBox(height: 40),
-            CustomText(
-              text: 'سيتم حذف جميع السجلات',
-              fontSize: 18.sp,
-            ),
+            CustomText(text: 'سيتم حذف جميع السجلات', fontSize: 18.sp),
             const SizedBox(height: 40),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -48,4 +45,3 @@ class ClearAllConfirmationDialog extends StatelessWidget {
     );
   }
 }
-

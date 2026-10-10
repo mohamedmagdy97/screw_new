@@ -4,7 +4,10 @@ import 'package:screw_calculator/features/home/data/datasources/home_remote_data
 import 'package:screw_calculator/features/home/domain/repositories/home_repository.dart';
 
 class HomeRepositoryImpl implements HomeRepository {
-  HomeRepositoryImpl({required this.remoteDataSource, required this.localDataSource});
+  HomeRepositoryImpl({
+    required this.remoteDataSource,
+    required this.localDataSource,
+  });
 
   final HomeRemoteDataSource remoteDataSource;
   final HomeLocalDataSource localDataSource;

@@ -49,7 +49,7 @@ class ImageHelper {
   }) {
     Navigator.push(
       context,
-      MaterialPageRoute(
+      MaterialPageRoute<void>(
         builder: (_) => Scaffold(
           backgroundColor: Colors.black,
           appBar: AppBar(
@@ -73,12 +73,12 @@ class ImageHelper {
             child: Container(
               decoration: customBoxDecoration(
                 borderRadius: 8.r,
-                shadowColor: Colors.black.withOpacity(0.1),
+                shadowColor: Colors.black.withValues(alpha: 0.1),
               ),
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 8.w),
                 decoration: BoxDecoration(
-                  color: AppColors.opacity_1.withOpacity(0.75),
+                  color: AppColors.opacity_1.withValues(alpha: 0.75),
                   borderRadius: BorderRadius.circular(4.r),
                 ),
                 child: InteractiveViewer(

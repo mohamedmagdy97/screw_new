@@ -58,4 +58,3 @@ class ScreenshotDeleted extends ScreenshotState {
 
   ScreenshotDeleted(this.screenshots);
 }
-

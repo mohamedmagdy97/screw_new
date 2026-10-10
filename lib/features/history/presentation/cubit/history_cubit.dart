@@ -15,10 +15,10 @@ class HistoryCubit extends Cubit<HistoryState> {
     required GetGamesUseCase getGamesUseCase,
     required RemoveGameUseCase removeGameUseCase,
     required ClearAllGamesUseCase clearAllGamesUseCase,
-  })  : _getGamesUseCase = getGamesUseCase,
-        _removeGameUseCase = removeGameUseCase,
-        _clearAllGamesUseCase = clearAllGamesUseCase,
-        super(HistoryInitial()) {
+  }) : _getGamesUseCase = getGamesUseCase,
+       _removeGameUseCase = removeGameUseCase,
+       _clearAllGamesUseCase = clearAllGamesUseCase,
+       super(HistoryInitial()) {
     loadGames();
   }
 
@@ -72,4 +72,3 @@ class HistoryCubit extends Cubit<HistoryState> {
     }
   }
 }
-

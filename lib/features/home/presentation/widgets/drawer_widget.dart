@@ -233,9 +233,14 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                                               age: age,
                                             );
 
+                                        if (!context.mounted) return;
                                         switch (result) {
                                           case UserValidationResult.notExists:
                                             await homeData.addUserDataToDB();
+                                            if (!context.mounted ||
+                                                !ctx.mounted) {
+                                              return;
+                                            }
                                             Navigator.pop(ctx);
                                             homeData.routeFromDrawer(
                                               context,
@@ -247,6 +252,10 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                                           case UserValidationResult
                                               .existsAndValidOwner:
                                             await homeData.addUserDataToDB();
+                                            if (!context.mounted ||
+                                                !ctx.mounted) {
+                                              return;
+                                            }
 
                                             Navigator.pop(ctx);
                                             homeData.routeFromDrawer(
@@ -301,6 +310,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                           name: homeData.userName!,
                         );
 
+                        if (!context.mounted) return;
                         if (!canEnter /*&& RemoteConfig().canAccessChat(
                           phone: homeData.userPhone!,
                           name: homeData.userName!,
@@ -325,10 +335,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                       }
                     },
                   ),
-                DrawerItemWidget(
-                  title: '⭐ قيمنا',
-                  onTap: homeData.rateMyApp,
-                ),
+                DrawerItemWidget(title: '⭐ قيمنا', onTap: homeData.rateMyApp),
                 BlocBuilder<ThemeCubit, ThemeMode>(
                   builder: (context, mode) => DrawerItemWidget(
                     title: mode == ThemeMode.dark

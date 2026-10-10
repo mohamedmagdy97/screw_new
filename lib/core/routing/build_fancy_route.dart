@@ -10,9 +10,10 @@ Route<T> buildFancyRoute<T>(Widget page) {
         curve: Curves.easeOutCubic,
       );
 
-      final offsetAnimation =
-      Tween<Offset>(begin: const Offset(1, 0), end: Offset.zero)
-          .animate(curved);
+      final offsetAnimation = Tween<Offset>(
+        begin: const Offset(1, 0),
+        end: Offset.zero,
+      ).animate(curved);
 
       final scaleAnimation = Tween<double>(begin: 0.95, end: 1).animate(curved);
       final fadeAnimation = Tween<double>(begin: 0, end: 1).animate(curved);

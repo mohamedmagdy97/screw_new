@@ -3,9 +3,9 @@ import 'package:screw_calculator/core/theme/app_theme.dart';
 
 class InputBar extends StatelessWidget {
   final TextEditingController textCtrl;
-  final Function() pickAndSendImage;
-  final Function() sendMessage;
-  final Function(bool) updateTyping;
+  final VoidCallback pickAndSendImage;
+  final VoidCallback sendMessage;
+  final ValueChanged<bool> updateTyping;
 
   const InputBar({
     super.key,

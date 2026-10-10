@@ -15,10 +15,10 @@ class NotificationCubit extends Cubit<NotificationState> {
     required GetNotificationsUseCase getNotificationsUseCase,
     required DeleteNotificationUseCase deleteNotificationUseCase,
     required MarkNotificationReadUseCase markNotificationReadUseCase,
-  })  : _getNotificationsUseCase = getNotificationsUseCase,
-        _deleteNotificationUseCase = deleteNotificationUseCase,
-        _markNotificationReadUseCase = markNotificationReadUseCase,
-        super(NotificationInitial()) {
+  }) : _getNotificationsUseCase = getNotificationsUseCase,
+       _deleteNotificationUseCase = deleteNotificationUseCase,
+       _markNotificationReadUseCase = markNotificationReadUseCase,
+       super(NotificationInitial()) {
     _loadNotifications();
   }
 
@@ -62,4 +62,3 @@ class NotificationCubit extends Cubit<NotificationState> {
     }
   }
 }
-

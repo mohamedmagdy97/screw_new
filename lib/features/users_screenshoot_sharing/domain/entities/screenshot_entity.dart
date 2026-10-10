@@ -15,4 +15,3 @@ class ScreenshotEntity {
     this.imageBase64,
   });
 }
-

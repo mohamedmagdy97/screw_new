@@ -7,10 +7,7 @@ import 'package:screw_calculator/core/widgets/custom_text.dart';
 class DeleteGameConfirmationDialog extends StatelessWidget {
   final int gameIndex;
 
-  const DeleteGameConfirmationDialog({
-    super.key,
-    required this.gameIndex,
-  });
+  const DeleteGameConfirmationDialog({super.key, required this.gameIndex});
 
   @override
   Widget build(BuildContext context) {
@@ -53,4 +50,3 @@ class DeleteGameConfirmationDialog extends StatelessWidget {
     );
   }
 }
-

@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:screw_calculator/core/theme/app_theme.dart';
+import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/widgets/custom_button.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
 
@@ -21,7 +21,7 @@ class ScreenshotPreviewDialog extends StatelessWidget {
       insetPadding: const EdgeInsets.all(16),
       child: Container(
         decoration: BoxDecoration(
-          color: AppColors.bg,
+          color: context.palette.surfaceElevated,
           borderRadius: BorderRadius.circular(16),
         ),
         padding: const EdgeInsets.all(16),
@@ -37,7 +37,7 @@ class ScreenshotPreviewDialog extends StatelessWidget {
 
             Container(
               decoration: BoxDecoration(
-                border: Border.all(color: AppColors.grayy),
+                border: Border.all(color: context.palette.border),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: ClipRRect(

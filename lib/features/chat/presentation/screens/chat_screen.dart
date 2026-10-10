@@ -50,16 +50,16 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   bool _isOnline = false;
   StreamSubscription<ConnectivityResult>? _connectivitySubscription;
 
-  DocumentSnapshot? _lastDoc;
-  StreamSubscription? _liveSub;
-  StreamSubscription? _typingSub;
+  DocumentSnapshot<Object?>? _lastDoc;
+  StreamSubscription<Object?>? _liveSub;
+  StreamSubscription<Object?>? _typingSub;
 
   final List<ChatMessage> _messages = [];
   ChatMessage? _replyingTo;
   String? _editingId;
 
-  late Box userBox;
-  late Box cacheBox;
+  late Box<dynamic> userBox;
+  late Box<dynamic> cacheBox;
 
   String? userName;
   String? userPhone;
@@ -219,11 +219,11 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
             'country': userCountry,
             'message': base64Image,
             'type': 'image',
-            'seenBy': [],
+            'seenBy': <String>[],
             'datetime': DateTime.now(),
             'timestamp': FieldValue.serverTimestamp(),
             'replyTo': _replyingTo?.id,
-            'reactions': {},
+            'reactions': <String, dynamic>{},
             'isDeleted': false,
             'deviceName': await getDeviceName(),
           });
@@ -245,7 +245,11 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   void _loadCachedMessages() {
     final cached =
         cacheBox.values
-            .map((e) => ChatMessage.fromMap(Map<String, dynamic>.from(e)))
+            .map(
+              (e) => ChatMessage.fromMap(
+                Map<String, dynamic>.from(e as Map<dynamic, dynamic>),
+              ),
+            )
             .toList()
           ..sort((a, b) => a.timestamp.compareTo(b.timestamp));
 
@@ -403,11 +407,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
 
   Future<void> _markSeen() async {
     final toUpdate = _messages
-        .where(
-          (m) =>
-              m.name != userName &&
-              !(m.seenBy ?? []).contains(userName),
-        )
+        .where((m) => m.name != userName && !m.seenBy.contains(userName))
         .take(10)
         .toList();
 
@@ -452,9 +452,9 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       'message': _textCtrl.text.trim(),
       'datetime': DateTime.now(),
       'timestamp': FieldValue.serverTimestamp(),
-      'seenBy': [],
+      'seenBy': <String>[],
       'replyTo': _replyingTo?.id,
-      'reactions': {},
+      'reactions': <String, dynamic>{},
       'isDeleted': false,
       'deviceName': await getDeviceName(),
     };
@@ -522,7 +522,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
 
       final data = snap.data()!;
       final Map<String, dynamic> reactions = Map<String, dynamic>.from(
-        data['reactions'] ?? {},
+        (data['reactions'] as Map<dynamic, dynamic>?) ?? <String, dynamic>{},
       );
       final String value = '$userName|$emoji';
       if (reactions[userPhone] == value) {
@@ -764,7 +764,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     final prev = index > 0 ? _messages[index - 1] : null;
 
     final showName = (prev == null || prev.name != msg.name) && !isMe;
-    final showDay = prev == null || prev.timestamp.day != msg.timestamp.day;
 
     final isHighlighted =
         (_searchResults.contains(index) &&
@@ -1066,7 +1065,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
 
   // ---------------- OPTIONS ----------------
   void _showOptions(ChatMessage msg) {
-    showModalBottomSheet(
+    showModalBottomSheet<void>(
       context: context,
       builder: (_) => Column(
         mainAxisSize: MainAxisSize.min,
@@ -1127,7 +1126,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
               onTap: () async {
                 Navigator.pop(context);
 
-                final confirm = await showDialog(
+                final confirm = await showDialog<bool>(
                   context: context,
                   builder: (ctx) => AlertDialog(
                     title: const Text('Confirm Delete'),
@@ -1183,12 +1182,12 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.9),
+                color: Colors.white.withValues(alpha: 0.9),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(color: Colors.black12, width: 0.5),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: 0.05),
                     blurRadius: 2,
                     offset: const Offset(0, 1),
                   ),
@@ -1206,7 +1205,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   }
 
   void _showReactions(ChatMessage msg) {
-    showModalBottomSheet(
+    showModalBottomSheet<void>(
       context: context,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
@@ -1226,7 +1225,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: currentEmoji == e
-                          ? Colors.blue.withOpacity(0.2)
+                          ? Colors.blue.withValues(alpha: 0.2)
                           : Colors.transparent,
                     ),
                     child: IconButton(
@@ -1251,7 +1250,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         .map((e) => e.value.toString().split('|').first)
         .toList();
 
-    showModalBottomSheet(
+    showModalBottomSheet<void>(
       context: context,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),

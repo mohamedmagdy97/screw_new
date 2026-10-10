@@ -7,11 +7,10 @@ class LaunchContactUrlUseCase {
   LaunchContactUrlUseCase(this._repository);
 
   /// Executes the use case to launch a contact URL
-  /// 
+  ///
   /// [url] - The URL to launch
   /// Returns true if successful, false otherwise
   Future<bool> call(String url) async {
     return await _repository.launchUrl(url);
   }
 }
-

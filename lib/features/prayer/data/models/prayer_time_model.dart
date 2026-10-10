@@ -18,18 +18,20 @@ class PrayerTimeModel {
   });
 
   factory PrayerTimeModel.fromJson(Map<String, dynamic> json) {
-    final timings = json['data']['timings'];
+    final timings =
+        (json['data'] as Map<String, dynamic>)['timings']
+            as Map<String, dynamic>;
     return PrayerTimeModel(
-      fajr: _convertTo12Hour(timings['Fajr']),
-      dhuhr: _convertTo12Hour(timings['Dhuhr']),
-      asr: _convertTo12Hour(timings['Asr']),
-      maghrib: _convertTo12Hour(timings['Maghrib']),
-      isha: _convertTo12Hour(timings['Isha']),
-      fajr24: _cleanTime24(timings['Fajr']),
-      dhuhr24: _cleanTime24(timings['Dhuhr']),
-      asr24: _cleanTime24(timings['Asr']),
-      maghrib24: _cleanTime24(timings['Maghrib']),
-      isha24: _cleanTime24(timings['Isha']),
+      fajr: _convertTo12Hour(timings['Fajr'] as String),
+      dhuhr: _convertTo12Hour(timings['Dhuhr'] as String),
+      asr: _convertTo12Hour(timings['Asr'] as String),
+      maghrib: _convertTo12Hour(timings['Maghrib'] as String),
+      isha: _convertTo12Hour(timings['Isha'] as String),
+      fajr24: _cleanTime24(timings['Fajr'] as String),
+      dhuhr24: _cleanTime24(timings['Dhuhr'] as String),
+      asr24: _cleanTime24(timings['Asr'] as String),
+      maghrib24: _cleanTime24(timings['Maghrib'] as String),
+      isha24: _cleanTime24(timings['Isha'] as String),
     );
   }
 

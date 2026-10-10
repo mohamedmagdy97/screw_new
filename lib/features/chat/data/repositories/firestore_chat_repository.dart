@@ -77,7 +77,8 @@ class FirestoreChatRepository implements ChatRepository {
       if (!snap.exists) return;
 
       final reactions = Map<String, dynamic>.from(
-        snap.data()!['reactions'] ?? {},
+        (snap.data()!['reactions'] as Map<dynamic, dynamic>?) ??
+            <String, dynamic>{},
       );
       final value = '$userName|$emoji';
 

@@ -12,7 +12,7 @@ extension DateTimeFormatExtension on DateTime {
 
     // لو امبارح
     if (difference.inDays == 1) {
-      return 'Yesterday';//, ${DateFormat('hh:mm a').format(this)}";
+      return 'Yesterday'; //, ${DateFormat('hh:mm a').format(this)}";
     }
 
     // لو خلال آخر أسبوع

@@ -73,9 +73,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: Theme(
-        data: Theme.of(
-          context,
-        ).copyWith(hintColor: palette.textSecondary),
+        data: Theme.of(context).copyWith(hintColor: palette.textSecondary),
         child: Directionality(
           textDirection: TextDirection.rtl,
           child: TextFormField(

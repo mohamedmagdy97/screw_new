@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:screw_calculator/app/di/service_locator.dart';
 import 'package:screw_calculator/core/constants/social_links.dart';
-import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/widgets/bottom_nav_text.dart';
 import 'package:screw_calculator/core/widgets/custom_appbar.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
-import 'package:screw_calculator/features/contact_us/data/datasources/url_launcher_data_source.dart';
-import 'package:screw_calculator/features/contact_us/data/repositories/contact_repository_impl.dart';
-import 'package:screw_calculator/features/contact_us/domain/usecases/launch_contact_url_usecase.dart';
 import 'package:screw_calculator/features/contact_us/presentation/cubit/contact_cubit.dart';
 import 'package:screw_calculator/features/contact_us/presentation/widgets/social_media_button.dart';
 import 'package:screw_calculator/generated/assets.dart';
@@ -18,16 +15,9 @@ class ContactUsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => _createContactCubit(),
+      create: (_) => sl<ContactCubit>(),
       child: const _ContactUsView(),
     );
-  }
-
-  ContactCubit _createContactCubit() {
-    final dataSource = UrlLauncherDataSourceImpl();
-    final repository = ContactRepositoryImpl(dataSource: dataSource);
-    final useCase = LaunchContactUrlUseCase(repository);
-    return ContactCubit(launchContactUrlUseCase: useCase);
   }
 }
 

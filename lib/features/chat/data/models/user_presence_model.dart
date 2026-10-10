@@ -16,9 +16,9 @@ class UserPresence {
 
   factory UserPresence.fromMap(Map<String, dynamic> map) {
     return UserPresence(
-      name: map['name'] ?? '',
-      phone: map['phone'] ?? '',
-      isOnline: map['isOnline'] ?? false,
+      name: (map['name'] as String?) ?? '',
+      phone: (map['phone'] as String?) ?? '',
+      isOnline: (map['isOnline'] as bool?) ?? false,
       lastSeen: (map['lastSeen'] as Timestamp?)?.toDate() ?? DateTime.now(),
     );
   }

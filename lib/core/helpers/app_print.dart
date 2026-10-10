@@ -19,7 +19,6 @@ class Printing {
     }
   }
 
-
   static void warning(String message, {String tag = 'MyApp-Warning'}) {
     if (kDebugMode) {
       developer.log(

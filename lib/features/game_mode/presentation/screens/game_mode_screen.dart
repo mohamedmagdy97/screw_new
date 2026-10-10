@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:screw_calculator/app/di/service_locator.dart';
 import 'package:screw_calculator/core/helpers/firebase_notification_service.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/utils/enums.dart';
@@ -32,22 +34,27 @@ class _GameModeState extends State<GameMode> {
     await FirebaseNotificationService.init(context);
   }
 
-  Future<bool> _onWillPop() {
+  void _onPopInvoked(bool didPop, Object? result) {
+    if (didPop) return;
     final DateTime now = DateTime.now();
     if (currentBackPressTime == null ||
         now.difference(currentBackPressTime!) > const Duration(seconds: 2)) {
       currentBackPressTime = now;
       Utilities().showCustomSnack(context, txt: 'للخروج اضغط مرتين ');
-      return Future.value(false);
+      return;
     }
-    return Future.value(true);
+    SystemNavigator.pop();
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => GameModeCubit(),
-      child: WillPopScope(onWillPop: _onWillPop, child: const _GameModeView()),
+      create: (_) => sl<GameModeCubit>(),
+      child: PopScope<Object?>(
+        canPop: false,
+        onPopInvokedWithResult: _onPopInvoked,
+        child: const _GameModeView(),
+      ),
     );
   }
 }
@@ -94,8 +101,6 @@ class _GameModeView extends StatelessWidget {
             return const Center(
               child: CircularProgressIndicator.adaptive(
                 strokeWidth: 4,
-                backgroundColor: AppColors.mainColor,
-                valueColor: AlwaysStoppedAnimation<Color>(AppColors.bg),
               ),
             );
           }
@@ -192,7 +197,7 @@ class _GameModeView extends StatelessWidget {
         boxShadow: gameMode.isActive
             ? [
                 BoxShadow(
-                  color: AppColors.mainColor.withOpacity(.3),
+                  color: AppColors.mainColor.withValues(alpha: .3),
                   blurRadius: 8,
                 ),
               ]

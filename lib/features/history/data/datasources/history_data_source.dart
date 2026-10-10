@@ -34,9 +34,7 @@ class HistoryDataSourceImpl implements HistoryDataSource {
               })
               .toList();
 
-          return jsonData
-              .map<GameModel>(GameModel.fromJson)
-              .toList();
+          return jsonData.map<GameModel>(GameModel.fromJson).toList();
         }
       }
       return [];
@@ -66,4 +64,3 @@ class HistoryDataSourceImpl implements HistoryDataSource {
     }
   }
 }
-

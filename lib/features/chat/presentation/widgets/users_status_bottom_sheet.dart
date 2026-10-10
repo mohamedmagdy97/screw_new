@@ -11,7 +11,7 @@ class UsersStatusBottomSheet extends StatelessWidget {
   const UsersStatusBottomSheet({super.key, this.currentUserName});
 
   static void show(BuildContext context, {String? currentUserName}) {
-    showModalBottomSheet(
+    showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,

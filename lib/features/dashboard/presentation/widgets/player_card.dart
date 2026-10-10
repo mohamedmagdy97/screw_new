@@ -30,7 +30,7 @@ class PlayerCard extends StatelessWidget {
     final bool isWinner = winnerTotal?.toString() == player.total;
     final bool isLoser = loserTotal?.toString() == player.total;
 
-    final Color? bgColor = isWinner
+    final Color bgColor = isWinner
         ? palette.win.withValues(alpha: 0.20)
         : isLoser
         ? palette.lose.withValues(alpha: 0.18)

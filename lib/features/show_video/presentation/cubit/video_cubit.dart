@@ -16,7 +16,9 @@ class VideoCubit extends Cubit<VideoState> {
   Future<void> _initializeVideo() async {
     emit(VideoLoading());
     try {
-      _videoController = VideoPlayerController.asset('assets/video/screw_video.mp4');
+      _videoController = VideoPlayerController.asset(
+        'assets/video/screw_video.mp4',
+      );
       await _videoController!.initialize();
 
       _chewieController = ChewieController(
@@ -62,4 +64,3 @@ class VideoCubit extends Cubit<VideoState> {
     return super.close();
   }
 }
-

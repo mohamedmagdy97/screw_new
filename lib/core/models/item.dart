@@ -18,8 +18,8 @@ class Item {
   }
 
   Map<String, dynamic> toJson() => {
-        'key': key,
-        'value': value,
-        'isActive': isActive ?? false,
-      };
+    'key': key,
+    'value': value,
+    'isActive': isActive ?? false,
+  };
 }
