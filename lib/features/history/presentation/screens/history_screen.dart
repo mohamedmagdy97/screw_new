@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:screw_calculator/app/di/service_locator.dart';
 import 'package:screw_calculator/core/l10n/content_direction.dart';
-import 'package:screw_calculator/core/theme/app_theme.dart';
+import 'package:screw_calculator/core/widgets/app_dialog.dart';
+import 'package:screw_calculator/core/widgets/app_header.dart';
 import 'package:screw_calculator/core/widgets/bottom_nav_text.dart';
 import 'package:screw_calculator/core/widgets/custom_appbar.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
@@ -10,8 +11,6 @@ import 'package:screw_calculator/core/widgets/skeleton.dart';
 import 'package:screw_calculator/features/dashboard/presentation/screens/dashboard_screen.dart';
 import 'package:screw_calculator/features/history/domain/entities/game_history_entity.dart';
 import 'package:screw_calculator/features/history/presentation/cubit/history_cubit.dart';
-import 'package:screw_calculator/features/history/presentation/widgets/clear_all_confirmation_dialog.dart';
-import 'package:screw_calculator/features/history/presentation/widgets/delete_confirmation_dialog.dart';
 import 'package:screw_calculator/features/history/presentation/widgets/history_item.dart';
 import 'package:screw_calculator/l10n/app_localizations.dart';
 
@@ -32,9 +31,12 @@ class _HistoryView extends StatelessWidget {
 
   Future<void> _handleDeleteGame(BuildContext context, int index) async {
     final shouldDelete =
-        await showDialog<bool>(
-          context: context,
-          builder: (_) => DeleteGameConfirmationDialog(gameIndex: index),
+        await showAppConfirmDialog(
+          context,
+          icon: Icons.delete_outline_rounded,
+          tone: AppDialogTone.danger,
+          title: AppLocalizations.of(context).warning,
+          message: AppLocalizations.of(context).deleteGameWarning(index + 1),
         ) ??
         false;
 
@@ -45,9 +47,12 @@ class _HistoryView extends StatelessWidget {
 
   Future<void> _handleClearAll(BuildContext context) async {
     final shouldClear =
-        await showDialog<bool>(
-          context: context,
-          builder: (_) => const ClearAllConfirmationDialog(),
+        await showAppConfirmDialog(
+          context,
+          icon: Icons.delete_sweep_rounded,
+          tone: AppDialogTone.danger,
+          title: AppLocalizations.of(context).warning,
+          message: AppLocalizations.of(context).clearAllWarning,
         ) ??
         false;
 
@@ -74,9 +79,9 @@ class _HistoryView extends StatelessWidget {
     return Scaffold(
       appBar: CustomAppBar(
         title: AppLocalizations.of(context).historyTitle,
-        leading: IconButton(
-          onPressed: () => _handleClearAll(context),
-          icon: const Icon(Icons.delete_outline, color: AppColors.white),
+        leading: HeaderIconButton(
+          icon: Icons.delete_sweep_rounded,
+          onTap: () => _handleClearAll(context),
         ),
       ),
       bottomNavigationBar: const BottomNavigationText(),
@@ -118,7 +123,7 @@ class _HistoryView extends StatelessWidget {
                 ? state.games
                 : (state as HistoryClearing).games;
 
-            return ListView.separated(
+            return ListView.builder(
               padding: const EdgeInsets.all(16),
               itemCount: games.length,
               itemBuilder: (context, index) {
@@ -130,8 +135,6 @@ class _HistoryView extends StatelessWidget {
                   onDelete: () => _handleDeleteGame(context, index),
                 );
               },
-              separatorBuilder: (context, index) =>
-                  const Divider(color: AppColors.mainColor),
             );
           }
 

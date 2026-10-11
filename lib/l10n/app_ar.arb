@@ -36,7 +36,7 @@
   "results": "النتائج",
   "warning": "تحذير",
   "confirmResetRound": "هل تريد إعادة بدأ الجولة؟",
-  "gameOver": "انتهت اللعبة 🎉",
+  "gameOver": "انتهت اللعبة",
   "winnerLabel": "👑 الفائز: {names}",
   "@winnerLabel": {
     "placeholders": {
@@ -65,9 +65,9 @@
   },
   "undo": "تراجع",
   "saveHint": "الان يمكنك حفظ الجولة واستكمالها لاحقا",
-  "saveResult": "💾 حفظ النتيجة",
+  "saveResult": "حفظ النتيجة",
   "resetRound": "اعادة بدأ الجولة",
-  "shareResult": "📲 مشاركة النتيجة",
+  "shareResult": "مشاركة النتيجة",
   "shareNeed4": "لمشاركة النتائج يجب ادخال 4 جولات على الاقل",
   "shareText": "📸 شوف نتيجتي! من تطبيق سكرو حاسبة",
   "previewTitle": "📸 معاينة الصورة",
@@ -141,10 +141,8 @@
   "contactUs": "للاقتراحات والتواصل معنا",
   "publicChat": "محادثة عامة",
   "blockedUsers": "المستخدمون المحظورون",
-  "rateUs": "⭐ قيمنا",
-  "lightMode": "☀️ الوضع الفاتح",
-  "darkMode": "🌙 الوضع الداكن",
-  "language": "🌐 English",
+  "rateUs": "قيّمنا",
+  "language": "English",
   "enterYourData": "ادخل بياناتك",
   "firstNameHint": "الاسم الاول",
   "nameLabel": "الاسم",
@@ -238,14 +236,12 @@
   },
   "update": "تحديث",
   "splashSalawat": "صلي على النبي",
-  "weeklyReminderOn": "🔔 تذكير أسبوعي بلعبة: مفعّل",
-  "weeklyReminderOff": "🔕 تذكير أسبوعي بلعبة: متوقف",
   "reminderTitle": "وقت لعبة سكرو! 🃏",
   "reminderBody": "اجمع أصحابك والعبوا جولة وسجّلوا النتيجة في التطبيق.",
   "reminderEnabled": "تم تفعيل التذكير الأسبوعي (الجمعة 8 مساءً)",
   "reminderDisabled": "تم إيقاف التذكير الأسبوعي",
   "reminderPermission": "فعّل صلاحية الإشعارات من إعدادات الجهاز أولًا",
-  "tournamentMenu": "🏆 بطولة الأصدقاء",
+  "tournamentMenu": "بطولة الأصدقاء",
   "tournamentTitle": "بطولة الأصدقاء",
   "tournamentNameLabel": "اسم البطولة",
   "tournamentPlayersLabel": "اللاعبون",
@@ -289,6 +285,122 @@
     "placeholders": {
       "name": {
         "type": "String"
+      }
+    }
+  },
+  "scoreSheetAddTitle": "نتيجة {name} · الجولة {round}",
+  "@scoreSheetAddTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "round": {
+        "type": "int"
+      }
+    }
+  },
+  "scoreSheetEditTitle": "تعديل نتيجة {name} · الجولة {round}",
+  "@scoreSheetEditTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "round": {
+        "type": "int"
+      }
+    }
+  },
+  "pickYourCards": "اختر كروتك",
+  "orTypeScore": "أو اكتب النتيجة مباشرة",
+  "cardsTotal": "المجموع",
+  "clearCards": "مسح",
+  "removeLastCard": "حذف آخر كارت",
+  "addScore": "إضافة",
+  "saveChanges": "حفظ التعديل",
+  "multiplyBy2": "×2 مضاعفة",
+  "multiplyBy4": "×4 الجولة الأخيرة",
+  "screwZeroShort": "سكرو (0)",
+  "cardPower": "باور",
+  "cardPlus20": "+20",
+  "cardScrollGreen": "سكرول أخضر",
+  "cardScrollRed": "سكرول أحمر",
+  "editsLogTitle": "سجل التعديلات",
+  "editsLogEntry": "{name} · الجولة {round}: {oldValue} ← {newValue}",
+  "@editsLogEntry": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "round": {
+        "type": "int"
+      },
+      "oldValue": {
+        "type": "String"
+      },
+      "newValue": {
+        "type": "String"
+      }
+    }
+  },
+  "editsLogEmpty": "لا توجد تعديلات",
+  "editsCount": "تعديلات ({n})",
+  "@editsCount": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "tapScoreToEdit": "اضغط على أي نتيجة لتعديلها",
+  "rulesTitle": "قوانين اللعبة",
+  "rulesSearchHint": "ابحث في القواعد والكروت",
+  "rulesNoResults": "لا توجد نتائج مطابقة",
+  "rulesFilterAll": "الكل",
+  "rulesCatBasics": "الأساسيات",
+  "rulesCatPower": "كروت الباور",
+  "rulesCatOscar": "كروت أوسكار",
+  "rulesCatRamadan": "كروت رمضان",
+  "rulesCatTeams": "وضع الفرق",
+  "rulesCatGoal": "الهدف",
+  "powerCardsTitle": "الكروت الخاصة",
+  "powerCardsTooltip": "مرجع الكروت",
+  "inviteFriend": "ادعُ صديقًا",
+  "inviteText": "جرّب «سكرو حاسبة» 🃏 حاسبة نقاط لعبة سكرو بسهولة وسرعة!\n{link}",
+  "@inviteText": {
+    "placeholders": {
+      "link": {
+        "type": "String"
+      }
+    }
+  },
+  "shareTextWithLink": "📸 شوف نتيجتي! من تطبيق سكرو حاسبة\n{link}",
+  "@shareTextWithLink": {
+    "placeholders": {
+      "link": {
+        "type": "String"
+      }
+    }
+  },
+  "shareCardDownload": "حمّل التطبيق من Google Play",
+  "drawerSectionPlay": "اللعب",
+  "drawerSectionCommunity": "المجتمع",
+  "drawerSectionTools": "أدوات",
+  "drawerSectionSettings": "الإعدادات",
+  "weeklyReminderLabel": "تذكير أسبوعي بلعبة",
+  "weeklyReminderSub": "كل جمعة 8 مساءً",
+  "toggleThemeTooltip": "تبديل الوضع الفاتح/الداكن",
+  "toggleLanguageTooltip": "تغيير اللغة",
+  "version": "الإصدار",
+  "heroTagline": "احسب نقاط لعبتك بسهولة وسرعة",
+  "modeClassicTitle": "كلاسيك",
+  "modeClassicDesc": "كل لاعب لنفسه (من 2 إلى 12 لاعب)",
+  "modeFriendsTitle": "صاحب صاحبه",
+  "modeFriendsDesc": "فرق من لاعبين اثنين (حتى 4 فرق)",
+  "roundOfFive": "الجولة {n} من 5",
+  "@roundOfFive": {
+    "placeholders": {
+      "n": {
+        "type": "int"
       }
     }
   }

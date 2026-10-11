@@ -96,4 +96,44 @@ void main() {
     expect(a.total, '0');
     expect(active.saved, isNull);
   });
+
+  test('applyScoreAt edits any round and logs the change', () {
+    cubit.applyScore(a, 7);
+    cubit.applyScore(a, 3);
+    cubit.applyScoreAt(a, 0, 5); // تعديل الجولة 1
+
+    expect(a.gw1, '5');
+    expect(a.total, '8'); // 5 + 3
+    expect(cubit.state.edits, hasLength(1));
+    expect(cubit.state.edits.first.round, 1);
+    expect(cubit.state.edits.first.oldValue, '7');
+    expect(cubit.state.edits.first.newValue, '5');
+    expect(cubit.isEdited(a, 1), isTrue);
+    expect(cubit.isEdited(a, 2), isFalse);
+    expect(active.saved?.edits, hasLength(1));
+  });
+
+  test('filling an empty round via applyScoreAt is not logged as an edit', () {
+    cubit.applyScoreAt(a, 0, 4);
+    expect(a.gw1, '4');
+    expect(cubit.state.edits, isEmpty);
+  });
+
+  test('undo reverts an arbitrary-round edit and its log entry', () {
+    cubit.applyScore(a, 7);
+    cubit.applyScore(a, 3);
+    cubit.applyScoreAt(a, 0, 5);
+
+    cubit.undo();
+    expect(a.gw1, '7');
+    expect(a.total, '10');
+    expect(cubit.state.edits, isEmpty);
+  });
+
+  test('resetGame clears the edit log', () {
+    cubit.applyScore(a, 7);
+    cubit.applyScoreAt(a, 0, 1);
+    cubit.resetGame();
+    expect(cubit.state.edits, isEmpty);
+  });
 }

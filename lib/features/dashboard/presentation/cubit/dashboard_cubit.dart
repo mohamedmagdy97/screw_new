@@ -7,6 +7,7 @@ import 'package:screw_calculator/core/models/player_model.dart';
 import 'package:screw_calculator/core/models/team_model_new.dart';
 import 'package:screw_calculator/features/dashboard/domain/entities/active_game.dart';
 import 'package:screw_calculator/features/dashboard/domain/entities/last_game_summary.dart';
+import 'package:screw_calculator/features/dashboard/domain/entities/score_edit.dart';
 import 'package:screw_calculator/features/dashboard/domain/repositories/active_game_repository.dart';
 import 'package:screw_calculator/features/dashboard/domain/repositories/last_game_publisher.dart';
 import 'package:screw_calculator/features/dashboard/domain/usecases/save_game_usecase.dart';
@@ -47,6 +48,7 @@ class DashboardCubit extends Cubit<DashboardState> {
   void start({
     required List<PlayerModel> players,
     required bool showTeamsView,
+    List<ScoreEdit> edits = const [],
     List<String> teamNames = const [
       'الفريق الأول',
       'الفريق الثاني',
@@ -59,6 +61,7 @@ class DashboardCubit extends Cubit<DashboardState> {
         players: players,
         teams: showTeamsView ? _buildTeams(players, teamNames) : const [],
         showTeamsView: showTeamsView,
+        edits: edits,
       ),
     );
     _undoStack.clear();
@@ -75,7 +78,12 @@ class DashboardCubit extends Cubit<DashboardState> {
     snapshot.restore();
     finishAnnounced = isFinished;
     HapticFeedback.selectionClick();
-    emit(state.copyWith(revision: state.revision + 1));
+    emit(
+      state.copyWith(
+        revision: state.revision + 1,
+        edits: state.edits.sublist(0, snapshot.editsLength),
+      ),
+    );
     _persist();
   }
 
@@ -83,6 +91,7 @@ class DashboardCubit extends Cubit<DashboardState> {
     final game = ActiveGame(
       players: state.players,
       friendly: state.showTeamsView,
+      edits: state.edits,
     );
     if (game.hasProgress) {
       _activeGameRepository.save(game);
@@ -105,7 +114,7 @@ class DashboardCubit extends Cubit<DashboardState> {
 
   /// يضيف/يعدّل نتيجة لاعب (القيمة بعد الضرب بالمضاعف من واجهة الإدخال).
   void applyScore(PlayerModel player, int value, {bool edit = false}) {
-    _undoStack.add(_ScoreSnapshot(player));
+    _undoStack.add(_ScoreSnapshot(player, editsLength: state.edits.length));
     if (edit) {
       player.editLastRoundScore(value);
     } else {
@@ -136,6 +145,38 @@ class DashboardCubit extends Cubit<DashboardState> {
     );
   }
 
+  /// يعدّل نتيجة أي جولة (1..5 → [roundIndex] 0..4) لأي لاعب ويسجّل التعديل.
+  void applyScoreAt(PlayerModel player, int roundIndex, int value) {
+    final old = player.roundValueAt(roundIndex);
+    _undoStack.add(_ScoreSnapshot(player, editsLength: state.edits.length));
+    player.setRoundScoreAt(roundIndex, value);
+    final edits = old.isEmpty || old == value.toString()
+        ? state.edits
+        : [
+            ...state.edits,
+            ScoreEdit(
+              playerName: player.name ?? '',
+              playerId: player.id,
+              round: roundIndex + 1,
+              oldValue: old,
+              newValue: value.toString(),
+              at: DateTime.now(),
+            ),
+          ];
+    HapticFeedback.lightImpact();
+    emit(state.copyWith(revision: state.revision + 1, edits: edits));
+    _persist();
+    if (isFinished) _publishLastGame();
+  }
+
+  /// هل عُدّلت نتيجة هذا اللاعب في هذه الجولة (1..5) بعد إدخالها؟
+  bool isEdited(PlayerModel player, int round) => state.edits.any(
+    (e) =>
+        e.round == round &&
+        e.playerId == player.id &&
+        e.playerName == (player.name ?? ''),
+  );
+
   void hideMarquee() => emit(state.copyWith(marqueeVisible: false));
 
   /// إعادة بدء الجولة: تصفير نتائج كل اللاعبين.
@@ -145,7 +186,7 @@ class DashboardCubit extends Cubit<DashboardState> {
     }
     _undoStack.clear();
     finishAnnounced = false;
-    emit(state.copyWith(revision: state.revision + 1));
+    emit(state.copyWith(revision: state.revision + 1, edits: const []));
     _persist();
   }
 
@@ -217,9 +258,11 @@ class DashboardCubit extends Cubit<DashboardState> {
 
 /// لقطة لقيم جولات لاعب قبل تعديلها، تسمح باستعادتها عند التراجع.
 class _ScoreSnapshot {
-  _ScoreSnapshot(this.player) : values = List<String>.of(player.roundValues);
+  _ScoreSnapshot(this.player, {required this.editsLength})
+    : values = List<String>.of(player.roundValues);
 
   final PlayerModel player;
+  final int editsLength;
   final List<String> values;
 
   void restore() {

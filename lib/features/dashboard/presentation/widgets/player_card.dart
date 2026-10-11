@@ -9,7 +9,8 @@ import 'package:screw_calculator/features/dashboard/presentation/cubit/dashboard
 import 'package:screw_calculator/features/dashboard/presentation/widgets/player_scores_row.dart';
 import 'package:screw_calculator/generated/assets.dart';
 
-/// بطاقة لاعب في الوضع الكلاسيكي تعرض اسمه ونتائجه ومجموعه.
+/// بطاقة لاعب في الوضع الكلاسيكي: صورة رمزية بالحرف الأول، الاسم مع تاج
+/// الفائز، ثم صف النتائج والمجموع. الفائز أخضر والخاسر وردي.
 class PlayerCard extends StatelessWidget {
   const PlayerCard({
     super.key,
@@ -29,55 +30,80 @@ class PlayerCard extends StatelessWidget {
     final palette = context.palette;
     final bool isWinner = winnerTotal?.toString() == player.total;
     final bool isLoser = loserTotal?.toString() == player.total;
+    final bool decided = winnerTotal != loserTotal;
 
-    final Color bgColor = isWinner
-        ? palette.win.withValues(alpha: 0.20)
-        : isLoser
-        ? palette.lose.withValues(alpha: 0.18)
-        : palette.surface;
-    final Color borderColor = isWinner
+    final Color accent = isWinner && decided
         ? palette.win
-        : isLoser
+        : isLoser && decided
+        ? palette.lose
+        : palette.brand;
+    final Color bgColor = isWinner && decided
+        ? palette.win.withValues(alpha: 0.12)
+        : isLoser && decided
+        ? palette.lose.withValues(alpha: 0.10)
+        : palette.surface;
+    final Color borderColor = isWinner && decided
+        ? palette.win
+        : isLoser && decided
         ? palette.lose
         : palette.border;
+    final name = player.name?.toString() ?? '';
+    final initial = name.trim().isEmpty ? '?' : name.trim().characters.first;
 
     return FadeSlide(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 6),
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
           decoration: BoxDecoration(
             color: bgColor,
             borderRadius: BorderRadius.circular(AppRadii.lg),
-            border: Border.all(color: borderColor, width: 1.4),
+            border: Border.all(
+              color: borderColor,
+              width: isWinner && decided ? 1.6 : 1,
+            ),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
+                  Container(
+                    width: 38,
+                    height: 38,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: accent.withValues(alpha: 0.18),
+                    ),
+                    child: Text(
+                      initial,
+                      style: TextStyle(
+                        color: accent,
+                        fontSize: 18,
+                        fontFamily: AppFonts.bold,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
                   Expanded(
                     child: CustomText(
-                      text: player.name.toString(),
-                      fontSize: 20.sp,
-                      height: 1,
+                      text: name,
+                      fontSize: 19.sp,
+                      fontFamily: AppFonts.bold,
+                      height: 1.1,
                       textAlign: TextAlign.start,
                     ),
                   ),
-                  if (isWinner)
+                  if (isWinner && decided)
                     const Image(
                       image: AssetImage(Assets.kingIcon),
-                      height: 20,
-                      width: 20,
+                      height: 24,
+                      width: 24,
                     ),
                 ],
               ),
-              SizedBox(
-                width: 20,
-                height: 2,
-                child: Divider(color: palette.textSecondary),
-              ),
-              const SizedBox(height: 4),
+              const SizedBox(height: 12),
               PlayerScoresRow(cubit: cubit, player: player),
             ],
           ),

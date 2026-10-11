@@ -6,13 +6,13 @@ import 'package:screw_calculator/app/di/service_locator.dart';
 import 'package:screw_calculator/core/helpers/image_helper.dart';
 import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/utils/utilities.dart';
+import 'package:screw_calculator/core/widgets/app_dialog.dart';
 import 'package:screw_calculator/core/widgets/bottom_nav_text.dart';
 import 'package:screw_calculator/core/widgets/custom_appbar.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/core/widgets/skeleton.dart';
 import 'package:screw_calculator/features/users_screenshoot_sharing/domain/entities/screenshot_entity.dart';
 import 'package:screw_calculator/features/users_screenshoot_sharing/presentation/cubit/screenshot_cubit.dart';
-import 'package:screw_calculator/features/users_screenshoot_sharing/presentation/widgets/delete_confirmation_dialog.dart';
 import 'package:screw_calculator/features/users_screenshoot_sharing/presentation/widgets/empty_data.dart';
 import 'package:screw_calculator/features/users_screenshoot_sharing/presentation/widgets/loading_indicator.dart';
 import 'package:screw_calculator/features/users_screenshoot_sharing/presentation/widgets/screenshot_item.dart';
@@ -75,9 +75,13 @@ class _UserScSharingViewState extends State<_UserScSharingView> {
 
   Future<void> _handleDelete(String screenshotId) async {
     final shouldDelete =
-        await showDialog<bool>(
-          context: context,
-          builder: (context) => const DeleteConfirmationDialog(),
+        await showAppConfirmDialog(
+          context,
+          icon: Icons.delete_outline_rounded,
+          tone: AppDialogTone.danger,
+          title: AppLocalizations.of(context).confirmDelete,
+          message: AppLocalizations.of(context).confirmDeleteShare,
+          confirmText: AppLocalizations.of(context).delete,
         ) ??
         false;
 

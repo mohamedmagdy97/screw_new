@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:screw_calculator/core/theme/app_palette.dart';
+import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/features/game_mode/presentation/screens/game_mode_screen.dart';
 import 'package:screw_calculator/features/onboarding/presentation/screens/onboarding_screen.dart';
@@ -66,24 +68,41 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final palette = context.palette;
     return Scaffold(
-      body: Center(
+      body: SafeArea(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(height: 80.h),
-            Padding(
-              padding: EdgeInsets.all(24.sp),
-              child: Image.asset(Assets.iconsIcon, height: 0.15.sh),
+            const Spacer(flex: 3),
+            TweenAnimationBuilder<double>(
+              tween: Tween(begin: 0, end: 1),
+              duration: const Duration(milliseconds: 900),
+              curve: Curves.easeOutBack,
+              builder: (context, t, child) => Opacity(
+                opacity: t.clamp(0, 1),
+                child: Transform.scale(scale: 0.85 + 0.15 * t, child: child),
+              ),
+              child: Image.asset(Assets.iconsIcon, height: 0.3.sh),
             ),
-            SizedBox(height: 25.h),
+            const SizedBox(height: 16),
             CustomText(
               text: AppLocalizations.of(context).splashSalawat,
               fontSize: 16,
+              color: palette.textSecondary,
             ),
-
-            SizedBox(height: 0.45.sh),
-            const CircularProgressIndicator.adaptive(strokeWidth: 4),
+            const Spacer(flex: 3),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 72),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(AppRadii.pill),
+                child: LinearProgressIndicator(
+                  minHeight: 5,
+                  backgroundColor: palette.border,
+                  color: palette.brand,
+                ),
+              ),
+            ),
+            const SizedBox(height: 48),
           ],
         ),
       ),

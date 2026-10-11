@@ -98,7 +98,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get confirmResetRound => 'هل تريد إعادة بدأ الجولة؟';
 
   @override
-  String get gameOver => 'انتهت اللعبة 🎉';
+  String get gameOver => 'انتهت اللعبة';
 
   @override
   String winnerLabel(String names) {
@@ -128,13 +128,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get saveHint => 'الان يمكنك حفظ الجولة واستكمالها لاحقا';
 
   @override
-  String get saveResult => '💾 حفظ النتيجة';
+  String get saveResult => 'حفظ النتيجة';
 
   @override
   String get resetRound => 'اعادة بدأ الجولة';
 
   @override
-  String get shareResult => '📲 مشاركة النتيجة';
+  String get shareResult => 'مشاركة النتيجة';
 
   @override
   String get shareNeed4 => 'لمشاركة النتائج يجب ادخال 4 جولات على الاقل';
@@ -275,16 +275,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get blockedUsers => 'المستخدمون المحظورون';
 
   @override
-  String get rateUs => '⭐ قيمنا';
+  String get rateUs => 'قيّمنا';
 
   @override
-  String get lightMode => '☀️ الوضع الفاتح';
-
-  @override
-  String get darkMode => '🌙 الوضع الداكن';
-
-  @override
-  String get language => '🌐 English';
+  String get language => 'English';
 
   @override
   String get enterYourData => 'ادخل بياناتك';
@@ -456,12 +450,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get splashSalawat => 'صلي على النبي';
 
   @override
-  String get weeklyReminderOn => '🔔 تذكير أسبوعي بلعبة: مفعّل';
-
-  @override
-  String get weeklyReminderOff => '🔕 تذكير أسبوعي بلعبة: متوقف';
-
-  @override
   String get reminderTitle => 'وقت لعبة سكرو! 🃏';
 
   @override
@@ -479,7 +467,7 @@ class AppLocalizationsAr extends AppLocalizations {
       'فعّل صلاحية الإشعارات من إعدادات الجهاز أولًا';
 
   @override
-  String get tournamentMenu => '🏆 بطولة الأصدقاء';
+  String get tournamentMenu => 'بطولة الأصدقاء';
 
   @override
   String get tournamentTitle => 'بطولة الأصدقاء';
@@ -543,5 +531,180 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String editScoreSemantic(String name) {
     return 'تعديل آخر نتيجة $name';
+  }
+
+  @override
+  String scoreSheetAddTitle(String name, int round) {
+    return 'نتيجة $name · الجولة $round';
+  }
+
+  @override
+  String scoreSheetEditTitle(String name, int round) {
+    return 'تعديل نتيجة $name · الجولة $round';
+  }
+
+  @override
+  String get pickYourCards => 'اختر كروتك';
+
+  @override
+  String get orTypeScore => 'أو اكتب النتيجة مباشرة';
+
+  @override
+  String get cardsTotal => 'المجموع';
+
+  @override
+  String get clearCards => 'مسح';
+
+  @override
+  String get removeLastCard => 'حذف آخر كارت';
+
+  @override
+  String get addScore => 'إضافة';
+
+  @override
+  String get saveChanges => 'حفظ التعديل';
+
+  @override
+  String get multiplyBy2 => '×2 مضاعفة';
+
+  @override
+  String get multiplyBy4 => '×4 الجولة الأخيرة';
+
+  @override
+  String get screwZeroShort => 'سكرو (0)';
+
+  @override
+  String get cardPower => 'باور';
+
+  @override
+  String get cardPlus20 => '+20';
+
+  @override
+  String get cardScrollGreen => 'سكرول أخضر';
+
+  @override
+  String get cardScrollRed => 'سكرول أحمر';
+
+  @override
+  String get editsLogTitle => 'سجل التعديلات';
+
+  @override
+  String editsLogEntry(
+    String name,
+    int round,
+    String oldValue,
+    String newValue,
+  ) {
+    return '$name · الجولة $round: $oldValue ← $newValue';
+  }
+
+  @override
+  String get editsLogEmpty => 'لا توجد تعديلات';
+
+  @override
+  String editsCount(int n) {
+    return 'تعديلات ($n)';
+  }
+
+  @override
+  String get tapScoreToEdit => 'اضغط على أي نتيجة لتعديلها';
+
+  @override
+  String get rulesTitle => 'قوانين اللعبة';
+
+  @override
+  String get rulesSearchHint => 'ابحث في القواعد والكروت';
+
+  @override
+  String get rulesNoResults => 'لا توجد نتائج مطابقة';
+
+  @override
+  String get rulesFilterAll => 'الكل';
+
+  @override
+  String get rulesCatBasics => 'الأساسيات';
+
+  @override
+  String get rulesCatPower => 'كروت الباور';
+
+  @override
+  String get rulesCatOscar => 'كروت أوسكار';
+
+  @override
+  String get rulesCatRamadan => 'كروت رمضان';
+
+  @override
+  String get rulesCatTeams => 'وضع الفرق';
+
+  @override
+  String get rulesCatGoal => 'الهدف';
+
+  @override
+  String get powerCardsTitle => 'الكروت الخاصة';
+
+  @override
+  String get powerCardsTooltip => 'مرجع الكروت';
+
+  @override
+  String get inviteFriend => 'ادعُ صديقًا';
+
+  @override
+  String inviteText(String link) {
+    return 'جرّب «سكرو حاسبة» 🃏 حاسبة نقاط لعبة سكرو بسهولة وسرعة!\n$link';
+  }
+
+  @override
+  String shareTextWithLink(String link) {
+    return '📸 شوف نتيجتي! من تطبيق سكرو حاسبة\n$link';
+  }
+
+  @override
+  String get shareCardDownload => 'حمّل التطبيق من Google Play';
+
+  @override
+  String get drawerSectionPlay => 'اللعب';
+
+  @override
+  String get drawerSectionCommunity => 'المجتمع';
+
+  @override
+  String get drawerSectionTools => 'أدوات';
+
+  @override
+  String get drawerSectionSettings => 'الإعدادات';
+
+  @override
+  String get weeklyReminderLabel => 'تذكير أسبوعي بلعبة';
+
+  @override
+  String get weeklyReminderSub => 'كل جمعة 8 مساءً';
+
+  @override
+  String get toggleThemeTooltip => 'تبديل الوضع الفاتح/الداكن';
+
+  @override
+  String get toggleLanguageTooltip => 'تغيير اللغة';
+
+  @override
+  String get version => 'الإصدار';
+
+  @override
+  String get heroTagline => 'احسب نقاط لعبتك بسهولة وسرعة';
+
+  @override
+  String get modeClassicTitle => 'كلاسيك';
+
+  @override
+  String get modeClassicDesc => 'كل لاعب لنفسه (من 2 إلى 12 لاعب)';
+
+  @override
+  String get modeFriendsTitle => 'صاحب صاحبه';
+
+  @override
+  String get modeFriendsDesc => 'فرق من لاعبين اثنين (حتى 4 فرق)';
+
+  @override
+  String roundOfFive(int n) {
+    return 'الجولة $n من 5';
   }
 }

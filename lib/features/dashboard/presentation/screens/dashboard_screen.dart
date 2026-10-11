@@ -7,15 +7,18 @@ import 'package:screw_calculator/app/di/service_locator.dart';
 import 'package:screw_calculator/core/l10n/content_direction.dart';
 import 'package:screw_calculator/core/models/player_model.dart';
 import 'package:screw_calculator/core/theme/app_palette.dart';
+import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/utils/enums.dart';
 import 'package:screw_calculator/core/utils/utilities.dart';
+import 'package:screw_calculator/core/widgets/app_dialog.dart';
 import 'package:screw_calculator/core/widgets/bottom_nav_text.dart';
-import 'package:screw_calculator/core/widgets/custom_button.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
+import 'package:screw_calculator/features/dashboard/domain/entities/score_edit.dart';
 import 'package:screw_calculator/features/dashboard/presentation/cubit/dashboard_cubit.dart';
 import 'package:screw_calculator/features/dashboard/presentation/widgets/dashboard_app_bar.dart';
 import 'package:screw_calculator/features/dashboard/presentation/widgets/marquee_bar.dart';
 import 'package:screw_calculator/features/dashboard/presentation/widgets/player_card.dart';
+import 'package:screw_calculator/features/dashboard/presentation/widgets/round_header.dart';
 import 'package:screw_calculator/features/dashboard/presentation/widgets/share_screen_btn.dart';
 import 'package:screw_calculator/features/dashboard/presentation/widgets/team_card.dart';
 import 'package:screw_calculator/l10n/app_localizations.dart';
@@ -26,11 +29,15 @@ class DashboardScreen extends StatelessWidget {
     required this.players,
     this.fromHistory = false,
     this.teamsMode = false,
+    this.initialEdits = const [],
   });
 
   final List<PlayerModel> players;
   final bool fromHistory;
   final bool teamsMode;
+
+  /// سجل التعديلات المستعاد مع لعبة محفوظة.
+  final List<ScoreEdit> initialEdits;
 
   @override
   Widget build(BuildContext context) {
@@ -93,32 +100,26 @@ class _DashboardViewState extends State<_DashboardView> {
       context: context,
       builder: (ctx) {
         final palette = ctx.palette;
-        return AlertDialog(
-          title: CustomText(
-            text: AppLocalizations.of(ctx).gameOver,
-            fontSize: 20,
-            textAlign: TextAlign.center,
-          ),
+        final l10n = AppLocalizations.of(ctx);
+        return AppDialog(
+          icon: Icons.emoji_events_rounded,
+          tone: AppDialogTone.success,
+          title: l10n.gameOver,
           content: Column(
-            mainAxisSize: MainAxisSize.min,
             children: [
-              CustomText(
-                text: AppLocalizations.of(ctx).winnerLabel(winners),
-                fontSize: 18,
-                color: palette.win,
-              ),
+              _ResultPill(text: l10n.winnerLabel(winners), color: palette.win),
               const SizedBox(height: 8),
-              CustomText(
-                text: AppLocalizations.of(ctx).loserLabel(losers),
-                fontSize: 16,
-                color: palette.lose,
-              ),
+              _ResultPill(text: l10n.loserLabel(losers), color: palette.lose),
             ],
           ),
           actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(ctx),
-              child: Text(AppLocalizations.of(ctx).ok),
+            Expanded(
+              child: AppDialogButton(
+                label: l10n.ok,
+                primary: true,
+                tone: AppDialogTone.success,
+                onPressed: () => Navigator.pop(ctx),
+              ),
             ),
           ],
         );
@@ -179,36 +180,10 @@ class _DashboardViewState extends State<_DashboardView> {
                         textDirection: context.contentDirection,
                         child: Column(
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                CustomText(
-                                  text: round == kGameFinishedRound
-                                      ? AppLocalizations.of(
-                                          context,
-                                        ).roundsFinished
-                                      : AppLocalizations.of(
-                                          context,
-                                        ).roundNumber(round),
-                                  color: context.palette.brandSoft,
-                                  fontSize: 18,
-                                ),
-                                if (!widget.fromHistory)
-                                  Padding(
-                                    padding: const EdgeInsetsDirectional.only(
-                                      start: 12,
-                                    ),
-                                    child: TextButton.icon(
-                                      onPressed: cubit.canUndo
-                                          ? cubit.undo
-                                          : null,
-                                      icon: const Icon(Icons.undo, size: 18),
-                                      label: Text(
-                                        AppLocalizations.of(context).undo,
-                                      ),
-                                    ),
-                                  ),
-                              ],
+                            RoundHeader(
+                              cubit: cubit,
+                              round: round,
+                              readOnly: widget.fromHistory,
                             ),
                             Expanded(
                               child: SingleChildScrollView(
@@ -230,15 +205,13 @@ class _DashboardViewState extends State<_DashboardView> {
                                               state: state,
                                             ),
                                     ),
-                                    ShareScreenBtn(
+                                    _ActionsRow(
                                       cubit: cubit,
                                       screenshotController:
                                           _screenshotController,
+                                      teamsView: state.showTeamsView,
+                                      fromHistory: widget.fromHistory,
                                     ),
-                                    if (state.showTeamsView)
-                                      _ResetSection(onReset: cubit.resetGame)
-                                    else if (!widget.fromHistory)
-                                      _SaveSection(onSave: cubit.saveGame),
                                   ],
                                 ),
                               ),
@@ -313,46 +286,104 @@ class _TeamsBoard extends StatelessWidget {
   }
 }
 
-class _SaveSection extends StatelessWidget {
-  const _SaveSection({required this.onSave});
+/// أزرار أسفل اللوحة: مشاركة + (حفظ النتيجة | إعادة اللعبة) مع تلميح الحفظ.
+class _ActionsRow extends StatelessWidget {
+  const _ActionsRow({
+    required this.cubit,
+    required this.screenshotController,
+    required this.teamsView,
+    required this.fromHistory,
+  });
 
-  final VoidCallback onSave;
+  final DashboardCubit cubit;
+  final ScreenshotController screenshotController;
+  final bool teamsView;
+  final bool fromHistory;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        CustomText(
-          text: AppLocalizations.of(context).saveHint,
-          fontSize: 14,
-          color: Colors.red,
-        ),
-        Padding(
-          padding: const EdgeInsets.only(bottom: 4, top: 2),
-          child: CustomButton(
-            text: AppLocalizations.of(context).saveResult,
-            onPressed: onSave,
+    final l10n = AppLocalizations.of(context);
+    final palette = context.palette;
+    return Padding(
+      padding: const EdgeInsets.only(top: 12, bottom: 20),
+      child: Column(
+        children: [
+          if (!teamsView && !fromHistory)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: CustomText(
+                text: l10n.saveHint,
+                fontSize: 13,
+                color: palette.textSecondary,
+              ),
+            ),
+          Row(
+            children: [
+              Expanded(
+                child: ShareScreenBtn(
+                  cubit: cubit,
+                  screenshotController: screenshotController,
+                ),
+              ),
+              if (teamsView || !fromHistory) ...[
+                const SizedBox(width: 12),
+                Expanded(
+                  child: SizedBox(
+                    height: 52,
+                    child: FilledButton.icon(
+                      onPressed: teamsView ? cubit.resetGame : cubit.saveGame,
+                      icon: Icon(
+                        teamsView
+                            ? Icons.restart_alt_rounded
+                            : Icons.save_alt_rounded,
+                        size: 20,
+                      ),
+                      label: FittedBox(
+                        child: Text(
+                          teamsView ? l10n.resetRound : l10n.saveResult,
+                        ),
+                      ),
+                      style: FilledButton.styleFrom(
+                        backgroundColor: palette.brand,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(AppRadii.md),
+                        ),
+                        textStyle: const TextStyle(
+                          fontFamily: AppFonts.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ],
           ),
-        ),
-        const SizedBox(height: 12),
-      ],
+        ],
+      ),
     );
   }
 }
 
-class _ResetSection extends StatelessWidget {
-  const _ResetSection({required this.onReset});
+/// شريحة نتيجة (فائز/خاسر) داخل حوار نهاية اللعبة.
+class _ResultPill extends StatelessWidget {
+  const _ResultPill({required this.text, required this.color});
 
-  final VoidCallback onReset;
+  final String text;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
-      child: CustomButton(
-        text: AppLocalizations.of(context).resetRound,
-        onPressed: onReset,
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.14),
+        borderRadius: BorderRadius.circular(AppRadii.md),
+        border: Border.all(color: color.withValues(alpha: 0.5)),
       ),
+      child: CustomText(text: text, fontSize: 17, color: color),
     );
   }
 }

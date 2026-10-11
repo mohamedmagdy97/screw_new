@@ -81,12 +81,22 @@ abstract final class AppTheme {
         ),
         clipBehavior: Clip.antiAlias,
       ),
+      bottomSheetTheme: BottomSheetThemeData(
+        backgroundColor: p.surfaceElevated,
+        surfaceTintColor: Colors.transparent,
+        showDragHandle: true,
+        dragHandleColor: p.border,
+        modalBackgroundColor: p.surfaceElevated,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+        ),
+      ),
       dialogTheme: DialogThemeData(
         backgroundColor: p.surfaceElevated,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppRadii.xl),
+          borderRadius: BorderRadius.circular(28),
           side: BorderSide(color: p.border),
         ),
       ),

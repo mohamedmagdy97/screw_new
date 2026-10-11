@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:screw_calculator/app/di/service_locator.dart';
 import 'package:screw_calculator/core/helpers/firebase_notification_service.dart';
 import 'package:screw_calculator/core/l10n/content_direction.dart';
@@ -10,6 +9,7 @@ import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/utils/enums.dart';
 import 'package:screw_calculator/core/utils/utilities.dart';
+import 'package:screw_calculator/core/widgets/app_dialog.dart';
 import 'package:screw_calculator/core/widgets/bottom_nav_text.dart';
 import 'package:screw_calculator/core/widgets/custom_button.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
@@ -18,6 +18,7 @@ import 'package:screw_calculator/features/dashboard/presentation/screens/dashboa
 import 'package:screw_calculator/features/game_mode/domain/entities/game_mode_item_entity.dart';
 import 'package:screw_calculator/features/game_mode/presentation/cubit/game_mode_cubit.dart';
 import 'package:screw_calculator/features/home/presentation/screens/home_screen.dart';
+import 'package:screw_calculator/generated/assets.dart';
 import 'package:screw_calculator/l10n/app_localizations.dart';
 
 class GameMode extends StatefulWidget {
@@ -42,31 +43,14 @@ class _GameModeState extends State<GameMode> {
     final game = await sl<ActiveGameRepository>().load();
     if (game == null || !game.hasProgress || !mounted) return;
 
-    final resume = await showDialog<bool>(
-      context: context,
-      barrierDismissible: false,
-      builder: (ctx) => AlertDialog(
-        title: CustomText(
-          text: AppLocalizations.of(ctx).unfinishedGameTitle,
-          fontSize: 18,
-          textAlign: TextAlign.center,
-        ),
-        content: CustomText(
-          text: AppLocalizations.of(ctx).unfinishedGameBody,
-          fontSize: 16,
-          textAlign: TextAlign.center,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, false),
-            child: Text(AppLocalizations.of(ctx).startNewGame),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(ctx, true),
-            child: Text(AppLocalizations.of(ctx).resume),
-          ),
-        ],
-      ),
+    final l10n = AppLocalizations.of(context);
+    final resume = await showAppConfirmDialog(
+      context,
+      icon: Icons.history_rounded,
+      title: l10n.unfinishedGameTitle,
+      message: l10n.unfinishedGameBody,
+      confirmText: l10n.resume,
+      cancelText: l10n.startNewGame,
     );
     if (!mounted) return;
     if (resume ?? false) {
@@ -76,7 +60,11 @@ class _GameModeState extends State<GameMode> {
       await Navigator.push(
         context,
         buildFancyRoute<void>(
-          DashboardScreen(players: game.players, teamsMode: game.friendly),
+          DashboardScreen(
+            players: game.players,
+            teamsMode: game.friendly,
+            initialEdits: game.edits,
+          ),
         ),
       );
     } else {
@@ -110,14 +98,14 @@ class _GameModeState extends State<GameMode> {
       child: PopScope<Object?>(
         canPop: false,
         onPopInvokedWithResult: _onPopInvoked,
-        child: const _GameModeView(),
+        child: const GameModeView(),
       ),
     );
   }
 }
 
-class _GameModeView extends StatelessWidget {
-  const _GameModeView();
+class GameModeView extends StatelessWidget {
+  const GameModeView({super.key});
 
   void _handleSelectMode(BuildContext context, int index) {
     final cubit = context.read<GameModeCubit>();
@@ -145,142 +133,241 @@ class _GameModeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        automaticallyImplyLeading: false,
-        title: CustomText(
-          text: AppLocalizations.of(context).appName,
-          fontSize: 22.sp,
-        ),
-      ),
       bottomNavigationBar: const BottomNavigationText(),
-      body: BlocBuilder<GameModeCubit, GameModeState>(
-        builder: (context, state) {
-          if (state is GameModeInitial || state is GameModeLoading) {
-            return const Center(
-              child: CircularProgressIndicator.adaptive(strokeWidth: 4),
-            );
-          }
-
-          if (state is GameModeError) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.error_outline, size: 48, color: Colors.red),
-                  const SizedBox(height: 16),
-                  CustomText(text: state.message, fontSize: 16),
-                ],
-              ),
-            );
-          }
-
-          if (state is GameModeLoaded) {
-            return ListView(
-              padding: const EdgeInsets.all(24),
-              children: [
-                CustomText(
-                  text: AppLocalizations.of(context).chooseGameMode,
-                  fontSize: 16.sp,
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 16),
-                Column(
-                  crossAxisAlignment: context.readStartCross,
-                  children: [
-                    SingleChildScrollView(
-                      child: Hero(
-                        tag:
-                            'gameMode-${state.gameModes.firstWhere((e) => e.isActive).key}',
-                        child: Material(
-                          color: Colors.transparent,
-                          child: AnimatedOpacity(
-                            duration: const Duration(milliseconds: 500),
-                            opacity: 1,
+      body: Column(
+        children: [
+          const _HeroHeader(),
+          Expanded(
+            child: BlocBuilder<GameModeCubit, GameModeState>(
+              builder: (context, state) {
+                if (state is GameModeInitial || state is GameModeLoading) {
+                  return const Center(
+                    child: CircularProgressIndicator.adaptive(strokeWidth: 4),
+                  );
+                }
+                if (state is GameModeError) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.error_outline_rounded,
+                          size: 48,
+                          color: context.palette.lose,
+                        ),
+                        const SizedBox(height: 16),
+                        CustomText(text: state.message, fontSize: 16),
+                      ],
+                    ),
+                  );
+                }
+                if (state is GameModeLoaded) {
+                  return Directionality(
+                    textDirection: context.contentDirection,
+                    child: ListView(
+                      padding: const EdgeInsets.fromLTRB(20, 24, 20, 16),
+                      children: [
+                        CustomText(
+                          text: l10n.chooseGameMode,
+                          fontSize: 18,
+                          fontFamily: AppFonts.bold,
+                          textAlign: TextAlign.start,
+                        ),
+                        const SizedBox(height: 14),
+                        Hero(
+                          tag:
+                              'gameMode-${state.gameModes.firstWhere((e) => e.isActive).key}',
+                          child: Material(
+                            color: Colors.transparent,
                             child: Column(
-                              children: List.generate(
-                                state.gameModes.length,
-                                (index) => _buildGameModeItem(
-                                  context,
-                                  state.gameModes[index],
-                                  index,
-                                ),
-                              ),
+                              children: [
+                                for (var i = 0; i < state.gameModes.length; i++)
+                                  _ModeCard(
+                                    gameMode: state.gameModes[i],
+                                    onTap: () => _handleSelectMode(context, i),
+                                  ),
+                              ],
                             ),
                           ),
                         ),
-                      ),
+                        const SizedBox(height: 20),
+                        CustomButton(
+                          text: l10n.next,
+                          onPressed: () => _handleNext(context),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 36),
-                    CustomButton(
-                      text: AppLocalizations.of(context).next,
-                      onPressed: () => _handleNext(context),
-                    ),
-                  ],
-                ),
-              ],
-            );
-          }
-
-          return const SizedBox.shrink();
-        },
+                  );
+                }
+                return const SizedBox.shrink();
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
+}
 
-  Widget _buildGameModeItem(
-    BuildContext context,
-    GameModeItemEntity gameMode,
-    int index,
-  ) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-      height: 120.h,
-      width: 1.sw,
-      margin: const EdgeInsets.symmetric(vertical: 12),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        gradient: LinearGradient(
-          colors: gameMode.isActive
-              ? [
-                  context.palette.brand,
-                  context.palette.brand.withValues(alpha: 0.82),
-                ]
-              : [Colors.transparent, Colors.transparent],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        border: Border.all(
-          color: gameMode.isActive ? Colors.transparent : AppColors.mainColor,
-        ),
-        boxShadow: gameMode.isActive
-            ? [
-                BoxShadow(
-                  color: AppColors.mainColor.withValues(alpha: .3),
-                  blurRadius: 8,
-                ),
-              ]
-            : [],
+/// ترويسة الشاشة الرئيسية: تدرّج الهوية بزوايا سفلية كبيرة، الشعار والاسم.
+class _HeroHeader extends StatelessWidget {
+  const _HeroHeader();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final palette = context.palette;
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.fromLTRB(
+        24,
+        MediaQuery.of(context).padding.top + 28,
+        24,
+        30,
       ),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(12),
-        onTap: () => _handleSelectMode(context, index),
-        child: Center(
-          child: AnimatedDefaultTextStyle(
-            style: TextStyle(
-              fontSize: 18.sp,
-              fontWeight: FontWeight.normal,
-              color: gameMode.isActive ? Colors.white : AppColors.black,
-            ),
-            duration: const Duration(milliseconds: 300),
-            child: CustomText(
-              text: gameMode.key == 0
-                  ? AppLocalizations.of(context).modeClassic
-                  : AppLocalizations.of(context).modeFriends,
-              fontSize: 22,
-              color: gameMode.isActive ? Colors.white : null,
+      decoration: BoxDecoration(
+        gradient: palette.brandGradient,
+        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(36)),
+        boxShadow: [
+          BoxShadow(
+            color: palette.brand.withValues(alpha: 0.35),
+            blurRadius: 24,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(22),
+            child: Image.asset(Assets.iconsMark, width: 76, height: 76),
+          ),
+          const SizedBox(height: 14),
+          CustomText(
+            text: l10n.appName,
+            fontSize: 26,
+            fontFamily: AppFonts.bold,
+            color: Colors.white,
+          ),
+          const SizedBox(height: 4),
+          CustomText(
+            text: l10n.heroTagline,
+            fontSize: 14,
+            color: Colors.white.withValues(alpha: 0.85),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// بطاقة وضع لعب: أيقونة، عنوان، وصف، ومؤشر اختيار.
+class _ModeCard extends StatelessWidget {
+  const _ModeCard({required this.gameMode, required this.onTap});
+
+  final GameModeItemEntity gameMode;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final palette = context.palette;
+    final selected = gameMode.isActive;
+    final isClassic = gameMode.key == 0;
+    final title = isClassic ? l10n.modeClassicTitle : l10n.modeFriendsTitle;
+    final desc = isClassic ? l10n.modeClassicDesc : l10n.modeFriendsDesc;
+    final fg = selected ? Colors.white : palette.textPrimary;
+    final fgSoft = selected
+        ? Colors.white.withValues(alpha: 0.85)
+        : palette.textSecondary;
+
+    return Semantics(
+      button: true,
+      selected: selected,
+      label: '$title. $desc',
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.easeOut,
+        margin: const EdgeInsets.only(bottom: 14),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(AppRadii.xl),
+          gradient: selected ? palette.brandGradient : null,
+          color: selected ? null : palette.surface,
+          border: Border.all(
+            color: selected ? Colors.transparent : palette.border,
+          ),
+          boxShadow: selected
+              ? [
+                  BoxShadow(
+                    color: palette.brand.withValues(alpha: 0.35),
+                    blurRadius: 18,
+                    offset: const Offset(0, 8),
+                  ),
+                ]
+              : null,
+        ),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(AppRadii.xl),
+            onTap: onTap,
+            child: Padding(
+              padding: const EdgeInsets.all(18),
+              child: Row(
+                children: [
+                  Container(
+                    width: 56,
+                    height: 56,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(18),
+                      color: selected
+                          ? Colors.white.withValues(alpha: 0.2)
+                          : palette.brand.withValues(alpha: 0.14),
+                    ),
+                    child: Icon(
+                      isClassic ? Icons.person_rounded : Icons.groups_rounded,
+                      size: 30,
+                      color: selected ? Colors.white : palette.brandSoft,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CustomText(
+                          text: title,
+                          fontSize: 19,
+                          fontFamily: AppFonts.bold,
+                          color: fg,
+                          textAlign: TextAlign.start,
+                        ),
+                        const SizedBox(height: 4),
+                        CustomText(
+                          text: desc,
+                          fontSize: 13.5,
+                          color: fgSoft,
+                          textAlign: TextAlign.start,
+                          height: 1.4,
+                        ),
+                      ],
+                    ),
+                  ),
+                  AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 200),
+                    child: Icon(
+                      selected
+                          ? Icons.check_circle_rounded
+                          : Icons.radio_button_unchecked_rounded,
+                      key: ValueKey(selected),
+                      color: selected ? Colors.white : palette.border,
+                      size: 26,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

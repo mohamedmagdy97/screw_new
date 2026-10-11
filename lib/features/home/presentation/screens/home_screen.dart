@@ -1,11 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:screw_calculator/app/di/service_locator.dart';
-import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/utils/enums.dart';
+import 'package:screw_calculator/core/widgets/app_header.dart';
 import 'package:screw_calculator/core/widgets/bottom_nav_text.dart';
-import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/features/home/presentation/controller/home_controller.dart';
 import 'package:screw_calculator/features/home/presentation/widgets/classic_mode.dart';
 import 'package:screw_calculator/features/home/presentation/widgets/drawer_widget.dart';
@@ -32,38 +29,20 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final palette = context.palette;
     return Hero(
       tag: 'gameMode-${widget.index}',
       child: Scaffold(
         key: homeData.scaffoldKey,
-        appBar: AppBar(
-          centerTitle: true,
-          foregroundColor: Colors.white,
-          flexibleSpace: Container(
-            decoration: BoxDecoration(gradient: palette.brandGradient),
-          ),
-          leading: InkWell(
+        appBar: AppHeader(
+          title: AppLocalizations.of(context).appName,
+          left: HeaderIconButton(
+            icon: Icons.arrow_back_ios_new_rounded,
             onTap: () => Navigator.pop(context),
-            child: const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Icon(CupertinoIcons.back, color: Colors.white),
-            ),
           ),
-          title: CustomText(
-            text: AppLocalizations.of(context).appName,
-            fontSize: 22.sp,
-            color: Colors.white,
+          right: HeaderIconButton(
+            icon: Icons.menu_rounded,
+            onTap: () => homeData.scaffoldKey.currentState!.openEndDrawer(),
           ),
-          actions: [
-            InkWell(
-              onTap: () => homeData.scaffoldKey.currentState!.openEndDrawer(),
-              child: const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Icon(Icons.menu, color: Colors.white),
-              ),
-            ),
-          ],
         ),
         endDrawer: const DrawerWidget(),
         bottomNavigationBar: const BottomNavigationText(),

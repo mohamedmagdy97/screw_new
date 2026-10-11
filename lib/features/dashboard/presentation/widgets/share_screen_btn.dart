@@ -2,15 +2,13 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
+import 'package:screw_calculator/core/constants/app_links.dart';
 import 'package:screw_calculator/core/l10n/content_direction.dart';
 import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/utils/utilities.dart';
-import 'package:screw_calculator/core/widgets/custom_text.dart';
-import 'package:screw_calculator/core/widgets/dox_decoration.dart';
 import 'package:screw_calculator/features/dashboard/presentation/cubit/dashboard_cubit.dart';
 import 'package:screw_calculator/features/dashboard/presentation/widgets/screenshot_preview_dialog.dart';
 import 'package:screw_calculator/features/dashboard/presentation/widgets/share_result_card.dart';
@@ -56,6 +54,8 @@ class ShareScreenBtn extends StatelessWidget {
             palette: context.palette,
             title: l10n.shareCardTitle,
             footer: l10n.appName,
+            downloadLabel: l10n.shareCardDownload,
+            downloadUrl: AppLinks.playStore,
           ),
         ),
       ),
@@ -103,21 +103,20 @@ class ShareScreenBtn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16, top: 16),
-      child: InkWell(
-        onTap: () => _captureAndShare(context),
-        child: Container(
-          width: 1.sw,
-          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
-          decoration: customBoxDecoration(
-            borderRadius: AppRadii.sm,
-            color: AppColors.mainColor,
+    final palette = context.palette;
+    return SizedBox(
+      height: 52,
+      child: OutlinedButton.icon(
+        onPressed: () => _captureAndShare(context),
+        icon: const Icon(Icons.ios_share_rounded, size: 20),
+        label: FittedBox(child: Text(AppLocalizations.of(context).shareResult)),
+        style: OutlinedButton.styleFrom(
+          foregroundColor: palette.brandSoft,
+          side: BorderSide(color: palette.brand.withValues(alpha: 0.6)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppRadii.md),
           ),
-          child: CustomText(
-            text: AppLocalizations.of(context).shareResult,
-            fontSize: 18,
-          ),
+          textStyle: const TextStyle(fontFamily: AppFonts.bold, fontSize: 16),
         ),
       ),
     );

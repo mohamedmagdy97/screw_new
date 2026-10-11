@@ -1,10 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:screw_calculator/core/theme/app_palette.dart';
-import 'package:screw_calculator/core/widgets/custom_button.dart';
-import 'package:screw_calculator/core/widgets/custom_text.dart';
+import 'package:screw_calculator/core/theme/app_theme.dart';
+import 'package:screw_calculator/core/widgets/app_dialog.dart';
 import 'package:screw_calculator/l10n/app_localizations.dart';
 
+/// معاينة صورة النتيجة قبل المشاركة (إلغاء / مشاركة).
 class ScreenshotPreviewDialog extends StatelessWidget {
   final Uint8List imageBytes;
   final VoidCallback onShare;
@@ -17,62 +18,42 @@ class ScreenshotPreviewDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      backgroundColor: Colors.transparent,
-      insetPadding: const EdgeInsets.all(16),
-      child: Container(
-        decoration: BoxDecoration(
-          color: context.palette.surfaceElevated,
-          borderRadius: BorderRadius.circular(16),
+    final l10n = AppLocalizations.of(context);
+    return AppDialog(
+      icon: Icons.ios_share_rounded,
+      title: l10n.previewTitle,
+      content: Container(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height * 0.5,
         ),
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            CustomText(
-              text: AppLocalizations.of(context).previewTitle,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-            const SizedBox(height: 16),
-
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: context.palette.border),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Image.memory(imageBytes, fit: BoxFit.contain),
-              ),
-            ),
-
-            const SizedBox(height: 16),
-
-            Row(
-              children: [
-                Expanded(
-                  child: CustomButton(
-                    text: AppLocalizations.of(context).cancel,
-                    onPressed: () => Navigator.pop(context),
-                    color: Colors.grey,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: CustomButton(
-                    text: AppLocalizations.of(context).share,
-                    onPressed: () {
-                      onShare();
-                      Navigator.pop(context, true);
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ],
+        decoration: BoxDecoration(
+          border: Border.all(color: context.palette.border),
+          borderRadius: BorderRadius.circular(AppRadii.md),
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(AppRadii.md),
+          child: Image.memory(imageBytes, fit: BoxFit.contain),
         ),
       ),
+      actions: [
+        Expanded(
+          child: AppDialogButton(
+            label: l10n.cancel,
+            onPressed: () => Navigator.pop(context),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: AppDialogButton(
+            label: l10n.share,
+            primary: true,
+            onPressed: () {
+              onShare();
+              Navigator.pop(context, true);
+            },
+          ),
+        ),
+      ],
     );
   }
 }

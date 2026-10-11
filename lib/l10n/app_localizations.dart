@@ -275,7 +275,7 @@ abstract class AppLocalizations {
   /// No description provided for @gameOver.
   ///
   /// In ar, this message translates to:
-  /// **'انتهت اللعبة 🎉'**
+  /// **'انتهت اللعبة'**
   String get gameOver;
 
   /// No description provided for @winnerLabel.
@@ -323,7 +323,7 @@ abstract class AppLocalizations {
   /// No description provided for @saveResult.
   ///
   /// In ar, this message translates to:
-  /// **'💾 حفظ النتيجة'**
+  /// **'حفظ النتيجة'**
   String get saveResult;
 
   /// No description provided for @resetRound.
@@ -335,7 +335,7 @@ abstract class AppLocalizations {
   /// No description provided for @shareResult.
   ///
   /// In ar, this message translates to:
-  /// **'📲 مشاركة النتيجة'**
+  /// **'مشاركة النتيجة'**
   String get shareResult;
 
   /// No description provided for @shareNeed4.
@@ -593,25 +593,13 @@ abstract class AppLocalizations {
   /// No description provided for @rateUs.
   ///
   /// In ar, this message translates to:
-  /// **'⭐ قيمنا'**
+  /// **'قيّمنا'**
   String get rateUs;
-
-  /// No description provided for @lightMode.
-  ///
-  /// In ar, this message translates to:
-  /// **'☀️ الوضع الفاتح'**
-  String get lightMode;
-
-  /// No description provided for @darkMode.
-  ///
-  /// In ar, this message translates to:
-  /// **'🌙 الوضع الداكن'**
-  String get darkMode;
 
   /// No description provided for @language.
   ///
   /// In ar, this message translates to:
-  /// **'🌐 English'**
+  /// **'English'**
   String get language;
 
   /// No description provided for @enterYourData.
@@ -920,18 +908,6 @@ abstract class AppLocalizations {
   /// **'صلي على النبي'**
   String get splashSalawat;
 
-  /// No description provided for @weeklyReminderOn.
-  ///
-  /// In ar, this message translates to:
-  /// **'🔔 تذكير أسبوعي بلعبة: مفعّل'**
-  String get weeklyReminderOn;
-
-  /// No description provided for @weeklyReminderOff.
-  ///
-  /// In ar, this message translates to:
-  /// **'🔕 تذكير أسبوعي بلعبة: متوقف'**
-  String get weeklyReminderOff;
-
   /// No description provided for @reminderTitle.
   ///
   /// In ar, this message translates to:
@@ -965,7 +941,7 @@ abstract class AppLocalizations {
   /// No description provided for @tournamentMenu.
   ///
   /// In ar, this message translates to:
-  /// **'🏆 بطولة الأصدقاء'**
+  /// **'بطولة الأصدقاء'**
   String get tournamentMenu;
 
   /// No description provided for @tournamentTitle.
@@ -1075,6 +1051,323 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'تعديل آخر نتيجة {name}'**
   String editScoreSemantic(String name);
+
+  /// No description provided for @scoreSheetAddTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'نتيجة {name} · الجولة {round}'**
+  String scoreSheetAddTitle(String name, int round);
+
+  /// No description provided for @scoreSheetEditTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعديل نتيجة {name} · الجولة {round}'**
+  String scoreSheetEditTitle(String name, int round);
+
+  /// No description provided for @pickYourCards.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر كروتك'**
+  String get pickYourCards;
+
+  /// No description provided for @orTypeScore.
+  ///
+  /// In ar, this message translates to:
+  /// **'أو اكتب النتيجة مباشرة'**
+  String get orTypeScore;
+
+  /// No description provided for @cardsTotal.
+  ///
+  /// In ar, this message translates to:
+  /// **'المجموع'**
+  String get cardsTotal;
+
+  /// No description provided for @clearCards.
+  ///
+  /// In ar, this message translates to:
+  /// **'مسح'**
+  String get clearCards;
+
+  /// No description provided for @removeLastCard.
+  ///
+  /// In ar, this message translates to:
+  /// **'حذف آخر كارت'**
+  String get removeLastCard;
+
+  /// No description provided for @addScore.
+  ///
+  /// In ar, this message translates to:
+  /// **'إضافة'**
+  String get addScore;
+
+  /// No description provided for @saveChanges.
+  ///
+  /// In ar, this message translates to:
+  /// **'حفظ التعديل'**
+  String get saveChanges;
+
+  /// No description provided for @multiplyBy2.
+  ///
+  /// In ar, this message translates to:
+  /// **'×2 مضاعفة'**
+  String get multiplyBy2;
+
+  /// No description provided for @multiplyBy4.
+  ///
+  /// In ar, this message translates to:
+  /// **'×4 الجولة الأخيرة'**
+  String get multiplyBy4;
+
+  /// No description provided for @screwZeroShort.
+  ///
+  /// In ar, this message translates to:
+  /// **'سكرو (0)'**
+  String get screwZeroShort;
+
+  /// No description provided for @cardPower.
+  ///
+  /// In ar, this message translates to:
+  /// **'باور'**
+  String get cardPower;
+
+  /// No description provided for @cardPlus20.
+  ///
+  /// In ar, this message translates to:
+  /// **'+20'**
+  String get cardPlus20;
+
+  /// No description provided for @cardScrollGreen.
+  ///
+  /// In ar, this message translates to:
+  /// **'سكرول أخضر'**
+  String get cardScrollGreen;
+
+  /// No description provided for @cardScrollRed.
+  ///
+  /// In ar, this message translates to:
+  /// **'سكرول أحمر'**
+  String get cardScrollRed;
+
+  /// No description provided for @editsLogTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'سجل التعديلات'**
+  String get editsLogTitle;
+
+  /// No description provided for @editsLogEntry.
+  ///
+  /// In ar, this message translates to:
+  /// **'{name} · الجولة {round}: {oldValue} ← {newValue}'**
+  String editsLogEntry(
+    String name,
+    int round,
+    String oldValue,
+    String newValue,
+  );
+
+  /// No description provided for @editsLogEmpty.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد تعديلات'**
+  String get editsLogEmpty;
+
+  /// No description provided for @editsCount.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعديلات ({n})'**
+  String editsCount(int n);
+
+  /// No description provided for @tapScoreToEdit.
+  ///
+  /// In ar, this message translates to:
+  /// **'اضغط على أي نتيجة لتعديلها'**
+  String get tapScoreToEdit;
+
+  /// No description provided for @rulesTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'قوانين اللعبة'**
+  String get rulesTitle;
+
+  /// No description provided for @rulesSearchHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'ابحث في القواعد والكروت'**
+  String get rulesSearchHint;
+
+  /// No description provided for @rulesNoResults.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد نتائج مطابقة'**
+  String get rulesNoResults;
+
+  /// No description provided for @rulesFilterAll.
+  ///
+  /// In ar, this message translates to:
+  /// **'الكل'**
+  String get rulesFilterAll;
+
+  /// No description provided for @rulesCatBasics.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأساسيات'**
+  String get rulesCatBasics;
+
+  /// No description provided for @rulesCatPower.
+  ///
+  /// In ar, this message translates to:
+  /// **'كروت الباور'**
+  String get rulesCatPower;
+
+  /// No description provided for @rulesCatOscar.
+  ///
+  /// In ar, this message translates to:
+  /// **'كروت أوسكار'**
+  String get rulesCatOscar;
+
+  /// No description provided for @rulesCatRamadan.
+  ///
+  /// In ar, this message translates to:
+  /// **'كروت رمضان'**
+  String get rulesCatRamadan;
+
+  /// No description provided for @rulesCatTeams.
+  ///
+  /// In ar, this message translates to:
+  /// **'وضع الفرق'**
+  String get rulesCatTeams;
+
+  /// No description provided for @rulesCatGoal.
+  ///
+  /// In ar, this message translates to:
+  /// **'الهدف'**
+  String get rulesCatGoal;
+
+  /// No description provided for @powerCardsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الكروت الخاصة'**
+  String get powerCardsTitle;
+
+  /// No description provided for @powerCardsTooltip.
+  ///
+  /// In ar, this message translates to:
+  /// **'مرجع الكروت'**
+  String get powerCardsTooltip;
+
+  /// No description provided for @inviteFriend.
+  ///
+  /// In ar, this message translates to:
+  /// **'ادعُ صديقًا'**
+  String get inviteFriend;
+
+  /// No description provided for @inviteText.
+  ///
+  /// In ar, this message translates to:
+  /// **'جرّب «سكرو حاسبة» 🃏 حاسبة نقاط لعبة سكرو بسهولة وسرعة!\n{link}'**
+  String inviteText(String link);
+
+  /// No description provided for @shareTextWithLink.
+  ///
+  /// In ar, this message translates to:
+  /// **'📸 شوف نتيجتي! من تطبيق سكرو حاسبة\n{link}'**
+  String shareTextWithLink(String link);
+
+  /// No description provided for @shareCardDownload.
+  ///
+  /// In ar, this message translates to:
+  /// **'حمّل التطبيق من Google Play'**
+  String get shareCardDownload;
+
+  /// No description provided for @drawerSectionPlay.
+  ///
+  /// In ar, this message translates to:
+  /// **'اللعب'**
+  String get drawerSectionPlay;
+
+  /// No description provided for @drawerSectionCommunity.
+  ///
+  /// In ar, this message translates to:
+  /// **'المجتمع'**
+  String get drawerSectionCommunity;
+
+  /// No description provided for @drawerSectionTools.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدوات'**
+  String get drawerSectionTools;
+
+  /// No description provided for @drawerSectionSettings.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإعدادات'**
+  String get drawerSectionSettings;
+
+  /// No description provided for @weeklyReminderLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'تذكير أسبوعي بلعبة'**
+  String get weeklyReminderLabel;
+
+  /// No description provided for @weeklyReminderSub.
+  ///
+  /// In ar, this message translates to:
+  /// **'كل جمعة 8 مساءً'**
+  String get weeklyReminderSub;
+
+  /// No description provided for @toggleThemeTooltip.
+  ///
+  /// In ar, this message translates to:
+  /// **'تبديل الوضع الفاتح/الداكن'**
+  String get toggleThemeTooltip;
+
+  /// No description provided for @toggleLanguageTooltip.
+  ///
+  /// In ar, this message translates to:
+  /// **'تغيير اللغة'**
+  String get toggleLanguageTooltip;
+
+  /// No description provided for @version.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإصدار'**
+  String get version;
+
+  /// No description provided for @heroTagline.
+  ///
+  /// In ar, this message translates to:
+  /// **'احسب نقاط لعبتك بسهولة وسرعة'**
+  String get heroTagline;
+
+  /// No description provided for @modeClassicTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'كلاسيك'**
+  String get modeClassicTitle;
+
+  /// No description provided for @modeClassicDesc.
+  ///
+  /// In ar, this message translates to:
+  /// **'كل لاعب لنفسه (من 2 إلى 12 لاعب)'**
+  String get modeClassicDesc;
+
+  /// No description provided for @modeFriendsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'صاحب صاحبه'**
+  String get modeFriendsTitle;
+
+  /// No description provided for @modeFriendsDesc.
+  ///
+  /// In ar, this message translates to:
+  /// **'فرق من لاعبين اثنين (حتى 4 فرق)'**
+  String get modeFriendsDesc;
+
+  /// No description provided for @roundOfFive.
+  ///
+  /// In ar, this message translates to:
+  /// **'الجولة {n} من 5'**
+  String roundOfFive(int n);
 }
 
 class _AppLocalizationsDelegate

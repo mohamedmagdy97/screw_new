@@ -4,6 +4,7 @@ import 'package:screw_calculator/core/constants/local_storage_keys.dart';
 import 'package:screw_calculator/core/models/player_model.dart';
 import 'package:screw_calculator/core/utils/local_store.dart';
 import 'package:screw_calculator/features/dashboard/domain/entities/active_game.dart';
+import 'package:screw_calculator/features/dashboard/domain/entities/score_edit.dart';
 import 'package:screw_calculator/features/dashboard/domain/repositories/active_game_repository.dart';
 
 class ActiveGameRepositoryImpl implements ActiveGameRepository {
@@ -12,6 +13,7 @@ class ActiveGameRepositoryImpl implements ActiveGameRepository {
     final json = jsonEncode(<String, dynamic>{
       'friendly': game.friendly,
       'players': game.players.map((p) => p.toJson()).toList(),
+      'edits': game.edits.map((e) => e.toJson()).toList(),
     });
     return AppLocalStore.setString(LocalStoreNames.activeGame, json);
   }
@@ -28,9 +30,13 @@ class ActiveGameRepositoryImpl implements ActiveGameRepository {
       for (final p in players) {
         p.recomputeTotal();
       }
+      final edits = ((map['edits'] as List<dynamic>?) ?? const <dynamic>[])
+          .map((e) => ScoreEdit.fromJson(e as Map<String, dynamic>))
+          .toList();
       return ActiveGame(
         players: players,
         friendly: (map['friendly'] as bool?) ?? false,
+        edits: edits,
       );
     } catch (_) {
       await clear();

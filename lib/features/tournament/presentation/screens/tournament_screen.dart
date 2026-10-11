@@ -5,6 +5,7 @@ import 'package:screw_calculator/core/l10n/content_direction.dart';
 import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/utils/utilities.dart';
+import 'package:screw_calculator/core/widgets/app_dialog.dart';
 import 'package:screw_calculator/core/widgets/bottom_nav_text.dart';
 import 'package:screw_calculator/core/widgets/custom_appbar.dart';
 import 'package:screw_calculator/core/widgets/custom_button.dart';
@@ -134,22 +135,12 @@ class _Standings extends StatelessWidget {
   Future<void> _end(BuildContext context) async {
     final l10n = AppLocalizations.of(context);
     final cubit = context.read<TournamentCubit>();
-    final confirm = await showDialog<bool>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(l10n.tournamentEnd),
-        content: Text(l10n.tournamentEndConfirm),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, false),
-            child: Text(l10n.cancel),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(ctx, true),
-            child: Text(l10n.yes),
-          ),
-        ],
-      ),
+    final confirm = await showAppConfirmDialog(
+      context,
+      icon: Icons.flag_rounded,
+      tone: AppDialogTone.danger,
+      title: l10n.tournamentEnd,
+      message: l10n.tournamentEndConfirm,
     );
     if (confirm ?? false) await cubit.end();
   }

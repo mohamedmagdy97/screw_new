@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/generated/assets.dart';
@@ -22,6 +23,8 @@ class ShareResultCard extends StatelessWidget {
     required this.palette,
     required this.title,
     required this.footer,
+    required this.downloadLabel,
+    required this.downloadUrl,
   });
 
   /// مرتّبة تصاعديًا: الأقل مجموعًا (الفائز) أولًا.
@@ -29,6 +32,10 @@ class ShareResultCard extends StatelessWidget {
   final AppPalette palette;
   final String title;
   final String footer;
+
+  /// نص "حمّل التطبيق" بجانب الـ QR، ورابط التحميل المرمّز فيه.
+  final String downloadLabel;
+  final String downloadUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -60,13 +67,61 @@ class ShareResultCard extends StatelessWidget {
               entry: entries[i],
               isWinner: entries[i].total == best,
             ),
-          const SizedBox(height: 12),
-          Text(
-            footer,
-            style: TextStyle(
-              color: Colors.white.withValues(alpha: 0.85),
-              fontSize: 14,
-              fontFamily: AppFonts.regular,
+          const SizedBox(height: 16),
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.14),
+              borderRadius: BorderRadius.circular(AppRadii.md),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: QrImageView(
+                    data: downloadUrl,
+                    size: 64,
+                    padding: EdgeInsets.zero,
+                    eyeStyle: const QrEyeStyle(
+                      eyeShape: QrEyeShape.square,
+                      color: Color(0xFF2E1065),
+                    ),
+                    dataModuleStyle: const QrDataModuleStyle(
+                      dataModuleShape: QrDataModuleShape.square,
+                      color: Color(0xFF2E1065),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        downloadLabel,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontFamily: AppFonts.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        footer,
+                        style: TextStyle(
+                          color: Colors.white.withValues(alpha: 0.85),
+                          fontSize: 13,
+                          fontFamily: AppFonts.regular,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
         ],

@@ -36,7 +36,7 @@
   "results": "Results",
   "warning": "Warning",
   "confirmResetRound": "Do you want to restart the game?",
-  "gameOver": "Game over 🎉",
+  "gameOver": "Game over",
   "winnerLabel": "👑 Winner: {names}",
   "@winnerLabel": {
     "placeholders": {
@@ -65,9 +65,9 @@
   },
   "undo": "Undo",
   "saveHint": "You can save this game and continue it later",
-  "saveResult": "💾 Save result",
+  "saveResult": "Save result",
   "resetRound": "Restart game",
-  "shareResult": "📲 Share result",
+  "shareResult": "Share result",
   "shareNeed4": "Enter at least 4 rounds to share the results",
   "shareText": "📸 Check out my result! From the Screw Calculator app",
   "previewTitle": "📸 Image preview",
@@ -141,10 +141,8 @@
   "contactUs": "Suggestions & contact us",
   "publicChat": "Public chat",
   "blockedUsers": "Blocked users",
-  "rateUs": "⭐ Rate us",
-  "lightMode": "☀️ Light mode",
-  "darkMode": "🌙 Dark mode",
-  "language": "🌐 العربية",
+  "rateUs": "Rate us",
+  "language": "العربية",
   "enterYourData": "Enter your details",
   "firstNameHint": "First name",
   "nameLabel": "Name",
@@ -238,14 +236,12 @@
   },
   "update": "Update",
   "splashSalawat": "Send blessings upon the Prophet ﷺ",
-  "weeklyReminderOn": "🔔 Weekly game reminder: on",
-  "weeklyReminderOff": "🔕 Weekly game reminder: off",
   "reminderTitle": "Time for a Screw game! 🃏",
   "reminderBody": "Gather your friends for a round and score it in the app.",
   "reminderEnabled": "Weekly reminder enabled (Fridays 8 PM)",
   "reminderDisabled": "Weekly reminder disabled",
   "reminderPermission": "Please enable notifications in device settings first",
-  "tournamentMenu": "🏆 Friends tournament",
+  "tournamentMenu": "Friends tournament",
   "tournamentTitle": "Friends tournament",
   "tournamentNameLabel": "Tournament name",
   "tournamentPlayersLabel": "Players",
@@ -289,6 +285,122 @@
     "placeholders": {
       "name": {
         "type": "String"
+      }
+    }
+  },
+  "scoreSheetAddTitle": "{name} · Round {round}",
+  "@scoreSheetAddTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "round": {
+        "type": "int"
+      }
+    }
+  },
+  "scoreSheetEditTitle": "Edit {name} · Round {round}",
+  "@scoreSheetEditTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "round": {
+        "type": "int"
+      }
+    }
+  },
+  "pickYourCards": "Pick your cards",
+  "orTypeScore": "Or type the score directly",
+  "cardsTotal": "Total",
+  "clearCards": "Clear",
+  "removeLastCard": "Remove last card",
+  "addScore": "Add",
+  "saveChanges": "Save changes",
+  "multiplyBy2": "×2 Double",
+  "multiplyBy4": "×4 Final round",
+  "screwZeroShort": "Screw (0)",
+  "cardPower": "Power",
+  "cardPlus20": "+20",
+  "cardScrollGreen": "Green scroll",
+  "cardScrollRed": "Red scroll",
+  "editsLogTitle": "Edit log",
+  "editsLogEntry": "{name} · Round {round}: {oldValue} → {newValue}",
+  "@editsLogEntry": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "round": {
+        "type": "int"
+      },
+      "oldValue": {
+        "type": "String"
+      },
+      "newValue": {
+        "type": "String"
+      }
+    }
+  },
+  "editsLogEmpty": "No edits",
+  "editsCount": "Edits ({n})",
+  "@editsCount": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "tapScoreToEdit": "Tap any score to edit it",
+  "rulesTitle": "Game rules",
+  "rulesSearchHint": "Search rules and cards",
+  "rulesNoResults": "No matching results",
+  "rulesFilterAll": "All",
+  "rulesCatBasics": "Basics",
+  "rulesCatPower": "Power cards",
+  "rulesCatOscar": "Oscar cards",
+  "rulesCatRamadan": "Ramadan cards",
+  "rulesCatTeams": "Teams mode",
+  "rulesCatGoal": "Goal",
+  "powerCardsTitle": "Special cards",
+  "powerCardsTooltip": "Cards reference",
+  "inviteFriend": "Invite a friend",
+  "inviteText": "Try “Screw Calculator” 🃏 — score your Screw games easily and fast!\n{link}",
+  "@inviteText": {
+    "placeholders": {
+      "link": {
+        "type": "String"
+      }
+    }
+  },
+  "shareTextWithLink": "📸 Check out my result! From the Screw Calculator app\n{link}",
+  "@shareTextWithLink": {
+    "placeholders": {
+      "link": {
+        "type": "String"
+      }
+    }
+  },
+  "shareCardDownload": "Get the app on Google Play",
+  "drawerSectionPlay": "Play",
+  "drawerSectionCommunity": "Community",
+  "drawerSectionTools": "Tools",
+  "drawerSectionSettings": "Settings",
+  "weeklyReminderLabel": "Weekly game reminder",
+  "weeklyReminderSub": "Every Friday 8 PM",
+  "toggleThemeTooltip": "Toggle light/dark mode",
+  "toggleLanguageTooltip": "Change language",
+  "version": "Version",
+  "heroTagline": "Score your game easily and fast",
+  "modeClassicTitle": "Classic",
+  "modeClassicDesc": "Every player for themselves (2–12 players)",
+  "modeFriendsTitle": "Teams",
+  "modeFriendsDesc": "Teams of two (up to 4 teams)",
+  "roundOfFive": "Round {n} of 5",
+  "@roundOfFive": {
+    "placeholders": {
+      "n": {
+        "type": "int"
       }
     }
   }

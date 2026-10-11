@@ -120,19 +120,16 @@ class _CustomTextFieldState extends State<CustomTextField> {
                   widget.borderRadius != null
                       ? widget.borderRadius!
                       : widget.maxLines == null
-                      ? 12.sp
-                      : 15.sp,
+                      ? 16
+                      : 16,
                 ),
                 borderSide: BorderSide(
                   color: widget.fillBorderColor ?? palette.border,
                 ),
-                gapPadding: 10,
               ),
-              contentPadding: const EdgeInsets.only(
-                left: 12,
-                right: 12,
-                top: 10,
-                bottom: 10,
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 18,
+                vertical: 16,
               ),
               alignLabelWithHint: true,
               prefixIconConstraints: const BoxConstraints(
@@ -154,30 +151,28 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 fontFamily: AppFonts.regular,
                 fontWeight: AppFonts.w400,
               ),
-              floatingLabelBehavior: FloatingLabelBehavior.always,
+              floatingLabelBehavior: FloatingLabelBehavior.auto,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(
                   widget.borderRadius != null
                       ? widget.borderRadius!
                       : widget.maxLines == null
-                      ? 12.sp
-                      : 15.sp,
+                      ? 16
+                      : 16,
                 ),
                 borderSide: BorderSide(
                   color: widget.fillBorderColor ?? palette.border,
                 ),
-                gapPadding: 10,
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(
                   widget.borderRadius != null
                       ? widget.borderRadius!
                       : widget.maxLines == null
-                      ? 12.sp
-                      : 15.sp,
+                      ? 16
+                      : 16,
                 ),
                 borderSide: BorderSide(color: palette.brand, width: 1.6),
-                gapPadding: 10,
               ),
             ),
             style: TextStyle(

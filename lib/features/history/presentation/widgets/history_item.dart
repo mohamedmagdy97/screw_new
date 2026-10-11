@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:screw_calculator/core/l10n/content_direction.dart';
+import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/features/history/domain/entities/game_history_entity.dart';
 import 'package:screw_calculator/l10n/app_localizations.dart';
 
+/// بطاقة لعبة محفوظة: رقم اللعبة، الفائز (أقل سكور) بمجموعه، وزر حذف.
 class HistoryItem extends StatelessWidget {
   final GameHistoryEntity game;
   final int index;
@@ -19,51 +21,85 @@ class HistoryItem extends StatelessWidget {
     required this.onDelete,
   });
 
-  String _getWinnerName() {
-    if (game.players.isEmpty) return '';
-    return game.players
-        .reduce(
-          (curr, next) =>
-              int.parse(curr.total ?? '0') < int.parse(next.total ?? '0')
-              ? curr
-              : next,
-        )
-        .name
-        .toString();
+  /// (اسم الفائز، مجموعه) — الأقل نقاطًا يفوز.
+  (String, int) _winner() {
+    if (game.players.isEmpty) return ('', 0);
+    final best = game.players.reduce(
+      (curr, next) =>
+          (int.tryParse(curr.total ?? '0') ?? 0) <=
+              (int.tryParse(next.total ?? '0') ?? 0)
+          ? curr
+          : next,
+    );
+    return (best.name ?? '', int.tryParse(best.total ?? '0') ?? 0);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: InkWell(
-        onTap: onTap,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            IconButton(
-              onPressed: onDelete,
-              icon: const Icon(Icons.delete_outline, color: AppColors.white),
-            ),
-            Column(
-              crossAxisAlignment: context.readStartCross,
+    final l10n = AppLocalizations.of(context);
+    final palette = context.palette;
+    final (winner, total) = _winner();
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 6),
+      decoration: BoxDecoration(
+        color: palette.surface,
+        borderRadius: BorderRadius.circular(AppRadii.lg),
+        border: Border.all(color: palette.border),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(AppRadii.lg),
+          child: Padding(
+            padding: const EdgeInsets.all(14),
+            child: Row(
               children: [
-                CustomText(
-                  text: AppLocalizations.of(context).gameN(index + 1),
-                  fontSize: 18,
-                  fontFamily: AppFonts.bold,
-                  textAlign: context.readStart,
+                Container(
+                  width: 46,
+                  height: 46,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: palette.brandGradient,
+                  ),
+                  child: Text(
+                    '${index + 1}',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 19,
+                      fontFamily: AppFonts.bold,
+                    ),
+                  ),
                 ),
-                CustomText(
-                  text: AppLocalizations.of(
-                    context,
-                  ).lowestScoreWinner(_getWinnerName()),
-                  fontSize: 14,
-                  textAlign: context.readStart,
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: context.readStartCross,
+                    children: [
+                      CustomText(
+                        text: l10n.gameN(index + 1),
+                        fontSize: 17,
+                        fontFamily: AppFonts.bold,
+                        textAlign: context.readStart,
+                      ),
+                      const SizedBox(height: 2),
+                      CustomText(
+                        text: '👑 $winner · $total',
+                        fontSize: 14,
+                        color: palette.win,
+                        textAlign: context.readStart,
+                      ),
+                    ],
+                  ),
+                ),
+                IconButton(
+                  onPressed: onDelete,
+                  icon: Icon(Icons.delete_outline_rounded, color: palette.lose),
                 ),
               ],
             ),
-          ],
+          ),
         ),
       ),
     );

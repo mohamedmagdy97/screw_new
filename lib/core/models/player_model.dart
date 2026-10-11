@@ -151,6 +151,18 @@ class PlayerModel {
         .toString();
   }
 
+  /// قيمة الجولة [index] (0..4) كنص، أو فارغ لو لم تُدخل بعد.
+  String roundValueAt(int index) => roundValues[index];
+
+  /// يضبط قيمة الجولة [index] (0..4) ثم يحدّث المجموع.
+  /// يعيد false لو الفهرس خارج النطاق.
+  bool setRoundScoreAt(int index, int value) {
+    if (index < 0 || index > 4) return false;
+    _setRoundValue(index, value.toString());
+    recomputeTotal();
+    return true;
+  }
+
   /// يضيف نتيجة في أول جولة فارغة ثم يحدّث المجموع.
   /// يعيد false إذا كانت كل الجولات ممتلئة.
   bool addRoundScore(int value) {

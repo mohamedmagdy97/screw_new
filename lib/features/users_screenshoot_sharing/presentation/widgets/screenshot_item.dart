@@ -1,11 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
-import 'package:screw_calculator/core/widgets/dox_decoration.dart';
 import 'package:screw_calculator/features/users_screenshoot_sharing/domain/entities/screenshot_entity.dart';
 
 class ScreenshotItem extends StatelessWidget {
@@ -22,59 +21,46 @@ class ScreenshotItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final palette = context.palette;
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 2.h),
+      padding: const EdgeInsets.symmetric(vertical: 6),
       child: GestureDetector(
         onTap: onTap,
         onDoubleTap: onDelete,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-          padding: EdgeInsets.all(4.w),
-          decoration: customBoxDecoration(
-            borderRadius: 8.r,
-            shadowColor: Colors.black.withValues(alpha: 0.1),
+        child: Container(
+          decoration: BoxDecoration(
+            color: palette.surface,
+            borderRadius: BorderRadius.circular(AppRadii.lg),
+            border: Border.all(color: palette.border),
           ),
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 8.w),
-            decoration: BoxDecoration(
-              color: AppColors.opacity_1.withValues(alpha: 0.75),
-              borderRadius: BorderRadius.circular(4.r),
-            ),
-            child: Stack(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(12.r),
-                  child: Image.memory(
-                    base64Decode(screenshot.imageBase64!),
-                    fit: BoxFit.fitWidth,
-                    width: double.infinity,
-                    height: double.infinity,
+          clipBehavior: Clip.antiAlias,
+          child: Stack(
+            children: [
+              Image.memory(
+                base64Decode(screenshot.imageBase64!),
+                fit: BoxFit.fitWidth,
+                width: double.infinity,
+              ),
+              PositionedDirectional(
+                bottom: 10,
+                end: 10,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withValues(alpha: 0.55),
+                    borderRadius: BorderRadius.circular(AppRadii.pill),
+                  ),
+                  child: CustomText(
+                    text: DateFormat('hh:mm a').format(screenshot.timestamp),
+                    fontSize: 11,
+                    color: Colors.white,
                   ),
                 ),
-
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: Container(
-                    padding: EdgeInsets.all(4.h),
-                    width: 1.sw,
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [Colors.black54, Colors.transparent],
-                        begin: Alignment.bottomCenter,
-                        end: Alignment.topCenter,
-                      ),
-                    ),
-                    child: CustomText(
-                      text: DateFormat('hh:mm a').format(screenshot.timestamp),
-                      fontSize: 10.sp,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:screw_calculator/core/theme/app_palette.dart';
-import 'package:screw_calculator/core/widgets/custom_button.dart';
-import 'package:screw_calculator/core/widgets/custom_text.dart';
+import 'package:screw_calculator/core/widgets/app_dialog.dart';
+import 'package:screw_calculator/core/widgets/app_header.dart';
+import 'package:screw_calculator/core/widgets/custom_appbar.dart';
 import 'package:screw_calculator/l10n/app_localizations.dart';
 
-/// شريط علوي للوحة النتائج مع زر إعادة بدء الجولة (مع تأكيد) وزر رجوع.
+/// شريط علوي للوحة النتائج: زر رجوع، وزر إعادة بدء اللعبة (مع تأكيد).
 class DashboardAppBar extends StatelessWidget implements PreferredSizeWidget {
   const DashboardAppBar({
     super.key,
@@ -17,111 +16,33 @@ class DashboardAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onResetConfirmed;
 
   @override
-  Size get preferredSize => const Size.fromHeight(80);
+  Size get preferredSize => const Size.fromHeight(AppHeader.height);
+
+  Future<void> _confirmReset(BuildContext context) async {
+    final l10n = AppLocalizations.of(context);
+    final confirmed = await showAppConfirmDialog(
+      context,
+      icon: Icons.restart_alt_rounded,
+      tone: AppDialogTone.danger,
+      title: l10n.warning,
+      message: l10n.confirmResetRound,
+      confirmText: l10n.yes,
+      cancelText: l10n.no,
+    );
+    if (confirmed ?? false) onResetConfirmed?.call();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      centerTitle: true,
-      automaticallyImplyLeading: false,
-      foregroundColor: Colors.white,
-      flexibleSpace: Container(
-        decoration: BoxDecoration(gradient: context.palette.brandGradient),
-      ),
+    return CustomAppBar(
+      title: AppLocalizations.of(context).results,
+      backResult: true,
       leading: fromHistory
-          ? const SizedBox()
-          : IconButton(
-              onPressed: () => _showResetDialog(context),
-              icon: const Icon(Icons.refresh, color: Colors.white),
+          ? null
+          : HeaderIconButton(
+              icon: Icons.restart_alt_rounded,
+              onTap: () => _confirmReset(context),
             ),
-      actions: [
-        IconButton(
-          onPressed: () => Navigator.pop(context, true),
-          icon: Transform.flip(
-            flipX: true,
-            child: const Icon(Icons.arrow_back_ios, color: Colors.white),
-          ),
-        ),
-      ],
-      title: CustomText(
-        text: AppLocalizations.of(context).results,
-        fontSize: 22.sp,
-        color: Colors.white,
-      ),
-    );
-  }
-
-  void _showResetDialog(BuildContext context) {
-    showGeneralDialog<void>(
-      context: context,
-      barrierColor: Colors.black54,
-      transitionDuration: const Duration(milliseconds: 450),
-      pageBuilder: (_, _, _) => const SizedBox.shrink(),
-      transitionBuilder: (ctx, anim, _, child) {
-        return SlideTransition(
-          position: Tween<Offset>(
-            begin: const Offset(0, 1),
-            end: Offset.zero,
-          ).animate(CurvedAnimation(parent: anim, curve: Curves.easeOutCubic)),
-          child: Opacity(
-            opacity: anim.value,
-            child: _ResetDialog(onConfirm: onResetConfirmed),
-          ),
-        );
-      },
-    );
-  }
-}
-
-class _ResetDialog extends StatelessWidget {
-  const _ResetDialog({this.onConfirm});
-
-  final VoidCallback? onConfirm;
-
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 32),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            CustomText(
-              text: AppLocalizations.of(context).warning,
-              fontSize: 18.sp,
-              color: context.palette.brand,
-            ),
-            const SizedBox(height: 40),
-            CustomText(
-              text: AppLocalizations.of(context).confirmResetRound,
-              fontSize: 18.sp,
-            ),
-            const SizedBox(height: 40),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: CustomText(
-                    text: AppLocalizations.of(context).no,
-                    fontSize: 18,
-                  ),
-                ),
-                CustomButton(
-                  width: 0.25.sw,
-                  height: 40,
-                  text: AppLocalizations.of(context).yes,
-                  isButtonBorder: true,
-                  onPressed: () {
-                    Navigator.pop(context);
-                    onConfirm?.call();
-                  },
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

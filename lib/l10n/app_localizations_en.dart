@@ -98,7 +98,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get confirmResetRound => 'Do you want to restart the game?';
 
   @override
-  String get gameOver => 'Game over 🎉';
+  String get gameOver => 'Game over';
 
   @override
   String winnerLabel(String names) {
@@ -128,13 +128,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get saveHint => 'You can save this game and continue it later';
 
   @override
-  String get saveResult => '💾 Save result';
+  String get saveResult => 'Save result';
 
   @override
   String get resetRound => 'Restart game';
 
   @override
-  String get shareResult => '📲 Share result';
+  String get shareResult => 'Share result';
 
   @override
   String get shareNeed4 => 'Enter at least 4 rounds to share the results';
@@ -276,16 +276,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get blockedUsers => 'Blocked users';
 
   @override
-  String get rateUs => '⭐ Rate us';
+  String get rateUs => 'Rate us';
 
   @override
-  String get lightMode => '☀️ Light mode';
-
-  @override
-  String get darkMode => '🌙 Dark mode';
-
-  @override
-  String get language => '🌐 العربية';
+  String get language => 'العربية';
 
   @override
   String get enterYourData => 'Enter your details';
@@ -460,12 +454,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get splashSalawat => 'Send blessings upon the Prophet ﷺ';
 
   @override
-  String get weeklyReminderOn => '🔔 Weekly game reminder: on';
-
-  @override
-  String get weeklyReminderOff => '🔕 Weekly game reminder: off';
-
-  @override
   String get reminderTitle => 'Time for a Screw game! 🃏';
 
   @override
@@ -483,7 +471,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Please enable notifications in device settings first';
 
   @override
-  String get tournamentMenu => '🏆 Friends tournament';
+  String get tournamentMenu => 'Friends tournament';
 
   @override
   String get tournamentTitle => 'Friends tournament';
@@ -549,5 +537,180 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String editScoreSemantic(String name) {
     return 'Edit last score of $name';
+  }
+
+  @override
+  String scoreSheetAddTitle(String name, int round) {
+    return '$name · Round $round';
+  }
+
+  @override
+  String scoreSheetEditTitle(String name, int round) {
+    return 'Edit $name · Round $round';
+  }
+
+  @override
+  String get pickYourCards => 'Pick your cards';
+
+  @override
+  String get orTypeScore => 'Or type the score directly';
+
+  @override
+  String get cardsTotal => 'Total';
+
+  @override
+  String get clearCards => 'Clear';
+
+  @override
+  String get removeLastCard => 'Remove last card';
+
+  @override
+  String get addScore => 'Add';
+
+  @override
+  String get saveChanges => 'Save changes';
+
+  @override
+  String get multiplyBy2 => '×2 Double';
+
+  @override
+  String get multiplyBy4 => '×4 Final round';
+
+  @override
+  String get screwZeroShort => 'Screw (0)';
+
+  @override
+  String get cardPower => 'Power';
+
+  @override
+  String get cardPlus20 => '+20';
+
+  @override
+  String get cardScrollGreen => 'Green scroll';
+
+  @override
+  String get cardScrollRed => 'Red scroll';
+
+  @override
+  String get editsLogTitle => 'Edit log';
+
+  @override
+  String editsLogEntry(
+    String name,
+    int round,
+    String oldValue,
+    String newValue,
+  ) {
+    return '$name · Round $round: $oldValue → $newValue';
+  }
+
+  @override
+  String get editsLogEmpty => 'No edits';
+
+  @override
+  String editsCount(int n) {
+    return 'Edits ($n)';
+  }
+
+  @override
+  String get tapScoreToEdit => 'Tap any score to edit it';
+
+  @override
+  String get rulesTitle => 'Game rules';
+
+  @override
+  String get rulesSearchHint => 'Search rules and cards';
+
+  @override
+  String get rulesNoResults => 'No matching results';
+
+  @override
+  String get rulesFilterAll => 'All';
+
+  @override
+  String get rulesCatBasics => 'Basics';
+
+  @override
+  String get rulesCatPower => 'Power cards';
+
+  @override
+  String get rulesCatOscar => 'Oscar cards';
+
+  @override
+  String get rulesCatRamadan => 'Ramadan cards';
+
+  @override
+  String get rulesCatTeams => 'Teams mode';
+
+  @override
+  String get rulesCatGoal => 'Goal';
+
+  @override
+  String get powerCardsTitle => 'Special cards';
+
+  @override
+  String get powerCardsTooltip => 'Cards reference';
+
+  @override
+  String get inviteFriend => 'Invite a friend';
+
+  @override
+  String inviteText(String link) {
+    return 'Try “Screw Calculator” 🃏 — score your Screw games easily and fast!\n$link';
+  }
+
+  @override
+  String shareTextWithLink(String link) {
+    return '📸 Check out my result! From the Screw Calculator app\n$link';
+  }
+
+  @override
+  String get shareCardDownload => 'Get the app on Google Play';
+
+  @override
+  String get drawerSectionPlay => 'Play';
+
+  @override
+  String get drawerSectionCommunity => 'Community';
+
+  @override
+  String get drawerSectionTools => 'Tools';
+
+  @override
+  String get drawerSectionSettings => 'Settings';
+
+  @override
+  String get weeklyReminderLabel => 'Weekly game reminder';
+
+  @override
+  String get weeklyReminderSub => 'Every Friday 8 PM';
+
+  @override
+  String get toggleThemeTooltip => 'Toggle light/dark mode';
+
+  @override
+  String get toggleLanguageTooltip => 'Change language';
+
+  @override
+  String get version => 'Version';
+
+  @override
+  String get heroTagline => 'Score your game easily and fast';
+
+  @override
+  String get modeClassicTitle => 'Classic';
+
+  @override
+  String get modeClassicDesc => 'Every player for themselves (2–12 players)';
+
+  @override
+  String get modeFriendsTitle => 'Teams';
+
+  @override
+  String get modeFriendsDesc => 'Teams of two (up to 4 teams)';
+
+  @override
+  String roundOfFive(int n) {
+    return 'Round $n of 5';
   }
 }

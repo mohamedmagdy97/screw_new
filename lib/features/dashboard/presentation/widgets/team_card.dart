@@ -28,8 +28,8 @@ class TeamCard extends StatelessWidget {
     final palette = context.palette;
     return FadeSlide(
       child: Container(
-        padding: const EdgeInsets.all(12),
-        margin: const EdgeInsets.symmetric(vertical: 5),
+        padding: const EdgeInsets.all(14),
+        margin: const EdgeInsets.symmetric(vertical: 6),
         decoration: BoxDecoration(
           color: isWinning
               ? palette.brand.withValues(alpha: 0.16)
@@ -44,8 +44,8 @@ class TeamCard extends StatelessWidget {
           children: [
             CustomText(
               text: '${isWinning ? '👑 ' : ''}${team.name}',
-              fontSize: 18.sp,
-              fontWeight: FontWeight.bold,
+              fontSize: 19.sp,
+              fontFamily: AppFonts.bold,
               color: isWinning ? palette.brandSoft : null,
             ),
             _TeamPlayerRow(
@@ -84,13 +84,21 @@ class _TeamPlayerRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        CustomText(text: '${name ?? ''} | ', fontSize: 16.sp),
-        Expanded(
-          child: PlayerScoresRow(cubit: cubit, player: player),
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CustomText(
+            text: name ?? '',
+            fontSize: 16.sp,
+            fontFamily: AppFonts.bold,
+            textAlign: TextAlign.start,
+          ),
+          const SizedBox(height: 6),
+          PlayerScoresRow(cubit: cubit, player: player),
+        ],
+      ),
     );
   }
 }

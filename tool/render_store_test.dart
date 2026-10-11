@@ -17,6 +17,7 @@ import 'package:screw_calculator/core/models/player_model.dart';
 import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/utils/enums.dart';
+import 'package:screw_calculator/core/widgets/app_dialog.dart';
 import 'package:screw_calculator/features/dashboard/domain/entities/active_game.dart';
 import 'package:screw_calculator/features/dashboard/domain/entities/last_game_summary.dart';
 import 'package:screw_calculator/features/dashboard/domain/repositories/active_game_repository.dart';
@@ -27,6 +28,8 @@ import 'package:screw_calculator/features/dashboard/domain/usecases/upload_scree
 import 'package:screw_calculator/features/dashboard/presentation/cubit/dashboard_cubit.dart';
 import 'package:screw_calculator/features/dashboard/presentation/screens/dashboard_screen.dart';
 import 'package:screw_calculator/features/dashboard/presentation/widgets/share_result_card.dart';
+import 'package:screw_calculator/features/game_mode/presentation/cubit/game_mode_cubit.dart';
+import 'package:screw_calculator/features/game_mode/presentation/screens/game_mode_screen.dart';
 import 'package:screw_calculator/features/history/domain/entities/game_history_entity.dart';
 import 'package:screw_calculator/features/history/domain/repositories/history_repository.dart';
 import 'package:screw_calculator/features/history/domain/usecases/get_games_usecase.dart';
@@ -34,8 +37,13 @@ import 'package:screw_calculator/features/home/data/datasources/home_local_data_
 import 'package:screw_calculator/features/home/domain/repositories/home_repository.dart';
 import 'package:screw_calculator/features/home/presentation/controller/home_controller.dart';
 import 'package:screw_calculator/features/home/presentation/screens/home_screen.dart';
+import 'package:screw_calculator/features/rules/presentation/screens/rules_screen.dart';
 import 'package:screw_calculator/features/stats/presentation/cubit/stats_cubit.dart';
 import 'package:screw_calculator/features/stats/presentation/screens/stats_screen.dart';
+import 'package:screw_calculator/features/tournament/domain/entities/tournament.dart';
+import 'package:screw_calculator/features/tournament/domain/repositories/tournament_repository.dart';
+import 'package:screw_calculator/features/tournament/presentation/cubit/tournament_cubit.dart';
+import 'package:screw_calculator/features/tournament/presentation/screens/tournament_screen.dart';
 import 'package:screw_calculator/l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -86,6 +94,17 @@ class _HomeRepo implements HomeRepository {
     required String phone,
     required String country,
   }) async => UserValidationResult.notExists;
+}
+
+class _TournamentRepo implements TournamentRepository {
+  @override
+  Future<void> clear() async {}
+
+  @override
+  Future<Tournament?> load() async => null;
+
+  @override
+  Future<void> save(Tournament tournament) async {}
 }
 
 class _HistoryRepo implements HistoryRepository {
@@ -195,6 +214,11 @@ Future<void> _loadFont(String family, String path) async {
 /// لغة الرندر: `STORE_LOCALE=en` للتحقق من الواجهة الإنجليزية.
 final String _locale = Platform.environment['STORE_LOCALE'] ?? 'ar';
 
+/// `STORE_THEME=light` لرندر الوضع الفاتح.
+final ThemeMode _themeMode = Platform.environment['STORE_THEME'] == 'light'
+    ? ThemeMode.light
+    : ThemeMode.dark;
+
 Widget _app(Widget home) {
   return ScreenUtilInit(
     designSize: const Size(414, 896),
@@ -210,7 +234,7 @@ Widget _app(Widget home) {
           fontFamilyFallback: const ['AppleEmoji'],
         ),
       ),
-      themeMode: ThemeMode.dark,
+      themeMode: _themeMode,
       // نفس سلوك التطبيق: هيكل الواجهة LTR والمحتوى يتبع اللغة.
       builder: (context, child) => Directionality(
         textDirection: TextDirection.ltr,
@@ -227,6 +251,13 @@ Future<ui.Image> _capture(
   Future<void> Function()? afterPump,
 }) async {
   final key = GlobalKey();
+  // اطبع أي استثناء فورًا (الاختبار قد لا ينتهي فلا يظهر التقرير النهائي).
+  FlutterError.onError = (details) {
+    stderr.writeln('FLUTTER ERROR: ${details.exceptionAsString()}');
+    stderr.writeln(
+      (details.stack?.toString() ?? '').split('\n').take(14).join('\n'),
+    );
+  };
   t.view
     ..physicalSize = const Size(_logicalW * _dpr, _logicalH * _dpr)
     ..devicePixelRatio = _dpr
@@ -395,8 +426,8 @@ void main() {
 
   tearDownAll(() => hiveDir.deleteSync(recursive: true));
 
-  setUp(() {
-    sl.reset();
+  setUp(() async {
+    await sl.reset();
     sl
       ..registerFactory<DashboardCubit>(
         () => DashboardCubit(
@@ -409,6 +440,9 @@ void main() {
       ..registerSingleton<HomeController>(
         HomeController(repository: _HomeRepo()),
       )
+      ..registerFactory<TournamentCubit>(
+        () => TournamentCubit(repository: _TournamentRepo()),
+      )
       ..registerFactory<StatsCubit>(
         () => StatsCubit(
           getGamesUseCase: GetGamesUseCase(_HistoryRepo(_history())),
@@ -417,14 +451,16 @@ void main() {
   });
 
   const shots = <String, List<String>>{
-    '1-setup': ['ابدأ لعبتك في ثوانٍ', 'فردي أو فرق، وأسماء لاعبينك محفوظة'],
-    '2-score': ['احسب النقاط بلمسة', 'سجّل كل جولة وتراجع عن أي غلطة'],
-    '3-winner': ['اعرف الفائز فورًا', 'الأقل نقاطًا يفوز.. والخاسر معروف'],
-    '4-teams': ['العب فرق زوجي', 'حتى 4 فرق ومجموع كل فريق أمامك'],
-    '5-stats': ['إحصائيات لاعبينك', 'نسب الفوز ومتوسط النقاط من سجلّك'],
-    '6-share': [
+    '1-gamemode': ['ابدأ لعبتك في ثوانٍ', 'فردي أو فرق، بتصميم عصري وسريع'],
+    '2-scoresheet': ['احسب بالكروت باللمس', 'اختر كروتك والمجموع يتحسب لوحده'],
+    '3-score': ['سجّل كل جولة بسهولة', 'تراجع أو عدّل أي نتيجة في أي وقت'],
+    '4-winner': ['اعرف الفائز فورًا', 'الأقل نقاطًا يفوز.. والخاسر معروف'],
+    '5-teams': ['العب فرق زوجي', 'حتى 4 فرق ومجموع كل فريق أمامك'],
+    '6-stats': ['إحصائيات لاعبينك', 'نسب الفوز ومتوسط النقاط من سجلّك'],
+    '7-rules': ['دليل الكروت والقواعد', 'بحث وتصفية سريعة بالعربي والإنجليزي'],
+    '8-share': [
       'شارك النتيجة بصورة أنيقة',
-      'بطاقة جاهزة بهوية التطبيق لأصدقائك',
+      'بطاقة جاهزة برابط التحميل لأصدقائك',
     ],
   };
 
@@ -436,24 +472,43 @@ void main() {
     _writeFile('design/store/$dir/$id.png', await _pngOf(shot));
   }
 
-  testWidgets('1 setup', (t) async {
-    ModeClass.mode = GameModeEnum.classic;
-    final home = sl<HomeController>();
+  testWidgets('1 gamemode', (t) async {
     final img = await _capture(
       t,
-      const HomeScreen(index: 0),
-      afterPump: () async {
-        home.onSelect(2); // 4 لاعبين
-        home.recentPlayers.value = const ['علي', 'عمر', 'سلمى', 'يوسف', 'مريم'];
-        home.controllers[0].text = 'علي';
-        home.controllers[1].text = 'عمر';
-        await t.pump(const Duration(milliseconds: 400));
-      },
+      BlocProvider<GameModeCubit>(
+        create: (_) => GameModeCubit(),
+        child: const GameModeView(),
+      ),
     );
-    await save('1-setup', img);
+    await save('1-gamemode', img);
   });
 
-  testWidgets('2 score', (t) async {
+  testWidgets('2 scoresheet', (t) async {
+    ModeClass.mode = GameModeEnum.classic;
+    final img = await _capture(
+      t,
+      DashboardScreen(players: _midGame()),
+      afterPump: () async {
+        t
+            .element(find.byType(Scaffold).first)
+            .read<DashboardCubit>()
+            .hideMarquee();
+        await t.pump(const Duration(seconds: 4));
+        await t.tap(find.byIcon(Icons.add_rounded).first);
+        await t.pump(const Duration(milliseconds: 700));
+        // اختيار كروت ليظهر المجموع (7 + 10 + سكرول أحمر).
+        await t.tap(find.text('8').last);
+        await t.pump(const Duration(milliseconds: 150));
+        await t.tap(find.text('5').last);
+        await t.pump(const Duration(milliseconds: 150));
+        await t.tap(find.text('2').last);
+        await t.pump(const Duration(milliseconds: 300));
+      },
+    );
+    await save('2-scoresheet', img);
+  });
+
+  testWidgets('3 score', (t) async {
     ModeClass.mode = GameModeEnum.classic;
     final img = await _capture(
       t,
@@ -466,10 +521,10 @@ void main() {
         await t.pump(const Duration(seconds: 4));
       },
     );
-    await save('2-score', img);
+    await save('3-score', img);
   });
 
-  testWidgets('3 winner', (t) async {
+  testWidgets('4 winner', (t) async {
     ModeClass.mode = GameModeEnum.classic;
     final img = await _capture(
       t,
@@ -488,10 +543,10 @@ void main() {
         await t.pump(const Duration(seconds: 4));
       },
     );
-    await save('3-winner', img);
+    await save('4-winner', img);
   });
 
-  testWidgets('4 teams', (t) async {
+  testWidgets('5 teams', (t) async {
     ModeClass.mode = GameModeEnum.friendly;
     final img = await _capture(
       t,
@@ -504,15 +559,20 @@ void main() {
         await t.pump(const Duration(seconds: 4));
       },
     );
-    await save('4-teams', img);
+    await save('5-teams', img);
   });
 
-  testWidgets('5 stats', (t) async {
+  testWidgets('6 stats', (t) async {
     final img = await _capture(t, const StatsScreen());
-    await save('5-stats', img);
+    await save('6-stats', img);
   });
 
-  testWidgets('6 share', (t) async {
+  testWidgets('7 rules', (t) async {
+    final img = await _capture(t, const RulesScreen());
+    await save('7-rules', img);
+  });
+
+  testWidgets('8 share', (t) async {
     final img = await _capture(
       t,
       Scaffold(
@@ -523,6 +583,9 @@ void main() {
               palette: AppPalette.dark,
               title: 'نتيجة اللعبة',
               footer: 'سكرو حاسبة',
+              downloadLabel: 'حمّل التطبيق من Google Play',
+              downloadUrl:
+                  'https://play.google.com/store/apps/details?id=com.megTech.screw_calculator',
               entries: [
                 ShareResultEntry(name: 'سلمى', total: 15),
                 ShareResultEntry(name: 'علي', total: 35),
@@ -534,7 +597,92 @@ void main() {
         ),
       ),
     );
-    await save('6-share', img);
+    await save('8-share', img);
+  });
+
+  Future<void> design(String id, ui.Image shot) async {
+    final dir = Platform.environment['STORE_OUT'] ?? 'check_design';
+    _writeFile('design/store/$dir/$id.png', await _pngOf(shot));
+  }
+
+  testWidgets('design gamemode', (t) async {
+    final img = await _capture(
+      t,
+      BlocProvider<GameModeCubit>(
+        create: (_) => GameModeCubit(),
+        child: const GameModeView(),
+      ),
+    );
+    await design('gamemode', img);
+  });
+
+  testWidgets('design drawer', (t) async {
+    ModeClass.mode = GameModeEnum.classic;
+    final home = sl<HomeController>();
+    final img = await _capture(
+      t,
+      const HomeScreen(index: 0),
+      afterPump: () async {
+        home.scaffoldKey.currentState!.openEndDrawer();
+        await t.pump(const Duration(milliseconds: 600));
+      },
+    );
+    await design('drawer', img);
+  });
+
+  testWidgets('design scoresheet', (t) async {
+    ModeClass.mode = GameModeEnum.classic;
+    final img = await _capture(
+      t,
+      DashboardScreen(players: _midGame()),
+      afterPump: () async {
+        t
+            .element(find.byType(Scaffold).first)
+            .read<DashboardCubit>()
+            .hideMarquee();
+        await t.pump(const Duration(seconds: 4));
+        await t.tap(find.byIcon(Icons.add_rounded).first);
+        await t.pump(const Duration(milliseconds: 700));
+      },
+    );
+    await design('scoresheet', img);
+  });
+
+  testWidgets('design rules', (t) async {
+    final img = await _capture(t, const RulesScreen());
+    await design('rules', img);
+  });
+
+  testWidgets('design dialog', (t) async {
+    final img = await _capture(
+      t,
+      Builder(
+        builder: (context) => Scaffold(
+          body: Center(
+            child: ElevatedButton(
+              onPressed: () => showAppConfirmDialog(
+                context,
+                icon: Icons.restart_alt_rounded,
+                tone: AppDialogTone.danger,
+                title: 'تحذير',
+                message: 'هل تريد إعادة بدأ الجولة؟',
+              ),
+              child: const Text('open'),
+            ),
+          ),
+        ),
+      ),
+      afterPump: () async {
+        await t.tap(find.text('open'));
+        await t.pump(const Duration(milliseconds: 600));
+      },
+    );
+    await design('dialog', img);
+  });
+
+  testWidgets('design tournament', (t) async {
+    final img = await _capture(t, const TournamentScreen());
+    await design('tournament', img);
   });
 
   test('compose store images', () async {

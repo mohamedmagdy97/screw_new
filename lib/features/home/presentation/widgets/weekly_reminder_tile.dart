@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/utils/utilities.dart';
-import 'package:screw_calculator/features/home/presentation/widgets/drawer_item_widget.dart';
+import 'package:screw_calculator/features/home/presentation/widgets/drawer_tile.dart';
 import 'package:screw_calculator/features/prayer/core/notification_service.dart';
 import 'package:screw_calculator/l10n/app_localizations.dart';
 
@@ -49,9 +50,13 @@ class _WeeklyReminderTileState extends State<WeeklyReminderTile> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    return DrawerItemWidget(
-      title: _enabled ? l10n.weeklyReminderOn : l10n.weeklyReminderOff,
+    return DrawerTile(
+      icon: Icons.alarm_rounded,
+      title: l10n.weeklyReminderLabel,
+      subtitle: l10n.weeklyReminderSub,
+      color: context.palette.win,
       onTap: _toggle,
+      trailing: Switch(value: _enabled, onChanged: (_) => _toggle()),
     );
   }
 }
