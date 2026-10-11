@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:screw_calculator/app/di/service_locator.dart';
+import 'package:screw_calculator/core/l10n/content_direction.dart';
 import 'package:screw_calculator/core/models/player_model.dart';
 import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/utils/enums.dart';
@@ -175,7 +176,7 @@ class _DashboardViewState extends State<_DashboardView> {
                     alignment: Alignment.center,
                     children: [
                       Directionality(
-                        textDirection: Directionality.of(context),
+                        textDirection: context.contentDirection,
                         child: Column(
                           children: [
                             Row(

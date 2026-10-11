@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:screw_calculator/app/di/service_locator.dart';
+import 'package:screw_calculator/core/l10n/content_direction.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/widgets/bottom_nav_text.dart';
 import 'package:screw_calculator/core/widgets/custom_appbar.dart';
@@ -90,7 +91,7 @@ class _HistoryView extends StatelessWidget {
               child: CustomText(
                 text: AppLocalizations.of(context).historyEmpty,
                 fontSize: 20,
-                textAlign: TextAlign.end,
+                textAlign: context.readStart,
               ),
             );
           }

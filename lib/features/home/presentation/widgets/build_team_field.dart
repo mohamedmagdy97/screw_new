@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:screw_calculator/core/l10n/content_direction.dart';
 import 'package:screw_calculator/core/utils/validation_form.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/core/widgets/custom_text_field.dart';
@@ -18,9 +19,13 @@ class BuildTeamFields extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
+      crossAxisAlignment: context.readStartCross,
       children: [
-        CustomText(text: teamName, fontSize: 16.sp, textAlign: TextAlign.end),
+        CustomText(
+          text: teamName,
+          fontSize: 16.sp,
+          textAlign: context.readStart,
+        ),
         const SizedBox(height: 8),
         ...controllers.map(
           (controller) => CustomTextField(

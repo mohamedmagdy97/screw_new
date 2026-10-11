@@ -199,22 +199,24 @@ Widget _app(Widget home) {
   return ScreenUtilInit(
     designSize: const Size(414, 896),
     minTextAdapt: true,
-    builder: (context, _) => Directionality(
-      textDirection: _locale == 'ar' ? TextDirection.rtl : TextDirection.ltr,
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        locale: Locale(_locale),
-        supportedLocales: AppLocalizations.supportedLocales,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        theme: AppTheme.light,
-        darkTheme: AppTheme.dark.copyWith(
-          textTheme: AppTheme.dark.textTheme.apply(
-            fontFamilyFallback: const ['AppleEmoji'],
-          ),
+    builder: (context, _) => MaterialApp(
+      debugShowCheckedModeBanner: false,
+      locale: Locale(_locale),
+      supportedLocales: AppLocalizations.supportedLocales,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      theme: AppTheme.light,
+      darkTheme: AppTheme.dark.copyWith(
+        textTheme: AppTheme.dark.textTheme.apply(
+          fontFamilyFallback: const ['AppleEmoji'],
         ),
-        themeMode: ThemeMode.dark,
-        home: home,
       ),
+      themeMode: ThemeMode.dark,
+      // نفس سلوك التطبيق: هيكل الواجهة LTR والمحتوى يتبع اللغة.
+      builder: (context, child) => Directionality(
+        textDirection: TextDirection.ltr,
+        child: child ?? const SizedBox.shrink(),
+      ),
+      home: home,
     ),
   );
 }
@@ -428,7 +430,9 @@ void main() {
 
   Future<void> save(String id, ui.Image shot) async {
     // التركيب النهائي يتم في اختبار منفصل (compose) لأن toImage يحتاج zone حقيقي.
-    final dir = _locale == 'ar' ? 'raw' : 'check_$_locale';
+    final dir =
+        Platform.environment['STORE_OUT'] ??
+        (_locale == 'ar' ? 'raw' : 'check_$_locale');
     _writeFile('design/store/$dir/$id.png', await _pngOf(shot));
   }
 

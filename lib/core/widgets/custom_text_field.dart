@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:screw_calculator/core/l10n/content_direction.dart';
 import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/utils/validation_form.dart';
@@ -76,7 +77,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
       child: Theme(
         data: Theme.of(context).copyWith(hintColor: palette.textSecondary),
         child: Directionality(
-          textDirection: Directionality.of(context),
+          textDirection: context.contentDirection,
           child: TextFormField(
             autovalidateMode: AutovalidateMode.onUserInteraction,
             cursorColor: palette.brand,
@@ -85,7 +86,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
             maxLength: widget.maxLength,
             maxLines: widget.maxLines,
             // textAlign: TextAlign.end,
-            textDirection: Directionality.of(context),
+            textDirection: context.contentDirection,
             keyboardType: widget.inputType,
             obscureText: widget.obscureText,
             inputFormatters: widget.inputType == TextInputType.phone

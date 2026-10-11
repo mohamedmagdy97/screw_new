@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:screw_calculator/core/l10n/content_direction.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/features/history/domain/entities/game_history_entity.dart';
@@ -45,20 +46,20 @@ class HistoryItem extends StatelessWidget {
               icon: const Icon(Icons.delete_outline, color: AppColors.white),
             ),
             Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
+              crossAxisAlignment: context.readStartCross,
               children: [
                 CustomText(
                   text: AppLocalizations.of(context).gameN(index + 1),
                   fontSize: 18,
                   fontFamily: AppFonts.bold,
-                  textAlign: TextAlign.end,
+                  textAlign: context.readStart,
                 ),
                 CustomText(
                   text: AppLocalizations.of(
                     context,
                   ).lowestScoreWinner(_getWinnerName()),
                   fontSize: 14,
-                  textAlign: TextAlign.end,
+                  textAlign: context.readStart,
                 ),
               ],
             ),

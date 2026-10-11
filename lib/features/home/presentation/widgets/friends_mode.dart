@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:screw_calculator/app/di/service_locator.dart';
+import 'package:screw_calculator/core/l10n/content_direction.dart';
 import 'package:screw_calculator/core/models/item.dart';
 import 'package:screw_calculator/core/state/generic_cubit/generic_cubit.dart';
 import 'package:screw_calculator/core/theme/app_palette.dart';
@@ -25,7 +26,7 @@ class FriendsMode extends StatelessWidget {
         CustomText(
           text: AppLocalizations.of(context).chooseNumberOfTeams,
           fontSize: 16.sp,
-          textAlign: TextAlign.end,
+          textAlign: context.readStart,
         ),
         const SizedBox(height: 16),
         BlocBuilder<GenericCubit<List<Item>>, GenericState<List<Item>>>(
@@ -35,7 +36,7 @@ class FriendsMode extends StatelessWidget {
                 .firstWhere((e) => e.isActive == true)
                 .key!;
             return Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
+              crossAxisAlignment: context.readStartCross,
               children: [
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,

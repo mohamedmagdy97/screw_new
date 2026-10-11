@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:screw_calculator/app/di/service_locator.dart';
+import 'package:screw_calculator/core/l10n/content_direction.dart';
 import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/utils/utilities.dart';
@@ -34,14 +35,17 @@ class _TournamentView extends StatelessWidget {
     return Scaffold(
       appBar: CustomAppBar(title: l10n.tournamentTitle),
       bottomNavigationBar: const BottomNavigationText(),
-      body: BlocBuilder<TournamentCubit, TournamentState>(
-        builder: (context, state) {
-          if (state.loading) {
-            return const SkeletonList();
-          }
-          final t = state.tournament;
-          return t == null ? const _CreateForm() : _Standings(tournament: t);
-        },
+      body: Directionality(
+        textDirection: context.contentDirection,
+        child: BlocBuilder<TournamentCubit, TournamentState>(
+          builder: (context, state) {
+            if (state.loading) {
+              return const SkeletonList();
+            }
+            final t = state.tournament;
+            return t == null ? const _CreateForm() : _Standings(tournament: t);
+          },
+        ),
       ),
     );
   }

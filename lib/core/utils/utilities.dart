@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:screw_calculator/core/l10n/content_direction.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
 
@@ -39,7 +40,7 @@ class Utilities {
               child: CustomText(
                 text: txt ?? '',
                 fontSize: 16.sp,
-                textAlign: TextAlign.end,
+                textAlign: context.readStart,
               ), // here you may safely put Hero
             ),
           ),
@@ -64,7 +65,7 @@ class Utilities {
   //         text: txt ?? "",
   //         fontSize: 16.sp,
   //         color: AppColors.white,
-  //         textAlign: TextAlign.end,
+  //         textAlign: context.readStart,
   //       ),
   //       // padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
   //       backgroundColor: AppColors.mainColor,

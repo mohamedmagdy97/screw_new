@@ -39,14 +39,18 @@ class MyApp extends StatelessWidget {
                   builder: (context, child) {
                     // نحدّ تكبير الخط (0.9–1.3) كي لا ينكسر التصميم مع الخطوط الكبيرة.
                     final mq = MediaQuery.of(context);
-                    return MediaQuery(
-                      data: mq.copyWith(
-                        textScaler: mq.textScaler.clamp(
-                          minScaleFactor: 0.9,
-                          maxScaleFactor: 1.3,
+                    return Directionality(
+                      // هيكل الواجهة LTR كما صُمّم؛ المحتوى يتبع اللغة (ContentDirection).
+                      textDirection: TextDirection.ltr,
+                      child: MediaQuery(
+                        data: mq.copyWith(
+                          textScaler: mq.textScaler.clamp(
+                            minScaleFactor: 0.9,
+                            maxScaleFactor: 1.3,
+                          ),
                         ),
+                        child: child ?? const SizedBox.shrink(),
                       ),
-                      child: child ?? const SizedBox.shrink(),
                     );
                   },
                   home: const SplashScreen(),

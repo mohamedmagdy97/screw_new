@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
+import 'package:screw_calculator/core/l10n/content_direction.dart';
 import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/utils/utilities.dart';
@@ -45,7 +46,7 @@ class ShareScreenBtn extends StatelessWidget {
               .toList();
     entries.sort((a, b) => a.total.compareTo(b.total));
     return Directionality(
-      textDirection: Directionality.of(context),
+      textDirection: context.contentDirection,
       child: Theme(
         data: Theme.of(context),
         child: Padding(

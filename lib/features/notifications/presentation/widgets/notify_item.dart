@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:screw_calculator/core/l10n/content_direction.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/utils/format_date_to_string.dart';
 import 'package:screw_calculator/core/utils/utilities.dart';
@@ -199,7 +200,7 @@ class NotificationsItem extends StatelessWidget {
               children: [
                 Expanded(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                    crossAxisAlignment: context.readStartCross,
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -207,14 +208,14 @@ class NotificationsItem extends StatelessWidget {
                           CustomText(
                             text: notification.datetime.toSmartFormat(),
                             fontSize: 12,
-                            textAlign: TextAlign.end,
+                            textAlign: context.readStart,
                           ),
                           Expanded(
                             child: CustomText(
                               text: notification.title,
                               fontSize: 17,
                               fontFamily: AppFonts.bold,
-                              textAlign: TextAlign.end,
+                              textAlign: context.readStart,
                             ),
                           ),
                         ],
@@ -223,7 +224,7 @@ class NotificationsItem extends StatelessWidget {
                       CustomText(
                         text: notification.description,
                         fontSize: 15.sp,
-                        textAlign: TextAlign.end,
+                        textAlign: context.readStart,
                       ),
                     ],
                   ),

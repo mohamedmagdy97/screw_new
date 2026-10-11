@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:screw_calculator/core/l10n/content_direction.dart';
 import 'package:screw_calculator/core/models/player_model.dart';
 import 'package:screw_calculator/core/utils/validation_form.dart';
 import 'package:screw_calculator/core/widgets/custom_button.dart';
@@ -92,7 +93,7 @@ class _ScoreInputDialogState extends State<ScoreInputDialog> {
 
     return AlertDialog(
       title: Directionality(
-        textDirection: Directionality.of(context),
+        textDirection: context.contentDirection,
         child: CustomText(
           text: title,
           fontSize: 14.sp,

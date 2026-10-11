@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:screw_calculator/app/di/service_locator.dart';
 import 'package:screw_calculator/core/helpers/firebase_notification_service.dart';
+import 'package:screw_calculator/core/l10n/content_direction.dart';
 import 'package:screw_calculator/core/routing/build_fancy_route.dart';
 import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
@@ -186,7 +187,7 @@ class _GameModeView extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
+                  crossAxisAlignment: context.readStartCross,
                   children: [
                     SingleChildScrollView(
                       child: Hero(

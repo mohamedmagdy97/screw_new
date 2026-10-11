@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:screw_calculator/core/l10n/content_direction.dart';
 import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
 
@@ -18,7 +19,7 @@ class DrawerItemWidget extends StatelessWidget {
           title: CustomText(
             text: title,
             fontSize: 16,
-            textAlign: TextAlign.end,
+            textAlign: context.readStart,
           ),
         ),
 

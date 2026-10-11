@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:screw_calculator/app/di/service_locator.dart';
+import 'package:screw_calculator/core/l10n/content_direction.dart';
 import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/widgets/bottom_nav_text.dart';
@@ -32,23 +33,26 @@ class _StatsView extends StatelessWidget {
     return Scaffold(
       appBar: CustomAppBar(title: AppLocalizations.of(context).statsTitle),
       bottomNavigationBar: const BottomNavigationText(),
-      body: BlocBuilder<StatsCubit, StatsState>(
-        builder: (context, state) {
-          switch (state.status) {
-            case StatsStatus.loading:
-              return const SkeletonList(itemHeight: 110);
-            case StatsStatus.error:
-              return Center(
-                child: CustomText(
-                  text: AppLocalizations.of(context).statsLoadError,
-                  fontSize: 16,
-                ),
-              );
-            case StatsStatus.loaded:
-              if (state.players.isEmpty) return const _EmptyStats();
-              return _StatsBody(state: state);
-          }
-        },
+      body: Directionality(
+        textDirection: context.contentDirection,
+        child: BlocBuilder<StatsCubit, StatsState>(
+          builder: (context, state) {
+            switch (state.status) {
+              case StatsStatus.loading:
+                return const SkeletonList(itemHeight: 110);
+              case StatsStatus.error:
+                return Center(
+                  child: CustomText(
+                    text: AppLocalizations.of(context).statsLoadError,
+                    fontSize: 16,
+                  ),
+                );
+              case StatsStatus.loaded:
+                if (state.players.isEmpty) return const _EmptyStats();
+                return _StatsBody(state: state);
+            }
+          },
+        ),
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:screw_calculator/app/di/service_locator.dart';
+import 'package:screw_calculator/core/l10n/content_direction.dart';
 import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/features/chat/data/datasources/chat_moderation_store.dart';
@@ -39,39 +40,42 @@ class _BlockedUsersDialogState extends State<_BlockedUsersDialog> {
     final blocked = _blocked;
     return AlertDialog(
       title: const CustomText(text: 'المستخدمون المحظورون', fontSize: 18),
-      content: SizedBox(
-        width: double.maxFinite,
-        child: blocked == null
-            ? const Center(
-                heightFactor: 2,
-                child: CircularProgressIndicator.adaptive(),
-              )
-            : blocked.isEmpty
-            ? CustomText(
-                text: 'لا يوجد مستخدمون محظورون',
-                fontSize: 15,
-                color: context.palette.textSecondary,
-              )
-            : ListView(
-                shrinkWrap: true,
-                children: [
-                  for (final e in blocked.entries)
-                    ListTile(
-                      title: CustomText(
-                        text: e.value,
-                        fontSize: 16,
-                        textAlign: TextAlign.start,
+      content: Directionality(
+        textDirection: context.contentDirection,
+        child: SizedBox(
+          width: double.maxFinite,
+          child: blocked == null
+              ? const Center(
+                  heightFactor: 2,
+                  child: CircularProgressIndicator.adaptive(),
+                )
+              : blocked.isEmpty
+              ? CustomText(
+                  text: 'لا يوجد مستخدمون محظورون',
+                  fontSize: 15,
+                  color: context.palette.textSecondary,
+                )
+              : ListView(
+                  shrinkWrap: true,
+                  children: [
+                    for (final e in blocked.entries)
+                      ListTile(
+                        title: CustomText(
+                          text: e.value,
+                          fontSize: 16,
+                          textAlign: TextAlign.start,
+                        ),
+                        trailing: TextButton(
+                          onPressed: () async {
+                            await _store.unblock(e.key);
+                            await _reload();
+                          },
+                          child: const Text('إلغاء الحظر'),
+                        ),
                       ),
-                      trailing: TextButton(
-                        onPressed: () async {
-                          await _store.unblock(e.key);
-                          await _reload();
-                        },
-                        child: const Text('إلغاء الحظر'),
-                      ),
-                    ),
-                ],
-              ),
+                  ],
+                ),
+        ),
       ),
       actions: [
         TextButton(
