@@ -5,12 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
+import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/utils/utilities.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/core/widgets/dox_decoration.dart';
 import 'package:screw_calculator/features/dashboard/presentation/cubit/dashboard_cubit.dart';
 import 'package:screw_calculator/features/dashboard/presentation/widgets/screenshot_preview_dialog.dart';
+import 'package:screw_calculator/features/dashboard/presentation/widgets/share_result_card.dart';
 import 'package:share_plus/share_plus.dart';
 
 /// زر مشاركة لوحة النتائج: يلتقط صورة، يعرض معاينة، يرفعها، ثم يشاركها.
@@ -24,6 +26,34 @@ class ShareScreenBtn extends StatelessWidget {
   final DashboardCubit cubit;
   final ScreenshotController screenshotController;
 
+  /// يبني قالب النتيجة الجاهز للمشاركة (لاعبون أو فرق) مرتّبًا بالأفضل أولًا.
+  Widget _buildCard(BuildContext context) {
+    final state = cubit.state;
+    final entries = state.showTeamsView && state.teams.isNotEmpty
+        ? state.teams
+              .map((t) => ShareResultEntry(name: t.name, total: t.totalScore))
+              .toList()
+        : state.players
+              .map(
+                (p) => ShareResultEntry(
+                  name: p.name ?? '',
+                  total: int.tryParse(p.total ?? '') ?? 0,
+                ),
+              )
+              .toList();
+    entries.sort((a, b) => a.total.compareTo(b.total));
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Theme(
+        data: Theme.of(context),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: ShareResultCard(entries: entries, palette: context.palette),
+        ),
+      ),
+    );
+  }
+
   Future<void> _captureAndShare(BuildContext context) async {
     if (!cubit.canShare) {
       Utilities().showCustomSnack(
@@ -34,10 +64,13 @@ class ShareScreenBtn extends StatelessWidget {
     }
 
     try {
-      final Uint8List? bytes = await screenshotController.capture(
-        delay: const Duration(milliseconds: 10),
+      final Uint8List bytes = await screenshotController.captureFromWidget(
+        _buildCard(context),
+        pixelRatio: 3,
+        context: context,
+        delay: const Duration(milliseconds: 50),
       );
-      if (bytes == null || !context.mounted) return;
+      if (!context.mounted) return;
 
       final dir = await getTemporaryDirectory();
       final filePath =

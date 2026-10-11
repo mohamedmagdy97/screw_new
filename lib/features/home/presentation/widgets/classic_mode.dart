@@ -11,6 +11,7 @@ import 'package:screw_calculator/core/widgets/custom_button.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/core/widgets/custom_text_field.dart';
 import 'package:screw_calculator/features/home/presentation/controller/home_controller.dart';
+import 'package:screw_calculator/features/home/presentation/widgets/recent_players_bar.dart';
 
 class ClassicMode extends StatelessWidget {
   const ClassicMode({super.key});
@@ -87,7 +88,20 @@ class ClassicMode extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 36),
+                const SizedBox(height: 24),
+                RecentPlayersBar(
+                  names: homeData.recentPlayers,
+                  onPick: (name) => homeData.pickRecentPlayer(
+                    name,
+                    homeData.controllers
+                        .take(
+                          state.data!
+                              .firstWhere((e) => e.isActive == true)
+                              .key!,
+                        )
+                        .toList(),
+                  ),
+                ),
                 for (
                   int i = 0;
                   i < state.data!.firstWhere((e) => e.isActive == true).key!;

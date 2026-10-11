@@ -29,39 +29,53 @@ class NotificationModel {
     this.messageId,
   });
 
-  factory NotificationModel.fromJson(Map<String, dynamic> json, String docId) {
-    DateTime parsedDate;
+  /// ينسخ الإشعار مع تغيير حالة القراءة (تُدار محليًا على الجهاز).
+  NotificationModel copyWith({bool? isRead}) {
+    return NotificationModel(
+      id: id,
+      title: title,
+      description: description,
+      datetime: datetime,
+      type: type,
+      image: image,
+      isRead: isRead ?? this.isRead,
+      priority: priority,
+      actionUrl: actionUrl,
+      createdAt: createdAt,
+      token: token,
+      messageId: messageId,
+    );
+  }
 
-    // ✅ نتأكد إذا القيمة Timestamp أو String
-    if (json['datetime'] is Timestamp) {
-      parsedDate = (json['datetime'] as Timestamp).toDate();
-    } else if (json['datetime'] is String) {
-      parsedDate =
-          DateTime.tryParse(json['datetime']!.toString()) ?? DateTime.now();
-    } else if (json['datetime'] == null) {
-      parsedDate = DateTime.now();
-    } else {
-      parsedDate = DateTime.now();
-    }
+  static DateTime _parseDate(dynamic value) {
+    if (value is Timestamp) return value.toDate();
+    if (value is String) return DateTime.tryParse(value) ?? DateTime.now();
+    return DateTime.now();
+  }
+
+  static String _str(dynamic value, [String fallback = '']) =>
+      value == null ? fallback : value.toString();
+
+  /// يقبل شكلين للبيانات: الشكل المعروض (`description`/`image`/`datetime`)
+  /// والشكل الذي يحفظه التطبيق عند استلام FCM (`body`/`imageUrl`/`sentTime`).
+  factory NotificationModel.fromJson(Map<String, dynamic> json, String docId) {
     return NotificationModel(
       id: docId,
-      title: json['title']!.toString(),
-      description: json['description'] != null
-          ? json['description']!.toString()
-          : '',
-      datetime: parsedDate /*(json['datetime'] != null)
-          ? DateTime.parse(json['datetime']!.toString())
-          : DateTime.now()*/,
-      type: json['type']!.toString(),
-      image: json['image'] != null ? json['image']!.toString() : '',
+      title: _str(json['title']),
+      description: _str(json['description'] ?? json['body']),
+      datetime: _parseDate(
+        json['datetime'] ?? json['sentTime'] ?? json['createdAt'],
+      ),
+      type: _str(json['type'], 'general'),
+      image: _str(json['image'] ?? json['imageUrl']),
       isRead: json['isRead'] is bool
           ? json['isRead'] as bool
-          : json['isRead'].toString().toLowerCase() == 'true',
-      priority: json['priority'] != null ? json['priority']!.toString() : '',
-      actionUrl: json['actionUrl'] != null ? json['actionUrl']!.toString() : '',
-      createdAt: json['createdAt']!.toString(),
-      messageId: json['messageId'] != null ? json['messageId']!.toString() : '',
-      token: json['token'] != null ? json['token']!.toString() : '',
+          : _str(json['isRead']).toLowerCase() == 'true',
+      priority: _str(json['priority']),
+      actionUrl: _str(json['actionUrl']),
+      createdAt: _str(json['createdAt']),
+      messageId: _str(json['messageId']),
+      token: _str(json['token']),
     );
   }
 

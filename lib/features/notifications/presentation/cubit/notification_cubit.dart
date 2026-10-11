@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:screw_calculator/features/notifications/domain/entities/notification_entity.dart';
 import 'package:screw_calculator/features/notifications/domain/usecases/delete_notification_usecase.dart';
@@ -22,9 +24,12 @@ class NotificationCubit extends Cubit<NotificationState> {
     _loadNotifications();
   }
 
+  StreamSubscription<List<NotificationEntity>>? _subscription;
+
   void _loadNotifications() {
     emit(NotificationLoading());
-    _getNotificationsUseCase.call().listen(
+    _subscription?.cancel();
+    _subscription = _getNotificationsUseCase.call().listen(
       (notifications) {
         if (notifications.isEmpty) {
           emit(NotificationEmpty());
@@ -43,9 +48,8 @@ class NotificationCubit extends Cubit<NotificationState> {
     try {
       final success = await _deleteNotificationUseCase.call(notificationId);
       if (success) {
+        // القائمة تتحدّث تلقائيًا لأن الحالة المحلية تُبثّ على نفس الـ stream.
         emit(NotificationDeleted());
-        // Reload notifications after deletion
-        _loadNotifications();
       } else {
         emit(NotificationError('فشل في حذف الإشعار'));
       }
@@ -60,5 +64,11 @@ class NotificationCubit extends Cubit<NotificationState> {
     } catch (e) {
       // Silently fail for mark as read
     }
+  }
+
+  @override
+  Future<void> close() async {
+    await _subscription?.cancel();
+    return super.close();
   }
 }

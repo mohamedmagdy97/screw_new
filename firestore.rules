@@ -1,0 +1,47 @@
+rules_version = '2';
+
+// قواعد Firestore المقترحة لـ «سكرو حاسبة».
+//
+// ملاحظة مهمة: التطبيق لا يستخدم Firebase Auth حاليًا، فكل الطلبات "مجهولة"
+// ولا يمكن ربط الصلاحيات بمستخدم. هذه القواعد تعيد عمل التطبيق وتقيّد ما أمكن
+// (الإشعارات للقراءة والإنشاء فقط، ومنع أي collection غير معروف). الخطوة التالية
+// الموصى بها: Anonymous Auth ثم استبدال `if true` بـ `if request.auth != null`.
+//
+// النشر:  firebase deploy --only firestore:rules   (أو نسخها في Firebase Console)
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // الإشعارات: مشتركة للجميع. القراءة مفتوحة، والإنشاء فقط (أول جهاز يستقبل
+    // رسالة FCM يحفظها). الحذف والتعديل ممنوعان — حالة "مقروء/محذوف" محلية
+    // على كل جهاز داخل التطبيق.
+    match /notifications/{id} {
+      allow read: if true;
+      allow create: if request.resource.data.title is string
+                    && request.resource.data.title.size() < 300;
+      allow update, delete: if false;
+    }
+
+    // رموز FCM: يقرؤها التطبيق ويكتبها لجهازه ويحذفها عند تسجيل الخروج.
+    match /tokens/{id} {
+      allow read, create, update, delete: if true;
+    }
+
+    // مشاركات نتائج المستخدمين.
+    match /user_screenshoot_sharing/{id} {
+      allow read, delete: if true;
+      allow create: if request.resource.data.keys().hasAll(['title'])
+                    && request.resource.data.title is string;
+      allow update: if false;
+    }
+
+    // الشات العام: chats/{messages|typing|users|pinned}/...
+    match /chats/{document=**} {
+      allow read, write: if true;
+    }
+
+    // أي مسار آخر مغلق.
+    match /{other=**} {
+      allow read, write: if false;
+    }
+  }
+}

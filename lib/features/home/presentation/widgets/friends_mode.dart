@@ -10,6 +10,7 @@ import 'package:screw_calculator/core/widgets/custom_button.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/features/home/presentation/controller/home_controller.dart';
 import 'package:screw_calculator/features/home/presentation/widgets/build_team_field.dart';
+import 'package:screw_calculator/features/home/presentation/widgets/recent_players_bar.dart';
 
 class FriendsMode extends StatelessWidget {
   const FriendsMode({super.key});
@@ -91,6 +92,23 @@ class FriendsMode extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
+                RecentPlayersBar(
+                  names: homeData.recentPlayers,
+                  onPick: (name) => homeData.pickRecentPlayer(name, [
+                    homeData.playerOne,
+                    homeData.playerTwo,
+                    homeData.playerThree,
+                    homeData.playerFour,
+                    if (activeTeams >= 3) ...[
+                      homeData.playerFive,
+                      homeData.playerSix,
+                    ],
+                    if (activeTeams >= 4) ...[
+                      homeData.playerOne2,
+                      homeData.playerTwo2,
+                    ],
+                  ]),
+                ),
                 BuildTeamFields(
                   teamName: 'الفريق الأول',
                   controllers: [homeData.playerOne, homeData.playerTwo],

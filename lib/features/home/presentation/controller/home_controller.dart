@@ -6,6 +6,7 @@ import 'package:screw_calculator/core/models/player_model.dart';
 import 'package:screw_calculator/core/routing/build_fancy_route.dart';
 import 'package:screw_calculator/core/state/generic_cubit/generic_cubit.dart';
 import 'package:screw_calculator/core/utils/enums.dart';
+import 'package:screw_calculator/core/utils/recent_players_store.dart';
 import 'package:screw_calculator/features/dashboard/presentation/screens/dashboard_screen.dart';
 import 'package:screw_calculator/features/home/domain/repositories/home_repository.dart';
 
@@ -53,7 +54,30 @@ class HomeController {
 
   List<PlayerModel> players = [];
 
+  final RecentPlayersStore _recentStore = RecentPlayersStore();
+  final ValueNotifier<List<String>> recentPlayers = ValueNotifier<List<String>>(
+    const [],
+  );
+
+  Future<void> _loadRecentPlayers() async {
+    recentPlayers.value = await _recentStore.load();
+  }
+
+  /// يملأ أول خانة اسم فارغة من [targets] بالاسم المختار.
+  void pickRecentPlayer(String name, List<TextEditingController> targets) {
+    if (targets.any((c) => c.text.trim() == name)) return;
+    final empty = targets.where((c) => c.text.trim().isEmpty);
+    if (empty.isNotEmpty) empty.first.text = name;
+  }
+
+  Future<void> _rememberPlayers(List<PlayerModel> list) async {
+    recentPlayers.value = await _recentStore.remember(
+      list.map((p) => p.name ?? ''),
+    );
+  }
+
   void init() {
+    _loadRecentPlayers();
     classicInit();
     friendsInit();
     loadCachedUser();
@@ -147,7 +171,9 @@ class HomeController {
     );
 
     players.removeWhere((element) => element.id! > playersCount);
+    await _rememberPlayers(players);
 
+    if (!context.mounted) return;
     await Navigator.push(
       context,
       buildFancyRoute<void>(
@@ -183,7 +209,9 @@ class HomeController {
     };
 
     players.removeWhere((element) => element.id! > playersCount);
+    await _rememberPlayers(players);
 
+    if (!context.mounted) return;
     await Navigator.of(context).push(
       buildFancyRoute<void>(DashboardScreen(players: players, teamsMode: true)),
     );

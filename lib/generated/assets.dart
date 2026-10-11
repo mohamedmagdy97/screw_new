@@ -6,6 +6,7 @@ class Assets {
   static const String fontsJannaLTBold = 'assets/fonts/JannaLT-Bold.ttf';
   static const String fontsJannaLTRegular = 'assets/fonts/JannaLT-Regular.ttf';
   static const String iconsIcon = 'assets/icons/icon.png';
+  static const String iconsMark = 'assets/icons/mark.png';
   static const String iconsStoreIcon = 'assets/icons/store_icon.png';
   static const String whatsappIcon = 'assets/icons/WhatsApp.png';
   static const String linkedInIcon = 'assets/icons/LinkedIn_icon.png';

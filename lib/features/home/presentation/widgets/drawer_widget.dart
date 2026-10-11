@@ -22,6 +22,7 @@ import 'package:screw_calculator/features/notifications/presentation/screens/not
 import 'package:screw_calculator/features/prayer/presentation/screens/prayer_screen.dart';
 import 'package:screw_calculator/features/rules/presentation/screens/rules_screen.dart';
 import 'package:screw_calculator/features/show_video/presentation/screens/show_video_screen.dart';
+import 'package:screw_calculator/features/stats/presentation/screens/stats_screen.dart';
 import 'package:screw_calculator/features/users_screenshoot_sharing/presentation/screens/user_sc_sharing_screen.dart';
 import 'package:screw_calculator/generated/assets.dart';
 
@@ -94,6 +95,11 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                   title: 'الجولات السابقة',
                   onTap: () =>
                       homeData.routeFromDrawer(context, const HistoryScreen()),
+                ),
+                DrawerItemWidget(
+                  title: 'إحصائيات اللاعبين',
+                  onTap: () =>
+                      homeData.routeFromDrawer(context, const StatsScreen()),
                 ),
                 DrawerItemWidget(
                   title: 'فيديو شرح اللعبة',

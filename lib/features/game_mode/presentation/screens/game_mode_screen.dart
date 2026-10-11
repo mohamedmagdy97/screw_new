@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:screw_calculator/app/di/service_locator.dart';
 import 'package:screw_calculator/core/helpers/firebase_notification_service.dart';
+import 'package:screw_calculator/core/routing/build_fancy_route.dart';
 import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/utils/enums.dart';
@@ -11,6 +12,8 @@ import 'package:screw_calculator/core/utils/utilities.dart';
 import 'package:screw_calculator/core/widgets/bottom_nav_text.dart';
 import 'package:screw_calculator/core/widgets/custom_button.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
+import 'package:screw_calculator/features/dashboard/domain/repositories/active_game_repository.dart';
+import 'package:screw_calculator/features/dashboard/presentation/screens/dashboard_screen.dart';
 import 'package:screw_calculator/features/game_mode/domain/entities/game_mode_item_entity.dart';
 import 'package:screw_calculator/features/game_mode/presentation/cubit/game_mode_cubit.dart';
 import 'package:screw_calculator/features/home/presentation/screens/home_screen.dart';
@@ -29,6 +32,54 @@ class _GameModeState extends State<GameMode> {
   void initState() {
     super.initState();
     _initializeNotifications();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _offerResume());
+  }
+
+  /// يعرض استكمال لعبة لم تنتهِ (حُفظت تلقائيًا) إن وُجدت.
+  Future<void> _offerResume() async {
+    final game = await sl<ActiveGameRepository>().load();
+    if (game == null || !game.hasProgress || !mounted) return;
+
+    final resume = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => AlertDialog(
+        title: const CustomText(
+          text: 'لعبة غير مكتملة',
+          fontSize: 18,
+          textAlign: TextAlign.center,
+        ),
+        content: const CustomText(
+          text: 'عندك لعبة لم تنتهِ، تحب تكمّلها؟',
+          fontSize: 16,
+          textAlign: TextAlign.center,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('بدء لعبة جديدة'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('متابعة'),
+          ),
+        ],
+      ),
+    );
+    if (!mounted) return;
+    if (resume ?? false) {
+      ModeClass.mode = game.friendly
+          ? GameModeEnum.friendly
+          : GameModeEnum.classic;
+      await Navigator.push(
+        context,
+        buildFancyRoute<void>(
+          DashboardScreen(players: game.players, teamsMode: game.friendly),
+        ),
+      );
+    } else {
+      await sl<ActiveGameRepository>().clear();
+    }
   }
 
   Future<void> _initializeNotifications() async {

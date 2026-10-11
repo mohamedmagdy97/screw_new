@@ -78,7 +78,7 @@ class BuildPrayerCard extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                if (badge != null) badge,
+                ?badge,
                 const SizedBox(width: 8),
                 CustomText(
                   text: title,

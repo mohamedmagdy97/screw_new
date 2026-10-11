@@ -1,10 +1,11 @@
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:screw_calculator/app/di/service_locator.dart';
 import 'package:screw_calculator/core/models/player_model.dart';
-import 'package:screw_calculator/core/theme/app_theme.dart';
+import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/utils/enums.dart';
 import 'package:screw_calculator/core/utils/utilities.dart';
 import 'package:screw_calculator/core/widgets/bottom_nav_text.dart';
@@ -69,6 +70,52 @@ class _DashboardViewState extends State<_DashboardView> {
     super.dispose();
   }
 
+  void _showResultDialog(DashboardCubit cubit) {
+    final winners = cubit.state.players
+        .where((p) => (int.tryParse(p.total ?? '') ?? -1) == cubit.winnerTotal)
+        .map((p) => p.name ?? '')
+        .join(' و ');
+    final losers = cubit.state.players
+        .where((p) => (int.tryParse(p.total ?? '') ?? -1) == cubit.loserTotal)
+        .map((p) => p.name ?? '')
+        .join(' و ');
+    showDialog<void>(
+      context: context,
+      builder: (ctx) {
+        final palette = ctx.palette;
+        return AlertDialog(
+          title: const CustomText(
+            text: 'انتهت اللعبة 🎉',
+            fontSize: 20,
+            textAlign: TextAlign.center,
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CustomText(
+                text: '👑 الفائز: $winners',
+                fontSize: 18,
+                color: palette.win,
+              ),
+              const SizedBox(height: 8),
+              CustomText(
+                text: '😅 الخاسر: $losers',
+                fontSize: 16,
+                color: palette.lose,
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text('تمام'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<DashboardCubit, DashboardState>(
@@ -81,10 +128,14 @@ class _DashboardViewState extends State<_DashboardView> {
       builder: (context, state) {
         final cubit = context.read<DashboardCubit>();
         final int round = cubit.currentRound;
-        if (cubit.isFinished) {
-          WidgetsBinding.instance.addPostFrameCallback(
-            (_) => _confettiController.play(),
-          );
+        if (cubit.isFinished && !cubit.finishAnnounced && !widget.fromHistory) {
+          cubit.finishAnnounced = true;
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (!mounted) return;
+            _confettiController.play();
+            HapticFeedback.heavyImpact();
+            _showResultDialog(cubit);
+          });
         }
 
         return PopScope(
@@ -110,12 +161,30 @@ class _DashboardViewState extends State<_DashboardView> {
                         textDirection: TextDirection.rtl,
                         child: Column(
                           children: [
-                            CustomText(
-                              text: round == kGameFinishedRound
-                                  ? 'انتهت الجولات'
-                                  : 'الجولة رقم $round',
-                              color: AppColors.mainColorLight,
-                              fontSize: 18,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                CustomText(
+                                  text: round == kGameFinishedRound
+                                      ? 'انتهت الجولات'
+                                      : 'الجولة رقم $round',
+                                  color: context.palette.brandSoft,
+                                  fontSize: 18,
+                                ),
+                                if (!widget.fromHistory)
+                                  Padding(
+                                    padding: const EdgeInsetsDirectional.only(
+                                      start: 12,
+                                    ),
+                                    child: TextButton.icon(
+                                      onPressed: cubit.canUndo
+                                          ? cubit.undo
+                                          : null,
+                                      icon: const Icon(Icons.undo, size: 18),
+                                      label: const Text('تراجع'),
+                                    ),
+                                  ),
+                              ],
                             ),
                             Expanded(
                               child: SingleChildScrollView(

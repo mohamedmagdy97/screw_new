@@ -8,7 +8,9 @@ import 'package:screw_calculator/features/contact_us/domain/repositories/contact
 import 'package:screw_calculator/features/contact_us/domain/usecases/launch_contact_url_usecase.dart';
 import 'package:screw_calculator/features/contact_us/presentation/cubit/contact_cubit.dart';
 import 'package:screw_calculator/features/dashboard/data/datasources/dashboard_remote_data_source.dart';
+import 'package:screw_calculator/features/dashboard/data/repositories/active_game_repository_impl.dart';
 import 'package:screw_calculator/features/dashboard/data/repositories/dashboard_repository_impl.dart';
+import 'package:screw_calculator/features/dashboard/domain/repositories/active_game_repository.dart';
 import 'package:screw_calculator/features/dashboard/domain/repositories/dashboard_repository.dart';
 import 'package:screw_calculator/features/dashboard/domain/usecases/save_game_usecase.dart';
 import 'package:screw_calculator/features/dashboard/domain/usecases/upload_screenshot_usecase.dart';
@@ -36,6 +38,7 @@ import 'package:screw_calculator/features/notifications/presentation/cubit/notif
 import 'package:screw_calculator/features/prayer/data/datasources/prayer_api_service.dart';
 import 'package:screw_calculator/features/prayer/presentation/cubit/prayer_cubit.dart';
 import 'package:screw_calculator/features/show_video/presentation/cubit/video_cubit.dart';
+import 'package:screw_calculator/features/stats/presentation/cubit/stats_cubit.dart';
 import 'package:screw_calculator/features/users_screenshoot_sharing/data/datasources/screenshot_data_source.dart';
 import 'package:screw_calculator/features/users_screenshoot_sharing/data/repositories/screenshot_repository_impl.dart';
 import 'package:screw_calculator/features/users_screenshoot_sharing/domain/repositories/screenshot_repository.dart';
@@ -59,6 +62,7 @@ Future<void> setupLocator() async {
   _registerDashboard();
   _registerPrayer();
   _registerHistory();
+  _registerStats();
   _registerContact();
   _registerNotifications();
   _registerScreenshots();
@@ -109,10 +113,12 @@ void _registerDashboard() {
         remoteDataSource: sl(),
       ),
     )
+    ..registerLazySingleton<ActiveGameRepository>(ActiveGameRepositoryImpl.new)
     ..registerFactory<DashboardCubit>(
       () => DashboardCubit(
         saveGameUseCase: SaveGameUseCase(sl()),
         uploadScreenshotUseCase: UploadScreenshotUseCase(sl()),
+        activeGameRepository: sl(),
       ),
     );
 }
@@ -158,7 +164,10 @@ void _registerContact() {
 void _registerNotifications() {
   sl
     ..registerLazySingleton<NotificationDataSource>(
-      () => NotificationDataSourceImpl(firestore: sl()),
+      () => NotificationDataSourceImpl(
+        firestore: sl(),
+        localBox: sl(instanceName: 'userBox'),
+      ),
     )
     ..registerLazySingleton<NotificationRepository>(
       () => NotificationRepositoryImpl(dataSource: sl()),
@@ -195,4 +204,11 @@ void _registerSimpleCubits() {
   sl
     ..registerFactory<GameModeCubit>(GameModeCubit.new)
     ..registerFactory<VideoCubit>(VideoCubit.new);
+}
+
+/// تبعيات إحصائيات اللاعبين (stats) — تعتمد على سجل الجولات.
+void _registerStats() {
+  sl.registerFactory<StatsCubit>(
+    () => StatsCubit(getGamesUseCase: GetGamesUseCase(sl())),
+  );
 }

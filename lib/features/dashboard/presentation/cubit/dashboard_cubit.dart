@@ -1,9 +1,12 @@
 import 'dart:io';
 
 import 'package:equatable/equatable.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:screw_calculator/core/models/player_model.dart';
 import 'package:screw_calculator/core/models/team_model_new.dart';
+import 'package:screw_calculator/features/dashboard/domain/entities/active_game.dart';
+import 'package:screw_calculator/features/dashboard/domain/repositories/active_game_repository.dart';
 import 'package:screw_calculator/features/dashboard/domain/usecases/save_game_usecase.dart';
 import 'package:screw_calculator/features/dashboard/domain/usecases/upload_screenshot_usecase.dart';
 
@@ -16,12 +19,21 @@ class DashboardCubit extends Cubit<DashboardState> {
   DashboardCubit({
     required SaveGameUseCase saveGameUseCase,
     required UploadScreenshotUseCase uploadScreenshotUseCase,
+    required ActiveGameRepository activeGameRepository,
   }) : _saveGameUseCase = saveGameUseCase,
+       _activeGameRepository = activeGameRepository,
        _uploadScreenshotUseCase = uploadScreenshotUseCase,
        super(const DashboardState(players: [], teams: []));
 
   final SaveGameUseCase _saveGameUseCase;
   final UploadScreenshotUseCase _uploadScreenshotUseCase;
+  final ActiveGameRepository _activeGameRepository;
+
+  /// لقطات ما قبل كل إدخال لدعم التراجع (Undo) عن آخر نتيجة.
+  final List<_ScoreSnapshot> _undoStack = [];
+
+  /// تُضبط عند الإعلان عن نتيجة اللعبة حتى لا يتكرر الإعلان.
+  bool finishAnnounced = false;
 
   /// تهيئة اللعبة بقائمة اللاعبين وإن كان وضع الفرق مفعّلاً.
   void start({
@@ -35,6 +47,34 @@ class DashboardCubit extends Cubit<DashboardState> {
         showTeamsView: showTeamsView,
       ),
     );
+    _undoStack.clear();
+    finishAnnounced = isFinished;
+    _persist();
+  }
+
+  bool get canUndo => _undoStack.isNotEmpty;
+
+  /// يتراجع عن آخر نتيجة أُدخلت (إضافة أو تعديل) لأي لاعب.
+  void undo() {
+    if (_undoStack.isEmpty) return;
+    final snapshot = _undoStack.removeLast();
+    snapshot.restore();
+    finishAnnounced = isFinished;
+    HapticFeedback.selectionClick();
+    emit(state.copyWith(revision: state.revision + 1));
+    _persist();
+  }
+
+  void _persist() {
+    final game = ActiveGame(
+      players: state.players,
+      friendly: state.showTeamsView,
+    );
+    if (game.hasProgress) {
+      _activeGameRepository.save(game);
+    } else {
+      _activeGameRepository.clear();
+    }
   }
 
   List<Team> _buildTeams(List<PlayerModel> players) {
@@ -59,12 +99,15 @@ class DashboardCubit extends Cubit<DashboardState> {
 
   /// يضيف/يعدّل نتيجة لاعب (القيمة بعد الضرب بالمضاعف من واجهة الإدخال).
   void applyScore(PlayerModel player, int value, {bool edit = false}) {
+    _undoStack.add(_ScoreSnapshot(player));
     if (edit) {
       player.editLastRoundScore(value);
     } else {
       player.addRoundScore(value);
     }
+    HapticFeedback.lightImpact();
     emit(state.copyWith(revision: state.revision + 1));
+    _persist();
   }
 
   void hideMarquee() => emit(state.copyWith(marqueeVisible: false));
@@ -74,13 +117,17 @@ class DashboardCubit extends Cubit<DashboardState> {
     for (final player in state.players) {
       player.resetRounds();
     }
+    _undoStack.clear();
+    finishAnnounced = false;
     emit(state.copyWith(revision: state.revision + 1));
+    _persist();
   }
 
   Future<void> saveGame() async {
     emit(state.copyWith(status: DashboardStatus.saving));
     try {
       await _saveGameUseCase(state.players);
+      await _activeGameRepository.clear();
       emit(
         state.copyWith(status: DashboardStatus.saved, message: 'تم حفظ الجولة'),
       );
@@ -137,4 +184,22 @@ class DashboardCubit extends Cubit<DashboardState> {
   bool get canShare =>
       state.players.isNotEmpty &&
       state.players.every((p) => p.filledRoundsCount >= 4);
+}
+
+/// لقطة لقيم جولات لاعب قبل تعديلها، تسمح باستعادتها عند التراجع.
+class _ScoreSnapshot {
+  _ScoreSnapshot(this.player) : values = List<String>.of(player.roundValues);
+
+  final PlayerModel player;
+  final List<String> values;
+
+  void restore() {
+    player
+      ..gw1 = values[0]
+      ..gw2 = values[1]
+      ..gw3 = values[2]
+      ..gw4 = values[3]
+      ..gw5 = values[4]
+      ..recomputeTotal();
+  }
 }

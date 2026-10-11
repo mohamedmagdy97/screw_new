@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/features/game_mode/presentation/screens/game_mode_screen.dart';
+import 'package:screw_calculator/features/onboarding/presentation/screens/onboarding_screen.dart';
 import 'package:screw_calculator/generated/assets.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -17,7 +18,12 @@ class _SplashScreenState extends State<SplashScreen> {
       if (!mounted) {
         return;
       }
+      final bool seenOnboarding = await OnboardingScreen.wasSeen();
+      if (!mounted) {
+        return;
+      }
 
+      Widget gameMode() => const GameMode();
       await Navigator.of(context).pushAndRemoveUntil(
         PageRouteBuilder<void>(
           transitionDuration: const Duration(milliseconds: 400),
@@ -36,7 +42,13 @@ class _SplashScreenState extends State<SplashScreen> {
                           curve: Curves.easeOutCubic,
                         ),
                       ),
-                  child: const GameMode(),
+                  child: seenOnboarding
+                      ? gameMode()
+                      : OnboardingScreen(
+                          onDone: () => Navigator.of(context).pushReplacement(
+                            MaterialPageRoute<void>(builder: (_) => gameMode()),
+                          ),
+                        ),
                 ),
               ),
         ),
