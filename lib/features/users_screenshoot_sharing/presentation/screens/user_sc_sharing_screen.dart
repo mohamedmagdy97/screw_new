@@ -9,12 +9,14 @@ import 'package:screw_calculator/core/utils/utilities.dart';
 import 'package:screw_calculator/core/widgets/bottom_nav_text.dart';
 import 'package:screw_calculator/core/widgets/custom_appbar.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
+import 'package:screw_calculator/core/widgets/skeleton.dart';
 import 'package:screw_calculator/features/users_screenshoot_sharing/domain/entities/screenshot_entity.dart';
 import 'package:screw_calculator/features/users_screenshoot_sharing/presentation/cubit/screenshot_cubit.dart';
 import 'package:screw_calculator/features/users_screenshoot_sharing/presentation/widgets/delete_confirmation_dialog.dart';
 import 'package:screw_calculator/features/users_screenshoot_sharing/presentation/widgets/empty_data.dart';
 import 'package:screw_calculator/features/users_screenshoot_sharing/presentation/widgets/loading_indicator.dart';
 import 'package:screw_calculator/features/users_screenshoot_sharing/presentation/widgets/screenshot_item.dart';
+import 'package:screw_calculator/l10n/app_localizations.dart';
 
 class UserScSharingScreen extends StatelessWidget {
   const UserScSharingScreen({super.key});
@@ -56,8 +58,9 @@ class _UserScSharingViewState extends State<_UserScSharingView> {
     final yesterday = DateTime(now.year, now.month, now.day - 1);
     final itemDate = DateTime(date.year, date.month, date.day);
 
-    if (itemDate == today) return 'اليوم';
-    if (itemDate == yesterday) return 'الأمس';
+    final l10n = AppLocalizations.of(context);
+    if (itemDate == today) return l10n.today;
+    if (itemDate == yesterday) return l10n.yesterday;
     return DateFormat('yyyy/MM/dd').format(date);
   }
 
@@ -86,7 +89,7 @@ class _UserScSharingViewState extends State<_UserScSharingView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(title: 'مشاركات الاخرين'),
+      appBar: CustomAppBar(title: AppLocalizations.of(context).sharedTitle),
       bottomNavigationBar: const BottomNavigationText(),
       body: BlocConsumer<ScreenshotCubit, ScreenshotState>(
         listener: (context, state) {
@@ -99,16 +102,14 @@ class _UserScSharingViewState extends State<_UserScSharingView> {
           } else if (state is ScreenshotDeleted) {
             Utilities().showCustomSnack(
               context,
-              txt: 'تم الحذف بنجاح ✓',
+              txt: AppLocalizations.of(context).deletedSuccessfully,
               backgroundColor: Colors.green,
             );
           }
         },
         builder: (context, state) {
           if (state is ScreenshotInitial || state is ScreenshotLoading) {
-            return const Center(
-              child: CircularProgressIndicator.adaptive(strokeWidth: 4),
-            );
+            return const SkeletonList(itemHeight: 140);
           }
 
           if (state is ScreenshotEmpty) {
@@ -190,7 +191,7 @@ class _UserScSharingViewState extends State<_UserScSharingView> {
                       padding: EdgeInsets.symmetric(vertical: 16.h),
                       child: Center(
                         child: CustomText(
-                          text: 'تم عرض جميع النتائج',
+                          text: AppLocalizations.of(context).allResultsShown,
                           fontSize: 14.sp,
                           color: context.palette.textSecondary,
                         ),

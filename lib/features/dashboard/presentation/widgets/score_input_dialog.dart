@@ -6,6 +6,7 @@ import 'package:screw_calculator/core/widgets/custom_button.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/core/widgets/custom_text_field.dart';
 import 'package:screw_calculator/features/dashboard/presentation/cubit/dashboard_cubit.dart';
+import 'package:screw_calculator/l10n/app_localizations.dart';
 
 /// يعرض [ScoreInputDialog] بانتقال تكبير/تلاشٍ ناعم.
 Future<void> showScoreInputDialog({
@@ -86,12 +87,12 @@ class _ScoreInputDialogState extends State<ScoreInputDialog> {
     final player = widget.player;
     final bool isFinalRound = player.filledRoundsCount == 4;
     final title = widget.isEdit
-        ? 'تعديل نتيجة الاعب ${player.name} المضافة أخيراً'
-        : 'إضافة نتيجة الاعب ${player.name} في الجولة';
+        ? AppLocalizations.of(context).scoreDialogEdit(player.name ?? '')
+        : AppLocalizations.of(context).scoreDialogAdd(player.name ?? '');
 
     return AlertDialog(
       title: Directionality(
-        textDirection: TextDirection.rtl,
+        textDirection: Directionality.of(context),
         child: CustomText(
           text: title,
           fontSize: 14.sp,
@@ -112,25 +113,31 @@ class _ScoreInputDialogState extends State<ScoreInputDialog> {
               textFieldVaidType: TextFieldValidatorType.number,
             ),
             const SizedBox(height: 16),
-            CustomButton(text: 'التالي', onPressed: () => _submit(1)),
+            CustomButton(
+              text: AppLocalizations.of(context).next,
+              onPressed: () => _submit(1),
+            ),
             const SizedBox(height: 16),
             CustomButton(
-              text: ' 2 x احسب النتيجة ',
+              text: AppLocalizations.of(context).times2,
               onPressed: () => _submit(2),
             ),
             if (isFinalRound) ...[
               const SizedBox(height: 16),
               CustomButton(
-                text: ' 4 x احسب النتيجة ',
+                text: AppLocalizations.of(context).times4,
                 onPressed: () => _submit(4, forceAdd: true),
               ),
             ],
             const SizedBox(height: 16),
-            CustomButton(text: ' سكرو (0) ', onPressed: _submitScrew),
+            CustomButton(
+              text: AppLocalizations.of(context).screwZero,
+              onPressed: _submitScrew,
+            ),
             const SizedBox(height: 16),
             if (player.gw4!.isNotEmpty && player.gw5!.isEmpty)
               CustomText(
-                text: 'انتبه لا يمكن التعديل على النتيجة',
+                text: AppLocalizations.of(context).cannotEditWarning,
                 fontSize: 14.sp,
                 color: Colors.red,
                 fontWeight: FontWeight.bold,

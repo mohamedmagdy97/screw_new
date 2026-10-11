@@ -5,6 +5,7 @@ import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/utils/local_store.dart';
 import 'package:screw_calculator/core/widgets/custom_button.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
+import 'package:screw_calculator/l10n/app_localizations.dart';
 
 class _Page {
   const _Page(this.emoji, this.title, this.body);
@@ -14,22 +15,10 @@ class _Page {
   final String body;
 }
 
-const List<_Page> _pages = [
-  _Page(
-    '🃏',
-    'احسب نقاط سكرو بسهولة',
-    'اختر وضع اللعب: فردي كلاسيك أو فرق (زوجي)، واكتب أسماء اللاعبين وابدأ.',
-  ),
-  _Page(
-    '🧮',
-    'سجّل كل جولة بلمسة',
-    'أدخل نتيجة كل لاعب، واضرب في 2 أو 4 عند الحاجة، وتراجع عن أي خطأ بزر "تراجع". الأقل نقاطًا يفوز.',
-  ),
-  _Page(
-    '📊',
-    'لعبتك محفوظة وإحصائياتك جاهزة',
-    'تُحفظ اللعبة الجارية تلقائيًا لتكمّلها لاحقًا، وتتابع نسب الفوز، وتشارك النتيجة كصورة أنيقة.',
-  ),
+List<_Page> _pagesOf(AppLocalizations l10n) => [
+  _Page('🃏', l10n.onb1Title, l10n.onb1Body),
+  _Page('🧮', l10n.onb2Title, l10n.onb2Body),
+  _Page('📊', l10n.onb3Title, l10n.onb3Body),
 ];
 
 /// شاشة تعريفية قصيرة تُعرض مرة واحدة عند أول فتح للتطبيق.
@@ -51,7 +40,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController _controller = PageController();
   int _index = 0;
 
+  late List<_Page> _pages;
+
   bool get _isLast => _index == _pages.length - 1;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _pages = _pagesOf(AppLocalizations.of(context));
+  }
 
   @override
   void dispose() {
@@ -84,7 +81,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           children: [
             Align(
               alignment: AlignmentDirectional.centerStart,
-              child: TextButton(onPressed: _finish, child: const Text('تخطي')),
+              child: TextButton(
+                onPressed: _finish,
+                child: Text(AppLocalizations.of(context).skip),
+              ),
             ),
             Expanded(
               child: PageView.builder(
@@ -156,7 +156,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             Padding(
               padding: const EdgeInsets.all(24),
               child: CustomButton(
-                text: _isLast ? 'ابدأ اللعب' : 'التالي',
+                text: _isLast
+                    ? AppLocalizations.of(context).startPlaying
+                    : AppLocalizations.of(context).next,
                 onPressed: _next,
               ),
             ),

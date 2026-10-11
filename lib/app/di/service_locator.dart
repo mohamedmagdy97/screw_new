@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
+import 'package:screw_calculator/core/l10n/locale_cubit.dart';
 import 'package:screw_calculator/core/theme/theme_cubit.dart';
+import 'package:screw_calculator/features/chat/data/datasources/chat_moderation_store.dart';
 import 'package:screw_calculator/features/contact_us/data/datasources/url_launcher_data_source.dart';
 import 'package:screw_calculator/features/contact_us/data/repositories/contact_repository_impl.dart';
 import 'package:screw_calculator/features/contact_us/domain/repositories/contact_repository.dart';
@@ -10,8 +12,10 @@ import 'package:screw_calculator/features/contact_us/presentation/cubit/contact_
 import 'package:screw_calculator/features/dashboard/data/datasources/dashboard_remote_data_source.dart';
 import 'package:screw_calculator/features/dashboard/data/repositories/active_game_repository_impl.dart';
 import 'package:screw_calculator/features/dashboard/data/repositories/dashboard_repository_impl.dart';
+import 'package:screw_calculator/features/dashboard/data/repositories/home_widget_last_game_publisher.dart';
 import 'package:screw_calculator/features/dashboard/domain/repositories/active_game_repository.dart';
 import 'package:screw_calculator/features/dashboard/domain/repositories/dashboard_repository.dart';
+import 'package:screw_calculator/features/dashboard/domain/repositories/last_game_publisher.dart';
 import 'package:screw_calculator/features/dashboard/domain/usecases/save_game_usecase.dart';
 import 'package:screw_calculator/features/dashboard/domain/usecases/upload_screenshot_usecase.dart';
 import 'package:screw_calculator/features/dashboard/presentation/cubit/dashboard_cubit.dart';
@@ -39,6 +43,9 @@ import 'package:screw_calculator/features/prayer/data/datasources/prayer_api_ser
 import 'package:screw_calculator/features/prayer/presentation/cubit/prayer_cubit.dart';
 import 'package:screw_calculator/features/show_video/presentation/cubit/video_cubit.dart';
 import 'package:screw_calculator/features/stats/presentation/cubit/stats_cubit.dart';
+import 'package:screw_calculator/features/tournament/data/tournament_repository_impl.dart';
+import 'package:screw_calculator/features/tournament/domain/repositories/tournament_repository.dart';
+import 'package:screw_calculator/features/tournament/presentation/cubit/tournament_cubit.dart';
 import 'package:screw_calculator/features/users_screenshoot_sharing/data/datasources/screenshot_data_source.dart';
 import 'package:screw_calculator/features/users_screenshoot_sharing/data/repositories/screenshot_repository_impl.dart';
 import 'package:screw_calculator/features/users_screenshoot_sharing/domain/repositories/screenshot_repository.dart';
@@ -63,6 +70,8 @@ Future<void> setupLocator() async {
   _registerPrayer();
   _registerHistory();
   _registerStats();
+  _registerChat();
+  _registerTournament();
   _registerContact();
   _registerNotifications();
   _registerScreenshots();
@@ -80,7 +89,9 @@ void _registerExternals() {
 
 /// تبعيات الطبقة المشتركة (core).
 void _registerCore() {
-  sl.registerLazySingleton<ThemeCubit>(ThemeCubit.new);
+  sl
+    ..registerLazySingleton<ThemeCubit>(ThemeCubit.new)
+    ..registerLazySingleton<LocaleCubit>(LocaleCubit.new);
 }
 
 /// تبعيات الشاشة الرئيسية (home).
@@ -113,12 +124,14 @@ void _registerDashboard() {
         remoteDataSource: sl(),
       ),
     )
+    ..registerLazySingleton<LastGamePublisher>(HomeWidgetLastGamePublisher.new)
     ..registerLazySingleton<ActiveGameRepository>(ActiveGameRepositoryImpl.new)
     ..registerFactory<DashboardCubit>(
       () => DashboardCubit(
         saveGameUseCase: SaveGameUseCase(sl()),
         uploadScreenshotUseCase: UploadScreenshotUseCase(sl()),
         activeGameRepository: sl(),
+        lastGamePublisher: sl(),
       ),
     );
 }
@@ -211,4 +224,18 @@ void _registerStats() {
   sl.registerFactory<StatsCubit>(
     () => StatsCubit(getGamesUseCase: GetGamesUseCase(sl())),
   );
+}
+
+/// تبعيات الشات (إشراف: حظر/إبلاغ).
+void _registerChat() {
+  sl.registerLazySingleton<ChatModerationStore>(
+    () => ChatModerationStore(firestore: sl()),
+  );
+}
+
+/// تبعيات بطولة الأصدقاء (tournament).
+void _registerTournament() {
+  sl
+    ..registerLazySingleton<TournamentRepository>(TournamentRepositoryImpl.new)
+    ..registerFactory<TournamentCubit>(() => TournamentCubit(repository: sl()));
 }

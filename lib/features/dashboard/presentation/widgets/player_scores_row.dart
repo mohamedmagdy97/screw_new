@@ -5,6 +5,7 @@ import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/features/dashboard/presentation/cubit/dashboard_cubit.dart';
 import 'package:screw_calculator/features/dashboard/presentation/widgets/score_input_dialog.dart';
+import 'package:screw_calculator/l10n/app_localizations.dart';
 
 /// صف يعرض نتائج جولات اللاعب الخمس مع أزرار الإضافة/التعديل والمجموع.
 class PlayerScoresRow extends StatelessWidget {
@@ -46,6 +47,9 @@ class _ActionButtons extends StatelessWidget {
       children: [
         if (player.gw1!.isNotEmpty)
           _IconAction(
+            semanticLabel: AppLocalizations.of(
+              context,
+            ).editScoreSemantic(player.name ?? ''),
             icon: Icons.edit,
             size: 22,
             onTap: () => showScoreInputDialog(
@@ -56,6 +60,9 @@ class _ActionButtons extends StatelessWidget {
             ),
           ),
         _IconAction(
+          semanticLabel: AppLocalizations.of(
+            context,
+          ).addScoreSemantic(player.name ?? ''),
           icon: Icons.add_circle_sharp,
           size: 24,
           onTap: () => showScoreInputDialog(
@@ -71,23 +78,30 @@ class _ActionButtons extends StatelessWidget {
 
 class _IconAction extends StatelessWidget {
   const _IconAction({
+    required this.semanticLabel,
     required this.icon,
     required this.size,
     required this.onTap,
   });
 
+  final String semanticLabel;
   final IconData icon;
   final double size;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(50),
-      child: Padding(
-        padding: const EdgeInsets.all(6),
-        child: Icon(icon, color: context.palette.accent, size: size),
+    return Semantics(
+      button: true,
+      label: semanticLabel,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(50),
+        // مساحة لمس ≥ 44 لإمكانية الوصول.
+        child: Padding(
+          padding: EdgeInsets.all((44 - size) / 2),
+          child: Icon(icon, color: context.palette.accent, size: size),
+        ),
       ),
     );
   }

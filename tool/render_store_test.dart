@@ -18,8 +18,10 @@ import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/utils/enums.dart';
 import 'package:screw_calculator/features/dashboard/domain/entities/active_game.dart';
+import 'package:screw_calculator/features/dashboard/domain/entities/last_game_summary.dart';
 import 'package:screw_calculator/features/dashboard/domain/repositories/active_game_repository.dart';
 import 'package:screw_calculator/features/dashboard/domain/repositories/dashboard_repository.dart';
+import 'package:screw_calculator/features/dashboard/domain/repositories/last_game_publisher.dart';
 import 'package:screw_calculator/features/dashboard/domain/usecases/save_game_usecase.dart';
 import 'package:screw_calculator/features/dashboard/domain/usecases/upload_screenshot_usecase.dart';
 import 'package:screw_calculator/features/dashboard/presentation/cubit/dashboard_cubit.dart';
@@ -34,6 +36,7 @@ import 'package:screw_calculator/features/home/presentation/controller/home_cont
 import 'package:screw_calculator/features/home/presentation/screens/home_screen.dart';
 import 'package:screw_calculator/features/stats/presentation/cubit/stats_cubit.dart';
 import 'package:screw_calculator/features/stats/presentation/screens/stats_screen.dart';
+import 'package:screw_calculator/l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'brand/logo_options.dart';
@@ -189,14 +192,20 @@ Future<void> _loadFont(String family, String path) async {
   await loader.load();
 }
 
+/// لغة الرندر: `STORE_LOCALE=en` للتحقق من الواجهة الإنجليزية.
+final String _locale = Platform.environment['STORE_LOCALE'] ?? 'ar';
+
 Widget _app(Widget home) {
   return ScreenUtilInit(
     designSize: const Size(414, 896),
     minTextAdapt: true,
     builder: (context, _) => Directionality(
-      textDirection: TextDirection.rtl,
+      textDirection: _locale == 'ar' ? TextDirection.rtl : TextDirection.ltr,
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
+        locale: Locale(_locale),
+        supportedLocales: AppLocalizations.supportedLocales,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
         theme: AppTheme.light,
         darkTheme: AppTheme.dark.copyWith(
           textTheme: AppTheme.dark.textTheme.apply(
@@ -350,12 +359,18 @@ Future<Uint8List> _compose(ui.Image shot, String title, String subtitle) async {
   return _pngOf(image);
 }
 
+class _NoopPublisher implements LastGamePublisher {
+  @override
+  Future<void> publish(LastGameSummary summary) async {}
+}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   final sl = GetIt.instance;
   late Directory hiveDir;
 
   setUpAll(() async {
+    // ignore: invalid_use_of_visible_for_testing_member
     SharedPreferences.setMockInitialValues(<String, Object>{});
     await _loadFont('JannaLT-Bold', 'assets/fonts/JannaLT-Bold.ttf');
     await _loadFont('JannaLT-Regular', 'assets/fonts/JannaLT-Regular.ttf');
@@ -386,6 +401,7 @@ void main() {
           saveGameUseCase: SaveGameUseCase(_DashRepo()),
           uploadScreenshotUseCase: UploadScreenshotUseCase(_DashRepo()),
           activeGameRepository: _ActiveRepo(),
+          lastGamePublisher: _NoopPublisher(),
         ),
       )
       ..registerSingleton<HomeController>(
@@ -412,7 +428,8 @@ void main() {
 
   Future<void> save(String id, ui.Image shot) async {
     // التركيب النهائي يتم في اختبار منفصل (compose) لأن toImage يحتاج zone حقيقي.
-    _writeFile('design/store/raw/$id.png', await _pngOf(shot));
+    final dir = _locale == 'ar' ? 'raw' : 'check_$_locale';
+    _writeFile('design/store/$dir/$id.png', await _pngOf(shot));
   }
 
   testWidgets('1 setup', (t) async {
@@ -500,6 +517,8 @@ void main() {
           child: Builder(
             builder: (context) => const ShareResultCard(
               palette: AppPalette.dark,
+              title: 'نتيجة اللعبة',
+              footer: 'سكرو حاسبة',
               entries: [
                 ShareResultEntry(name: 'سلمى', total: 15),
                 ShareResultEntry(name: 'علي', total: 35),

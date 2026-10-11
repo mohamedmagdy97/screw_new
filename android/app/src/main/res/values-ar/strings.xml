@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_title">سكرو حاسبة · آخر لعبة</string>
+    <string name="widget_description">يعرض الفائز والخاسر في آخر لعبة.</string>
+    <string name="widget_winner">👑 %1$s · %2$s</string>
+    <string name="widget_loser">😅 %1$s · %2$s</string>
+    <string name="widget_empty">أكمل لعبة لتظهر نتيجتها هنا.</string>
+</resources>

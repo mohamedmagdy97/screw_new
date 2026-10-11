@@ -4,6 +4,7 @@ import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/features/game_mode/presentation/screens/game_mode_screen.dart';
 import 'package:screw_calculator/features/onboarding/presentation/screens/onboarding_screen.dart';
 import 'package:screw_calculator/generated/assets.dart';
+import 'package:screw_calculator/l10n/app_localizations.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -76,7 +77,10 @@ class _SplashScreenState extends State<SplashScreen> {
               child: Image.asset(Assets.iconsIcon, height: 0.15.sh),
             ),
             SizedBox(height: 25.h),
-            const CustomText(text: 'صلي على النبي', fontSize: 16),
+            CustomText(
+              text: AppLocalizations.of(context).splashSalawat,
+              fontSize: 16,
+            ),
 
             SizedBox(height: 0.45.sh),
             const CircularProgressIndicator.adaptive(strokeWidth: 4),

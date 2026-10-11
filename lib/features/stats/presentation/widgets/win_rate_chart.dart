@@ -3,6 +3,7 @@ import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/features/stats/domain/entities/player_stats.dart';
+import 'package:screw_calculator/l10n/app_localizations.dart';
 
 /// رسم بياني أفقي لنسبة فوز كل لاعب (بدون مكتبات خارجية).
 class WinRateChart extends StatelessWidget {
@@ -19,8 +20,9 @@ class WinRateChart extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 6),
             child: Semantics(
-              label:
-                  '${p.name}: نسبة الفوز ${(p.winRate * 100).round()} بالمئة',
+              label: AppLocalizations.of(
+                context,
+              ).winRateSemantics(p.name, (p.winRate * 100).round()),
               child: Row(
                 children: [
                   SizedBox(

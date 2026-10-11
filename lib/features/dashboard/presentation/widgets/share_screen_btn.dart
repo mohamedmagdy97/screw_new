@@ -13,6 +13,7 @@ import 'package:screw_calculator/core/widgets/dox_decoration.dart';
 import 'package:screw_calculator/features/dashboard/presentation/cubit/dashboard_cubit.dart';
 import 'package:screw_calculator/features/dashboard/presentation/widgets/screenshot_preview_dialog.dart';
 import 'package:screw_calculator/features/dashboard/presentation/widgets/share_result_card.dart';
+import 'package:screw_calculator/l10n/app_localizations.dart';
 import 'package:share_plus/share_plus.dart';
 
 /// زر مشاركة لوحة النتائج: يلتقط صورة، يعرض معاينة، يرفعها، ثم يشاركها.
@@ -28,6 +29,7 @@ class ShareScreenBtn extends StatelessWidget {
 
   /// يبني قالب النتيجة الجاهز للمشاركة (لاعبون أو فرق) مرتّبًا بالأفضل أولًا.
   Widget _buildCard(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final state = cubit.state;
     final entries = state.showTeamsView && state.teams.isNotEmpty
         ? state.teams
@@ -43,23 +45,26 @@ class ShareScreenBtn extends StatelessWidget {
               .toList();
     entries.sort((a, b) => a.total.compareTo(b.total));
     return Directionality(
-      textDirection: TextDirection.rtl,
+      textDirection: Directionality.of(context),
       child: Theme(
         data: Theme.of(context),
         child: Padding(
           padding: const EdgeInsets.all(16),
-          child: ShareResultCard(entries: entries, palette: context.palette),
+          child: ShareResultCard(
+            entries: entries,
+            palette: context.palette,
+            title: l10n.shareCardTitle,
+            footer: l10n.appName,
+          ),
         ),
       ),
     );
   }
 
   Future<void> _captureAndShare(BuildContext context) async {
+    final l10n = AppLocalizations.of(context);
     if (!cubit.canShare) {
-      Utilities().showCustomSnack(
-        context,
-        txt: 'لمشاركة النتائج يجب ادخال 4 جولات على الاقل',
-      );
+      Utilities().showCustomSnack(context, txt: l10n.shareNeed4);
       return;
     }
 
@@ -88,10 +93,7 @@ class ShareScreenBtn extends StatelessWidget {
       );
 
       await SharePlus.instance.share(
-        ShareParams(
-          files: [XFile(filePath)],
-          text: '📸 شوف نتيجتي! من تطبيق سكرو حاسبة',
-        ),
+        ShareParams(files: [XFile(filePath)], text: l10n.shareText),
       );
     } catch (e) {
       debugPrint('خطأ أثناء مشاركة الصورة: $e');
@@ -111,7 +113,10 @@ class ShareScreenBtn extends StatelessWidget {
             borderRadius: AppRadii.sm,
             color: AppColors.mainColor,
           ),
-          child: const CustomText(text: '📲 مشاركة النتيجة', fontSize: 18),
+          child: CustomText(
+            text: AppLocalizations.of(context).shareResult,
+            fontSize: 18,
+          ),
         ),
       ),
     );

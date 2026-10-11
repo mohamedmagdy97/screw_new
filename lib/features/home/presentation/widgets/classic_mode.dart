@@ -12,6 +12,7 @@ import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/core/widgets/custom_text_field.dart';
 import 'package:screw_calculator/features/home/presentation/controller/home_controller.dart';
 import 'package:screw_calculator/features/home/presentation/widgets/recent_players_bar.dart';
+import 'package:screw_calculator/l10n/app_localizations.dart';
 
 class ClassicMode extends StatelessWidget {
   const ClassicMode({super.key});
@@ -23,7 +24,7 @@ class ClassicMode extends StatelessWidget {
       padding: const EdgeInsets.all(24),
       children: [
         CustomText(
-          text: 'أختر عدد الاعبيين',
+          text: AppLocalizations.of(context).chooseNumberOfPlayers,
           fontSize: 16.sp,
           textAlign: TextAlign.end,
         ),
@@ -41,46 +42,54 @@ class ClassicMode extends StatelessWidget {
                       state.data!.length,
                       (index) => Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: InkWell(
-                          borderRadius: BorderRadius.circular(12.sp),
-                          onTap: () => homeData.onSelect(index),
-                          child: Container(
-                            width: (1.sw - 120.w) / 5,
-                            height: 50,
-                            alignment: Alignment.center,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 10,
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12.sp),
-                              gradient: LinearGradient(
-                                colors: state.data![index].isActive!
-                                    ? [
-                                        context.palette.brand,
-                                        context.palette.brand.withValues(
-                                          alpha: 0.82,
-                                        ),
-                                      ]
-                                    : [Colors.transparent, Colors.transparent],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
+                        child: Semantics(
+                          button: true,
+                          selected: state.data![index].isActive,
+                          label: state.data![index].value,
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(12.sp),
+                            onTap: () => homeData.onSelect(index),
+                            child: Container(
+                              width: (1.sw - 120.w) / 5,
+                              height: 50,
+                              alignment: Alignment.center,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 10,
                               ),
-                              // color: state.data![index].isActive!
-                              //     ? AppColors.mainColor
-                              //     : null,
-                              border: Border.all(
-                                color: !state.data![index].isActive!
-                                    ? AppColors.mainColor
-                                    : Colors.transparent,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12.sp),
+                                gradient: LinearGradient(
+                                  colors: state.data![index].isActive!
+                                      ? [
+                                          context.palette.brand,
+                                          context.palette.brand.withValues(
+                                            alpha: 0.82,
+                                          ),
+                                        ]
+                                      : [
+                                          Colors.transparent,
+                                          Colors.transparent,
+                                        ],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                                // color: state.data![index].isActive!
+                                //     ? AppColors.mainColor
+                                //     : null,
+                                border: Border.all(
+                                  color: !state.data![index].isActive!
+                                      ? AppColors.mainColor
+                                      : Colors.transparent,
+                                ),
                               ),
-                            ),
-                            child: CustomText(
-                              text: state.data![index].value.toString(),
-                              fontSize: 18.sp,
-                              color: state.data![index].isActive!
-                                  ? Colors.white
-                                  : null,
+                              child: CustomText(
+                                text: state.data![index].value.toString(),
+                                fontSize: 18.sp,
+                                color: state.data![index].isActive!
+                                    ? Colors.white
+                                    : null,
+                              ),
                             ),
                           ),
                         ),
@@ -110,14 +119,16 @@ class ClassicMode extends StatelessWidget {
                   CustomTextField(
                     controller: homeData.controllers[i],
                     hintText: '',
-                    labelText: 'ادخل اسم اللاعب ${i + 1}',
+                    labelText: AppLocalizations.of(
+                      context,
+                    ).enterPlayerNameN(i + 1),
                     containtPaddingRight: 0,
                     inputType: TextInputType.text,
                     textFieldVaidType: TextFieldValidatorType.displayText,
                   ),
                 const SizedBox(height: 16),
                 CustomButton(
-                  text: 'التالي',
+                  text: AppLocalizations.of(context).next,
                   onPressed: () => homeData.goToNext(context),
                 ),
               ],

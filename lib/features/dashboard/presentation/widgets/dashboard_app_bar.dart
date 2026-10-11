@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/widgets/custom_button.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
+import 'package:screw_calculator/l10n/app_localizations.dart';
 
 /// شريط علوي للوحة النتائج مع زر إعادة بدء الجولة (مع تأكيد) وزر رجوع.
 class DashboardAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -42,7 +43,11 @@ class DashboardAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ),
       ],
-      title: CustomText(text: 'النتائج', fontSize: 22.sp, color: Colors.white),
+      title: CustomText(
+        text: AppLocalizations.of(context).results,
+        fontSize: 22.sp,
+        color: Colors.white,
+      ),
     );
   }
 
@@ -82,24 +87,30 @@ class _ResetDialog extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             CustomText(
-              text: 'تحذير',
+              text: AppLocalizations.of(context).warning,
               fontSize: 18.sp,
               color: context.palette.brand,
             ),
             const SizedBox(height: 40),
-            CustomText(text: 'هل تريد إعادة بدأ الجولة؟', fontSize: 18.sp),
+            CustomText(
+              text: AppLocalizations.of(context).confirmResetRound,
+              fontSize: 18.sp,
+            ),
             const SizedBox(height: 40),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: const CustomText(text: 'لا', fontSize: 18),
+                  child: CustomText(
+                    text: AppLocalizations.of(context).no,
+                    fontSize: 18,
+                  ),
                 ),
                 CustomButton(
                   width: 0.25.sw,
                   height: 40,
-                  text: 'نعم',
+                  text: AppLocalizations.of(context).yes,
                   isButtonBorder: true,
                   onPressed: () {
                     Navigator.pop(context);

@@ -6,7 +6,6 @@
 <!--        tools:node="remove" />-->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
-    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
     <!-- الأذونات الأساسية -->
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -22,10 +21,6 @@
 
     <!-- للصوت -->
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-
-    <!-- للخدمات -->
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
 
     <!-- لتشغيل الشاشة -->
 <!--    <uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>-->
@@ -82,6 +77,17 @@
 <!--        <meta-data-->
 <!--            android:name="com.google.android.gms.ads.APPLICATION_ID"-->
 <!--            android:value="ca-app-pub-2846618561973841~4716255614" />-->
+
+        <receiver
+            android:name=".ScrewWidgetProvider"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/screw_widget_info" />
+        </receiver>
 
         <receiver
             android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver"

@@ -17,6 +17,7 @@ import 'package:screw_calculator/features/dashboard/presentation/screens/dashboa
 import 'package:screw_calculator/features/game_mode/domain/entities/game_mode_item_entity.dart';
 import 'package:screw_calculator/features/game_mode/presentation/cubit/game_mode_cubit.dart';
 import 'package:screw_calculator/features/home/presentation/screens/home_screen.dart';
+import 'package:screw_calculator/l10n/app_localizations.dart';
 
 class GameMode extends StatefulWidget {
   const GameMode({super.key});
@@ -44,24 +45,24 @@ class _GameModeState extends State<GameMode> {
       context: context,
       barrierDismissible: false,
       builder: (ctx) => AlertDialog(
-        title: const CustomText(
-          text: 'لعبة غير مكتملة',
+        title: CustomText(
+          text: AppLocalizations.of(ctx).unfinishedGameTitle,
           fontSize: 18,
           textAlign: TextAlign.center,
         ),
-        content: const CustomText(
-          text: 'عندك لعبة لم تنتهِ، تحب تكمّلها؟',
+        content: CustomText(
+          text: AppLocalizations.of(ctx).unfinishedGameBody,
           fontSize: 16,
           textAlign: TextAlign.center,
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('بدء لعبة جديدة'),
+            child: Text(AppLocalizations.of(ctx).startNewGame),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('متابعة'),
+            child: Text(AppLocalizations.of(ctx).resume),
           ),
         ],
       ),
@@ -92,7 +93,10 @@ class _GameModeState extends State<GameMode> {
     if (currentBackPressTime == null ||
         now.difference(currentBackPressTime!) > const Duration(seconds: 2)) {
       currentBackPressTime = now;
-      Utilities().showCustomSnack(context, txt: 'للخروج اضغط مرتين ');
+      Utilities().showCustomSnack(
+        context,
+        txt: AppLocalizations.of(context).pressBackAgain,
+      );
       return;
     }
     SystemNavigator.pop();
@@ -144,7 +148,10 @@ class _GameModeView extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         automaticallyImplyLeading: false,
-        title: CustomText(text: 'سكرو حاسبة', fontSize: 22.sp),
+        title: CustomText(
+          text: AppLocalizations.of(context).appName,
+          fontSize: 22.sp,
+        ),
       ),
       bottomNavigationBar: const BottomNavigationText(),
       body: BlocBuilder<GameModeCubit, GameModeState>(
@@ -173,7 +180,7 @@ class _GameModeView extends StatelessWidget {
               padding: const EdgeInsets.all(24),
               children: [
                 CustomText(
-                  text: 'اختر وضع اللعبة',
+                  text: AppLocalizations.of(context).chooseGameMode,
                   fontSize: 16.sp,
                   textAlign: TextAlign.center,
                 ),
@@ -206,7 +213,7 @@ class _GameModeView extends StatelessWidget {
                     ),
                     const SizedBox(height: 36),
                     CustomButton(
-                      text: 'التالي',
+                      text: AppLocalizations.of(context).next,
                       onPressed: () => _handleNext(context),
                     ),
                   ],
@@ -268,7 +275,9 @@ class _GameModeView extends StatelessWidget {
             ),
             duration: const Duration(milliseconds: 300),
             child: CustomText(
-              text: gameMode.value,
+              text: gameMode.key == 0
+                  ? AppLocalizations.of(context).modeClassic
+                  : AppLocalizations.of(context).modeFriends,
               fontSize: 22,
               color: gameMode.isActive ? Colors.white : null,
             ),

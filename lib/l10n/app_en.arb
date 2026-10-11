@@ -1,0 +1,295 @@
+{
+  "@@locale": "en",
+  "appName": "Screw Calculator",
+  "next": "Next",
+  "cancel": "Cancel",
+  "yes": "Yes",
+  "no": "No",
+  "ok": "OK",
+  "skip": "Skip",
+  "close": "Close",
+  "share": "Share",
+  "chooseGameMode": "Choose game mode",
+  "modeClassic": "Classic\n ( Solo )",
+  "modeFriends": "Teams\n ( Pairs )",
+  "unfinishedGameTitle": "Unfinished game",
+  "unfinishedGameBody": "You have an unfinished game. Continue it?",
+  "startNewGame": "Start a new game",
+  "resume": "Resume",
+  "pressBackAgain": "Press back again to exit",
+  "chooseNumberOfPlayers": "Choose number of players",
+  "chooseNumberOfTeams": "Choose number of teams",
+  "enterPlayerNameN": "Enter player {n} name",
+  "@enterPlayerNameN": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "enterPlayerName": "Enter player name",
+  "teamFirst": "Team 1",
+  "teamSecond": "Team 2",
+  "teamThird": "Team 3",
+  "teamFourth": "Team 4",
+  "recentPlayers": "Recent players",
+  "results": "Results",
+  "warning": "Warning",
+  "confirmResetRound": "Do you want to restart the game?",
+  "gameOver": "Game over 🎉",
+  "winnerLabel": "👑 Winner: {names}",
+  "@winnerLabel": {
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "loserLabel": "😅 Loser: {names}",
+  "@loserLabel": {
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "andJoin": " & ",
+  "roundsFinished": "All rounds finished",
+  "roundNumber": "Round {n}",
+  "@roundNumber": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "undo": "Undo",
+  "saveHint": "You can save this game and continue it later",
+  "saveResult": "💾 Save result",
+  "resetRound": "Restart game",
+  "shareResult": "📲 Share result",
+  "shareNeed4": "Enter at least 4 rounds to share the results",
+  "shareText": "📸 Check out my result! From the Screw Calculator app",
+  "previewTitle": "📸 Image preview",
+  "teamTotal": "Total: {total}",
+  "@teamTotal": {
+    "placeholders": {
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "shareCardTitle": "Game result",
+  "scoreDialogEdit": "Edit the last score of {name}",
+  "@scoreDialogEdit": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "scoreDialogAdd": "Add {name}'s score for this round",
+  "@scoreDialogAdd": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "times2": " 2 x Calculate ",
+  "times4": " 4 x Calculate ",
+  "screwZero": " Screw (0) ",
+  "cannotEditWarning": "Careful: this score can no longer be edited",
+  "roundSaved": "Game saved",
+  "roundSaveFailed": "Could not save the game",
+  "statsTitle": "Player statistics",
+  "statsLoadError": "Could not load statistics",
+  "statsEmpty": "No statistics yet.\nFinish a game and save it from the results screen to see it here.",
+  "bestWinRate": "Best win rate",
+  "mostLosses": "Most losses",
+  "winRate": "Win rate",
+  "played": "Played",
+  "wins": "Wins",
+  "lossesLabel": "Losses",
+  "avgScore": "Avg. score",
+  "winRateSemantics": "{name}: win rate {percent} percent",
+  "@winRateSemantics": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "onb1Title": "Score your Screw games easily",
+  "onb1Body": "Pick a mode: classic solo or teams (pairs), enter the players and start.",
+  "onb2Title": "Record every round in a tap",
+  "onb2Body": "Enter each player's score, multiply by 2 or 4 when needed, and undo any mistake with the \"Undo\" button. Lowest score wins.",
+  "onb3Title": "Your game is saved, your stats are ready",
+  "onb3Body": "The current game is saved automatically so you can continue later, track win rates and share the result as a neat image.",
+  "startPlaying": "Start playing",
+  "drawerGreeting": "Welcome, friend",
+  "prayerTimes": "Prayer times",
+  "notifications": "Notifications",
+  "rules": "Game rules",
+  "history": "Previous games",
+  "statsMenu": "Player statistics",
+  "video": "How-to-play video",
+  "sharedResults": "Others' shared results",
+  "contactUs": "Suggestions & contact us",
+  "publicChat": "Public chat",
+  "blockedUsers": "Blocked users",
+  "rateUs": "⭐ Rate us",
+  "lightMode": "☀️ Light mode",
+  "darkMode": "🌙 Dark mode",
+  "language": "🌐 العربية",
+  "enterYourData": "Enter your details",
+  "firstNameHint": "First name",
+  "nameLabel": "Name",
+  "phoneLabel": "Mobile number",
+  "cityHint": "City or governorate",
+  "cityLabel": "City",
+  "ageHint": "How old are you",
+  "ageLabel": "Age",
+  "chatUnavailableTitle": "Unavailable",
+  "chatUnavailableBody": "Chat is currently unavailable",
+  "dontLetGameDistract": "🌙 Don't let the game distract you from prayer 🌙",
+  "fieldRequired": "This field is required",
+  "noSpecialChars": "Must not contain special characters",
+  "invalidPhone": "Enter a valid mobile number",
+  "nameTooShort": "Name is too short",
+  "nameTooLong": "Text is too long",
+  "textTooShort": "Text is too short",
+  "reportMessage": "Report message",
+  "blockUserN": "Block {name}",
+  "@blockUserN": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "userExistsInvalidCity": "This data is already registered. Please enter the city exactly as registered before.",
+  "userExistsPhone": "This phone number is already registered. Please enter the name and city as registered before.",
+  "userExistsName": "This name is already registered. Enter your phone number and city if you registered before, or choose another name.",
+  "historyTitle": "Previous games",
+  "historyEmpty": "No previous games",
+  "gameN": "Game {n}",
+  "@gameN": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "lowestScoreWinner": "({name}) has the lowest score",
+  "@lowestScoreWinner": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "clearAllWarning": "All records will be deleted",
+  "deleteGameWarning": "Game {n} will be deleted",
+  "@deleteGameWarning": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "contactTitle": "Contact & suggestions",
+  "contactIntro": "You can chat with us for questions and inquiries via",
+  "contactNote": "We do not sell the game, but you can message us to help improve the app and learn about our latest apps",
+  "notificationsTitle": "Notifications",
+  "notificationsEmpty": "No notifications right now",
+  "notificationHidden": " ✅ Notification hidden ",
+  "deleteNotificationQuestion": "Delete this notification?",
+  "videoTitle": "Game rules video",
+  "sharedTitle": "Shared results",
+  "today": "Today",
+  "yesterday": "Yesterday",
+  "deletedSuccessfully": "Deleted successfully ✓",
+  "allResultsShown": "All results shown",
+  "confirmDelete": "Confirm delete",
+  "confirmDeleteShare": "Are you sure you want to delete this share?",
+  "delete": "Delete",
+  "noSharesYet": "No shares yet",
+  "forceUpdateTitle": "Update required",
+  "forceUpdateBody": "Please update the app to version {version} to keep using all features.",
+  "@forceUpdateBody": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateNow": "Update now",
+  "newVersionAvailable": "A new version ({version}) is available 🎉\nTry the latest features now!",
+  "@newVersionAvailable": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "update": "Update",
+  "splashSalawat": "Send blessings upon the Prophet ﷺ",
+  "weeklyReminderOn": "🔔 Weekly game reminder: on",
+  "weeklyReminderOff": "🔕 Weekly game reminder: off",
+  "reminderTitle": "Time for a Screw game! 🃏",
+  "reminderBody": "Gather your friends for a round and score it in the app.",
+  "reminderEnabled": "Weekly reminder enabled (Fridays 8 PM)",
+  "reminderDisabled": "Weekly reminder disabled",
+  "reminderPermission": "Please enable notifications in device settings first",
+  "tournamentMenu": "🏆 Friends tournament",
+  "tournamentTitle": "Friends tournament",
+  "tournamentNameLabel": "Tournament name",
+  "tournamentPlayersLabel": "Players",
+  "tournamentPlayersHint": "Type names separated by commas (2 to 8 players)",
+  "tournamentStart": "Start tournament",
+  "tournamentInvalidPlayers": "Enter 2 to 8 players with different names",
+  "tournamentAddGame": "Add a game result",
+  "tournamentGameResultTitle": "Game {n} result",
+  "@tournamentGameResultTitle": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "tournamentSave": "Save",
+  "tournamentRemoveLast": "Remove last game",
+  "tournamentEnd": "End tournament",
+  "tournamentEndConfirm": "The tournament and its results will be deleted. Sure?",
+  "tournamentPoints": "pts",
+  "tournamentRulesNote": "In each game: lowest score gets 3 points, second 2, third 1.",
+  "tournamentGamesPlayed": "Games played: {n}",
+  "@tournamentGamesPlayed": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "tournamentInvalidScore": "Enter a valid number",
+  "addScoreSemantic": "Add score for {name}",
+  "@addScoreSemantic": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "editScoreSemantic": "Edit last score of {name}",
+  "@editScoreSemantic": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
+}

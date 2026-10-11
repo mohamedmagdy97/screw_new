@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/features/history/domain/entities/game_history_entity.dart';
+import 'package:screw_calculator/l10n/app_localizations.dart';
 
 class HistoryItem extends StatelessWidget {
   final GameHistoryEntity game;
@@ -47,13 +48,15 @@ class HistoryItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 CustomText(
-                  text: 'الجولة ${index + 1}',
+                  text: AppLocalizations.of(context).gameN(index + 1),
                   fontSize: 18,
                   fontFamily: AppFonts.bold,
                   textAlign: TextAlign.end,
                 ),
                 CustomText(
-                  text: '(${_getWinnerName()}) صاحب أقل سكور',
+                  text: AppLocalizations.of(
+                    context,
+                  ).lowestScoreWinner(_getWinnerName()),
                   fontSize: 14,
                   textAlign: TextAlign.end,
                 ),

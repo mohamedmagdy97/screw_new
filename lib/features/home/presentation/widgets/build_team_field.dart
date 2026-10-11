@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:screw_calculator/core/utils/validation_form.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/core/widgets/custom_text_field.dart';
+import 'package:screw_calculator/l10n/app_localizations.dart';
 
 class BuildTeamFields extends StatelessWidget {
   final String teamName;
@@ -25,7 +26,7 @@ class BuildTeamFields extends StatelessWidget {
           (controller) => CustomTextField(
             controller: controller,
             hintText: '',
-            labelText: 'ادخل اسم اللاعب',
+            labelText: AppLocalizations.of(context).enterPlayerName,
             containtPaddingRight: 0,
             inputType: TextInputType.text,
             textFieldVaidType: TextFieldValidatorType.displayText,

@@ -9,29 +9,29 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart' as intl;
+import 'package:screw_calculator/app/di/service_locator.dart';
 import 'package:screw_calculator/core/helpers/date_formatter.dart';
 import 'package:screw_calculator/core/helpers/device_info.dart';
-import 'package:screw_calculator/core/helpers/image_helper.dart';
 import 'package:screw_calculator/core/helpers/phone_mask_helper.dart';
 import 'package:screw_calculator/core/state/generic_cubit/generic_cubit.dart';
 import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/utils/utilities.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
+import 'package:screw_calculator/features/chat/data/datasources/chat_moderation_store.dart';
 import 'package:screw_calculator/features/chat/data/datasources/user_presence_manager.dart';
 import 'package:screw_calculator/features/chat/data/models/chat_msg_model.dart';
 import 'package:screw_calculator/features/chat/presentation/widgets/build_floating_date_header.dart';
 import 'package:screw_calculator/features/chat/presentation/widgets/build_reactions__users.dart';
-import 'package:screw_calculator/features/chat/presentation/widgets/build_status_icons.dart';
 import 'package:screw_calculator/features/chat/presentation/widgets/chat_app_bar.dart';
+import 'package:screw_calculator/features/chat/presentation/widgets/chat_message_actions.dart';
 import 'package:screw_calculator/features/chat/presentation/widgets/input_bar.dart';
+import 'package:screw_calculator/features/chat/presentation/widgets/message_bubble.dart';
 import 'package:screw_calculator/features/chat/presentation/widgets/new_msg_indicator.dart';
 import 'package:screw_calculator/features/chat/presentation/widgets/online_users_list.dart';
 import 'package:screw_calculator/features/chat/presentation/widgets/pinned_message.dart';
 import 'package:screw_calculator/features/chat/presentation/widgets/typing_indicator.dart';
 import 'package:sticky_headers/sticky_headers.dart';
-import 'package:swipe_to/swipe_to.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -56,6 +56,15 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   StreamSubscription<Object?>? _typingSub;
 
   final List<ChatMessage> _messages = [];
+
+  /// المستخدمون المحظورون (هاتف → اسم): رسائلهم مخفية على هذا الجهاز.
+  Map<String, String> _blocked = {};
+
+  Future<void> _loadBlocked() async {
+    final map = await sl<ChatModerationStore>().blockedUsers();
+    if (mounted) setState(() => _blocked = map);
+  }
+
   ChatMessage? _replyingTo;
   String? _editingId;
 
@@ -79,6 +88,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+    _loadBlocked();
     userBox = Hive.box('userBox');
     cacheBox = Hive.box('cachedMessages');
     userName = userBox.get('name')?.toString() ?? 'Anonymous';
@@ -761,6 +771,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
 
   Widget _buildMessage(ChatMessage msg, int index) {
     final msg = _messages[index];
+    if (_blocked.containsKey(msg.phoneNumber)) return const SizedBox.shrink();
     final isMe = msg.name == userName;
     final prev = index > 0 ? _messages[index - 1] : null;
 
@@ -778,224 +789,18 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     final messageKey = GlobalKey();
     _messageKeys[msg.id] = messageKey;
 
-    final Widget messageBubble = Container(
-      key: messageKey,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 400),
-        curve: Curves.easeOut,
-        margin: const EdgeInsets.symmetric(vertical: 4),
-        child: Align(
-          alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
-          child: Column(
-            children: [
-              if (msg.isDeleted)
-                Column(
-                  crossAxisAlignment: isMe
-                      ? CrossAxisAlignment.end
-                      : CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(top: 8, right: 8, left: 8),
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: context.palette.border),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: CustomText(
-                        text: 'تم حذف هذه الرسالة',
-                        fontSize: 12,
-                        color: context.palette.textSecondary,
-                        textAlign: msg.name == userName
-                            ? TextAlign.end
-                            : TextAlign.start,
-                      ),
-                    ),
-                  ],
-                ),
-
-              Column(
-                crossAxisAlignment: isMe
-                    ? CrossAxisAlignment.end
-                    : CrossAxisAlignment.start,
-                children: [
-                  if (!msg.isDeleted)
-                    IntrinsicWidth(
-                      child: Container(
-                        constraints: BoxConstraints(
-                          maxWidth: MediaQuery.of(context).size.width * 0.8,
-                        ),
-
-                        child: SwipeTo(
-                          iconColor: AppColors.white,
-                          onRightSwipe: (details) {
-                            setState(() {
-                              _replyingTo = msg;
-                            });
-                            HapticFeedback.mediumImpact();
-                          },
-                          child: GestureDetector(
-                            onLongPress: () => _showOptions(msg),
-                            onDoubleTap: () => _showReactions(msg),
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                right: 8,
-                                left: 8,
-                                top: 4,
-                              ),
-                              child: Column(
-                                crossAxisAlignment: isMe
-                                    ? CrossAxisAlignment.end
-                                    : CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                      color: isHighlighted
-                                          ? Color.alphaBlend(
-                                              context.palette.win.withValues(
-                                                alpha: 0.30,
-                                              ),
-                                              context.palette.surface,
-                                            )
-                                          : isMe
-                                          ? Color.alphaBlend(
-                                              context.palette.brand.withValues(
-                                                alpha: 0.22,
-                                              ),
-                                              context.palette.surface,
-                                            )
-                                          : context.palette.surfaceElevated,
-                                      borderRadius: BorderRadius.only(
-                                        topLeft: const Radius.circular(12),
-                                        topRight: const Radius.circular(12),
-                                        bottomLeft: Radius.circular(
-                                          isMe ? 12 : 0,
-                                        ),
-                                        bottomRight: Radius.circular(
-                                          isMe ? 0 : 12,
-                                        ),
-                                      ),
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        if (showName)
-                                          Row(
-                                            children: [
-                                              CustomText(
-                                                text: msg.name,
-                                                fontSize: 14.sp,
-                                                color: isMe
-                                                    ? AppColors.mainColor
-                                                    : AppColors.secondaryColor,
-                                                fontFamily: AppFonts.bold,
-                                              ),
-                                            ],
-                                          ),
-                                        if (msg.replyTo != null)
-                                          _replyPreview(msg),
-
-                                        Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.end,
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            if (msg.type != 'image')
-                                              Flexible(
-                                                child: CustomText(
-                                                  text: isMe
-                                                      ? msg.message
-                                                      : PhoneMaskHelper.maskPhoneNumbers(
-                                                          msg.message,
-                                                        ),
-                                                  fontSize: 14.sp,
-                                                  textAlign: TextAlign.start,
-                                                ),
-                                              ),
-                                            if (msg.type == 'image')
-                                              GestureDetector(
-                                                onTap: () =>
-                                                    ImageHelper.showFullImage(
-                                                      context,
-                                                      msg.message,
-                                                    ),
-                                                child: ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(8),
-                                                  child: Image.memory(
-                                                    base64Decode(msg.message),
-                                                    width: 0.2.sw,
-                                                    height: 0.2.sh,
-                                                    fit: BoxFit.cover,
-                                                    cacheWidth: 400,
-                                                    gaplessPlayback: true,
-                                                    errorBuilder:
-                                                        (
-                                                          context,
-                                                          error,
-                                                          stackTrace,
-                                                        ) => const Icon(
-                                                          Icons.broken_image,
-                                                        ),
-                                                  ),
-                                                ),
-                                              ),
-                                            const SizedBox(width: 8),
-                                            Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                Text(
-                                                  intl.DateFormat.jm().format(
-                                                    msg.timestamp,
-                                                  ),
-                                                  style: const TextStyle(
-                                                    fontSize: 10,
-                                                    color: AppColors.grayy2,
-                                                  ),
-                                                ),
-
-                                                BuildStatusIcons(
-                                                  msg: msg,
-                                                  isMe: isMe,
-                                                ),
-                                                if (msg.seenBy.isNotEmpty &&
-                                                    msg.name == userName)
-                                                  Row(
-                                                    children: [
-                                                      const SizedBox(width: 4),
-
-                                                      Text(
-                                                        '👁 ${msg.seenBy.length}',
-                                                        style: const TextStyle(
-                                                          fontSize: 12,
-                                                          color: AppColors
-                                                              .greenDark,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  _reactionRow(msg),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
+    final Widget messageBubble = MessageBubble(
+      bubbleKey: messageKey,
+      msg: msg,
+      isMe: isMe,
+      showName: showName,
+      isHighlighted: isHighlighted,
+      userName: userName,
+      replyPreview: msg.replyTo != null ? _replyPreview(msg) : null,
+      reactionRow: _reactionRow(msg),
+      onSwipeReply: () => setState(() => _replyingTo = msg),
+      onLongPress: () => _showOptions(msg),
+      onDoubleTap: () => _showReactions(msg),
     );
 
     if (isFirstInGroup) {
@@ -1074,101 +879,25 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     );
   }
 
-  // ---------------- OPTIONS ----------------
+  // ---------------- MODERATION / OPTIONS ----------------
+  Future<void> _reportMessage(ChatMessage msg) =>
+      reportChatMessage(context, msg, reporterPhone: userPhone ?? '');
+
+  Future<void> _blockUser(ChatMessage msg) async {
+    if (await confirmBlockChatUser(context, msg)) await _loadBlocked();
+  }
+
   void _showOptions(ChatMessage msg) {
-    showModalBottomSheet<void>(
-      context: context,
-      builder: (_) => Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ListTile(
-            leading: const Icon(Icons.push_pin),
-            title: CustomText(
-              text: 'تثبيت الرسالة',
-              fontSize: 14.sp,
-              textAlign: TextAlign.start,
-            ),
-            onTap: () {
-              FirebaseFirestore.instance.collection('chats').doc('pinned').set({
-                'text': msg.message,
-                'sender': msg.name,
-                'phone': msg.phoneNumber,
-                'id': msg.id,
-              });
-              Navigator.pop(context);
-            },
-          ),
-          if (msg.name == userName && msg.type != 'image')
-            ListTile(
-              leading: const Icon(Icons.edit),
-              title: CustomText(
-                text: 'تعديل الرسالة',
-                fontSize: 14.sp,
-                textAlign: TextAlign.start,
-              ),
-              onTap: () {
-                _setEdit(msg);
-                Navigator.pop(context);
-              },
-            ),
-
-          ListTile(
-            leading: const Icon(Icons.reply),
-            title: CustomText(
-              text: 'الرد على الرسالة',
-              fontSize: 14.sp,
-              textAlign: TextAlign.start,
-            ),
-            onTap: () {
-              setState(() => _replyingTo = msg);
-              Navigator.pop(context);
-            },
-          ),
-          if (msg.phoneNumber == userPhone ||
-              userPhone == '01149504892' ||
-              userPhone == '01556464892')
-            ListTile(
-              leading: const Icon(Icons.delete),
-              title: CustomText(
-                text: 'حذف الرسالة',
-                fontSize: 14.sp,
-                textAlign: TextAlign.start,
-              ),
-              onTap: () async {
-                Navigator.pop(context);
-
-                final confirm = await showDialog<bool>(
-                  context: context,
-                  builder: (ctx) => AlertDialog(
-                    title: const Text('Confirm Delete'),
-                    content: const Text('Do you want to delete this message?'),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(ctx, false),
-                        child: CustomText(
-                          text: 'إلغاء',
-                          fontSize: 15.sp,
-                          fontFamily: AppFonts.bold,
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () => Navigator.pop(ctx, true),
-                        child: CustomText(
-                          text: 'حذف',
-                          fontSize: 15.sp,
-                          color: AppColors.red,
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-                if (confirm == true) {
-                  _softDelete(msg);
-                }
-              },
-            ),
-        ],
-      ),
+    showChatMessageOptions(
+      context,
+      msg: msg,
+      userName: userName,
+      userPhone: userPhone,
+      onEdit: () => _setEdit(msg),
+      onReply: () => setState(() => _replyingTo = msg),
+      onDelete: () => _softDelete(msg),
+      onReport: () => _reportMessage(msg),
+      onBlock: () => _blockUser(msg),
     );
   }
 

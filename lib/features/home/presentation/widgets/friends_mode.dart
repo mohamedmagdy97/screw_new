@@ -11,6 +11,7 @@ import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/features/home/presentation/controller/home_controller.dart';
 import 'package:screw_calculator/features/home/presentation/widgets/build_team_field.dart';
 import 'package:screw_calculator/features/home/presentation/widgets/recent_players_bar.dart';
+import 'package:screw_calculator/l10n/app_localizations.dart';
 
 class FriendsMode extends StatelessWidget {
   const FriendsMode({super.key});
@@ -22,7 +23,7 @@ class FriendsMode extends StatelessWidget {
       padding: const EdgeInsets.all(24),
       children: [
         CustomText(
-          text: 'أختر عدد الفرق',
+          text: AppLocalizations.of(context).chooseNumberOfTeams,
           fontSize: 16.sp,
           textAlign: TextAlign.end,
         ),
@@ -43,47 +44,55 @@ class FriendsMode extends StatelessWidget {
                       state.data!.length,
                       (index) => Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: InkWell(
-                          borderRadius: BorderRadius.circular(12.sp),
-                          onTap: () => homeData.onSelectTeam(index),
-                          child: Container(
-                            width: (1.sw - 120.w) / 5,
-                            height: 50,
-                            alignment: Alignment.center,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 10,
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12.sp),
-                              gradient: LinearGradient(
-                                colors: state.data![index].isActive!
-                                    ? [
-                                        context.palette.brand,
-                                        context.palette.brand.withValues(
-                                          alpha: 0.82,
-                                        ),
-                                      ]
-                                    : [Colors.transparent, Colors.transparent],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
+                        child: Semantics(
+                          button: true,
+                          selected: state.data![index].isActive,
+                          label: state.data![index].value,
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(12.sp),
+                            onTap: () => homeData.onSelectTeam(index),
+                            child: Container(
+                              width: (1.sw - 120.w) / 5,
+                              height: 50,
+                              alignment: Alignment.center,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 10,
                               ),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12.sp),
+                                gradient: LinearGradient(
+                                  colors: state.data![index].isActive!
+                                      ? [
+                                          context.palette.brand,
+                                          context.palette.brand.withValues(
+                                            alpha: 0.82,
+                                          ),
+                                        ]
+                                      : [
+                                          Colors.transparent,
+                                          Colors.transparent,
+                                        ],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
 
-                              // color: state.data![index].isActive!
-                              //     ? AppColors.mainColor
-                              //     : null,
-                              border: Border.all(
-                                color: !state.data![index].isActive!
-                                    ? AppColors.mainColor
-                                    : Colors.transparent,
+                                // color: state.data![index].isActive!
+                                //     ? AppColors.mainColor
+                                //     : null,
+                                border: Border.all(
+                                  color: !state.data![index].isActive!
+                                      ? AppColors.mainColor
+                                      : Colors.transparent,
+                                ),
                               ),
-                            ),
-                            child: CustomText(
-                              text: state.data![index].value.toString(),
-                              fontSize: 18.sp,
-                              color: state.data![index].isActive!
-                                  ? Colors.white
-                                  : null,
+                              child: CustomText(
+                                text: state.data![index].value.toString(),
+                                fontSize: 18.sp,
+                                color: state.data![index].isActive!
+                                    ? Colors.white
+                                    : null,
+                              ),
                             ),
                           ),
                         ),
@@ -110,26 +119,26 @@ class FriendsMode extends StatelessWidget {
                   ]),
                 ),
                 BuildTeamFields(
-                  teamName: 'الفريق الأول',
+                  teamName: AppLocalizations.of(context).teamFirst,
                   controllers: [homeData.playerOne, homeData.playerTwo],
                 ),
                 BuildTeamFields(
-                  teamName: 'الفريق الثاني',
+                  teamName: AppLocalizations.of(context).teamSecond,
                   controllers: [homeData.playerThree, homeData.playerFour],
                 ),
                 if (activeTeams >= 3)
                   BuildTeamFields(
-                    teamName: 'الفريق الثالث',
+                    teamName: AppLocalizations.of(context).teamThird,
                     controllers: [homeData.playerFive, homeData.playerSix],
                   ),
                 if (activeTeams >= 4)
                   BuildTeamFields(
-                    teamName: 'الفريق الرابع',
+                    teamName: AppLocalizations.of(context).teamFourth,
                     controllers: [homeData.playerOne2, homeData.playerTwo2],
                   ),
                 const SizedBox(height: 16),
                 CustomButton(
-                  text: 'التالي',
+                  text: AppLocalizations.of(context).next,
                   onPressed: () => homeData.goToNextTeams(context),
                 ),
               ],

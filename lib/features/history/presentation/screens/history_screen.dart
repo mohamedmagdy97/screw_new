@@ -5,12 +5,14 @@ import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/widgets/bottom_nav_text.dart';
 import 'package:screw_calculator/core/widgets/custom_appbar.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
+import 'package:screw_calculator/core/widgets/skeleton.dart';
 import 'package:screw_calculator/features/dashboard/presentation/screens/dashboard_screen.dart';
 import 'package:screw_calculator/features/history/domain/entities/game_history_entity.dart';
 import 'package:screw_calculator/features/history/presentation/cubit/history_cubit.dart';
 import 'package:screw_calculator/features/history/presentation/widgets/clear_all_confirmation_dialog.dart';
 import 'package:screw_calculator/features/history/presentation/widgets/delete_confirmation_dialog.dart';
 import 'package:screw_calculator/features/history/presentation/widgets/history_item.dart';
+import 'package:screw_calculator/l10n/app_localizations.dart';
 
 class HistoryScreen extends StatelessWidget {
   const HistoryScreen({super.key});
@@ -70,7 +72,7 @@ class _HistoryView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        title: 'الجولات السابقة',
+        title: AppLocalizations.of(context).historyTitle,
         leading: IconButton(
           onPressed: () => _handleClearAll(context),
           icon: const Icon(Icons.delete_outline, color: AppColors.white),
@@ -80,15 +82,13 @@ class _HistoryView extends StatelessWidget {
       body: BlocBuilder<HistoryCubit, HistoryState>(
         builder: (context, state) {
           if (state is HistoryInitial || state is HistoryLoading) {
-            return const Center(
-              child: CircularProgressIndicator.adaptive(strokeWidth: 4),
-            );
+            return const SkeletonList();
           }
 
           if (state is HistoryEmpty) {
-            return const Center(
+            return Center(
               child: CustomText(
-                text: 'لا يوجد سجلات سابقة',
+                text: AppLocalizations.of(context).historyEmpty,
                 fontSize: 20,
                 textAlign: TextAlign.end,
               ),

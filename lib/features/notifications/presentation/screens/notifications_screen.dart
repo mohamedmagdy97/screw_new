@@ -4,8 +4,10 @@ import 'package:screw_calculator/app/di/service_locator.dart';
 import 'package:screw_calculator/core/widgets/bottom_nav_text.dart';
 import 'package:screw_calculator/core/widgets/custom_appbar.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
+import 'package:screw_calculator/core/widgets/skeleton.dart';
 import 'package:screw_calculator/features/notifications/presentation/cubit/notification_cubit.dart';
 import 'package:screw_calculator/features/notifications/presentation/widgets/notify_item.dart';
+import 'package:screw_calculator/l10n/app_localizations.dart';
 
 class NotificationsScreen extends StatelessWidget {
   const NotificationsScreen({super.key});
@@ -27,19 +29,22 @@ class _NotificationsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(title: 'الإشعارات'),
+      appBar: CustomAppBar(
+        title: AppLocalizations.of(context).notificationsTitle,
+      ),
       bottomNavigationBar: const BottomNavigationText(),
       body: BlocBuilder<NotificationCubit, NotificationState>(
         builder: (context, state) {
           if (state is NotificationLoading || state is NotificationInitial) {
-            return const Center(
-              child: CircularProgressIndicator.adaptive(strokeWidth: 4),
-            );
+            return const SkeletonList(itemHeight: 96);
           }
 
           if (state is NotificationEmpty) {
-            return const Center(
-              child: CustomText(text: 'لا توجد إشعارات حالياً', fontSize: 16),
+            return Center(
+              child: CustomText(
+                text: AppLocalizations.of(context).notificationsEmpty,
+                fontSize: 16,
+              ),
             );
           }
 

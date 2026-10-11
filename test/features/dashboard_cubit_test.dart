@@ -3,8 +3,10 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:screw_calculator/core/models/player_model.dart';
 import 'package:screw_calculator/features/dashboard/domain/entities/active_game.dart';
+import 'package:screw_calculator/features/dashboard/domain/entities/last_game_summary.dart';
 import 'package:screw_calculator/features/dashboard/domain/repositories/active_game_repository.dart';
 import 'package:screw_calculator/features/dashboard/domain/repositories/dashboard_repository.dart';
+import 'package:screw_calculator/features/dashboard/domain/repositories/last_game_publisher.dart';
 import 'package:screw_calculator/features/dashboard/domain/usecases/save_game_usecase.dart';
 import 'package:screw_calculator/features/dashboard/domain/usecases/upload_screenshot_usecase.dart';
 import 'package:screw_calculator/features/dashboard/presentation/cubit/dashboard_cubit.dart';
@@ -30,6 +32,11 @@ class _FakeActiveGameRepo implements ActiveGameRepository {
   Future<void> save(ActiveGame game) async => saved = game;
 }
 
+class _NoopPublisher implements LastGamePublisher {
+  @override
+  Future<void> publish(LastGameSummary summary) async {}
+}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -45,6 +52,7 @@ void main() {
       saveGameUseCase: SaveGameUseCase(repo),
       uploadScreenshotUseCase: UploadScreenshotUseCase(repo),
       activeGameRepository: active,
+      lastGamePublisher: _NoopPublisher(),
     );
     a = PlayerModel(id: 1, name: 'A');
     b = PlayerModel(id: 2, name: 'B');

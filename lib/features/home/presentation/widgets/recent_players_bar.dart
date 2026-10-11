@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
+import 'package:screw_calculator/l10n/app_localizations.dart';
 
 /// شريط اختيار سريع لأسماء اللاعبين المحفوظين.
 class RecentPlayersBar extends StatelessWidget {
@@ -26,8 +27,8 @@ class RecentPlayersBar extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const CustomText(
-                text: 'لاعبون سابقون',
+              CustomText(
+                text: AppLocalizations.of(context).recentPlayers,
                 fontSize: 14,
                 textAlign: TextAlign.start,
               ),

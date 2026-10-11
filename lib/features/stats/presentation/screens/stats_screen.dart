@@ -6,9 +6,11 @@ import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/widgets/bottom_nav_text.dart';
 import 'package:screw_calculator/core/widgets/custom_appbar.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
+import 'package:screw_calculator/core/widgets/skeleton.dart';
 import 'package:screw_calculator/features/stats/domain/entities/player_stats.dart';
 import 'package:screw_calculator/features/stats/presentation/cubit/stats_cubit.dart';
 import 'package:screw_calculator/features/stats/presentation/widgets/win_rate_chart.dart';
+import 'package:screw_calculator/l10n/app_localizations.dart';
 
 class StatsScreen extends StatelessWidget {
   const StatsScreen({super.key});
@@ -28,16 +30,19 @@ class _StatsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(title: 'إحصائيات اللاعبين'),
+      appBar: CustomAppBar(title: AppLocalizations.of(context).statsTitle),
       bottomNavigationBar: const BottomNavigationText(),
       body: BlocBuilder<StatsCubit, StatsState>(
         builder: (context, state) {
           switch (state.status) {
             case StatsStatus.loading:
-              return const Center(child: CircularProgressIndicator.adaptive());
+              return const SkeletonList(itemHeight: 110);
             case StatsStatus.error:
-              return const Center(
-                child: CustomText(text: 'تعذّر تحميل الإحصائيات', fontSize: 16),
+              return Center(
+                child: CustomText(
+                  text: AppLocalizations.of(context).statsLoadError,
+                  fontSize: 16,
+                ),
               );
             case StatsStatus.loaded:
               if (state.players.isEmpty) return const _EmptyStats();
@@ -54,12 +59,11 @@ class _EmptyStats extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.all(32),
+    return Padding(
+      padding: const EdgeInsets.all(32),
       child: Center(
         child: CustomText(
-          text:
-              'لا توجد إحصائيات بعد.\nأكمل جولة واحدة واحفظها من لوحة النتائج وستظهر هنا.',
+          text: AppLocalizations.of(context).statsEmpty,
           fontSize: 16,
           textAlign: TextAlign.center,
         ),
@@ -86,7 +90,7 @@ class _StatsBody extends StatelessWidget {
             Expanded(
               child: _Highlight(
                 emoji: '👑',
-                label: 'أعلى نسبة فوز',
+                label: AppLocalizations.of(context).bestWinRate,
                 value: best.name,
                 color: palette.win,
               ),
@@ -95,7 +99,7 @@ class _StatsBody extends StatelessWidget {
             Expanded(
               child: _Highlight(
                 emoji: '😅',
-                label: 'أكثر خسارة',
+                label: AppLocalizations.of(context).mostLosses,
                 value: worst?.name ?? '—',
                 color: palette.lose,
               ),
@@ -104,7 +108,7 @@ class _StatsBody extends StatelessWidget {
         ),
         const SizedBox(height: 20),
         _Section(
-          title: 'نسبة الفوز',
+          title: AppLocalizations.of(context).winRate,
           child: WinRateChart(players: state.players),
         ),
         const SizedBox(height: 16),
@@ -206,11 +210,20 @@ class _PlayerRow extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _Metric(label: 'لعب', value: '${stats.games}'),
-              _Metric(label: 'فوز', value: '${stats.wins}'),
-              _Metric(label: 'خسارة', value: '${stats.losses}'),
               _Metric(
-                label: 'متوسط النقاط',
+                label: AppLocalizations.of(context).played,
+                value: '${stats.games}',
+              ),
+              _Metric(
+                label: AppLocalizations.of(context).wins,
+                value: '${stats.wins}',
+              ),
+              _Metric(
+                label: AppLocalizations.of(context).lossesLabel,
+                value: '${stats.losses}',
+              ),
+              _Metric(
+                label: AppLocalizations.of(context).avgScore,
                 value: stats.averageScore.toStringAsFixed(1),
               ),
             ],

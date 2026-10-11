@@ -22,7 +22,7 @@ class DashboardState extends Equatable {
   /// إعادة البناء.
   final int revision;
   final DashboardStatus status;
-  final String? message;
+  final DashboardMessage? message;
 
   DashboardState copyWith({
     List<PlayerModel>? players,
@@ -31,7 +31,7 @@ class DashboardState extends Equatable {
     bool? marqueeVisible,
     int? revision,
     DashboardStatus? status,
-    String? message,
+    DashboardMessage? message,
   }) {
     return DashboardState(
       players: players ?? this.players,

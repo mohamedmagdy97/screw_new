@@ -6,11 +6,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:screw_calculator/core/models/player_model.dart';
 import 'package:screw_calculator/core/models/team_model_new.dart';
 import 'package:screw_calculator/features/dashboard/domain/entities/active_game.dart';
+import 'package:screw_calculator/features/dashboard/domain/entities/last_game_summary.dart';
 import 'package:screw_calculator/features/dashboard/domain/repositories/active_game_repository.dart';
+import 'package:screw_calculator/features/dashboard/domain/repositories/last_game_publisher.dart';
 import 'package:screw_calculator/features/dashboard/domain/usecases/save_game_usecase.dart';
 import 'package:screw_calculator/features/dashboard/domain/usecases/upload_screenshot_usecase.dart';
 
 part 'dashboard_state.dart';
+
+/// رسائل الحالة (تُترجم في طبقة العرض).
+enum DashboardMessage { saved, saveFailed }
 
 /// رقم الجولة المُعاد عند اكتمال كل الجولات.
 const int kGameFinishedRound = 10;
@@ -20,14 +25,17 @@ class DashboardCubit extends Cubit<DashboardState> {
     required SaveGameUseCase saveGameUseCase,
     required UploadScreenshotUseCase uploadScreenshotUseCase,
     required ActiveGameRepository activeGameRepository,
+    required LastGamePublisher lastGamePublisher,
   }) : _saveGameUseCase = saveGameUseCase,
        _activeGameRepository = activeGameRepository,
+       _lastGamePublisher = lastGamePublisher,
        _uploadScreenshotUseCase = uploadScreenshotUseCase,
        super(const DashboardState(players: [], teams: []));
 
   final SaveGameUseCase _saveGameUseCase;
   final UploadScreenshotUseCase _uploadScreenshotUseCase;
   final ActiveGameRepository _activeGameRepository;
+  final LastGamePublisher _lastGamePublisher;
 
   /// لقطات ما قبل كل إدخال لدعم التراجع (Undo) عن آخر نتيجة.
   final List<_ScoreSnapshot> _undoStack = [];
@@ -39,11 +47,17 @@ class DashboardCubit extends Cubit<DashboardState> {
   void start({
     required List<PlayerModel> players,
     required bool showTeamsView,
+    List<String> teamNames = const [
+      'الفريق الأول',
+      'الفريق الثاني',
+      'الفريق الثالث',
+      'الفريق الرابع',
+    ],
   }) {
     emit(
       state.copyWith(
         players: players,
-        teams: showTeamsView ? _buildTeams(players) : const [],
+        teams: showTeamsView ? _buildTeams(players, teamNames) : const [],
         showTeamsView: showTeamsView,
       ),
     );
@@ -77,23 +91,15 @@ class DashboardCubit extends Cubit<DashboardState> {
     }
   }
 
-  List<Team> _buildTeams(List<PlayerModel> players) {
+  List<Team> _buildTeams(List<PlayerModel> players, List<String> names) {
     if (players.length < 4) return const [];
     return [
-      Team(name: 'الفريق الأول', playerOne: players[0], playerTwo: players[1]),
-      Team(name: 'الفريق الثاني', playerOne: players[2], playerTwo: players[3]),
+      Team(name: names[0], playerOne: players[0], playerTwo: players[1]),
+      Team(name: names[1], playerOne: players[2], playerTwo: players[3]),
       if (players.length > 4)
-        Team(
-          name: 'الفريق الثالث',
-          playerOne: players[4],
-          playerTwo: players[5],
-        ),
+        Team(name: names[2], playerOne: players[4], playerTwo: players[5]),
       if (players.length > 6)
-        Team(
-          name: 'الفريق الرابع',
-          playerOne: players[6],
-          playerTwo: players[7],
-        ),
+        Team(name: names[3], playerOne: players[6], playerTwo: players[7]),
     ];
   }
 
@@ -108,6 +114,26 @@ class DashboardCubit extends Cubit<DashboardState> {
     HapticFeedback.lightImpact();
     emit(state.copyWith(revision: state.revision + 1));
     _persist();
+    if (isFinished) _publishLastGame();
+  }
+
+  /// ينشر الفائز والخاسر إلى ويدجت الشاشة الرئيسية عند انتهاء اللعبة.
+  void _publishLastGame() {
+    final best = winnerTotal;
+    final worst = loserTotal;
+    if (best == null || worst == null) return;
+    String names(int total) => state.players
+        .where((p) => (int.tryParse(p.total ?? '') ?? -1) == total)
+        .map((p) => p.name ?? '')
+        .join(', ');
+    _lastGamePublisher.publish(
+      LastGameSummary(
+        winners: names(best),
+        winnerTotal: best,
+        losers: names(worst),
+        loserTotal: worst,
+      ),
+    );
   }
 
   void hideMarquee() => emit(state.copyWith(marqueeVisible: false));
@@ -129,13 +155,16 @@ class DashboardCubit extends Cubit<DashboardState> {
       await _saveGameUseCase(state.players);
       await _activeGameRepository.clear();
       emit(
-        state.copyWith(status: DashboardStatus.saved, message: 'تم حفظ الجولة'),
+        state.copyWith(
+          status: DashboardStatus.saved,
+          message: DashboardMessage.saved,
+        ),
       );
     } catch (_) {
       emit(
         state.copyWith(
           status: DashboardStatus.saveError,
-          message: 'تعذّر حفظ الجولة',
+          message: DashboardMessage.saveFailed,
         ),
       );
     } finally {

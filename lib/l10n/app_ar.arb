@@ -1,0 +1,295 @@
+{
+  "@@locale": "ar",
+  "appName": "سكرو حاسبة",
+  "next": "التالي",
+  "cancel": "إلغاء",
+  "yes": "نعم",
+  "no": "لا",
+  "ok": "تمام",
+  "skip": "تخطي",
+  "close": "إغلاق",
+  "share": "مشاركة",
+  "chooseGameMode": "اختر وضع اللعبة",
+  "modeClassic": "كلاسيك\n ( فردي )",
+  "modeFriends": "صاحب صاحبه\n ( زوجي )",
+  "unfinishedGameTitle": "لعبة غير مكتملة",
+  "unfinishedGameBody": "عندك لعبة لم تنتهِ، تحب تكمّلها؟",
+  "startNewGame": "بدء لعبة جديدة",
+  "resume": "متابعة",
+  "pressBackAgain": "للخروج اضغط مرتين",
+  "chooseNumberOfPlayers": "أختر عدد الاعبيين",
+  "chooseNumberOfTeams": "أختر عدد الفرق",
+  "enterPlayerNameN": "ادخل اسم اللاعب {n}",
+  "@enterPlayerNameN": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "enterPlayerName": "ادخل اسم اللاعب",
+  "teamFirst": "الفريق الأول",
+  "teamSecond": "الفريق الثاني",
+  "teamThird": "الفريق الثالث",
+  "teamFourth": "الفريق الرابع",
+  "recentPlayers": "لاعبون سابقون",
+  "results": "النتائج",
+  "warning": "تحذير",
+  "confirmResetRound": "هل تريد إعادة بدأ الجولة؟",
+  "gameOver": "انتهت اللعبة 🎉",
+  "winnerLabel": "👑 الفائز: {names}",
+  "@winnerLabel": {
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "loserLabel": "😅 الخاسر: {names}",
+  "@loserLabel": {
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "andJoin": " و ",
+  "roundsFinished": "انتهت الجولات",
+  "roundNumber": "الجولة رقم {n}",
+  "@roundNumber": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "undo": "تراجع",
+  "saveHint": "الان يمكنك حفظ الجولة واستكمالها لاحقا",
+  "saveResult": "💾 حفظ النتيجة",
+  "resetRound": "اعادة بدأ الجولة",
+  "shareResult": "📲 مشاركة النتيجة",
+  "shareNeed4": "لمشاركة النتائج يجب ادخال 4 جولات على الاقل",
+  "shareText": "📸 شوف نتيجتي! من تطبيق سكرو حاسبة",
+  "previewTitle": "📸 معاينة الصورة",
+  "teamTotal": "المجموع: {total}",
+  "@teamTotal": {
+    "placeholders": {
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "shareCardTitle": "نتيجة اللعبة",
+  "scoreDialogEdit": "تعديل نتيجة الاعب {name} المضافة أخيراً",
+  "@scoreDialogEdit": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "scoreDialogAdd": "إضافة نتيجة الاعب {name} في الجولة",
+  "@scoreDialogAdd": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "times2": " 2 x احسب النتيجة ",
+  "times4": " 4 x احسب النتيجة ",
+  "screwZero": " سكرو (0) ",
+  "cannotEditWarning": "انتبه لا يمكن التعديل على النتيجة",
+  "roundSaved": "تم حفظ الجولة",
+  "roundSaveFailed": "تعذّر حفظ الجولة",
+  "statsTitle": "إحصائيات اللاعبين",
+  "statsLoadError": "تعذّر تحميل الإحصائيات",
+  "statsEmpty": "لا توجد إحصائيات بعد.\nأكمل جولة واحدة واحفظها من لوحة النتائج وستظهر هنا.",
+  "bestWinRate": "أعلى نسبة فوز",
+  "mostLosses": "أكثر خسارة",
+  "winRate": "نسبة الفوز",
+  "played": "لعب",
+  "wins": "فوز",
+  "lossesLabel": "خسارة",
+  "avgScore": "متوسط النقاط",
+  "winRateSemantics": "{name}: نسبة الفوز {percent} بالمئة",
+  "@winRateSemantics": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "onb1Title": "احسب نقاط سكرو بسهولة",
+  "onb1Body": "اختر وضع اللعب: فردي كلاسيك أو فرق (زوجي)، واكتب أسماء اللاعبين وابدأ.",
+  "onb2Title": "سجّل كل جولة بلمسة",
+  "onb2Body": "أدخل نتيجة كل لاعب، واضرب في 2 أو 4 عند الحاجة، وتراجع عن أي خطأ بزر \"تراجع\". الأقل نقاطًا يفوز.",
+  "onb3Title": "لعبتك محفوظة وإحصائياتك جاهزة",
+  "onb3Body": "تُحفظ اللعبة الجارية تلقائيًا لتكمّلها لاحقًا، وتتابع نسب الفوز، وتشارك النتيجة كصورة أنيقة.",
+  "startPlaying": "ابدأ اللعب",
+  "drawerGreeting": "آهلا بيك يا صديقي",
+  "prayerTimes": "مواقيت الصلاة",
+  "notifications": "الاشعارات",
+  "rules": "قوانين اللعبة",
+  "history": "الجولات السابقة",
+  "statsMenu": "إحصائيات اللاعبين",
+  "video": "فيديو شرح اللعبة",
+  "sharedResults": "مشاركات نتائج الاخرين",
+  "contactUs": "للاقتراحات والتواصل معنا",
+  "publicChat": "محادثة عامة",
+  "blockedUsers": "المستخدمون المحظورون",
+  "rateUs": "⭐ قيمنا",
+  "lightMode": "☀️ الوضع الفاتح",
+  "darkMode": "🌙 الوضع الداكن",
+  "language": "🌐 English",
+  "enterYourData": "ادخل بياناتك",
+  "firstNameHint": "الاسم الاول",
+  "nameLabel": "الاسم",
+  "phoneLabel": "رقم الموبايل",
+  "cityHint": "اسم المدينة أو المحافظة",
+  "cityLabel": "المدينة",
+  "ageHint": "عندك كام سنة",
+  "ageLabel": "العمر",
+  "chatUnavailableTitle": "غير متاح",
+  "chatUnavailableBody": "الدخول للشات غير متاح حاليًا",
+  "dontLetGameDistract": "🌙 لا تجعل اللعبة تلهيك عن الصلاة 🌙",
+  "fieldRequired": "هذا الحقل مطلوب",
+  "noSpecialChars": "لا يجب ان يحتوي علي حروف خاصة",
+  "invalidPhone": "يجب ان يكون رقم موبايل صحيح",
+  "nameTooShort": "عدد الحروف الاسم قصيرة",
+  "nameTooLong": "عدد حروف الكلمه كبيرة",
+  "textTooShort": "عدد حروف الكلمه قصيرة",
+  "reportMessage": "إبلاغ عن الرسالة",
+  "blockUserN": "حظر {name}",
+  "@blockUserN": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "userExistsInvalidCity": "هذه البيانات مسجلة بالفعل، يرجى إدخال المدينة كما كانت مسجلة سابقًا",
+  "userExistsPhone": "رقم الهاتف مسجل بالفعل، يرجى إدخال الأسم والمدينة كما كانت مسجلة سابقًا",
+  "userExistsName": "الاسم مسجل بالفعل، يرجى إدخال رقم الهاتف والمدينة لو كانت مسجلة مسبقًا او ادخل اسم اخر",
+  "historyTitle": "الجولات السابقة",
+  "historyEmpty": "لا يوجد سجلات سابقة",
+  "gameN": "الجولة {n}",
+  "@gameN": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "lowestScoreWinner": "({name}) صاحب أقل سكور",
+  "@lowestScoreWinner": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "clearAllWarning": "سيتم حذف جميع السجلات",
+  "deleteGameWarning": "سيتم حذف الجولة رقم {n}",
+  "@deleteGameWarning": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "contactTitle": "للتواصل وتقديم الاقتراحات",
+  "contactIntro": "يمكنك محادثتنا للأسئلة والاستفسارات من خلال",
+  "contactNote": "نحن لا نبيع اللعبة ولكن يمكنك الارسال لمساعدتنا بتحسين التطبيق ومعرفة اخر التطبيقات",
+  "notificationsTitle": "الإشعارات",
+  "notificationsEmpty": "لا توجد إشعارات حالياً",
+  "notificationHidden": " ✅ تم اخفاء الاشعار ",
+  "deleteNotificationQuestion": "! هل تريد حذف الاشعار",
+  "videoTitle": "شرح قواعد اللعبة",
+  "sharedTitle": "مشاركات الاخرين",
+  "today": "اليوم",
+  "yesterday": "الأمس",
+  "deletedSuccessfully": "تم الحذف بنجاح ✓",
+  "allResultsShown": "تم عرض جميع النتائج",
+  "confirmDelete": "تأكيد الحذف",
+  "confirmDeleteShare": "هل أنت متأكد أنك تريد حذف هذه المشاركة؟",
+  "delete": "حذف",
+  "noSharesYet": "لا توجد مشاركات حالياً",
+  "forceUpdateTitle": "تحديث إجباري",
+  "forceUpdateBody": "يرجى تحديث التطبيق للإصدار {version} للاستمرار في استخدام جميع المميزات.",
+  "@forceUpdateBody": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateNow": "تحديث الآن",
+  "newVersionAvailable": "إصدار جديد ({version}) متاح 🎉\nجرّب أحدث المميزات الآن!",
+  "@newVersionAvailable": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "update": "تحديث",
+  "splashSalawat": "صلي على النبي",
+  "weeklyReminderOn": "🔔 تذكير أسبوعي بلعبة: مفعّل",
+  "weeklyReminderOff": "🔕 تذكير أسبوعي بلعبة: متوقف",
+  "reminderTitle": "وقت لعبة سكرو! 🃏",
+  "reminderBody": "اجمع أصحابك والعبوا جولة وسجّلوا النتيجة في التطبيق.",
+  "reminderEnabled": "تم تفعيل التذكير الأسبوعي (الجمعة 8 مساءً)",
+  "reminderDisabled": "تم إيقاف التذكير الأسبوعي",
+  "reminderPermission": "فعّل صلاحية الإشعارات من إعدادات الجهاز أولًا",
+  "tournamentMenu": "🏆 بطولة الأصدقاء",
+  "tournamentTitle": "بطولة الأصدقاء",
+  "tournamentNameLabel": "اسم البطولة",
+  "tournamentPlayersLabel": "اللاعبون",
+  "tournamentPlayersHint": "اكتب الأسماء مفصولة بفاصلة (من 2 إلى 8 لاعبين)",
+  "tournamentStart": "ابدأ البطولة",
+  "tournamentInvalidPlayers": "أدخل من 2 إلى 8 لاعبين بأسماء مختلفة",
+  "tournamentAddGame": "إضافة نتيجة لعبة",
+  "tournamentGameResultTitle": "نتيجة اللعبة {n}",
+  "@tournamentGameResultTitle": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "tournamentSave": "حفظ",
+  "tournamentRemoveLast": "حذف آخر لعبة",
+  "tournamentEnd": "إنهاء البطولة",
+  "tournamentEndConfirm": "سيتم حذف البطولة ونتائجها. متأكد؟",
+  "tournamentPoints": "نقطة",
+  "tournamentRulesNote": "في كل لعبة: الأقل نقاطًا 3 نقاط، والثاني 2، والثالث 1.",
+  "tournamentGamesPlayed": "عدد الألعاب: {n}",
+  "@tournamentGamesPlayed": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "tournamentInvalidScore": "أدخل رقمًا صحيحًا",
+  "addScoreSemantic": "إضافة نتيجة {name}",
+  "@addScoreSemantic": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "editScoreSemantic": "تعديل آخر نتيجة {name}",
+  "@editScoreSemantic": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
+}

@@ -39,6 +39,13 @@ service cloud.firestore {
       allow read, write: if true;
     }
 
+    // بلاغات الشات: إنشاء فقط من التطبيق، وتُقرأ من لوحة Firebase.
+    match /reports/{id} {
+      allow create: if request.resource.data.keys().hasAll(['messageId', 'reportedPhone'])
+                    && request.resource.data.messageId is string;
+      allow read, update, delete: if false;
+    }
+
     // أي مسار آخر مغلق.
     match /{other=**} {
       allow read, write: if false;

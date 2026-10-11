@@ -10,6 +10,7 @@ import 'package:screw_calculator/features/home/presentation/controller/home_cont
 import 'package:screw_calculator/features/home/presentation/widgets/classic_mode.dart';
 import 'package:screw_calculator/features/home/presentation/widgets/drawer_widget.dart';
 import 'package:screw_calculator/features/home/presentation/widgets/friends_mode.dart';
+import 'package:screw_calculator/l10n/app_localizations.dart';
 
 class HomeScreen extends StatefulWidget {
   final int index;
@@ -50,7 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           title: CustomText(
-            text: 'سكرو حاسبة',
+            text: AppLocalizations.of(context).appName,
             fontSize: 22.sp,
             color: Colors.white,
           ),

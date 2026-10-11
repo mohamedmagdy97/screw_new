@@ -4,7 +4,7 @@ description: "A new Flutter project."
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 2.0.3+13
+version: 2.1.0+14
 
 environment:
   sdk: ^3.9.0
@@ -12,6 +12,8 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   flutter:
+    sdk: flutter
+  flutter_localizations:
     sdk: flutter
 
 
@@ -82,6 +84,7 @@ dependencies:
   flutter_local_notifications: ^19.4.2
   http: ^1.6.0
   uuid: ^4.6.0
+  home_widget: ^0.10.0
 
 
 
@@ -97,6 +100,7 @@ dev_dependencies:
 #  image_path: "assets/icons/icon.png"
 # # flutter pub run flutter_launcher_icons:main
 flutter:
+  generate: true
 
   uses-material-design: true
 

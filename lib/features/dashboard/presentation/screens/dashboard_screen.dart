@@ -17,6 +17,7 @@ import 'package:screw_calculator/features/dashboard/presentation/widgets/marquee
 import 'package:screw_calculator/features/dashboard/presentation/widgets/player_card.dart';
 import 'package:screw_calculator/features/dashboard/presentation/widgets/share_screen_btn.dart';
 import 'package:screw_calculator/features/dashboard/presentation/widgets/team_card.dart';
+import 'package:screw_calculator/l10n/app_localizations.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({
@@ -35,9 +36,17 @@ class DashboardScreen extends StatelessWidget {
     final bool showTeamsView =
         ModeClass.mode == GameModeEnum.friendly && !fromHistory;
     return BlocProvider<DashboardCubit>(
-      create: (_) =>
-          sl<DashboardCubit>()
-            ..start(players: players, showTeamsView: showTeamsView),
+      create: (_) => sl<DashboardCubit>()
+        ..start(
+          players: players,
+          showTeamsView: showTeamsView,
+          teamNames: [
+            AppLocalizations.of(context).teamFirst,
+            AppLocalizations.of(context).teamSecond,
+            AppLocalizations.of(context).teamThird,
+            AppLocalizations.of(context).teamFourth,
+          ],
+        ),
       child: _DashboardView(fromHistory: fromHistory),
     );
   }
@@ -74,18 +83,18 @@ class _DashboardViewState extends State<_DashboardView> {
     final winners = cubit.state.players
         .where((p) => (int.tryParse(p.total ?? '') ?? -1) == cubit.winnerTotal)
         .map((p) => p.name ?? '')
-        .join(' و ');
+        .join(AppLocalizations.of(context).andJoin);
     final losers = cubit.state.players
         .where((p) => (int.tryParse(p.total ?? '') ?? -1) == cubit.loserTotal)
         .map((p) => p.name ?? '')
-        .join(' و ');
+        .join(AppLocalizations.of(context).andJoin);
     showDialog<void>(
       context: context,
       builder: (ctx) {
         final palette = ctx.palette;
         return AlertDialog(
-          title: const CustomText(
-            text: 'انتهت اللعبة 🎉',
+          title: CustomText(
+            text: AppLocalizations.of(ctx).gameOver,
             fontSize: 20,
             textAlign: TextAlign.center,
           ),
@@ -93,13 +102,13 @@ class _DashboardViewState extends State<_DashboardView> {
             mainAxisSize: MainAxisSize.min,
             children: [
               CustomText(
-                text: '👑 الفائز: $winners',
+                text: AppLocalizations.of(ctx).winnerLabel(winners),
                 fontSize: 18,
                 color: palette.win,
               ),
               const SizedBox(height: 8),
               CustomText(
-                text: '😅 الخاسر: $losers',
+                text: AppLocalizations.of(ctx).loserLabel(losers),
                 fontSize: 16,
                 color: palette.lose,
               ),
@@ -108,7 +117,7 @@ class _DashboardViewState extends State<_DashboardView> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: const Text('تمام'),
+              child: Text(AppLocalizations.of(ctx).ok),
             ),
           ],
         );
@@ -121,8 +130,16 @@ class _DashboardViewState extends State<_DashboardView> {
     return BlocConsumer<DashboardCubit, DashboardState>(
       listenWhen: (a, b) => a.status != b.status && b.message != null,
       listener: (context, state) {
-        if (state.message != null) {
-          Utilities().showCustomSnack(context, txt: state.message);
+        final l10n = AppLocalizations.of(context);
+        final message = state.message;
+        if (message != null) {
+          Utilities().showCustomSnack(
+            context,
+            txt: switch (message) {
+              DashboardMessage.saved => l10n.roundSaved,
+              DashboardMessage.saveFailed => l10n.roundSaveFailed,
+            },
+          );
         }
       },
       builder: (context, state) {
@@ -158,7 +175,7 @@ class _DashboardViewState extends State<_DashboardView> {
                     alignment: Alignment.center,
                     children: [
                       Directionality(
-                        textDirection: TextDirection.rtl,
+                        textDirection: Directionality.of(context),
                         child: Column(
                           children: [
                             Row(
@@ -166,8 +183,12 @@ class _DashboardViewState extends State<_DashboardView> {
                               children: [
                                 CustomText(
                                   text: round == kGameFinishedRound
-                                      ? 'انتهت الجولات'
-                                      : 'الجولة رقم $round',
+                                      ? AppLocalizations.of(
+                                          context,
+                                        ).roundsFinished
+                                      : AppLocalizations.of(
+                                          context,
+                                        ).roundNumber(round),
                                   color: context.palette.brandSoft,
                                   fontSize: 18,
                                 ),
@@ -181,7 +202,9 @@ class _DashboardViewState extends State<_DashboardView> {
                                           ? cubit.undo
                                           : null,
                                       icon: const Icon(Icons.undo, size: 18),
-                                      label: const Text('تراجع'),
+                                      label: Text(
+                                        AppLocalizations.of(context).undo,
+                                      ),
                                     ),
                                   ),
                               ],
@@ -298,14 +321,17 @@ class _SaveSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const CustomText(
-          text: 'الان يمكنك حفظ الجولة واستكمالها لاحقا',
+        CustomText(
+          text: AppLocalizations.of(context).saveHint,
           fontSize: 14,
           color: Colors.red,
         ),
         Padding(
           padding: const EdgeInsets.only(bottom: 4, top: 2),
-          child: CustomButton(text: '💾 حفظ النتيجة', onPressed: onSave),
+          child: CustomButton(
+            text: AppLocalizations.of(context).saveResult,
+            onPressed: onSave,
+          ),
         ),
         const SizedBox(height: 12),
       ],
@@ -322,7 +348,10 @@ class _ResetSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
-      child: CustomButton(text: 'اعادة بدأ الجولة', onPressed: onReset),
+      child: CustomButton(
+        text: AppLocalizations.of(context).resetRound,
+        onPressed: onReset,
+      ),
     );
   }
 }

@@ -6,6 +6,7 @@ import 'package:screw_calculator/app/di/service_locator.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/features/show_video/presentation/cubit/video_cubit.dart';
+import 'package:screw_calculator/l10n/app_localizations.dart';
 
 class YoutubeLikePlayer extends StatelessWidget {
   const YoutubeLikePlayer({super.key});
@@ -28,7 +29,10 @@ class _ShowVideoView extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         automaticallyImplyLeading: false,
-        title: CustomText(text: 'شرح قواعد اللعبة', fontSize: 22.sp),
+        title: CustomText(
+          text: AppLocalizations.of(context).videoTitle,
+          fontSize: 22.sp,
+        ),
         actions: [
           IconButton(
             onPressed: () => Navigator.pop(context),

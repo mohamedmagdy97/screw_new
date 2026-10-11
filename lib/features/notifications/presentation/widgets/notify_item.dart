@@ -7,6 +7,7 @@ import 'package:screw_calculator/core/widgets/custom_button.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/features/contact_us/presentation/screens/contact_us_screen.dart';
 import 'package:screw_calculator/features/notifications/domain/entities/notification_entity.dart';
+import 'package:screw_calculator/l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class NotificationsItem extends StatelessWidget {
@@ -73,7 +74,10 @@ class NotificationsItem extends StatelessWidget {
         ),
         confirmDismiss: (direction) async {
           if (direction == DismissDirection.endToStart) {
-            Utilities().showCustomSnack(context, txt: ' ✅ تم اخفاء الاشعار ');
+            Utilities().showCustomSnack(
+              context,
+              txt: AppLocalizations.of(context).notificationHidden,
+            );
             return true;
           } else {
             return await showGeneralDialog(
@@ -105,13 +109,15 @@ class NotificationsItem extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             CustomText(
-                              text: 'تحذير',
+                              text: AppLocalizations.of(context).warning,
                               fontSize: 18.sp,
                               color: AppColors.mainColor,
                             ),
                             const SizedBox(height: 40),
                             CustomText(
-                              text: '! هل تريد حذف الاشعار',
+                              text: AppLocalizations.of(
+                                context,
+                              ).deleteNotificationQuestion,
                               fontSize: 18.sp,
                             ),
                             const SizedBox(height: 40),
@@ -120,15 +126,15 @@ class NotificationsItem extends StatelessWidget {
                               children: [
                                 TextButton(
                                   onPressed: () => Navigator.of(ctx).pop(false),
-                                  child: const CustomText(
-                                    text: 'لا',
+                                  child: CustomText(
+                                    text: AppLocalizations.of(context).no,
                                     fontSize: 18,
                                   ),
                                 ),
                                 CustomButton(
                                   width: 0.25.sw,
                                   height: 40,
-                                  text: 'نعم',
+                                  text: AppLocalizations.of(context).yes,
                                   isButtonBorder: true,
                                   onPressed: () {
                                     Navigator.of(ctx).pop(true);

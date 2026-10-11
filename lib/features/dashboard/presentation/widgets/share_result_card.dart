@@ -20,13 +20,15 @@ class ShareResultCard extends StatelessWidget {
     super.key,
     required this.entries,
     required this.palette,
-    this.title = 'نتيجة اللعبة',
+    required this.title,
+    required this.footer,
   });
 
   /// مرتّبة تصاعديًا: الأقل مجموعًا (الفائز) أولًا.
   final List<ShareResultEntry> entries;
   final AppPalette palette;
   final String title;
+  final String footer;
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +62,7 @@ class ShareResultCard extends StatelessWidget {
             ),
           const SizedBox(height: 12),
           Text(
-            'سكرو حاسبة',
+            footer,
             style: TextStyle(
               color: Colors.white.withValues(alpha: 0.85),
               fontSize: 14,

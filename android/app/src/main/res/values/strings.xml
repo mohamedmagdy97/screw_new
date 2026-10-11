@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_title">Screw Calculator · Last game</string>
+    <string name="widget_description">Shows the winner and loser of your last game.</string>
+    <string name="widget_winner">👑 %1$s · %2$s</string>
+    <string name="widget_loser">😅 %1$s · %2$s</string>
+    <string name="widget_empty">Finish a game to see the result here.</string>
+</resources>

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/widgets/custom_button.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
+import 'package:screw_calculator/l10n/app_localizations.dart';
 
 class ScreenshotPreviewDialog extends StatelessWidget {
   final Uint8List imageBytes;
@@ -28,8 +29,8 @@ class ScreenshotPreviewDialog extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const CustomText(
-              text: '📸 معاينة الصورة',
+            CustomText(
+              text: AppLocalizations.of(context).previewTitle,
               fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
@@ -52,7 +53,7 @@ class ScreenshotPreviewDialog extends StatelessWidget {
               children: [
                 Expanded(
                   child: CustomButton(
-                    text: 'إلغاء',
+                    text: AppLocalizations.of(context).cancel,
                     onPressed: () => Navigator.pop(context),
                     color: Colors.grey,
                   ),
@@ -60,7 +61,7 @@ class ScreenshotPreviewDialog extends StatelessWidget {
                 const SizedBox(width: 8),
                 Expanded(
                   child: CustomButton(
-                    text: 'مشاركة',
+                    text: AppLocalizations.of(context).share,
                     onPressed: () {
                       onShare();
                       Navigator.pop(context, true);

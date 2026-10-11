@@ -121,6 +121,54 @@ class NotificationService {
     }
   }
 
+  static const int _weeklyReminderId = 7001;
+
+  /// يجدول تذكيرًا أسبوعيًا بلعبة (اختياري). يستخدم جدولة غير دقيقة حتى لا
+  /// يحتاج صلاحية المنبّهات الدقيقة.
+  static Future<bool> scheduleWeeklyGameReminder({
+    required String title,
+    required String body,
+    int weekday = DateTime.friday,
+    int hour = 20,
+  }) async {
+    try {
+      await init();
+      if (!await Permission.notification.isGranted) return false;
+
+      final now = tz.TZDateTime.now(tz.local);
+      var next = tz.TZDateTime(tz.local, now.year, now.month, now.day, hour);
+      while (next.weekday != weekday || next.isBefore(now)) {
+        next = next.add(const Duration(days: 1));
+      }
+
+      await _notifications.zonedSchedule(
+        _weeklyReminderId,
+        title,
+        body,
+        next,
+        const NotificationDetails(
+          android: AndroidNotificationDetails(
+            'game_reminder_channel',
+            'Game reminders',
+            channelDescription: 'تذكير أسبوعي بلعبة',
+            icon: '@mipmap/ic_launcher',
+          ),
+          iOS: DarwinNotificationDetails(),
+        ),
+        androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+        matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
+        payload: 'weekly_game_reminder',
+      );
+      return true;
+    } catch (e) {
+      debugPrint('❌ Error scheduling weekly reminder: $e');
+      return false;
+    }
+  }
+
+  static Future<void> cancelWeeklyGameReminder() =>
+      _notifications.cancel(_weeklyReminderId);
+
   // طلب الأذونات
   static Future<bool> requestNotificationPermission() async {
     try {

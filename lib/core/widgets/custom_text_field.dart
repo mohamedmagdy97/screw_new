@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/utils/validation_form.dart';
+import 'package:screw_calculator/l10n/app_localizations.dart';
 
 // ignore: must_be_immutable
 class CustomTextField extends StatefulWidget {
@@ -75,7 +76,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
       child: Theme(
         data: Theme.of(context).copyWith(hintColor: palette.textSecondary),
         child: Directionality(
-          textDirection: TextDirection.rtl,
+          textDirection: Directionality.of(context),
           child: TextFormField(
             autovalidateMode: AutovalidateMode.onUserInteraction,
             cursorColor: palette.brand,
@@ -84,7 +85,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
             maxLength: widget.maxLength,
             maxLines: widget.maxLines,
             // textAlign: TextAlign.end,
-            textDirection: TextDirection.rtl,
+            textDirection: Directionality.of(context),
             keyboardType: widget.inputType,
             obscureText: widget.obscureText,
             inputFormatters: widget.inputType == TextInputType.phone
@@ -96,6 +97,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
             obscuringCharacter: '*',
             readOnly: widget.isDisable,
             validator: (String? v) => validation(
+              l10n: AppLocalizations.of(context),
               type: widget.textFieldVaidType!,
               value: v!,
               firstPasswordForConfirm: '',

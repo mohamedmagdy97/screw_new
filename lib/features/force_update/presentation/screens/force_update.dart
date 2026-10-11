@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
+import 'package:screw_calculator/l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ForceUpdateWrapper extends StatefulWidget {
@@ -140,16 +141,16 @@ class _ForceUpdateWrapperState extends State<ForceUpdateWrapper>
                         color: AppColors.mainColor,
                       ),
                       const SizedBox(height: 16),
-                      const CustomText(
-                        text: 'تحديث إجباري',
+                      CustomText(
+                        text: AppLocalizations.of(context).forceUpdateTitle,
                         fontSize: 22,
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 12),
                       CustomText(
-                        text:
-                            'يرجى تحديث التطبيق للإصدار $_latestVersion '
-                            'للاستمرار في استخدام جميع المميزات.',
+                        text: AppLocalizations.of(
+                          context,
+                        ).forceUpdateBody(_latestVersion),
                         textAlign: TextAlign.center,
                         fontSize: 16,
                       ),
@@ -171,8 +172,8 @@ class _ForceUpdateWrapperState extends State<ForceUpdateWrapper>
                           ),
                         ),
                         onPressed: _openStore,
-                        label: const CustomText(
-                          text: 'تحديث الآن',
+                        label: CustomText(
+                          text: AppLocalizations.of(context).updateNow,
                           fontSize: 16,
                         ),
                       ),
@@ -233,9 +234,9 @@ class _ForceUpdateWrapperState extends State<ForceUpdateWrapper>
                           Expanded(
                             child: CustomText(
                               textAlign: TextAlign.start,
-                              text:
-                                  'إصدار جديد ($_latestVersion) متاح 🎉\n'
-                                  'جرّب أحدث المميزات الآن!',
+                              text: AppLocalizations.of(
+                                context,
+                              ).newVersionAvailable(_latestVersion),
                               fontSize: 14,
                             ),
                           ),
@@ -243,8 +244,8 @@ class _ForceUpdateWrapperState extends State<ForceUpdateWrapper>
                           ElevatedButton.icon(
                             onPressed: _openStore,
                             icon: const Icon(Icons.arrow_back_ios, size: 16),
-                            label: const CustomText(
-                              text: 'تحديث',
+                            label: CustomText(
+                              text: AppLocalizations.of(context).update,
                               fontSize: 14,
                               color: AppColors.mainColor,
                               fontFamily: AppFonts.bold,

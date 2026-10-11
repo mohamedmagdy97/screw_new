@@ -8,6 +8,7 @@ import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/features/dashboard/presentation/cubit/dashboard_cubit.dart';
 import 'package:screw_calculator/features/dashboard/presentation/widgets/player_scores_row.dart';
+import 'package:screw_calculator/l10n/app_localizations.dart';
 
 /// بطاقة فريق في وضع الفرق: لاعبان ومجموع الفريق مع إبراز الفريق الفائز.
 class TeamCard extends StatelessWidget {
@@ -59,7 +60,7 @@ class TeamCard extends StatelessWidget {
             ),
             Divider(color: palette.border),
             CustomText(
-              text: 'المجموع: ${team.totalScore}',
+              text: AppLocalizations.of(context).teamTotal(team.totalScore),
               fontSize: 20.sp,
               fontWeight: FontWeight.bold,
             ),
