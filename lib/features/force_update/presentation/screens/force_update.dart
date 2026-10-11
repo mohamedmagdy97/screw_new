@@ -1,6 +1,7 @@
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/l10n/app_localizations.dart';
@@ -111,166 +112,154 @@ class _ForceUpdateWrapperState extends State<ForceUpdateWrapper>
 
   @override
   Widget build(BuildContext context) {
-    if (_forceUpdate) {
-      return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primarySwatch: Colors.purple,
-          fontFamily: AppFonts.regular,
-        ),
-        home: Scaffold(
-          backgroundColor: Colors.blueGrey.shade50,
-          body: Center(
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 400),
-              curve: Curves.easeInOut,
-              margin: const EdgeInsets.all(24),
-              child: Card(
-                elevation: 6,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(24),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(
-                        Icons.system_update,
-                        size: 80,
-                        color: AppColors.mainColor,
-                      ),
-                      const SizedBox(height: 16),
-                      CustomText(
-                        text: AppLocalizations.of(context).forceUpdateTitle,
-                        fontSize: 22,
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 12),
-                      CustomText(
-                        text: AppLocalizations.of(
-                          context,
-                        ).forceUpdateBody(_latestVersion),
-                        textAlign: TextAlign.center,
-                        fontSize: 16,
-                      ),
-                      const SizedBox(height: 28),
-                      ElevatedButton.icon(
-                        icon: const Icon(
-                          Icons.download,
-                          size: 22,
-                          color: AppColors.white,
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.mainColor,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 24,
-                            vertical: 12,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        onPressed: _openStore,
-                        label: CustomText(
-                          text: AppLocalizations.of(context).updateNow,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+    if (_forceUpdate) return _buildForcedPage(context);
+
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        widget.child,
+        if (_optionalUpdate)
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: SafeArea(
+              child: SlideTransition(
+                position: _slide,
+                child: _buildOptionalBanner(context),
               ),
             ),
           ),
-        ),
-      );
-    } else {
-      return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(fontFamily: AppFonts.regular),
-        home: Stack(
-          children: [
-            widget.child,
-            if (_optionalUpdate)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 28),
-                child: SlideTransition(
-                  position: _slide,
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      margin: const EdgeInsets.all(12),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 14,
+      ],
+    );
+  }
+
+  /// صفحة التحديث الإجباري (تملأ الشاشة).
+  Widget _buildForcedPage(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final palette = context.palette;
+    return Scaffold(
+      backgroundColor: palette.screen,
+      body: SafeArea(
+        child: Center(
+          child: Container(
+            margin: const EdgeInsets.all(24),
+            padding: const EdgeInsets.all(28),
+            decoration: BoxDecoration(
+              color: palette.surface,
+              borderRadius: BorderRadius.circular(AppRadii.xl),
+              border: Border.all(color: palette.border),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 84,
+                  height: 84,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: palette.brand.withValues(alpha: 0.14),
+                  ),
+                  child: Icon(
+                    Icons.system_update_rounded,
+                    size: 44,
+                    color: palette.brand,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                CustomText(
+                  text: l10n.forceUpdateTitle,
+                  fontSize: 22,
+                  fontFamily: AppFonts.bold,
+                ),
+                const SizedBox(height: 12),
+                CustomText(
+                  text: l10n.forceUpdateBody(_latestVersion),
+                  fontSize: 16,
+                  color: palette.textSecondary,
+                  height: 1.6,
+                ),
+                const SizedBox(height: 28),
+                SizedBox(
+                  width: double.infinity,
+                  height: 52,
+                  child: FilledButton.icon(
+                    onPressed: _openStore,
+                    icon: const Icon(Icons.download_rounded),
+                    label: Text(l10n.updateNow),
+                    style: FilledButton.styleFrom(
+                      backgroundColor: palette.brand,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(AppRadii.md),
                       ),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            Colors.purple.shade600,
-                            Colors.purple.shade800,
-                          ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        borderRadius: BorderRadius.circular(16),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Colors.black26,
-                            blurRadius: 8,
-                            offset: Offset(0, -2),
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        children: [
-                          const Icon(
-                            Icons.celebration,
-                            color: Colors.white,
-                            size: 28,
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: CustomText(
-                              textAlign: TextAlign.start,
-                              text: AppLocalizations.of(
-                                context,
-                              ).newVersionAvailable(_latestVersion),
-                              fontSize: 14,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          ElevatedButton.icon(
-                            onPressed: _openStore,
-                            icon: const Icon(Icons.arrow_back_ios, size: 16),
-                            label: CustomText(
-                              text: AppLocalizations.of(context).update,
-                              fontSize: 14,
-                              color: AppColors.mainColor,
-                              fontFamily: AppFonts.bold,
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              foregroundColor: AppColors.mainColor,
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 8,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                          ),
-                        ],
+                      textStyle: const TextStyle(
+                        fontFamily: AppFonts.bold,
+                        fontSize: 17,
                       ),
                     ),
                   ),
                 ),
-              ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// شريط التحديث الاختياري أسفل الشاشة.
+  Widget _buildOptionalBanner(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final palette = context.palette;
+    return Material(
+      color: Colors.transparent,
+      child: Container(
+        margin: const EdgeInsets.all(12),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        decoration: BoxDecoration(
+          gradient: palette.brandGradient,
+          borderRadius: BorderRadius.circular(AppRadii.lg),
+          boxShadow: [
+            BoxShadow(
+              color: palette.brand.withValues(alpha: 0.35),
+              blurRadius: 16,
+              offset: const Offset(0, 6),
+            ),
           ],
         ),
-      );
-    }
+        child: Row(
+          children: [
+            const Icon(
+              Icons.celebration_rounded,
+              color: Colors.white,
+              size: 28,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: CustomText(
+                textAlign: TextAlign.start,
+                text: l10n.newVersionAvailable(_latestVersion),
+                fontSize: 14,
+                color: Colors.white,
+              ),
+            ),
+            const SizedBox(width: 8),
+            FilledButton(
+              onPressed: _openStore,
+              style: FilledButton.styleFrom(
+                backgroundColor: Colors.white,
+                foregroundColor: palette.brand,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(AppRadii.sm + 2),
+                ),
+              ),
+              child: Text(
+                l10n.update,
+                style: const TextStyle(fontFamily: AppFonts.bold),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

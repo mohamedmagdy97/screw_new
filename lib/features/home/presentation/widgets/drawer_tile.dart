@@ -38,7 +38,7 @@ class DrawerTile extends StatelessWidget {
           onTap: onTap,
           borderRadius: BorderRadius.circular(AppRadii.md),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 9),
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             child: Row(
               children: [
                 Container(
@@ -53,7 +53,7 @@ class DrawerTile extends StatelessWidget {
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
-                    crossAxisAlignment: context.readStartCross,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       CustomText(
                         text: title,

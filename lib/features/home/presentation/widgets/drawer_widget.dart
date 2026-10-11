@@ -221,7 +221,7 @@ class _DrawerHeader extends StatelessWidget {
           const SizedBox(width: 14),
           Expanded(
             child: Column(
-              crossAxisAlignment: context.readStartCross,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CustomText(
                   text: l10n.appName,

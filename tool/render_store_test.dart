@@ -5,6 +5,10 @@
 import 'dart:io';
 import 'dart:ui' as ui;
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
+// ignore: depend_on_referenced_packages
+import 'package:firebase_core_platform_interface/test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -18,6 +22,8 @@ import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/utils/enums.dart';
 import 'package:screw_calculator/core/widgets/app_dialog.dart';
+import 'package:screw_calculator/features/chat/data/datasources/chat_moderation_store.dart';
+import 'package:screw_calculator/features/chat/presentation/screens/chat_screen.dart';
 import 'package:screw_calculator/features/dashboard/domain/entities/active_game.dart';
 import 'package:screw_calculator/features/dashboard/domain/entities/last_game_summary.dart';
 import 'package:screw_calculator/features/dashboard/domain/repositories/active_game_repository.dart';
@@ -37,6 +43,7 @@ import 'package:screw_calculator/features/home/data/datasources/home_local_data_
 import 'package:screw_calculator/features/home/domain/repositories/home_repository.dart';
 import 'package:screw_calculator/features/home/presentation/controller/home_controller.dart';
 import 'package:screw_calculator/features/home/presentation/screens/home_screen.dart';
+import 'package:screw_calculator/features/home/presentation/widgets/chat_entry_flow.dart';
 import 'package:screw_calculator/features/rules/presentation/screens/rules_screen.dart';
 import 'package:screw_calculator/features/stats/presentation/cubit/stats_cubit.dart';
 import 'package:screw_calculator/features/stats/presentation/screens/stats_screen.dart';
@@ -678,6 +685,121 @@ void main() {
       },
     );
     await design('dialog', img);
+  });
+
+  testWidgets('design chatentry', (t) async {
+    ModeClass.mode = GameModeEnum.classic;
+    final home = sl<HomeController>();
+    final img = await _capture(
+      t,
+      Builder(
+        builder: (context) => Scaffold(
+          body: Center(
+            child: ElevatedButton(
+              onPressed: () => openPublicChat(context, home),
+              child: const Text('open'),
+            ),
+          ),
+        ),
+      ),
+      afterPump: () async {
+        await t.tap(find.text('open'));
+        await t.pump(const Duration(milliseconds: 700));
+      },
+    );
+    await design('chatentry', img);
+  });
+
+  testWidgets('design chatscreen', (t) async {
+    setupFirebaseCoreMocks();
+    // عمليات async حقيقية (قنوات/ملفات) لا تعمل داخل fake-async.
+    await t.runAsync(() async {
+      await Firebase.initializeApp();
+      await Hive.openBox<dynamic>('cachedMessages');
+      final box = Hive.box<dynamic>('userBox');
+      await box.put('name', 'علي');
+      await box.put('phone', '01000000000');
+      await box.put('country', 'القاهرة');
+      final cache = Hive.box<dynamic>('cachedMessages');
+      await cache.clear();
+      final now = DateTime.now();
+      Map<String, dynamic> msg(
+        String id,
+        String name,
+        String phone,
+        String text, {
+        int minutesAgo = 5,
+        String? replyTo,
+        bool deleted = false,
+        Map<String, dynamic>? reactions,
+      }) => {
+        'id': id,
+        'name': name,
+        'age': 20,
+        'phone': phone,
+        'message': text,
+        'timestamp': now
+            .subtract(Duration(minutes: minutesAgo))
+            .toIso8601String(),
+        'reactions': reactions ?? <String, dynamic>{},
+        'seenBy': <String>['علي'],
+        'isDeleted': deleted,
+        'isPinned': false,
+        'isMe': false,
+        'status': 'sent',
+        'replyTo': replyTo,
+        'audioUrl': null,
+        'type': 'text',
+        'deviceName': 'Pixel',
+        'country': 'القاهرة',
+      };
+      await cache.put(
+        '1',
+        msg('1', 'سلمى', '0102', 'اهلا بالجميع', minutesAgo: 30),
+      );
+      await cache.put(
+        '2',
+        msg(
+          '2',
+          'علي',
+          '01000000000',
+          'اهلا سلمى',
+          minutesAgo: 25,
+          replyTo: '1',
+        ),
+      );
+      await cache.put(
+        '3',
+        msg(
+          '3',
+          'عمر',
+          '0103',
+          'تحبوا نلعب جولة؟',
+          minutesAgo: 20,
+          reactions: {'0102': 'سلمى|👍'},
+        ),
+      );
+      await cache.put(
+        '4',
+        msg('4', 'عمر', '0103', 'x', minutesAgo: 15, deleted: true),
+      );
+      await cache.put(
+        '5',
+        msg(
+          '5',
+          'علي',
+          '01000000000',
+          'تمام يلا',
+          minutesAgo: 10,
+          replyTo: '3',
+        ),
+      );
+    });
+    sl.registerLazySingleton<ChatModerationStore>(
+      () => ChatModerationStore(firestore: FirebaseFirestore.instance),
+    );
+    final img = await _capture(t, const ChatScreen());
+    await design('chat', img);
   });
 
   testWidgets('design tournament', (t) async {

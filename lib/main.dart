@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:screw_calculator/app/app.dart';
 import 'package:screw_calculator/app/di/service_locator.dart';
-import 'package:screw_calculator/features/force_update/presentation/screens/force_update.dart';
 import 'package:screw_calculator/features/prayer/core/notification_service.dart';
 
 void main() async {
@@ -19,5 +18,5 @@ void main() async {
   await setupLocator();
 
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  runApp(const ForceUpdateWrapper(child: MyApp()));
+  runApp(const MyApp());
 }

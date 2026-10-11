@@ -5,6 +5,7 @@ import 'package:screw_calculator/app/di/service_locator.dart';
 import 'package:screw_calculator/core/l10n/locale_cubit.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/theme/theme_cubit.dart';
+import 'package:screw_calculator/features/force_update/presentation/screens/force_update.dart';
 import 'package:screw_calculator/features/splash/presentation/screens/splash_screen.dart';
 import 'package:screw_calculator/l10n/app_localizations.dart';
 
@@ -49,7 +50,10 @@ class MyApp extends StatelessWidget {
                             maxScaleFactor: 1.3,
                           ),
                         ),
-                        child: child ?? const SizedBox.shrink(),
+                        // بوابة التحديث داخل نفس الـ MaterialApp (لا MaterialApp متداخلة).
+                        child: ForceUpdateWrapper(
+                          child: child ?? const SizedBox.shrink(),
+                        ),
                       ),
                     );
                   },
