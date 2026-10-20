@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:app_settings/app_settings.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -125,7 +127,9 @@ class FirebaseNotificationService {
     RemoteMessage message,
   ) async {
     try {
-      final String messageId = message.messageId ?? const Uuid().v4();
+      // معرّف FCM يختلف من جهاز لآخر لنفس الرسالة، فنشتق معرّفًا ثابتًا من
+      // المحتوى واليوم كي تُحفظ الحملة الواحدة مرة واحدة فقط.
+      final String messageId = _stableId(message);
       final String imageUrl = _extractImageUrl(message);
 
       final DocumentReference notificationRef = FirebaseFirestore.instance
@@ -158,6 +162,19 @@ class FirebaseNotificationService {
     } catch (e) {
       Printing.error('❌ Error saving notification: $e');
     }
+  }
+
+  /// معرّف ثابت (FNV-1a) من العنوان والنص ويوم الإرسال، متطابق على كل الأجهزة.
+  static String _stableId(RemoteMessage message) {
+    final sent = (message.sentTime ?? DateTime.now()).toUtc();
+    final day = '${sent.year}-${sent.month}-${sent.day}';
+    final key =
+        '${message.notification?.title ?? ''}|${message.notification?.body ?? ''}|$day';
+    var hash = 0xcbf29ce484222325;
+    for (final byte in utf8.encode(key)) {
+      hash = (hash ^ byte) * 0x100000001b3;
+    }
+    return 'n_${hash.toUnsigned(64).toRadixString(16)}';
   }
 
   /// Extract image URL from notification

@@ -51,6 +51,19 @@ class NotificationDataSourceImpl implements NotificationDataSource {
         .toList();
   }
 
+  /// يدمج نسخ نفس الإشعار المكررة (كل جهاز كان يحفظ نسخة) في نسخة واحدة،
+  /// ويُبقي الأقدم كي يبقى المعرّف ثابتًا لحالة "مقروء/محذوف" المحلية.
+  List<NotificationModel> _dedupe(List<NotificationModel> items) {
+    final seen = <String>{};
+    final kept = <NotificationModel>[];
+    for (final n in items.reversed) {
+      final d = n.datetime.toUtc();
+      final key = '${n.title}|${n.description}|${d.year}-${d.month}-${d.day}';
+      if (seen.add(key)) kept.add(n);
+    }
+    return kept.reversed.toList();
+  }
+
   @override
   Stream<List<NotificationModel>> getNotifications() {
     late final StreamController<List<NotificationModel>> controller;
@@ -67,9 +80,13 @@ class NotificationDataSourceImpl implements NotificationDataSource {
             .orderBy('createdAt', descending: true)
             .snapshots()
             .listen((snapshot) {
-              latest = snapshot.docs
-                  .map((doc) => NotificationModel.fromJson(doc.data(), doc.id))
-                  .toList();
+              latest = _dedupe(
+                snapshot.docs
+                    .map(
+                      (doc) => NotificationModel.fromJson(doc.data(), doc.id),
+                    )
+                    .toList(),
+              );
               emit();
             }, onError: controller.addError);
         localSub = _localChanges.stream.listen((_) => emit());
