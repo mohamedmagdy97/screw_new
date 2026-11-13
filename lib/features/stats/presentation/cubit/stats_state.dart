@@ -3,12 +3,19 @@ part of 'stats_cubit.dart';
 enum StatsStatus { loading, loaded, error }
 
 class StatsState extends Equatable {
-  const StatsState({required this.status, this.players = const []});
+  const StatsState({
+    required this.status,
+    this.players = const [],
+    this.titles = const [],
+  });
 
   const StatsState.loading() : this(status: StatsStatus.loading);
 
   final StatsStatus status;
   final List<PlayerStats> players;
+
+  /// الألقاب («ملك السكرو»، «أكبر سكرو»، ...).
+  final List<PlayerTitle> titles;
 
   /// اللاعب الأكثر خسارة (إن وُجد من خسر مرة على الأقل).
   PlayerStats? get mostLosses {
@@ -18,5 +25,5 @@ class StatsState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [status, players];
+  List<Object?> get props => [status, players, titles];
 }

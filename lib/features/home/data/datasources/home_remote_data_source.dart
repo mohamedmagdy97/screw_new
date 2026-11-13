@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:screw_calculator/core/helpers/device_info.dart';
 import 'package:screw_calculator/core/utils/enums.dart';
 
 /// مصدر البيانات البعيد للمستخدم (تسجيل/تحقق/صلاحية دخول الشات) عبر Firestore.
@@ -14,7 +13,6 @@ abstract class HomeRemoteDataSource {
     required String name,
     required String phone,
     required String country,
-    required int age,
   });
 
   Future<bool> canEnterChat({required String phone, required String name});
@@ -76,15 +74,12 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
     required String name,
     required String phone,
     required String country,
-    required int age,
   }) async {
     await _users.doc(phone).set({
       'id': phone,
       'userName': name,
       'userPhone': phone,
       'userCountry': country,
-      'userAge': age,
-      'deviceName': await getDeviceName(),
       'datetime': DateTime.now(),
       'createdAt': FieldValue.serverTimestamp(),
       'isBlocked': false,

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:screw_calculator/core/models/item.dart';
 import 'package:screw_calculator/core/models/player_model.dart';
@@ -40,7 +39,6 @@ class HomeController {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController countryController = TextEditingController();
-  final TextEditingController ageController = TextEditingController();
 
   final List<TextEditingController> controllers = List.generate(
     12,
@@ -50,7 +48,6 @@ class HomeController {
   String? userName;
   String? userPhone;
   String? userCountry;
-  int? userAge;
 
   List<PlayerModel> players = [];
 
@@ -81,7 +78,6 @@ class HomeController {
     classicInit();
     friendsInit();
     loadCachedUser();
-    _maybeAskForReview();
   }
 
   void loadCachedUser() {
@@ -89,7 +85,6 @@ class HomeController {
     userName = user.name;
     userPhone = user.phone;
     userCountry = user.country;
-    userAge = user.age;
   }
 
   Future<bool> canUserEnterChat({
@@ -101,12 +96,10 @@ class HomeController {
     userName = nameController.text;
     userPhone = phoneController.text;
     userCountry = countryController.text;
-    userAge = int.tryParse(ageController.text);
     await _repository.registerUser(
       name: nameController.text,
       phone: phoneController.text,
       country: countryController.text,
-      age: ageController.text,
     );
   }
 
@@ -114,7 +107,6 @@ class HomeController {
     required String name,
     required String phone,
     required String country,
-    required String age,
   }) => _repository.validateUser(name: name, phone: phone, country: country);
 
   void classicInit() {
@@ -230,36 +222,6 @@ class HomeController {
     await Future<void>.delayed(const Duration(milliseconds: 200));
     if (!context.mounted) return;
     await Navigator.of(context).push(buildFancyRoute<void>(widget));
-  }
-
-  static const String _launchCountKey = 'launchCount';
-  static const String _lastReviewPromptKey = 'lastReviewPrompt';
-  static const int _launchesBeforeReview = 5;
-  static const Duration _reviewCooldown = Duration(days: 60);
-
-  /// يطلب التقييم تلقائيًا بعد عدة مرات فتح، وبحد أقصى مرة كل [_reviewCooldown].
-  Future<void> _maybeAskForReview() async {
-    final box = Hive.box<dynamic>('userBox');
-    final launches = ((box.get(_launchCountKey) as int?) ?? 0) + 1;
-    await box.put(_launchCountKey, launches);
-    if (launches < _launchesBeforeReview) return;
-
-    final lastMs = box.get(_lastReviewPromptKey) as int?;
-    final last = lastMs == null
-        ? null
-        : DateTime.fromMillisecondsSinceEpoch(lastMs);
-    if (last != null && DateTime.now().difference(last) < _reviewCooldown) {
-      return;
-    }
-
-    final inAppReview = InAppReview.instance;
-    if (await inAppReview.isAvailable()) {
-      await box.put(
-        _lastReviewPromptKey,
-        DateTime.now().millisecondsSinceEpoch,
-      );
-      await inAppReview.requestReview();
-    }
   }
 
   /// زر "قيمنا" اليدوي: يفتح نافذة التقييم أو صفحة المتجر.

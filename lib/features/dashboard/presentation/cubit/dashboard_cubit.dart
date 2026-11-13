@@ -50,6 +50,9 @@ class DashboardCubit extends Cubit<DashboardState> {
   /// تُضبط عند الإعلان عن نتيجة اللعبة حتى لا يتكرر الإعلان.
   bool finishAnnounced = false;
 
+  /// هل اللعبة الحالية اتحفظت في السجل بعد آخر تعديل؟
+  bool _saved = false;
+
   /// تهيئة اللعبة بقائمة اللاعبين وإن كان وضع الفرق مفعّلاً.
   void start({
     required List<PlayerModel> players,
@@ -83,6 +86,7 @@ class DashboardCubit extends Cubit<DashboardState> {
     final snapshot = _undoStack.removeLast();
     snapshot.restore();
     finishAnnounced = isFinished;
+    _saved = false;
     HapticFeedback.selectionClick();
     emit(
       state.copyWith(
@@ -127,6 +131,7 @@ class DashboardCubit extends Cubit<DashboardState> {
       player.addRoundScore(value);
     }
     HapticFeedback.lightImpact();
+    _saved = false;
     emit(state.copyWith(revision: state.revision + 1));
     _persist();
     if (isFinished) _publishLastGame();
@@ -170,6 +175,7 @@ class DashboardCubit extends Cubit<DashboardState> {
             ),
           ];
     HapticFeedback.lightImpact();
+    _saved = false;
     emit(state.copyWith(revision: state.revision + 1, edits: edits));
     _persist();
     if (isFinished) _publishLastGame();
@@ -192,6 +198,7 @@ class DashboardCubit extends Cubit<DashboardState> {
     }
     _undoStack.clear();
     finishAnnounced = false;
+    _saved = false;
     emit(state.copyWith(revision: state.revision + 1, edits: const []));
     _persist();
   }
@@ -201,6 +208,7 @@ class DashboardCubit extends Cubit<DashboardState> {
     try {
       await _saveGameUseCase(state.players);
       await _activeGameRepository.clear();
+      _saved = true;
       emit(
         state.copyWith(
           status: DashboardStatus.saved,
@@ -218,6 +226,17 @@ class DashboardCubit extends Cubit<DashboardState> {
     } finally {
       emit(state.copyWith(status: DashboardStatus.idle));
     }
+  }
+
+  /// «نفس اللاعيبة تاني»: يحفظ اللعبة الخلصانة في السجل (لو لسه ما اتحفظتش)
+  /// ويبدأ لعبة جديدة بنفس الأسامي. لو الحفظ فشل ما بيمسحش النتيجة.
+  Future<bool> rematch() async {
+    if (!state.showTeamsView && isFinished && !_saved) {
+      await saveGame();
+      if (!_saved) return false;
+    }
+    resetGame();
+    return true;
   }
 
   Future<void> uploadScreenshot(File file, {required String title}) {

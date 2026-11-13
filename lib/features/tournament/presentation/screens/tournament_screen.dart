@@ -208,12 +208,12 @@ class _StandingTile extends StatelessWidget {
       decoration: BoxDecoration(
         color: leader
             ? Color.alphaBlend(
-                palette.win.withValues(alpha: 0.12),
+                palette.gold.withValues(alpha: 0.12),
                 palette.surface,
               )
             : palette.surface,
         borderRadius: BorderRadius.circular(AppRadii.lg),
-        border: Border.all(color: leader ? palette.win : palette.border),
+        border: Border.all(color: leader ? palette.gold : palette.border),
       ),
       child: Row(
         children: [

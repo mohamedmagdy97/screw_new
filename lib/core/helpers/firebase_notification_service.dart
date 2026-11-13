@@ -7,7 +7,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:screw_calculator/core/helpers/app_print.dart';
-import 'package:screw_calculator/core/helpers/device_info.dart';
 import 'package:screw_calculator/core/helpers/firbase_handling.dart';
 import 'package:screw_calculator/core/widgets/custom_dialog.dart';
 import 'package:uuid/uuid.dart';
@@ -230,9 +229,6 @@ class FirebaseNotificationService {
   /// Add token to Firestore (avoid duplicates)
   static Future<void> _addTokenToFirestore({required String token}) async {
     try {
-      final String deviceName = await getDeviceName();
-      Printing.info('📱 Device: $deviceName');
-
       final CollectionReference tokensRef = FirebaseFirestore.instance
           .collection(_tokensCollection);
 
@@ -246,7 +242,6 @@ class FirebaseNotificationService {
         // Update existing token
         final docId = snapshot.docs.first.id;
         await tokensRef.doc(docId).update({
-          'deviceName': deviceName,
           'lastUpdated': FieldValue.serverTimestamp(),
         });
         Printing.info('🔄 Token updated: $docId');
@@ -256,7 +251,6 @@ class FirebaseNotificationService {
         await tokensRef.doc(id).set({
           'id': id,
           'token': token,
-          'deviceName': deviceName,
           'createdAt': FieldValue.serverTimestamp(),
           'lastUpdated': FieldValue.serverTimestamp(),
           'isActive': true,

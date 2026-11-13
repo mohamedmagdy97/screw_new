@@ -10,8 +10,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:screw_calculator/app/di/service_locator.dart';
+import 'package:screw_calculator/l10n/app_localizations.dart';
+import 'package:screw_calculator/features/home/presentation/controller/home_controller.dart';
+import 'package:screw_calculator/features/chat/data/datasources/chat_account_remover.dart';
+import 'package:screw_calculator/core/widgets/app_dialog.dart';
 import 'package:screw_calculator/core/helpers/date_formatter.dart';
-import 'package:screw_calculator/core/helpers/device_info.dart';
 import 'package:screw_calculator/core/helpers/phone_mask_helper.dart';
 import 'package:screw_calculator/core/state/generic_cubit/generic_cubit.dart';
 import 'package:screw_calculator/core/theme/app_palette.dart';
@@ -73,7 +76,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
 
   String? userName;
   String? userPhone;
-  int? userAge;
   String? userCountry;
   Set<String> _usersTyping = {};
 
@@ -94,7 +96,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     userName = userBox.get('name')?.toString() ?? 'Anonymous';
     userPhone = userBox.get('phone')?.toString() ?? '';
     userCountry = userBox.get('country')?.toString();
-    userAge = int.parse((userBox.get('age') ?? '0').toString());
 
     _loadCachedMessages();
     _fetchInitialMessages();
@@ -226,7 +227,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
           .add({
             'name': userName,
             'phone': userPhone,
-            'age': userAge,
             'country': userCountry,
             'message': base64Image,
             'type': 'image',
@@ -236,7 +236,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
             'replyTo': _replyingTo?.id,
             'reactions': <String, dynamic>{},
             'isDeleted': false,
-            'deviceName': await getDeviceName(),
           });
 
       if (mounted) {
@@ -458,7 +457,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     final data = {
       'name': userName ?? 'Anonymous',
       'phone': userPhone,
-      'age': userAge,
       'country': userCountry,
       'message': _textCtrl.text.trim(),
       'datetime': DateTime.now(),
@@ -467,7 +465,6 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       'replyTo': _replyingTo?.id,
       'reactions': <String, dynamic>{},
       'isDeleted': false,
-      'deviceName': await getDeviceName(),
     };
 
     if (_editingId != null) {
@@ -584,6 +581,63 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   }
 
   // ---------------- SEARCH ----------------
+  /// «احذف حسابي»: تأكيد، ثم مسح الحساب والرسايل من Firestore والموبايل.
+  Future<void> _confirmDeleteAccount() async {
+    final l10n = AppLocalizations.of(context);
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AppDialog(
+        icon: Icons.delete_forever_rounded,
+        tone: AppDialogTone.danger,
+        title: l10n.chatDeleteAccountTitle,
+        message: l10n.chatDeleteAccountBody,
+        actions: [
+          Expanded(
+            child: AppDialogButton(
+              label: l10n.cancel,
+              onPressed: () => Navigator.pop(ctx, false),
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: AppDialogButton(
+              key: const ValueKey('chat-delete-confirm'),
+              label: l10n.chatDeleteAccountConfirm,
+              primary: true,
+              tone: AppDialogTone.danger,
+              onPressed: () => Navigator.pop(ctx, true),
+            ),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted) return;
+
+    final messenger = ScaffoldMessenger.of(context);
+    final navigator = Navigator.of(context);
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const Center(child: CircularProgressIndicator()),
+    );
+    try {
+      await sl<ChatAccountRemover>().deleteAccount(
+        phone: userPhone ?? '',
+        name: userName,
+      );
+      sl<HomeController>().loadCachedUser();
+      navigator
+        ..pop()
+        ..pop();
+      messenger.showSnackBar(SnackBar(content: Text(l10n.chatAccountDeleted)));
+    } catch (_) {
+      navigator.pop();
+      messenger.showSnackBar(
+        SnackBar(content: Text(l10n.chatDeleteAccountFailed)),
+      );
+    }
+  }
+
   void _toggleSearch() {
     setState(() {
       _isSearching = !_isSearching;
@@ -677,6 +731,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         onBackPressed: () => Navigator.pop(context),
         userName: userName ?? '',
         searchResults: _searchResults,
+        onDeleteAccount: _confirmDeleteAccount,
       ),
       body: Column(
         children: [

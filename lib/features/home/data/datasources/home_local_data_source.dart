@@ -2,12 +2,11 @@ import 'package:hive/hive.dart';
 
 /// بيانات المستخدم المخزّنة محليًا.
 class CachedUser {
-  const CachedUser({this.name, this.phone, this.country, this.age});
+  const CachedUser({this.name, this.phone, this.country});
 
   final String? name;
   final String? phone;
   final String? country;
-  final int? age;
 }
 
 /// تخزين/قراءة بيانات المستخدم محليًا في Hive.
@@ -18,7 +17,6 @@ abstract class HomeLocalDataSource {
     required String name,
     required String phone,
     required String country,
-    required String age,
   });
 }
 
@@ -33,7 +31,6 @@ class HomeLocalDataSourceImpl implements HomeLocalDataSource {
       name: userBox.get('name')?.toString(),
       phone: userBox.get('phone')?.toString(),
       country: userBox.get('country')?.toString(),
-      age: int.tryParse((userBox.get('age') ?? '').toString()),
     );
   }
 
@@ -42,13 +39,9 @@ class HomeLocalDataSourceImpl implements HomeLocalDataSource {
     required String name,
     required String phone,
     required String country,
-    required String age,
   }) async {
-    await userBox.putAll({
-      'name': name,
-      'phone': phone,
-      'country': country,
-      'age': age,
-    });
+    await userBox.putAll({'name': name, 'phone': phone, 'country': country});
+    // السن ما بقاش بيتطلب؛ نمسح أي قيمة قديمة.
+    await userBox.delete('age');
   }
 }

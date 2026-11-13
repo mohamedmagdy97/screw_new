@@ -294,12 +294,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cityLabel => 'City';
 
   @override
-  String get ageHint => 'How old are you';
-
-  @override
-  String get ageLabel => 'Age';
-
-  @override
   String get chatUnavailableTitle => 'Unavailable';
 
   @override
@@ -778,4 +772,158 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get aboutMadeBy => 'by';
+
+  @override
+  String get titlesHeader => 'Titles';
+
+  @override
+  String get titleKing => 'Screw King';
+
+  @override
+  String titleKingDetail(int count) {
+    return 'Won $count times';
+  }
+
+  @override
+  String get titleBiggestScrew => 'Biggest Screw';
+
+  @override
+  String get titleCleanestGame => 'Cleanest game';
+
+  @override
+  String get titleMostGames => 'Table regular';
+
+  @override
+  String titlePointsDetail(int points) {
+    return '$points points';
+  }
+
+  @override
+  String titleGamesDetail(int count) {
+    return 'Played $count games';
+  }
+
+  @override
+  String shareCardWinner(String names) {
+    return '🏆 Winner: $names';
+  }
+
+  @override
+  String shareResultMessage(String link) {
+    return '🃏 Our game result on Screw Calculator! Keep score yourselves too:\n$link';
+  }
+
+  @override
+  String get shareResultNow => 'Send the result to friends';
+
+  @override
+  String get rematch => 'Same players again';
+
+  @override
+  String get chatDeleteAccount => 'Delete my account';
+
+  @override
+  String get chatDeleteAccountTitle => 'Delete your chat account?';
+
+  @override
+  String get chatDeleteAccountBody =>
+      'We\'ll permanently delete your account and all your chat messages and images. This can\'t be undone. You can register again anytime.';
+
+  @override
+  String get chatDeleteAccountConfirm => 'Delete';
+
+  @override
+  String get chatAccountDeleted =>
+      'Your chat account and messages were deleted';
+
+  @override
+  String get chatDeleteAccountFailed =>
+      'Couldn\'t delete the account. Check your connection and try again.';
+
+  @override
+  String get liveStart => 'Let friends follow live';
+
+  @override
+  String liveOnAir(String code) {
+    return 'Live · $code';
+  }
+
+  @override
+  String get liveStartFailed =>
+      'Couldn\'t start live. Check your connection and try again.';
+
+  @override
+  String get liveHostTitle => 'Game is live';
+
+  @override
+  String get liveHostHint =>
+      'Friends open “Follow a live game” from the menu and scan or type this code';
+
+  @override
+  String get liveCodeCopied => 'Code copied';
+
+  @override
+  String get liveShareCode => 'Send the code';
+
+  @override
+  String liveShareText(String code, String link) {
+    return 'Follow our game live on Screw Calculator 🃏\nOpen “Follow a live game” and enter: $code\nDon\'t have the app? $link';
+  }
+
+  @override
+  String get liveStop => 'Stop live';
+
+  @override
+  String get liveJoinTitle => 'Follow a live game';
+
+  @override
+  String get liveJoinHint =>
+      'Type the code shown on your friend\'s phone, or scan its QR, and watch the score update.';
+
+  @override
+  String get liveJoinButton => 'Follow';
+
+  @override
+  String get liveScanButton => 'Scan QR';
+
+  @override
+  String get liveCodeInvalid => 'The code is 6 letters and digits, like ABC234';
+
+  @override
+  String get liveScanTitle => 'Scan the game code';
+
+  @override
+  String get liveScanHint =>
+      'Point the camera at the QR on your friend\'s phone';
+
+  @override
+  String get liveScanError =>
+      'Couldn\'t open the camera. Allow camera access or type the code.';
+
+  @override
+  String liveViewerTitle(String code) {
+    return 'Live · $code';
+  }
+
+  @override
+  String liveRound(int n) {
+    return 'Round $n of 5';
+  }
+
+  @override
+  String get liveFinished => 'All rounds played';
+
+  @override
+  String get liveEnded => 'The host stopped the live game';
+
+  @override
+  String get liveNotFound =>
+      'No live game with this code. Check the code, or the game may have ended.';
+
+  @override
+  String get liveLoadError =>
+      'Couldn\'t reach the game. Check your connection.';
+
+  @override
+  String get aboutPrivacy => 'Privacy policy';
 }

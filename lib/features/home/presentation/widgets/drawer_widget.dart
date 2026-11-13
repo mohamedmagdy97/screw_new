@@ -21,6 +21,7 @@ import 'package:screw_calculator/features/home/presentation/controller/home_cont
 import 'package:screw_calculator/features/home/presentation/widgets/chat_entry_flow.dart';
 import 'package:screw_calculator/features/home/presentation/widgets/drawer_tile.dart';
 import 'package:screw_calculator/features/home/presentation/widgets/weekly_reminder_tile.dart';
+import 'package:screw_calculator/features/live/presentation/screens/live_join_screen.dart';
 import 'package:screw_calculator/features/notifications/presentation/screens/notifications_screen.dart';
 import 'package:screw_calculator/features/prayer/presentation/screens/prayer_screen.dart';
 import 'package:screw_calculator/features/rules/presentation/screens/rules_screen.dart';
@@ -114,8 +115,14 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                   DrawerTile(
                     icon: Icons.emoji_events_rounded,
                     title: l10n.tournamentMenu,
-                    color: const Color(0xFFF59E0B),
+                    color: palette.gold,
                     onTap: () => _go(const TournamentScreen()),
+                  ),
+                  DrawerTile(
+                    icon: Icons.live_tv_rounded,
+                    title: l10n.liveJoinTitle,
+                    color: palette.lose,
+                    onTap: () => _go(const LiveJoinScreen()),
                   ),
                   DrawerTile(
                     icon: Icons.play_circle_rounded,
@@ -146,7 +153,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                   DrawerTile(
                     icon: Icons.group_add_rounded,
                     title: l10n.inviteFriend,
-                    color: const Color(0xFFF59E0B),
+                    color: palette.gold,
                     onTap: () => SharePlus.instance.share(
                       ShareParams(text: l10n.inviteText(AppLinks.playStore)),
                     ),
@@ -154,7 +161,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                   DrawerTile(
                     icon: Icons.star_rounded,
                     title: l10n.rateUs,
-                    color: const Color(0xFFF59E0B),
+                    color: palette.gold,
                     onTap: homeData.rateMyApp,
                   ),
 

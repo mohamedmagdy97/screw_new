@@ -626,18 +626,6 @@ abstract class AppLocalizations {
   /// **'المدينة'**
   String get cityLabel;
 
-  /// No description provided for @ageHint.
-  ///
-  /// In ar, this message translates to:
-  /// **'عندك كام سنة'**
-  String get ageHint;
-
-  /// No description provided for @ageLabel.
-  ///
-  /// In ar, this message translates to:
-  /// **'العمر'**
-  String get ageLabel;
-
   /// No description provided for @chatUnavailableTitle.
   ///
   /// In ar, this message translates to:
@@ -1482,6 +1470,258 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'من'**
   String get aboutMadeBy;
+
+  /// No description provided for @titlesHeader.
+  ///
+  /// In ar, this message translates to:
+  /// **'الألقاب'**
+  String get titlesHeader;
+
+  /// No description provided for @titleKing.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملك السكرو'**
+  String get titleKing;
+
+  /// No description provided for @titleKingDetail.
+  ///
+  /// In ar, this message translates to:
+  /// **'كسب {count} مرة'**
+  String titleKingDetail(int count);
+
+  /// No description provided for @titleBiggestScrew.
+  ///
+  /// In ar, this message translates to:
+  /// **'أكبر سكرو'**
+  String get titleBiggestScrew;
+
+  /// No description provided for @titleCleanestGame.
+  ///
+  /// In ar, this message translates to:
+  /// **'أنضف لعبة'**
+  String get titleCleanestGame;
+
+  /// No description provided for @titleMostGames.
+  ///
+  /// In ar, this message translates to:
+  /// **'ابن الترابيزة'**
+  String get titleMostGames;
+
+  /// No description provided for @titlePointsDetail.
+  ///
+  /// In ar, this message translates to:
+  /// **'{points} نقطة'**
+  String titlePointsDetail(int points);
+
+  /// No description provided for @titleGamesDetail.
+  ///
+  /// In ar, this message translates to:
+  /// **'لعب {count} لعبة'**
+  String titleGamesDetail(int count);
+
+  /// No description provided for @shareCardWinner.
+  ///
+  /// In ar, this message translates to:
+  /// **'🏆 الفايز: {names}'**
+  String shareCardWinner(String names);
+
+  /// No description provided for @shareResultMessage.
+  ///
+  /// In ar, this message translates to:
+  /// **'🃏 دي نتيجة لعبتنا في سكرو حاسبة! احسبوا نقطكم انتو كمان:\n{link}'**
+  String shareResultMessage(String link);
+
+  /// No description provided for @shareResultNow.
+  ///
+  /// In ar, this message translates to:
+  /// **'ابعت النتيجة لصحابك'**
+  String get shareResultNow;
+
+  /// No description provided for @rematch.
+  ///
+  /// In ar, this message translates to:
+  /// **'نفس اللاعيبة تاني'**
+  String get rematch;
+
+  /// No description provided for @chatDeleteAccount.
+  ///
+  /// In ar, this message translates to:
+  /// **'احذف حسابي'**
+  String get chatDeleteAccount;
+
+  /// No description provided for @chatDeleteAccountTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحذف حسابك في الشات؟'**
+  String get chatDeleteAccountTitle;
+
+  /// No description provided for @chatDeleteAccountBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'هنمسح حسابك وكل رسايلك وصورك في الشات نهائيًا، ومش هينفع نرجّعهم. ممكن تسجّل تاني في أي وقت.'**
+  String get chatDeleteAccountBody;
+
+  /// No description provided for @chatDeleteAccountConfirm.
+  ///
+  /// In ar, this message translates to:
+  /// **'احذف'**
+  String get chatDeleteAccountConfirm;
+
+  /// No description provided for @chatAccountDeleted.
+  ///
+  /// In ar, this message translates to:
+  /// **'اتمسح حسابك ورسايلك من الشات'**
+  String get chatAccountDeleted;
+
+  /// No description provided for @chatDeleteAccountFailed.
+  ///
+  /// In ar, this message translates to:
+  /// **'مقدرناش نمسح الحساب. اتأكد من النت وجرّب تاني.'**
+  String get chatDeleteAccountFailed;
+
+  /// No description provided for @liveStart.
+  ///
+  /// In ar, this message translates to:
+  /// **'خلّي صحابك يتابعوا لايف'**
+  String get liveStart;
+
+  /// No description provided for @liveOnAir.
+  ///
+  /// In ar, this message translates to:
+  /// **'لايف · {code}'**
+  String liveOnAir(String code);
+
+  /// No description provided for @liveStartFailed.
+  ///
+  /// In ar, this message translates to:
+  /// **'مقدرناش نبدأ اللايف. اتأكد من النت وجرّب تاني.'**
+  String get liveStartFailed;
+
+  /// No description provided for @liveHostTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'اللعبة لايف'**
+  String get liveHostTitle;
+
+  /// No description provided for @liveHostHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'صحابك يفتحوا «تابع لعبة لايف» من القائمة ويمسحوا الكود ده أو يكتبوه'**
+  String get liveHostHint;
+
+  /// No description provided for @liveCodeCopied.
+  ///
+  /// In ar, this message translates to:
+  /// **'اتنسخ الكود'**
+  String get liveCodeCopied;
+
+  /// No description provided for @liveShareCode.
+  ///
+  /// In ar, this message translates to:
+  /// **'ابعت الكود'**
+  String get liveShareCode;
+
+  /// No description provided for @liveShareText.
+  ///
+  /// In ar, this message translates to:
+  /// **'تابع لعبتنا لايف في سكرو حاسبة 🃏\nافتح «تابع لعبة لايف» واكتب الكود: {code}\nمعندكش التطبيق؟ {link}'**
+  String liveShareText(String code, String link);
+
+  /// No description provided for @liveStop.
+  ///
+  /// In ar, this message translates to:
+  /// **'وقّف اللايف'**
+  String get liveStop;
+
+  /// No description provided for @liveJoinTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تابع لعبة لايف'**
+  String get liveJoinTitle;
+
+  /// No description provided for @liveJoinHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب الكود اللي ظاهر عند صاحبك، أو امسح الـ QR من موبايله، وهتشوف النتيجة وهي بتتحدّث.'**
+  String get liveJoinHint;
+
+  /// No description provided for @liveJoinButton.
+  ///
+  /// In ar, this message translates to:
+  /// **'تابع'**
+  String get liveJoinButton;
+
+  /// No description provided for @liveScanButton.
+  ///
+  /// In ar, this message translates to:
+  /// **'امسح QR'**
+  String get liveScanButton;
+
+  /// No description provided for @liveCodeInvalid.
+  ///
+  /// In ar, this message translates to:
+  /// **'الكود 6 حروف وأرقام، زي ABC234'**
+  String get liveCodeInvalid;
+
+  /// No description provided for @liveScanTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'امسح كود اللعبة'**
+  String get liveScanTitle;
+
+  /// No description provided for @liveScanHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'وجّه الكاميرا على الـ QR اللي في موبايل صاحبك'**
+  String get liveScanHint;
+
+  /// No description provided for @liveScanError.
+  ///
+  /// In ar, this message translates to:
+  /// **'مقدرناش نفتح الكاميرا. اسمح للتطبيق باستخدامها أو اكتب الكود بإيدك.'**
+  String get liveScanError;
+
+  /// No description provided for @liveViewerTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'لايف · {code}'**
+  String liveViewerTitle(String code);
+
+  /// No description provided for @liveRound.
+  ///
+  /// In ar, this message translates to:
+  /// **'الجولة {n} من 5'**
+  String liveRound(int n);
+
+  /// No description provided for @liveFinished.
+  ///
+  /// In ar, this message translates to:
+  /// **'الجولات خلصت'**
+  String get liveFinished;
+
+  /// No description provided for @liveEnded.
+  ///
+  /// In ar, this message translates to:
+  /// **'صاحب اللعبة وقّف اللايف'**
+  String get liveEnded;
+
+  /// No description provided for @liveNotFound.
+  ///
+  /// In ar, this message translates to:
+  /// **'مفيش لعبة لايف بالكود ده. اتأكد من الكود، أو يمكن اللعبة خلصت.'**
+  String get liveNotFound;
+
+  /// No description provided for @liveLoadError.
+  ///
+  /// In ar, this message translates to:
+  /// **'مقدرناش نوصل للعبة. اتأكد من النت.'**
+  String get liveLoadError;
+
+  /// No description provided for @aboutPrivacy.
+  ///
+  /// In ar, this message translates to:
+  /// **'سياسة الخصوصية'**
+  String get aboutPrivacy;
 }
 
 class _AppLocalizationsDelegate

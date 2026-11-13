@@ -136,4 +136,87 @@ void main() {
     cubit.resetGame();
     expect(cubit.state.edits, isEmpty);
   });
+
+  group('rematch', () {
+    test(
+      'saves the finished game, then starts over with the same names',
+      () async {
+        var saved = 0;
+        final c = DashboardCubit(
+          saveGameUseCase: SaveGameUseCase(_FakeDashboardRepo()),
+          uploadScreenshotUseCase: UploadScreenshotUseCase(
+            _FakeDashboardRepo(),
+          ),
+          activeGameRepository: _FakeActiveGameRepo(),
+          lastGamePublisher: _NoopPublisher(),
+          onGameSaved: () async => saved++,
+        );
+        addTearDown(c.close);
+        c.start(
+          players: [_finished(1, 'A', 1), _finished(2, 'B', 2)],
+          showTeamsView: false,
+        );
+        expect(c.isFinished, isTrue);
+
+        expect(await c.rematch(), isTrue);
+        await Future<void>.delayed(Duration.zero);
+        expect(saved, 1);
+        expect(c.state.players.map((p) => p.name), ['A', 'B']);
+        expect(c.state.players.every((p) => p.filledRoundsCount == 0), isTrue);
+      },
+    );
+
+    test('a game saved already is not saved twice', () async {
+      var saved = 0;
+      final c = DashboardCubit(
+        saveGameUseCase: SaveGameUseCase(_FakeDashboardRepo()),
+        uploadScreenshotUseCase: UploadScreenshotUseCase(_FakeDashboardRepo()),
+        activeGameRepository: _FakeActiveGameRepo(),
+        lastGamePublisher: _NoopPublisher(),
+        onGameSaved: () async => saved++,
+      );
+      addTearDown(c.close);
+      c.start(
+        players: [_finished(1, 'A', 1), _finished(2, 'B', 2)],
+        showTeamsView: false,
+      );
+      await c.saveGame();
+      await c.rematch();
+      await Future<void>.delayed(Duration.zero);
+      expect(saved, 1);
+    });
+
+    test('if saving fails the finished scores are kept', () async {
+      final c = DashboardCubit(
+        saveGameUseCase: SaveGameUseCase(_FailingRepo()),
+        uploadScreenshotUseCase: UploadScreenshotUseCase(_FailingRepo()),
+        activeGameRepository: _FakeActiveGameRepo(),
+        lastGamePublisher: _NoopPublisher(),
+      );
+      addTearDown(c.close);
+      c.start(
+        players: [_finished(1, 'A', 1), _finished(2, 'B', 2)],
+        showTeamsView: false,
+      );
+      expect(await c.rematch(), isFalse);
+      expect(c.isFinished, isTrue);
+    });
+  });
+}
+
+class _FailingRepo implements DashboardRepository {
+  @override
+  Future<void> saveGame(List<PlayerModel> players) async =>
+      throw Exception('offline');
+
+  @override
+  Future<void> uploadScreenshot(File file, {required String title}) async {}
+}
+
+PlayerModel _finished(int id, String name, int each) {
+  final p = PlayerModel(id: id, name: name);
+  for (var i = 0; i < 5; i++) {
+    p.addRoundScore(each);
+  }
+  return p;
 }

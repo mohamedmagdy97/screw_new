@@ -46,6 +46,20 @@ service cloud.firestore {
       allow read, update, delete: if false;
     }
 
+    // الألعاب اللايف: live_games/{code}. أي حد معاه الكود يقدر يتابع. الكتابة
+    // بشكل محدد (كود 6 حروف، 12 لاعب بالكتير، ومعاها expireAt للمسح التلقائي).
+    // فعّل TTL من Firebase Console ← Firestore ← TTL على الحقل expireAt.
+    match /live_games/{code} {
+      allow get: if true;
+      allow list: if false;
+      allow create, update: if code.matches('^[A-HJ-NP-Z2-9]{6}$')
+                    && request.resource.data.code == code
+                    && request.resource.data.players is list
+                    && request.resource.data.players.size() <= 12
+                    && request.resource.data.expireAt is timestamp;
+      allow delete: if false;
+    }
+
     // أي مسار آخر مغلق.
     match /{other=**} {
       allow read, write: if false;

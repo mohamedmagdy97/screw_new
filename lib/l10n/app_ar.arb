@@ -147,8 +147,6 @@
   "phoneLabel": "رقم الموبايل",
   "cityHint": "اسم المدينة أو المحافظة",
   "cityLabel": "المدينة",
-  "ageHint": "عندك كام سنة",
-  "ageLabel": "العمر",
   "chatUnavailableTitle": "غير متاح",
   "chatUnavailableBody": "الدخول للشات غير متاح حاليًا",
   "dontLetGameDistract": "🌙 لا تجعل اللعبة تلهيك عن الصلاة 🌙",
@@ -446,5 +444,113 @@
   "aboutShare": "شارك التطبيق مع أصحابك",
   "aboutLicenses": "تراخيص المكتبات",
   "aboutFooter": "اقتراحاتكم بتخلي التطبيق أحسن. ابعتوها لنا.",
-  "aboutMadeBy": "من"
+  "aboutMadeBy": "من",
+  "titlesHeader": "الألقاب",
+  "titleKing": "ملك السكرو",
+  "titleKingDetail": "كسب {count} مرة",
+  "@titleKingDetail": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "titleBiggestScrew": "أكبر سكرو",
+  "titleCleanestGame": "أنضف لعبة",
+  "titleMostGames": "ابن الترابيزة",
+  "titlePointsDetail": "{points} نقطة",
+  "@titlePointsDetail": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "titleGamesDetail": "لعب {count} لعبة",
+  "@titleGamesDetail": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shareCardWinner": "🏆 الفايز: {names}",
+  "@shareCardWinner": {
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "shareResultMessage": "🃏 دي نتيجة لعبتنا في سكرو حاسبة! احسبوا نقطكم انتو كمان:\n{link}",
+  "@shareResultMessage": {
+    "placeholders": {
+      "link": {
+        "type": "String"
+      }
+    }
+  },
+  "shareResultNow": "ابعت النتيجة لصحابك",
+  "rematch": "نفس اللاعيبة تاني",
+  "chatDeleteAccount": "احذف حسابي",
+  "chatDeleteAccountTitle": "تحذف حسابك في الشات؟",
+  "chatDeleteAccountBody": "هنمسح حسابك وكل رسايلك وصورك في الشات نهائيًا، ومش هينفع نرجّعهم. ممكن تسجّل تاني في أي وقت.",
+  "chatDeleteAccountConfirm": "احذف",
+  "chatAccountDeleted": "اتمسح حسابك ورسايلك من الشات",
+  "chatDeleteAccountFailed": "مقدرناش نمسح الحساب. اتأكد من النت وجرّب تاني.",
+  "liveStart": "خلّي صحابك يتابعوا لايف",
+  "liveOnAir": "لايف · {code}",
+  "@liveOnAir": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "liveStartFailed": "مقدرناش نبدأ اللايف. اتأكد من النت وجرّب تاني.",
+  "liveHostTitle": "اللعبة لايف",
+  "liveHostHint": "صحابك يفتحوا «تابع لعبة لايف» من القائمة ويمسحوا الكود ده أو يكتبوه",
+  "liveCodeCopied": "اتنسخ الكود",
+  "liveShareCode": "ابعت الكود",
+  "liveShareText": "تابع لعبتنا لايف في سكرو حاسبة 🃏\nافتح «تابع لعبة لايف» واكتب الكود: {code}\nمعندكش التطبيق؟ {link}",
+  "@liveShareText": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      },
+      "link": {
+        "type": "String"
+      }
+    }
+  },
+  "liveStop": "وقّف اللايف",
+  "liveJoinTitle": "تابع لعبة لايف",
+  "liveJoinHint": "اكتب الكود اللي ظاهر عند صاحبك، أو امسح الـ QR من موبايله، وهتشوف النتيجة وهي بتتحدّث.",
+  "liveJoinButton": "تابع",
+  "liveScanButton": "امسح QR",
+  "liveCodeInvalid": "الكود 6 حروف وأرقام، زي ABC234",
+  "liveScanTitle": "امسح كود اللعبة",
+  "liveScanHint": "وجّه الكاميرا على الـ QR اللي في موبايل صاحبك",
+  "liveScanError": "مقدرناش نفتح الكاميرا. اسمح للتطبيق باستخدامها أو اكتب الكود بإيدك.",
+  "liveViewerTitle": "لايف · {code}",
+  "@liveViewerTitle": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "liveRound": "الجولة {n} من 5",
+  "@liveRound": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "liveFinished": "الجولات خلصت",
+  "liveEnded": "صاحب اللعبة وقّف اللايف",
+  "liveNotFound": "مفيش لعبة لايف بالكود ده. اتأكد من الكود، أو يمكن اللعبة خلصت.",
+  "liveLoadError": "مقدرناش نوصل للعبة. اتأكد من النت.",
+  "aboutPrivacy": "سياسة الخصوصية"
 }

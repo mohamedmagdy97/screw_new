@@ -84,7 +84,6 @@ class _RegistrationDialog extends StatelessWidget {
       name: homeData.nameController.text.trim(),
       phone: homeData.phoneController.text.trim(),
       country: homeData.countryController.text.trim(),
-      age: homeData.ageController.text.trim(),
     );
     if (!context.mounted) return;
 
@@ -148,14 +147,6 @@ class _RegistrationDialog extends StatelessWidget {
                 containtPaddingRight: 0,
                 inputType: TextInputType.text,
                 textFieldVaidType: TextFieldValidatorType.displayText,
-              ),
-              CustomTextField(
-                controller: homeData.ageController,
-                hintText: l10n.ageHint,
-                labelText: l10n.ageLabel,
-                containtPaddingRight: 0,
-                inputType: TextInputType.number,
-                textFieldVaidType: TextFieldValidatorType.number,
               ),
             ],
           ),

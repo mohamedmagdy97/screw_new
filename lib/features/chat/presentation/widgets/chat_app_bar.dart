@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/features/chat/presentation/widgets/users_status_bottom_sheet.dart';
+import 'package:screw_calculator/l10n/app_localizations.dart';
 
 class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool isSearching;
@@ -16,6 +17,9 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback onBackPressed;
   final List<int> searchResults;
 
+  /// «احذف حسابي» من قائمة الشات؛ null يخفي القائمة.
+  final VoidCallback? onDeleteAccount;
+
   const ChatAppBar({
     super.key,
     required this.isSearching,
@@ -27,6 +31,7 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
     required this.onBackPressed,
     required this.userName,
     required this.searchResults,
+    this.onDeleteAccount,
   });
 
   @override
@@ -146,6 +151,25 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
           onPressed: onToggleSearch,
         ),
+        if (!isSearching && onDeleteAccount != null)
+          PopupMenuButton<String>(
+            key: const ValueKey('chat-menu'),
+            icon: const Icon(Icons.more_vert_rounded, color: AppColors.white),
+            onSelected: (_) => onDeleteAccount!(),
+            itemBuilder: (context) => [
+              PopupMenuItem<String>(
+                key: const ValueKey('chat-delete-account'),
+                value: 'delete',
+                child: Row(
+                  children: [
+                    const Icon(Icons.delete_forever_rounded, color: Colors.red),
+                    const SizedBox(width: 10),
+                    Text(AppLocalizations.of(context).chatDeleteAccount),
+                  ],
+                ),
+              ),
+            ],
+          ),
         IconButton(
           onPressed: () => Navigator.pop(context),
           icon: Transform.flip(

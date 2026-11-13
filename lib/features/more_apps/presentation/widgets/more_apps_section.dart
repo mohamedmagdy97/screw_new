@@ -209,22 +209,19 @@ class _GetChip extends StatelessWidget {
 
   final String label;
 
-  static const Color _gold = Color(0xFFF59E0B);
-  static const Color _onGold = Color(0xFF1E1733);
-
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       decoration: BoxDecoration(
-        color: _gold,
+        color: context.palette.gold,
         borderRadius: BorderRadius.circular(AppRadii.pill),
       ),
       child: CustomText(
         text: label,
         fontSize: 12.5,
         fontFamily: AppFonts.bold,
-        color: _onGold,
+        color: context.palette.onGold,
         maxLines: 1,
       ),
     );

@@ -52,9 +52,11 @@
   <section>
     <h2>بيانات بتتبعت لما تستخدم مميزات معيّنة</h2>
     <ul>
-      <li><b>الشات العام (اختياري):</b> عشان تدخل الشات بتكتب اسمك ورقم موبايلك وبلدك وسنّك. بنحفظ البيانات دي مع اسم موديل الموبايل، ورسايلك (النص وأي صورة بتبعتها من الاستوديو)، وحالة الاتصال (أونلاين/بيكتب)، والبلاغات والحظر، على Google Firebase (Cloud Firestore). الاسم والرسايل بتظهر لباقي المشاركين في الشات.</li>
+      <li><b>الشات العام (اختياري):</b> عشان تدخل الشات بتكتب اسمك ورقم موبايلك وبلدك. بنحفظ البيانات دي مع رسايلك (النص وأي صورة بتبعتها من الاستوديو)، وحالة الاتصال (أونلاين/بيكتب)، والبلاغات والحظر، على Google Firebase (Cloud Firestore). الاسم والرسايل بتظهر لباقي المشاركين في الشات.</li>
+      <li><b>متابعة لعبة لايف (اختياري):</b> لو شغّلت «خلّي صحابك يتابعوا لايف»، أسماء اللاعبين ونتايج الجولات بتتحفظ على Firebase تحت كود اللعبة، وأي حد معاه الكود يقدر يشوفها. البيانات دي بتتمسح لوحدها بعد 24 ساعة، ومفيهاش أي بيانات تانية عنك.</li>
+      <li><b>الكاميرا (اختياري):</b> بتستخدم بس لما تمسح QR لعبة لايف، أو تصوّر صورة تبعتها في الشات. الصورة اللي بتشوفها الكاميرا وانت بتمسح مش بتتحفظ ومش بتتبعت لأي حد.</li>
       <li><b>مشاركة النتيجة (اختياري):</b> لو اخترت تشارك صورة نتيجة، الصورة والعنوان اللي كتبته بيترفعوا على Firebase وبيظهروا لباقي المستخدمين في «نتائج مشتركة».</li>
-      <li><b>الإشعارات:</b> بنستخدم Firebase Cloud Messaging عشان نبعت إشعارات التحديثات والأخبار. ده بيستخدم معرّف إشعارات للجهاز (token) واسم موديل الموبايل.</li>
+      <li><b>الإشعارات:</b> بنستخدم Firebase Cloud Messaging عشان نبعت إشعارات التحديثات والأخبار. ده بيستخدم معرّف إشعارات للجهاز (token) بس.</li>
       <li><b>مواقيت الصلاة:</b> اسم المدينة اللي اخترتها بيتبعت لخدمة <span class="ltr">api.aladhan.com</span> عشان نجيب المواقيت. مش بنستخدم موقعك (GPS).</li>
       <li><b>تطبيقات MegTech التانية:</b> التطبيق بيقرا قائمة عامة من <span class="ltr">el-mahkama.web.app</span>، من غير ما يبعت أي بيانات عنك.</li>
       <li><b>إعدادات وأداء التطبيق:</b> Firebase Remote Config وFirebase Performance بيجمعوا بيانات تقنية مجهولة (زي سرعة التحميل وإصدار التطبيق ونوع الجهاز) عشان نحسّن التطبيق ونعرف لو فيه تحديث مطلوب.</li>
@@ -65,7 +67,7 @@
     <h2>اللي مش بنعمله</h2>
     <ul>
       <li>مش بنبيع بياناتك ولا بنشاركها مع معلنين. التطبيق مفيهوش إعلانات.</li>
-      <li>مش بنطلب موقعك ولا جهات الاتصال ولا الكاميرا ولا الميكروفون.</li>
+      <li>مش بنطلب موقعك ولا جهات الاتصال ولا الميكروفون، ومش بنسأل عن سنّك.</li>
       <li>الصور اللي بتختارها للمشاركة بس هي اللي بتترفع، ومش بنقرا باقي صورك.</li>
     </ul>
   </section>
@@ -80,8 +82,10 @@
   </section>
 
   <section>
-    <h2>مدة الحفظ والحذف</h2>
-    <p>بيانات الشات والصور المشتركة بتفضل محفوظة طول ما الخدمة شغالة، إلا لو طلبت حذفها. تقدر تطلب حذف حسابك في الشات ورسايلك وصورك المشتركة في أي وقت. ابعتلنا رقم الموبايل اللي سجلت بيه على واتساب أو الإيميل تحت، وبنحذفها خلال 30 يوم.</p>
+    <h2 id="delete">حذف حسابك وبياناتك</h2>
+    <p><b>من جوّه التطبيق:</b> افتح الشات ← القائمة (⋮) فوق ← «احذف حسابي» ← «احذف». ده بيمسح حساب الشات وكل رسايلك وصورك في الشات من السيرفر على طول، وبيمسح بياناتك من الموبايل.</p>
+    <p><b>من غير التطبيق:</b> ابعتلنا رقم الموبايل اللي سجلت بيه على واتساب أو الإيميل تحت وقول «احذف حسابي»، وبنحذف الحساب والرسايل خلال 30 يوم.</p>
+    <p>صور «نتائج مشتركة» مش مربوطة بحساب، وتقدر تمسح أي صورة شاركتها من شاشة «نتائج مشتركة»، أو تبعتلنا وإحنا نمسحها. الألعاب اللايف بتتمسح لوحدها بعد 24 ساعة. باقي بيانات الشات بتفضل محفوظة طول ما الخدمة شغالة لحد ما تطلب حذفها.</p>
   </section>
 
   <section>
@@ -117,9 +121,11 @@
     <section>
       <h2>Data sent when you use certain features</h2>
       <ul>
-        <li><b>Public chat (optional):</b> to join you enter your name, phone number, country and age. We store these with your phone model name, your messages (text and any image you send from your gallery), presence status (online/typing), reports and blocks in Google Firebase (Cloud Firestore). Your name and messages are visible to other chat members.</li>
+        <li><b>Public chat (optional):</b> to join you enter your name, phone number and country. We store these with your messages (text and any image you send from your gallery), presence status (online/typing), reports and blocks in Google Firebase (Cloud Firestore). Your name and messages are visible to other chat members.</li>
+        <li><b>Live games (optional):</b> when you turn on “Let friends follow live”, player names and round scores are stored in Firebase under the game code, visible to anyone with the code, and deleted automatically after 24 hours.</li>
+        <li><b>Camera (optional):</b> used only to scan a live-game QR code or to take a photo you send in the chat. What the camera sees while scanning is not stored or sent.</li>
         <li><b>Shared results (optional):</b> a result image and the title you write are uploaded to Firebase and shown to other users.</li>
-        <li><b>Notifications:</b> Firebase Cloud Messaging, using a device notification token and the phone model name.</li>
+        <li><b>Notifications:</b> Firebase Cloud Messaging, using a device notification token only.</li>
         <li><b>Prayer times:</b> the city you pick is sent to api.aladhan.com. We do not use your location (GPS).</li>
         <li><b>More MegTech apps:</b> a public list is read from el-mahkama.web.app; nothing about you is sent.</li>
         <li><b>App config and performance:</b> Firebase Remote Config and Performance collect anonymous technical data (load times, app version, device type).</li>
@@ -128,12 +134,14 @@
 
     <section>
       <h2>What we don't do</h2>
-      <p>We don't sell or share your data with advertisers, and the app has no ads. We don't access your location, contacts, camera or microphone. Only images you choose to share are uploaded.</p>
+      <p>We don't sell or share your data with advertisers, and the app has no ads. We don't access your location, contacts or microphone, and we don't ask your age. Only images you choose to share are uploaded.</p>
     </section>
 
     <section>
-      <h2>Retention and deletion</h2>
-      <p>Chat data and shared images are kept while the service runs unless you ask us to delete them. To delete your chat account, messages and shared images, message us on WhatsApp or e-mail with the phone number you registered; we delete it within 30 days.</p>
+      <h2 id="delete-en">Deleting your account and data</h2>
+      <p><b>In the app:</b> open the chat → menu (⋮) → “Delete my account” → “Delete”. This immediately deletes your chat account and all your chat messages and images from our server, and clears your data on the phone.</p>
+      <p><b>Without the app:</b> message us on WhatsApp or e-mail with the phone number you registered and ask to delete your account; we delete it within 30 days.</p>
+      <p>Shared-result images aren't linked to an account; you can delete one from the “Shared results” screen or ask us to. Live games are deleted automatically after 24 hours. Other chat data is kept while the service runs until you ask us to delete it.</p>
     </section>
 
     <section>

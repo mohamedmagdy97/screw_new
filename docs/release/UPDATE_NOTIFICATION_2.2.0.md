@@ -14,6 +14,13 @@ Firebase Console ← Messaging ← New campaign ← Notifications.
 5. Review ← Publish. لا تضغط Publish قبل ما النسخة 2.2.0 (versionCode 16) تظهر على Google Play.
 
 ## اللي جديد في النسخة دي
+- **تابع اللعبة لايف:** اللي بيسجّل يدوس «خلّي صحابك يتابعوا لايف» فيطلع كود وQR، وصحابه يفتحوا «تابع لعبة لايف» ويشوفوا النتيجة وهي بتتحدّث على موبايلاتهم.
+- **ابعت النتيجة لصحابك:** بعد آخر جولة كارت جاهز فيه الترتيب والفايز ولوجو التطبيق ولينك التحميل، يتبعت على واتساب أو أي تطبيق.
+- **نفس اللاعيبة تاني:** زرار في نهاية اللعبة يحفظها ويبدأ جديدة بنفس الأسامي.
+- **الألقاب:** «ملك السكرو» و«أكبر سكرو» و«أنضف لعبة» و«ابن الترابيزة» في الإحصائيات.
+- **احذف حسابي:** من قائمة الشات، بيمسح الحساب والرسايل والصور.
+- **بيانات أقل:** الشات ما بقاش بيطلب السن، والتطبيق ما بقاش بيبعت اسم موديل الموبايل.
+- لمسة دهبي MegTech في الفايز والألقاب والبطولة.
 - صفحة «عن التطبيق»: إيه هو التطبيق، مين المطوّر، تواصل على واتساب برسالة جاهزة، اقتراح فكرة، نسخ الإيميل، تقييم ومشاركة، وتراخيص المكتبات.
 - «تطبيقات تانية من MegTech»: باقي تطبيقاتنا (محكمة، الحقيقة المجهولة، Clenova) بلينك المتجر.
 - صفحة «تواصل معنا» اتشالت، وكل طرق التواصل بقت في «عن التطبيق».
@@ -21,33 +28,43 @@ Firebase Console ← Messaging ← New campaign ← Notifications.
 - هوية MegTech الجديدة في القائمة الجانبية وصفحة «عن التطبيق».
 
 ## النسخة العربية (الأساسية)
-**العنوان:** سكرو حاسبة 2.2: شوف مين ورا التطبيق 👋
+**العنوان:** سكرو حاسبة 2.2: تابعوا اللعبة لايف 📡
 
-**النص:** صفحة «عن التطبيق» الجديدة: كلّمنا على واتساب واقترح أفكارك، واكتشف تطبيقات تانية من MegTech. حدّث الآن!
+**النص:** صحابك يتابعوا النتيجة لايف من موبايلاتهم، ابعت كارت النتيجة على واتساب، والعب تاني بنفس اللاعيبة في ضغطة، وألقاب جديدة زي «ملك السكرو» 👑. حدّث الآن!
 
 ## بديل أقصر
 **العنوان:** تحديث جديد لسكرو حاسبة 🎴
 
-**النص:** صفحة «عن التطبيق» وتطبيقات جديدة من MegTech. حدّث من جوجل بلاي.
+**النص:** لعب لايف مع صحابك، كارت نتيجة جاهز، وألقاب جديدة. حدّث من جوجل بلاي.
 
 ## English (لو حبيت حملة منفصلة للإنجليزي)
-**Title:** Screw Calculator 2.2 👋
+**Title:** Screw Calculator 2.2: follow games live 📡
 
-**Body:** New About page: message us on WhatsApp, suggest ideas, and discover more apps from MegTech. Update now!
+**Body:** Friends follow the score live on their phones, share a ready result card, rematch in one tap, and earn titles like Screw King 👑. Update now!
 
 ## «ما الجديد» في Google Play (Release notes)
 ```
 <ar>
-• صفحة «عن التطبيق» جديدة: تواصل معانا على واتساب واقترح أفكارك
-• تطبيقات تانية من MegTech
-• تحسينات وإصلاحات
+• تابعوا اللعبة لايف من أكتر من موبايل بكود أو QR
+• كارت نتيجة جاهز تبعته على واتساب
+• «نفس اللاعيبة تاني» في ضغطة
+• ألقاب جديدة: ملك السكرو، أكبر سكرو وغيرهم
+• صفحة «عن التطبيق» وحذف حساب الشات
 </ar>
 <en-US>
-• New About page: reach us on WhatsApp and suggest ideas
-• More apps from MegTech
-• Improvements and fixes
+• Follow games live on several phones with a code or QR
+• Ready result card to send on WhatsApp
+• “Same players again” in one tap
+• New titles: Screw King, Biggest Screw and more
+• About page and chat account deletion
 </en-US>
 ```
+
+## قبل النشر (مهم)
+1. انشر قواعد Firestore الجديدة (فيها `live_games`): `firebase deploy --only firestore:rules`.
+2. فعّل TTL من Firebase Console ← Firestore ← TTL على collection `live_games` والحقل `expireAt` (بيمسح الألعاب اللايف بعد 24 ساعة).
+3. فعّل GitHub Pages لريبو `screw-new-privacy` (Settings ← Pages ← Branch: main / root)، وحط اللينك `https://mohamedmagdy97.github.io/screw-new-privacy/` في Play Console كسياسة خصوصية، و`…/screw-new-privacy/#delete` كلينك حذف الحساب.
+4. حدّث نموذج «أمان البيانات» (Data safety): الاسم ورقم الموبايل والبلد (الشات، اختياري، ممكن تتمسح)، الرسايل والصور (الشات)، الكاميرا (مسح QR)، ومعرّف الإشعارات. شيل السن واسم الجهاز.
 
 ## ملاحظات
 - لازم الإصدار يكون منشور فعلًا (versionCode 16) قبل الموعد، وإلا الضغط على الإشعار هيودّي لنسخة قديمة.

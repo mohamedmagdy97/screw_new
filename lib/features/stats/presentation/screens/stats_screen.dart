@@ -9,6 +9,7 @@ import 'package:screw_calculator/core/widgets/custom_appbar.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/core/widgets/skeleton.dart';
 import 'package:screw_calculator/features/stats/domain/entities/player_stats.dart';
+import 'package:screw_calculator/features/stats/domain/entities/player_title.dart';
 import 'package:screw_calculator/features/stats/presentation/cubit/stats_cubit.dart';
 import 'package:screw_calculator/features/stats/presentation/widgets/win_rate_chart.dart';
 import 'package:screw_calculator/l10n/app_localizations.dart';
@@ -110,6 +111,10 @@ class _StatsBody extends StatelessWidget {
             ),
           ],
         ),
+        if (state.titles.isNotEmpty) ...[
+          const SizedBox(height: 20),
+          _TitlesSection(titles: state.titles),
+        ],
         const SizedBox(height: 20),
         _Section(
           title: AppLocalizations.of(context).winRate,
@@ -255,6 +260,117 @@ class _Metric extends StatelessWidget {
           color: context.palette.textSecondary,
         ),
       ],
+    );
+  }
+}
+
+/// «الألقاب»: كروت ذهبية، كل لقب وصاحبه.
+class _TitlesSection extends StatelessWidget {
+  const _TitlesSection({required this.titles});
+
+  final List<PlayerTitle> titles;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        CustomText(
+          text: l10n.titlesHeader,
+          fontSize: 16,
+          fontFamily: AppFonts.bold,
+          textAlign: TextAlign.start,
+        ),
+        const SizedBox(height: 10),
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final width = (constraints.maxWidth - 12) / 2;
+            return Wrap(
+              spacing: 12,
+              runSpacing: 12,
+              children: [
+                for (final t in titles)
+                  SizedBox(
+                    width: width,
+                    child: TitleCard(title: t),
+                  ),
+              ],
+            );
+          },
+        ),
+      ],
+    );
+  }
+}
+
+/// كارت لقب واحد بلمسة ذهبي MegTech.
+class TitleCard extends StatelessWidget {
+  const TitleCard({super.key, required this.title});
+
+  final PlayerTitle title;
+
+  static String emoji(PlayerTitleKind kind) => switch (kind) {
+    PlayerTitleKind.king => '👑',
+    PlayerTitleKind.biggestScrew => '💥',
+    PlayerTitleKind.cleanestGame => '✨',
+    PlayerTitleKind.mostGames => '🃏',
+  };
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final palette = context.palette;
+    final (label, detail) = switch (title.kind) {
+      PlayerTitleKind.king => (
+        l10n.titleKing,
+        l10n.titleKingDetail(title.value),
+      ),
+      PlayerTitleKind.biggestScrew => (
+        l10n.titleBiggestScrew,
+        l10n.titlePointsDetail(title.value),
+      ),
+      PlayerTitleKind.cleanestGame => (
+        l10n.titleCleanestGame,
+        l10n.titlePointsDetail(title.value),
+      ),
+      PlayerTitleKind.mostGames => (
+        l10n.titleMostGames,
+        l10n.titleGamesDetail(title.value),
+      ),
+    };
+    return Container(
+      key: ValueKey('title-${title.kind.name}'),
+      padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
+      decoration: BoxDecoration(
+        color: Color.alphaBlend(
+          palette.gold.withValues(alpha: 0.12),
+          palette.surface,
+        ),
+        borderRadius: BorderRadius.circular(AppRadii.lg),
+        border: Border.all(color: palette.gold.withValues(alpha: 0.7)),
+      ),
+      child: Column(
+        children: [
+          Text(emoji(title.kind), style: const TextStyle(fontSize: 26)),
+          const SizedBox(height: 4),
+          CustomText(
+            text: label,
+            fontSize: 13,
+            fontFamily: AppFonts.bold,
+            color: palette.gold,
+            maxLines: 1,
+          ),
+          const SizedBox(height: 2),
+          CustomText(text: title.name, fontSize: 16.5, maxLines: 1),
+          CustomText(
+            text: detail,
+            fontSize: 12,
+            color: palette.textSecondary,
+            maxLines: 1,
+          ),
+        ],
+      ),
     );
   }
 }

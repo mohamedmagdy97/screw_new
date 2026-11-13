@@ -105,7 +105,7 @@ class _AboutScreenState extends State<AboutScreen> {
                     _Tile(
                       key: const ValueKey('about-suggest'),
                       icon: Icons.lightbulb_rounded,
-                      iconColor: const Color(0xFFF59E0B),
+                      iconColor: palette.gold,
                       title: l10n.aboutSuggest,
                       subtitle: l10n.aboutSuggestHint,
                       onTap: () => _whatsapp(l10n.aboutSuggestMessage),
@@ -127,7 +127,7 @@ class _AboutScreenState extends State<AboutScreen> {
                     _Tile(
                       key: const ValueKey('about-rate'),
                       icon: Icons.star_rounded,
-                      iconColor: const Color(0xFFF59E0B),
+                      iconColor: palette.gold,
                       title: l10n.aboutRate,
                       subtitle: l10n.aboutRateHint,
                       onTap: () => InAppReview.instance.openStoreListing(),
@@ -140,6 +140,13 @@ class _AboutScreenState extends State<AboutScreen> {
                       onTap: () => SharePlus.instance.share(
                         ShareParams(text: l10n.inviteText(AppLinks.playStore)),
                       ),
+                    ),
+                    _Tile(
+                      key: const ValueKey('about-privacy'),
+                      icon: Icons.privacy_tip_rounded,
+                      iconColor: palette.win,
+                      title: l10n.aboutPrivacy,
+                      onTap: () => _open(AppLinks.privacyPolicy),
                     ),
                     _Tile(
                       key: const ValueKey('about-licenses'),
@@ -250,10 +257,7 @@ class _DeveloperCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final gold = Color(
-      isDark ? DeveloperInfo.goldOnDark : DeveloperInfo.goldOnLight,
-    );
+    final gold = context.palette.gold;
     return _Card(
       title: l10n.aboutDeveloperTitle,
       child: Column(

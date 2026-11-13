@@ -293,12 +293,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get cityLabel => 'المدينة';
 
   @override
-  String get ageHint => 'عندك كام سنة';
-
-  @override
-  String get ageLabel => 'العمر';
-
-  @override
   String get chatUnavailableTitle => 'غير متاح';
 
   @override
@@ -771,4 +765,155 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get aboutMadeBy => 'من';
+
+  @override
+  String get titlesHeader => 'الألقاب';
+
+  @override
+  String get titleKing => 'ملك السكرو';
+
+  @override
+  String titleKingDetail(int count) {
+    return 'كسب $count مرة';
+  }
+
+  @override
+  String get titleBiggestScrew => 'أكبر سكرو';
+
+  @override
+  String get titleCleanestGame => 'أنضف لعبة';
+
+  @override
+  String get titleMostGames => 'ابن الترابيزة';
+
+  @override
+  String titlePointsDetail(int points) {
+    return '$points نقطة';
+  }
+
+  @override
+  String titleGamesDetail(int count) {
+    return 'لعب $count لعبة';
+  }
+
+  @override
+  String shareCardWinner(String names) {
+    return '🏆 الفايز: $names';
+  }
+
+  @override
+  String shareResultMessage(String link) {
+    return '🃏 دي نتيجة لعبتنا في سكرو حاسبة! احسبوا نقطكم انتو كمان:\n$link';
+  }
+
+  @override
+  String get shareResultNow => 'ابعت النتيجة لصحابك';
+
+  @override
+  String get rematch => 'نفس اللاعيبة تاني';
+
+  @override
+  String get chatDeleteAccount => 'احذف حسابي';
+
+  @override
+  String get chatDeleteAccountTitle => 'تحذف حسابك في الشات؟';
+
+  @override
+  String get chatDeleteAccountBody =>
+      'هنمسح حسابك وكل رسايلك وصورك في الشات نهائيًا، ومش هينفع نرجّعهم. ممكن تسجّل تاني في أي وقت.';
+
+  @override
+  String get chatDeleteAccountConfirm => 'احذف';
+
+  @override
+  String get chatAccountDeleted => 'اتمسح حسابك ورسايلك من الشات';
+
+  @override
+  String get chatDeleteAccountFailed =>
+      'مقدرناش نمسح الحساب. اتأكد من النت وجرّب تاني.';
+
+  @override
+  String get liveStart => 'خلّي صحابك يتابعوا لايف';
+
+  @override
+  String liveOnAir(String code) {
+    return 'لايف · $code';
+  }
+
+  @override
+  String get liveStartFailed =>
+      'مقدرناش نبدأ اللايف. اتأكد من النت وجرّب تاني.';
+
+  @override
+  String get liveHostTitle => 'اللعبة لايف';
+
+  @override
+  String get liveHostHint =>
+      'صحابك يفتحوا «تابع لعبة لايف» من القائمة ويمسحوا الكود ده أو يكتبوه';
+
+  @override
+  String get liveCodeCopied => 'اتنسخ الكود';
+
+  @override
+  String get liveShareCode => 'ابعت الكود';
+
+  @override
+  String liveShareText(String code, String link) {
+    return 'تابع لعبتنا لايف في سكرو حاسبة 🃏\nافتح «تابع لعبة لايف» واكتب الكود: $code\nمعندكش التطبيق؟ $link';
+  }
+
+  @override
+  String get liveStop => 'وقّف اللايف';
+
+  @override
+  String get liveJoinTitle => 'تابع لعبة لايف';
+
+  @override
+  String get liveJoinHint =>
+      'اكتب الكود اللي ظاهر عند صاحبك، أو امسح الـ QR من موبايله، وهتشوف النتيجة وهي بتتحدّث.';
+
+  @override
+  String get liveJoinButton => 'تابع';
+
+  @override
+  String get liveScanButton => 'امسح QR';
+
+  @override
+  String get liveCodeInvalid => 'الكود 6 حروف وأرقام، زي ABC234';
+
+  @override
+  String get liveScanTitle => 'امسح كود اللعبة';
+
+  @override
+  String get liveScanHint => 'وجّه الكاميرا على الـ QR اللي في موبايل صاحبك';
+
+  @override
+  String get liveScanError =>
+      'مقدرناش نفتح الكاميرا. اسمح للتطبيق باستخدامها أو اكتب الكود بإيدك.';
+
+  @override
+  String liveViewerTitle(String code) {
+    return 'لايف · $code';
+  }
+
+  @override
+  String liveRound(int n) {
+    return 'الجولة $n من 5';
+  }
+
+  @override
+  String get liveFinished => 'الجولات خلصت';
+
+  @override
+  String get liveEnded => 'صاحب اللعبة وقّف اللايف';
+
+  @override
+  String get liveNotFound =>
+      'مفيش لعبة لايف بالكود ده. اتأكد من الكود، أو يمكن اللعبة خلصت.';
+
+  @override
+  String get liveLoadError => 'مقدرناش نوصل للعبة. اتأكد من النت.';
+
+  @override
+  String get aboutPrivacy => 'سياسة الخصوصية';
 }

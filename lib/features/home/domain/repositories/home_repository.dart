@@ -16,7 +16,6 @@ abstract class HomeRepository {
     required String name,
     required String phone,
     required String country,
-    required String age,
   });
 
   Future<bool> canEnterChat({required String phone, required String name});

@@ -18,9 +18,14 @@ import 'package:screw_calculator/features/dashboard/presentation/cubit/dashboard
 import 'package:screw_calculator/features/dashboard/presentation/widgets/dashboard_app_bar.dart';
 import 'package:screw_calculator/features/dashboard/presentation/widgets/marquee_bar.dart';
 import 'package:screw_calculator/features/dashboard/presentation/widgets/player_card.dart';
+import 'package:screw_calculator/features/dashboard/presentation/widgets/result_share.dart';
 import 'package:screw_calculator/features/dashboard/presentation/widgets/round_header.dart';
 import 'package:screw_calculator/features/dashboard/presentation/widgets/share_screen_btn.dart';
 import 'package:screw_calculator/features/dashboard/presentation/widgets/team_card.dart';
+import 'package:screw_calculator/features/live/domain/entities/live_game.dart';
+import 'package:screw_calculator/features/live/domain/repositories/live_game_repository.dart';
+import 'package:screw_calculator/features/live/presentation/live_broadcaster.dart';
+import 'package:screw_calculator/features/live/presentation/widgets/live_host_sheet.dart';
 import 'package:screw_calculator/l10n/app_localizations.dart';
 
 class DashboardScreen extends StatelessWidget {
@@ -72,6 +77,28 @@ class _DashboardView extends StatefulWidget {
 class _DashboardViewState extends State<_DashboardView> {
   final ScreenshotController _screenshotController = ScreenshotController();
   late final ConfettiController _confettiController;
+  late final LiveBroadcaster _live = LiveBroadcaster(sl<LiveGameRepository>());
+
+  LiveGame Function(String code) _liveSnapshot(DashboardCubit cubit) {
+    final state = cubit.state;
+    final round = cubit.currentRound;
+    final finished = cubit.isFinished;
+    return (code) =>
+        liveGameFromDashboard(code, state, round: round, finished: finished);
+  }
+
+  /// «خلّي صحابك يتابعوا لايف»: يبدأ البث (لو لسه) ويعرض الكود والـ QR.
+  Future<void> _openLive(DashboardCubit cubit) async {
+    final l10n = AppLocalizations.of(context);
+    try {
+      final code = await _live.start(_liveSnapshot(cubit));
+      if (!mounted) return;
+      await showLiveHostSheet(context, code: code, onStop: _live.stop);
+    } catch (_) {
+      if (!mounted) return;
+      Utilities().showCustomSnack(context, txt: l10n.liveStartFailed);
+    }
+  }
 
   @override
   void initState() {
@@ -83,6 +110,7 @@ class _DashboardViewState extends State<_DashboardView> {
 
   @override
   void dispose() {
+    _live.dispose();
     _confettiController.dispose();
     super.dispose();
   }
@@ -107,9 +135,27 @@ class _DashboardViewState extends State<_DashboardView> {
           title: l10n.gameOver,
           content: Column(
             children: [
-              _ResultPill(text: l10n.winnerLabel(winners), color: palette.win),
+              _ResultPill(text: l10n.winnerLabel(winners), color: palette.gold),
               const SizedBox(height: 8),
               _ResultPill(text: l10n.loserLabel(losers), color: palette.lose),
+              const SizedBox(height: 16),
+              _DialogAction(
+                key: const ValueKey('result-share'),
+                icon: Icons.ios_share_rounded,
+                label: l10n.shareResultNow,
+                filled: true,
+                onPressed: () => shareResultCard(context, cubit),
+              ),
+              const SizedBox(height: 8),
+              _DialogAction(
+                key: const ValueKey('result-rematch'),
+                icon: Icons.replay_rounded,
+                label: l10n.rematch,
+                onPressed: () async {
+                  Navigator.pop(ctx);
+                  await cubit.rematch();
+                },
+              ),
             ],
           ),
           actions: [
@@ -129,6 +175,15 @@ class _DashboardViewState extends State<_DashboardView> {
 
   @override
   Widget build(BuildContext context) {
+    return BlocListener<DashboardCubit, DashboardState>(
+      listenWhen: (a, b) => a.revision != b.revision,
+      listener: (context, _) =>
+          _live.push(_liveSnapshot(context.read<DashboardCubit>())),
+      child: _buildBoard(context),
+    );
+  }
+
+  Widget _buildBoard(BuildContext context) {
     return BlocConsumer<DashboardCubit, DashboardState>(
       listenWhen: (a, b) => a.status != b.status && b.message != null,
       listener: (context, state) {
@@ -212,6 +267,16 @@ class _DashboardViewState extends State<_DashboardView> {
                                       teamsView: state.showTeamsView,
                                       fromHistory: widget.fromHistory,
                                     ),
+                                    if (!widget.fromHistory)
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                          bottom: 20,
+                                        ),
+                                        child: _LiveButton(
+                                          live: _live,
+                                          onTap: () => _openLive(cubit),
+                                        ),
+                                      ),
                                   ],
                                 ),
                               ),
@@ -384,6 +449,108 @@ class _ResultPill extends StatelessWidget {
         border: Border.all(color: color.withValues(alpha: 0.5)),
       ),
       child: CustomText(text: text, fontSize: 17, color: color),
+    );
+  }
+}
+
+/// زرار بعرض الحوار (مشاركة النتيجة / نفس اللاعيبة تاني).
+class _DialogAction extends StatelessWidget {
+  const _DialogAction({
+    super.key,
+    required this.icon,
+    required this.label,
+    required this.onPressed,
+    this.filled = false,
+  });
+
+  final IconData icon;
+  final String label;
+  final VoidCallback onPressed;
+  final bool filled;
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = context.palette;
+    final shape = RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(AppRadii.md),
+    );
+    const textStyle = TextStyle(fontFamily: AppFonts.bold, fontSize: 15.5);
+    return SizedBox(
+      width: double.infinity,
+      height: 48,
+      child: filled
+          ? FilledButton.icon(
+              onPressed: onPressed,
+              icon: Icon(icon, size: 20),
+              label: Text(label),
+              style: FilledButton.styleFrom(
+                backgroundColor: palette.brand,
+                foregroundColor: Colors.white,
+                shape: shape,
+                textStyle: textStyle,
+              ),
+            )
+          : OutlinedButton.icon(
+              onPressed: onPressed,
+              icon: Icon(icon, size: 20),
+              label: Text(label),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: palette.brandSoft,
+                side: BorderSide(color: palette.brand.withValues(alpha: 0.6)),
+                shape: shape,
+                textStyle: textStyle,
+              ),
+            ),
+    );
+  }
+}
+
+/// زرار «خلّي صحابك يتابعوا لايف»؛ وهو شغال بيبان «لايف · الكود».
+class _LiveButton extends StatelessWidget {
+  const _LiveButton({required this.live, required this.onTap});
+
+  final LiveBroadcaster live;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final palette = context.palette;
+    return ListenableBuilder(
+      listenable: live,
+      builder: (context, _) {
+        final code = live.code;
+        final on = code != null;
+        return SizedBox(
+          width: double.infinity,
+          height: 48,
+          child: OutlinedButton.icon(
+            key: const ValueKey('live-button'),
+            onPressed: onTap,
+            icon: Icon(
+              on ? Icons.sensors_rounded : Icons.live_tv_rounded,
+              size: 20,
+              color: on ? palette.lose : null,
+            ),
+            label: Text(on ? l10n.liveOnAir(code) : l10n.liveStart),
+            style: OutlinedButton.styleFrom(
+              foregroundColor: on ? palette.lose : palette.brandSoft,
+              side: BorderSide(
+                color: (on ? palette.lose : palette.brand).withValues(
+                  alpha: 0.6,
+                ),
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(AppRadii.md),
+              ),
+              textStyle: const TextStyle(
+                fontFamily: AppFonts.bold,
+                fontSize: 15,
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

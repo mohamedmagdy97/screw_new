@@ -19,6 +19,8 @@ class AppPalette extends ThemeExtension<AppPalette> {
     required this.win,
     required this.lose,
     required this.brandGradient,
+    required this.gold,
+    required this.onGold,
   });
 
   /// اللون البنفسجي الأساسي (الهوية).
@@ -57,6 +59,12 @@ class AppPalette extends ThemeExtension<AppPalette> {
   /// تدرّج الهوية (للأزرار والعناوين).
   final Gradient brandGradient;
 
+  /// ذهبي MegTech: للتاج والألقاب والإنجازات (لمسة، مش لون أساسي).
+  final Color gold;
+
+  /// لون النص فوق [gold].
+  final Color onGold;
+
   // ===== Dark (gaming) =====
   static const AppPalette dark = AppPalette(
     brand: Color(0xFF8B5CF6),
@@ -75,6 +83,8 @@ class AppPalette extends ThemeExtension<AppPalette> {
       end: Alignment.bottomRight,
       colors: [Color(0xFF8B5CF6), Color(0xFF6366F1)],
     ),
+    gold: Color(0xFFD4AF6A),
+    onGold: Color(0xFF0A0A0C),
   );
 
   // ===== Light (gaming, high-contrast) =====
@@ -95,6 +105,8 @@ class AppPalette extends ThemeExtension<AppPalette> {
       end: Alignment.bottomRight,
       colors: [Color(0xFF8B5CF6), Color(0xFF6D28D9)],
     ),
+    gold: Color(0xFFA9802F),
+    onGold: Color(0xFFFFFFFF),
   );
 
   @override
@@ -111,6 +123,8 @@ class AppPalette extends ThemeExtension<AppPalette> {
     Color? win,
     Color? lose,
     Gradient? brandGradient,
+    Color? gold,
+    Color? onGold,
   }) {
     return AppPalette(
       brand: brand ?? this.brand,
@@ -125,6 +139,8 @@ class AppPalette extends ThemeExtension<AppPalette> {
       win: win ?? this.win,
       lose: lose ?? this.lose,
       brandGradient: brandGradient ?? this.brandGradient,
+      gold: gold ?? this.gold,
+      onGold: onGold ?? this.onGold,
     );
   }
 
@@ -144,6 +160,8 @@ class AppPalette extends ThemeExtension<AppPalette> {
       win: Color.lerp(win, other.win, t)!,
       lose: Color.lerp(lose, other.lose, t)!,
       brandGradient: Gradient.lerp(brandGradient, other.brandGradient, t)!,
+      gold: Color.lerp(gold, other.gold, t)!,
+      onGold: Color.lerp(onGold, other.onGold, t)!,
     );
   }
 }

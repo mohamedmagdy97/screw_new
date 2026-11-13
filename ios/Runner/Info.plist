@@ -32,7 +32,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>نحتاج الوصول للكاميرا لالتقاط صورة لإرسالها في المحادثة.</string>
+	<string>الكاميرا بتستخدم لمسح كود QR عشان تتابع لعبة صاحبك لايف، أو لتصوير صورة تبعتها في الشات.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>نحتاج الوصول لمعرض الصور لاختيار صورة لإرسالها في المحادثة.</string>
 	<key>SKStoreReviewController</key>

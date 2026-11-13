@@ -4,6 +4,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:screw_calculator/app/di/service_locator.dart';
+import 'package:screw_calculator/core/constants/app_links.dart';
 import 'package:screw_calculator/core/constants/developer_info.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/features/about/presentation/screens/about_screen.dart';
@@ -150,5 +151,11 @@ void main() {
     await tapKey(tester, 'about-email');
     expect(clipboard, DeveloperInfo.email);
     expect(find.text('اتنسخ الإيميل'), findsOneWidget);
+  });
+
+  testWidgets('privacy policy opens the hosted page', (tester) async {
+    await pump(tester, AppTheme.light);
+    await tapKey(tester, 'about-privacy');
+    expect(launcher.opened.single, AppLinks.privacyPolicy);
   });
 }

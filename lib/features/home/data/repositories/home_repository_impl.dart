@@ -33,20 +33,13 @@ class HomeRepositoryImpl implements HomeRepository {
     required String name,
     required String phone,
     required String country,
-    required String age,
   }) async {
     await remoteDataSource.registerUser(
       name: name,
       phone: phone,
       country: country,
-      age: int.tryParse(age) ?? 0,
     );
-    await localDataSource.cacheUser(
-      name: name,
-      phone: phone,
-      country: country,
-      age: age,
-    );
+    await localDataSource.cacheUser(name: name, phone: phone, country: country);
   }
 
   @override

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:screw_calculator/core/constants/developer_info.dart';
 import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/generated/assets.dart';
@@ -25,7 +26,12 @@ class ShareResultCard extends StatelessWidget {
     required this.footer,
     required this.downloadLabel,
     required this.downloadUrl,
+    this.winnerBanner,
+    this.madeByLabel,
   });
+
+  /// ذهبي MegTech (الكارت دايمًا على خلفية بنفسجي غامق).
+  static const Color gold = Color(DeveloperInfo.goldOnDark);
 
   /// مرتّبة تصاعديًا: الأقل مجموعًا (الفائز) أولًا.
   final List<ShareResultEntry> entries;
@@ -36,6 +42,12 @@ class ShareResultCard extends StatelessWidget {
   /// نص "حمّل التطبيق" بجانب الـ QR، ورابط التحميل المرمّز فيه.
   final String downloadLabel;
   final String downloadUrl;
+
+  /// «🏆 الفايز: ...» تحت العنوان، أو null لو تعادل.
+  final String? winnerBanner;
+
+  /// «من» قبل علامة MegTech في آخر الكارت، أو null لإخفائها.
+  final String? madeByLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -60,6 +72,26 @@ class ShareResultCard extends StatelessWidget {
               fontFamily: AppFonts.bold,
             ),
           ),
+          if (winnerBanner case final banner?) ...[
+            const SizedBox(height: 10),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+              decoration: BoxDecoration(
+                color: gold.withValues(alpha: 0.18),
+                borderRadius: BorderRadius.circular(AppRadii.pill),
+                border: Border.all(color: gold),
+              ),
+              child: Text(
+                banner,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: gold,
+                  fontSize: 16,
+                  fontFamily: AppFonts.bold,
+                ),
+              ),
+            ),
+          ],
           const SizedBox(height: 16),
           for (var i = 0; i < entries.length; i++)
             _Row(
@@ -124,6 +156,39 @@ class ShareResultCard extends StatelessWidget {
               ],
             ),
           ),
+          if (madeByLabel case final madeBy?) ...[
+            const SizedBox(height: 12),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  madeBy,
+                  style: TextStyle(
+                    color: Colors.white.withValues(alpha: 0.8),
+                    fontSize: 12,
+                    fontFamily: AppFonts.regular,
+                  ),
+                ),
+                const SizedBox(width: 6),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  textDirection: TextDirection.ltr,
+                  children: [
+                    Image.asset(DeveloperInfo.mark, width: 16, height: 16),
+                    const SizedBox(width: 4),
+                    const Text(
+                      DeveloperInfo.brand,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontFamily: AppFonts.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
         ],
       ),
     );
@@ -146,7 +211,7 @@ class _Row extends StatelessWidget {
         color: Colors.white.withValues(alpha: isWinner ? 0.26 : 0.14),
         borderRadius: BorderRadius.circular(AppRadii.md),
         border: isWinner
-            ? Border.all(color: Colors.white.withValues(alpha: 0.8))
+            ? Border.all(color: ShareResultCard.gold, width: 1.5)
             : null,
       ),
       child: Row(
