@@ -1,0 +1,13 @@
+{
+ "version": 1,
+ "apps": [
+  {"id": "com.megtech.mahkama", "name": "محكمة", "tagline": "لعبة تحقيق جماعية: مين المذنب؟", "icon": "mahkama.png",
+   "play": "https://play.google.com/store/apps/details?id=com.megtech.mahkama", "appStore": "https://apps.apple.com/app/id6825098362"},
+  {"id": "com.megtech.hiddentruth", "name": "الحقيقة المجهولة", "tagline": "اكتب حكاية حقيقية في السر وخلّي صحابك يخمّنوا مين صاحبها", "icon": "hiddentruth.png",
+   "play": "https://play.google.com/store/apps/details?id=com.megtech.hiddentruth"},
+  {"id": "com.megTech.screw_calculator", "name": "سكرو حاسبة", "tagline": "احسب نقط السكرو بسهولة وانتو بتلعبوا", "icon": "screw.png",
+   "play": "https://play.google.com/store/apps/details?id=com.megTech.screw_calculator"},
+  {"id": "com.megtech.clenova", "name": "Clenova", "tagline": "نضّف موبايلك من الصور والملفات المتكررة", "icon": "clenova.png",
+   "play": "https://play.google.com/store/apps/details?id=com.megtech.clenova"}
+ ]
+}

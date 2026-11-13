@@ -403,5 +403,8 @@
         "type": "int"
       }
     }
-  }
+  },
+  "moreAppsTitle": "More apps from MegTech",
+  "moreAppsGet": "Get",
+  "moreAppsAll": "All our apps"
 }

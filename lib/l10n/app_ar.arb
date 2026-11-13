@@ -403,5 +403,8 @@
         "type": "int"
       }
     }
-  }
+  },
+  "moreAppsTitle": "تطبيقات تانية من MegTech",
+  "moreAppsGet": "نزّل",
+  "moreAppsAll": "كل تطبيقاتنا"
 }

@@ -713,4 +713,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String roundOfFive(int n) {
     return 'Round $n of 5';
   }
+
+  @override
+  String get moreAppsTitle => 'More apps from MegTech';
+
+  @override
+  String get moreAppsGet => 'Get';
+
+  @override
+  String get moreAppsAll => 'All our apps';
 }

@@ -5,4 +5,7 @@ abstract final class AppLinks {
   /// صفحة التطبيق على Google Play.
   static const String playStore =
       'https://play.google.com/store/apps/details?id=$androidPackage';
+
+  /// صفحة «كل تطبيقاتنا» من MegTech.
+  static const String megtechApps = 'https://el-mahkama.web.app/megtech/';
 }

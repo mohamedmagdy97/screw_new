@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
+import 'package:screw_calculator/core/constants/app_links.dart';
 import 'package:screw_calculator/core/l10n/locale_cubit.dart';
 import 'package:screw_calculator/core/theme/theme_cubit.dart';
 import 'package:screw_calculator/features/chat/data/datasources/chat_moderation_store.dart';
@@ -32,6 +33,9 @@ import 'package:screw_calculator/features/home/data/datasources/home_remote_data
 import 'package:screw_calculator/features/home/data/repositories/home_repository_impl.dart';
 import 'package:screw_calculator/features/home/domain/repositories/home_repository.dart';
 import 'package:screw_calculator/features/home/presentation/controller/home_controller.dart';
+import 'package:screw_calculator/features/more_apps/data/repositories/more_apps_repository_impl.dart';
+import 'package:screw_calculator/features/more_apps/domain/repositories/more_apps_repository.dart';
+import 'package:screw_calculator/features/more_apps/domain/usecases/get_more_apps_usecase.dart';
 import 'package:screw_calculator/features/notifications/data/datasources/notification_data_source.dart';
 import 'package:screw_calculator/features/notifications/data/repositories/notification_repository_impl.dart';
 import 'package:screw_calculator/features/notifications/domain/repositories/notification_repository.dart';
@@ -76,6 +80,7 @@ Future<void> setupLocator() async {
   _registerNotifications();
   _registerScreenshots();
   _registerSimpleCubits();
+  _registerMoreApps();
 }
 
 /// تبعيات خارجية (SDKs / تخزين) كـ singletons.
@@ -238,4 +243,15 @@ void _registerTournament() {
   sl
     ..registerLazySingleton<TournamentRepository>(TournamentRepositoryImpl.new)
     ..registerFactory<TournamentCubit>(() => TournamentCubit(repository: sl()));
+}
+
+/// تبعيات «تطبيقات تانية من MegTech» (more_apps).
+void _registerMoreApps() {
+  sl
+    ..registerLazySingleton<MoreAppsRepository>(
+      () => MoreAppsRepositoryImpl(fetch: fetchCatalogueText),
+    )
+    ..registerLazySingleton<GetMoreAppsUseCase>(
+      () => GetMoreAppsUseCase(sl(), selfId: AppLinks.androidPackage),
+    );
 }

@@ -707,4 +707,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String roundOfFive(int n) {
     return 'الجولة $n من 5';
   }
+
+  @override
+  String get moreAppsTitle => 'تطبيقات تانية من MegTech';
+
+  @override
+  String get moreAppsGet => 'نزّل';
+
+  @override
+  String get moreAppsAll => 'كل تطبيقاتنا';
 }

@@ -1368,6 +1368,24 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'الجولة {n} من 5'**
   String roundOfFive(int n);
+
+  /// No description provided for @moreAppsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تطبيقات تانية من MegTech'**
+  String get moreAppsTitle;
+
+  /// No description provided for @moreAppsGet.
+  ///
+  /// In ar, this message translates to:
+  /// **'نزّل'**
+  String get moreAppsGet;
+
+  /// No description provided for @moreAppsAll.
+  ///
+  /// In ar, this message translates to:
+  /// **'كل تطبيقاتنا'**
+  String get moreAppsAll;
 }
 
 class _AppLocalizationsDelegate
