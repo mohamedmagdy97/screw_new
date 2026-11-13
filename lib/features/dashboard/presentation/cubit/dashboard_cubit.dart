@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:equatable/equatable.dart';
@@ -27,7 +28,9 @@ class DashboardCubit extends Cubit<DashboardState> {
     required UploadScreenshotUseCase uploadScreenshotUseCase,
     required ActiveGameRepository activeGameRepository,
     required LastGamePublisher lastGamePublisher,
+    Future<void> Function()? onGameSaved,
   }) : _saveGameUseCase = saveGameUseCase,
+       _onGameSaved = onGameSaved,
        _activeGameRepository = activeGameRepository,
        _lastGamePublisher = lastGamePublisher,
        _uploadScreenshotUseCase = uploadScreenshotUseCase,
@@ -37,6 +40,9 @@ class DashboardCubit extends Cubit<DashboardState> {
   final UploadScreenshotUseCase _uploadScreenshotUseCase;
   final ActiveGameRepository _activeGameRepository;
   final LastGamePublisher _lastGamePublisher;
+
+  /// بعد حفظ جولة كاملة (مثلًا: طلب تقييم المتجر لو السياسة سامحة).
+  final Future<void> Function()? _onGameSaved;
 
   /// لقطات ما قبل كل إدخال لدعم التراجع (Undo) عن آخر نتيجة.
   final List<_ScoreSnapshot> _undoStack = [];
@@ -201,6 +207,7 @@ class DashboardCubit extends Cubit<DashboardState> {
           message: DashboardMessage.saved,
         ),
       );
+      unawaited(_onGameSaved?.call());
     } catch (_) {
       emit(
         state.copyWith(

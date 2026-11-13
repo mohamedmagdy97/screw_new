@@ -1,6 +1,7 @@
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:screw_calculator/core/constants/app_links.dart';
 import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
@@ -52,8 +53,7 @@ class _ForceUpdateWrapperState extends State<ForceUpdateWrapper>
     await rc.setDefaults({
       'min_supported_version': '1.0.0',
       'latest_version': '1.0.1',
-      'store_url':
-          'https://play.google.com/store/apps/details?id=com.megTech.screw_calculator',
+      'store_url': AppLinks.playStore,
     });
     await rc.fetchAndActivate();
 

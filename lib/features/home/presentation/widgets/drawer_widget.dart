@@ -12,6 +12,7 @@ import 'package:screw_calculator/core/l10n/locale_cubit.dart';
 import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/theme/theme_cubit.dart';
+import 'package:screw_calculator/core/widgets/brand_mark.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/features/about/presentation/screens/about_screen.dart';
 import 'package:screw_calculator/features/chat/presentation/widgets/blocked_users_dialog.dart';
@@ -340,10 +341,17 @@ class _DrawerFooter extends StatelessWidget {
         20,
         12 + MediaQuery.of(context).padding.bottom,
       ),
-      child: CustomText(
-        text: '© MegTech',
-        fontSize: 13,
-        color: context.palette.textSecondary,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CustomText(
+            text: '©',
+            fontSize: 13,
+            color: context.palette.textSecondary,
+          ),
+          const SizedBox(width: 6),
+          const BrandMark(),
+        ],
       ),
     );
   }

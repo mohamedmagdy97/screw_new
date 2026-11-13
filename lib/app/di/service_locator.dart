@@ -43,6 +43,9 @@ import 'package:screw_calculator/features/prayer/data/datasources/prayer_api_ser
 import 'package:screw_calculator/features/prayer/presentation/cubit/prayer_cubit.dart';
 import 'package:screw_calculator/features/show_video/presentation/cubit/video_cubit.dart';
 import 'package:screw_calculator/features/stats/presentation/cubit/stats_cubit.dart';
+import 'package:screw_calculator/features/review/data/review_repository_impl.dart';
+import 'package:screw_calculator/features/review/domain/repositories/review_repository.dart';
+import 'package:screw_calculator/features/review/domain/usecases/note_finished_game_usecase.dart';
 import 'package:screw_calculator/features/tournament/data/tournament_repository_impl.dart';
 import 'package:screw_calculator/features/tournament/domain/repositories/tournament_repository.dart';
 import 'package:screw_calculator/features/tournament/presentation/cubit/tournament_cubit.dart';
@@ -73,6 +76,7 @@ Future<void> setupLocator() async {
   _registerChat();
   _registerTournament();
   _registerUrlLauncher();
+  _registerReview();
   _registerNotifications();
   _registerScreenshots();
   _registerSimpleCubits();
@@ -133,6 +137,9 @@ void _registerDashboard() {
         uploadScreenshotUseCase: UploadScreenshotUseCase(sl()),
         activeGameRepository: sl(),
         lastGamePublisher: sl(),
+        onGameSaved: () async {
+          await sl<NoteFinishedGameUseCase>().call();
+        },
       ),
     );
 }
@@ -241,5 +248,15 @@ void _registerMoreApps() {
     )
     ..registerLazySingleton<GetMoreAppsUseCase>(
       () => GetMoreAppsUseCase(sl(), selfId: AppLinks.androidPackage),
+    );
+}
+
+/// طلب تقييم المتجر تلقائيًا بعد الجولات الكاملة (review).
+void _registerReview() {
+  sl
+    ..registerLazySingleton<ReviewRepository>(PrefsReviewRepository.new)
+    ..registerLazySingleton<StoreReview>(InAppStoreReview.new)
+    ..registerLazySingleton<NoteFinishedGameUseCase>(
+      () => NoteFinishedGameUseCase(sl(), sl()),
     );
 }

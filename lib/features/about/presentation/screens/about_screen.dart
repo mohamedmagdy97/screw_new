@@ -8,6 +8,7 @@ import 'package:screw_calculator/core/constants/developer_info.dart';
 import 'package:screw_calculator/core/l10n/content_direction.dart';
 import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
+import 'package:screw_calculator/core/widgets/brand_mark.dart';
 import 'package:screw_calculator/core/widgets/custom_appbar.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/core/helpers/url_launcher_data_source.dart';
@@ -289,40 +290,6 @@ class _DeveloperCard extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-/// علامة MegTech + الاسم، من الشمال لليمين زي اللوجو.
-class BrandMark extends StatelessWidget {
-  const BrandMark({super.key});
-
-  static const double _markSize = 20;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      textDirection: TextDirection.ltr,
-      children: [
-        Image.asset(
-          DeveloperInfo.mark,
-          key: const ValueKey('megtech-mark'),
-          width: _markSize,
-          height: _markSize,
-          semanticLabel: DeveloperInfo.brand,
-        ),
-        const SizedBox(width: 6),
-        Text(
-          DeveloperInfo.brand,
-          textDirection: TextDirection.ltr,
-          style: TextStyle(
-            fontSize: 13.5,
-            fontFamily: AppFonts.bold,
-            color: context.palette.textPrimary,
-          ),
-        ),
-      ],
     );
   }
 }

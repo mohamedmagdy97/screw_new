@@ -8,9 +8,6 @@ class Assets {
   static const String iconsIcon = 'assets/icons/icon.png';
   static const String iconsMark = 'assets/icons/mark.png';
   static const String iconsStoreIcon = 'assets/icons/store_icon.png';
-  static const String whatsappIcon = 'assets/icons/WhatsApp.png';
-  static const String linkedInIcon = 'assets/icons/LinkedIn_icon.png';
-  static const String githubIcon = 'assets/icons/github.png';
   static const String kingIcon = 'assets/icons/king.png';
   static const String videoScrewVideo = 'assets/video/screw_video.mp4';
   static const String soundsAzan = 'assets/sounds/azan.mp3';
