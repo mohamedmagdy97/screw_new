@@ -130,7 +130,6 @@
   "onb3Title": "Your game is saved, your stats are ready",
   "onb3Body": "The current game is saved automatically so you can continue later, track win rates and share the result as a neat image.",
   "startPlaying": "Start playing",
-  "drawerGreeting": "Welcome, friend",
   "prayerTimes": "Prayer times",
   "notifications": "Notifications",
   "rules": "Game rules",
@@ -138,7 +137,6 @@
   "statsMenu": "Player statistics",
   "video": "How-to-play video",
   "sharedResults": "Others' shared results",
-  "contactUs": "Suggestions & contact us",
   "publicChat": "Public chat",
   "blockedUsers": "Blocked users",
   "rateUs": "Rate us",
@@ -199,9 +197,6 @@
       }
     }
   },
-  "contactTitle": "Contact & suggestions",
-  "contactIntro": "You can chat with us for questions and inquiries via",
-  "contactNote": "We do not sell the game, but you can message us to help improve the app and learn about our latest apps",
   "notificationsTitle": "Notifications",
   "notificationsEmpty": "No notifications right now",
   "notificationHidden": " ✅ Notification hidden ",

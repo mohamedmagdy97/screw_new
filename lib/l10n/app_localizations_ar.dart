@@ -242,9 +242,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get startPlaying => 'ابدأ اللعب';
 
   @override
-  String get drawerGreeting => 'آهلا بيك يا صديقي';
-
-  @override
   String get prayerTimes => 'مواقيت الصلاة';
 
   @override
@@ -264,9 +261,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get sharedResults => 'مشاركات نتائج الاخرين';
-
-  @override
-  String get contactUs => 'للاقتراحات والتواصل معنا';
 
   @override
   String get publicChat => 'محادثة عامة';
@@ -374,16 +368,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String deleteGameWarning(int n) {
     return 'سيتم حذف الجولة رقم $n';
   }
-
-  @override
-  String get contactTitle => 'للتواصل وتقديم الاقتراحات';
-
-  @override
-  String get contactIntro => 'يمكنك محادثتنا للأسئلة والاستفسارات من خلال';
-
-  @override
-  String get contactNote =>
-      'نحن لا نبيع اللعبة ولكن يمكنك الارسال لمساعدتنا بتحسين التطبيق ومعرفة اخر التطبيقات';
 
   @override
   String get notificationsTitle => 'الإشعارات';

@@ -15,7 +15,6 @@ import 'package:screw_calculator/core/theme/theme_cubit.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
 import 'package:screw_calculator/features/about/presentation/screens/about_screen.dart';
 import 'package:screw_calculator/features/chat/presentation/widgets/blocked_users_dialog.dart';
-import 'package:screw_calculator/features/contact_us/presentation/screens/contact_us_screen.dart';
 import 'package:screw_calculator/features/history/presentation/screens/history_screen.dart';
 import 'package:screw_calculator/features/home/presentation/controller/home_controller.dart';
 import 'package:screw_calculator/features/home/presentation/widgets/chat_entry_flow.dart';
@@ -138,10 +137,10 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                     onTap: () => _go(const UserScSharingScreen()),
                   ),
                   DrawerTile(
-                    icon: Icons.support_agent_rounded,
-                    title: l10n.contactUs,
+                    icon: Icons.info_rounded,
+                    title: l10n.aboutTitle,
                     color: palette.win,
-                    onTap: () => _go(const ContactUsScreen()),
+                    onTap: () => _go(const AboutScreen()),
                   ),
                   DrawerTile(
                     icon: Icons.group_add_rounded,
@@ -178,12 +177,6 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                     title: l10n.blockedUsers,
                     color: palette.lose,
                     onTap: () => showBlockedUsersDialog(context),
-                  ),
-                  DrawerTile(
-                    icon: Icons.info_rounded,
-                    title: l10n.aboutTitle,
-                    color: palette.accent,
-                    onTap: () => _go(const AboutScreen()),
                   ),
                 ],
               ),

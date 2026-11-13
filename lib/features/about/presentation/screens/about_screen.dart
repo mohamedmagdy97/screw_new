@@ -10,7 +10,7 @@ import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/widgets/custom_appbar.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
-import 'package:screw_calculator/features/contact_us/data/datasources/url_launcher_data_source.dart';
+import 'package:screw_calculator/core/helpers/url_launcher_data_source.dart';
 import 'package:screw_calculator/features/more_apps/domain/usecases/get_more_apps_usecase.dart';
 import 'package:screw_calculator/features/more_apps/presentation/widgets/more_apps_section.dart';
 import 'package:screw_calculator/generated/assets.dart';

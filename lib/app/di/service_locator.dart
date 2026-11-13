@@ -2,14 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
 import 'package:screw_calculator/core/constants/app_links.dart';
+import 'package:screw_calculator/core/helpers/url_launcher_data_source.dart';
 import 'package:screw_calculator/core/l10n/locale_cubit.dart';
 import 'package:screw_calculator/core/theme/theme_cubit.dart';
 import 'package:screw_calculator/features/chat/data/datasources/chat_moderation_store.dart';
-import 'package:screw_calculator/features/contact_us/data/datasources/url_launcher_data_source.dart';
-import 'package:screw_calculator/features/contact_us/data/repositories/contact_repository_impl.dart';
-import 'package:screw_calculator/features/contact_us/domain/repositories/contact_repository.dart';
-import 'package:screw_calculator/features/contact_us/domain/usecases/launch_contact_url_usecase.dart';
-import 'package:screw_calculator/features/contact_us/presentation/cubit/contact_cubit.dart';
 import 'package:screw_calculator/features/dashboard/data/datasources/dashboard_remote_data_source.dart';
 import 'package:screw_calculator/features/dashboard/data/repositories/active_game_repository_impl.dart';
 import 'package:screw_calculator/features/dashboard/data/repositories/dashboard_repository_impl.dart';
@@ -76,7 +72,7 @@ Future<void> setupLocator() async {
   _registerStats();
   _registerChat();
   _registerTournament();
-  _registerContact();
+  _registerUrlLauncher();
   _registerNotifications();
   _registerScreenshots();
   _registerSimpleCubits();
@@ -163,19 +159,11 @@ void _registerHistory() {
     );
 }
 
-/// تبعيات التواصل معنا (contact_us).
-void _registerContact() {
-  sl
-    ..registerLazySingleton<UrlLauncherDataSource>(
-      UrlLauncherDataSourceImpl.new,
-    )
-    ..registerLazySingleton<ContactRepository>(
-      () => ContactRepositoryImpl(dataSource: sl()),
-    )
-    ..registerFactory<ContactCubit>(
-      () =>
-          ContactCubit(launchContactUrlUseCase: LaunchContactUrlUseCase(sl())),
-    );
+/// فتح الروابط الخارجية (واتساب / المتاجر / صفحات الويب).
+void _registerUrlLauncher() {
+  sl.registerLazySingleton<UrlLauncherDataSource>(
+    UrlLauncherDataSourceImpl.new,
+  );
 }
 
 /// تبعيات الإشعارات (notifications).

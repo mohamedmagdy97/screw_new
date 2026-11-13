@@ -6,7 +6,7 @@ import 'package:screw_calculator/core/utils/format_date_to_string.dart';
 import 'package:screw_calculator/core/utils/utilities.dart';
 import 'package:screw_calculator/core/widgets/app_dialog.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
-import 'package:screw_calculator/features/contact_us/presentation/screens/contact_us_screen.dart';
+import 'package:screw_calculator/features/about/presentation/screens/about_screen.dart';
 import 'package:screw_calculator/features/notifications/domain/entities/notification_entity.dart';
 import 'package:screw_calculator/l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -42,11 +42,12 @@ class NotificationsItem extends StatelessWidget {
   }
 
   Future<void> _open(BuildContext context) async {
+    // إشعارات «contact» القديمة بتفتح «عن التطبيق» (فيها كل طرق التواصل).
     if (notification.type == 'contact') {
       await Navigator.of(context).push(
         PageRouteBuilder<void>(
           transitionDuration: const Duration(milliseconds: 500),
-          pageBuilder: (_, _, _) => const ContactUsScreen(),
+          pageBuilder: (_, _, _) => const AboutScreen(),
         ),
       );
     } else if (notification.type == 'action') {

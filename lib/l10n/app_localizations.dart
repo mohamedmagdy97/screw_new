@@ -524,12 +524,6 @@ abstract class AppLocalizations {
   /// **'ابدأ اللعب'**
   String get startPlaying;
 
-  /// No description provided for @drawerGreeting.
-  ///
-  /// In ar, this message translates to:
-  /// **'آهلا بيك يا صديقي'**
-  String get drawerGreeting;
-
   /// No description provided for @prayerTimes.
   ///
   /// In ar, this message translates to:
@@ -571,12 +565,6 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'مشاركات نتائج الاخرين'**
   String get sharedResults;
-
-  /// No description provided for @contactUs.
-  ///
-  /// In ar, this message translates to:
-  /// **'للاقتراحات والتواصل معنا'**
-  String get contactUs;
 
   /// No description provided for @publicChat.
   ///
@@ -769,24 +757,6 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'سيتم حذف الجولة رقم {n}'**
   String deleteGameWarning(int n);
-
-  /// No description provided for @contactTitle.
-  ///
-  /// In ar, this message translates to:
-  /// **'للتواصل وتقديم الاقتراحات'**
-  String get contactTitle;
-
-  /// No description provided for @contactIntro.
-  ///
-  /// In ar, this message translates to:
-  /// **'يمكنك محادثتنا للأسئلة والاستفسارات من خلال'**
-  String get contactIntro;
-
-  /// No description provided for @contactNote.
-  ///
-  /// In ar, this message translates to:
-  /// **'نحن لا نبيع اللعبة ولكن يمكنك الارسال لمساعدتنا بتحسين التطبيق ومعرفة اخر التطبيقات'**
-  String get contactNote;
 
   /// No description provided for @notificationsTitle.
   ///

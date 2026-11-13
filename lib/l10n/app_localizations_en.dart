@@ -243,9 +243,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get startPlaying => 'Start playing';
 
   @override
-  String get drawerGreeting => 'Welcome, friend';
-
-  @override
   String get prayerTimes => 'Prayer times';
 
   @override
@@ -265,9 +262,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sharedResults => 'Others\' shared results';
-
-  @override
-  String get contactUs => 'Suggestions & contact us';
 
   @override
   String get publicChat => 'Public chat';
@@ -376,17 +370,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String deleteGameWarning(int n) {
     return 'Game $n will be deleted';
   }
-
-  @override
-  String get contactTitle => 'Contact & suggestions';
-
-  @override
-  String get contactIntro =>
-      'You can chat with us for questions and inquiries via';
-
-  @override
-  String get contactNote =>
-      'We do not sell the game, but you can message us to help improve the app and learn about our latest apps';
 
   @override
   String get notificationsTitle => 'Notifications';
