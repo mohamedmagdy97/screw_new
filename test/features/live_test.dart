@@ -8,12 +8,14 @@ import 'package:screw_calculator/app/di/service_locator.dart';
 import 'package:screw_calculator/core/models/player_model.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/features/dashboard/presentation/cubit/dashboard_cubit.dart';
+import 'package:screw_calculator/features/live/data/pending_live_codes.dart';
 import 'package:screw_calculator/features/live/domain/entities/live_game.dart';
 import 'package:screw_calculator/features/live/domain/live_code.dart';
 import 'package:screw_calculator/features/live/domain/repositories/live_game_repository.dart';
 import 'package:screw_calculator/features/live/presentation/live_broadcaster.dart';
 import 'package:screw_calculator/features/live/presentation/screens/live_join_screen.dart';
 import 'package:screw_calculator/l10n/app_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class _Repo implements LiveGameRepository {
   final created = <LiveGame>[];
@@ -35,6 +37,9 @@ class _Repo implements LiveGameRepository {
 
   @override
   Stream<LiveGame?> watch(String code) => controller.stream;
+
+  @override
+  Future<void> cleanupLeftovers() async {}
 }
 
 PlayerModel _player(String name, List<int> rounds) {
@@ -194,9 +199,32 @@ void main() {
       expect(find.text('علي'), findsOneWidget);
       expect(tester.takeException(), isNull);
 
+      // صاحب اللعبة وقّف اللايف: الوثيقة اتمسحت، والنتيجة الأخيرة تفضل ظاهرة.
+      repo.controller.add(null);
+      await tester.pump();
+      expect(find.text('صاحب اللعبة وقّف اللايف'), findsOneWidget);
+      expect(find.text('علي'), findsOneWidget);
+    });
+
+    testWidgets('a code with no game says so', (tester) async {
+      await pump(tester, scanned: 'XYZ789');
+      await tester.tap(find.byKey(const ValueKey('live-scan')));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 600));
       repo.controller.add(null);
       await tester.pump();
       expect(find.textContaining('مفيش لعبة لايف'), findsOneWidget);
     });
+  });
+
+  test('pending codes survive until removed (cleanup after a crash)', () async {
+    SharedPreferences.setMockInitialValues({});
+    final pending = PrefsPendingLiveCodes();
+    await pending.add('ABC234');
+    await pending.add('ABC234');
+    await pending.add('XYZ789');
+    expect(await PrefsPendingLiveCodes().load(), ['ABC234', 'XYZ789']);
+    await pending.remove('ABC234');
+    expect(await pending.load(), ['XYZ789']);
   });
 }

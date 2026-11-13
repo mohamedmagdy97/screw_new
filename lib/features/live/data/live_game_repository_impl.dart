@@ -1,14 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:screw_calculator/features/live/data/pending_live_codes.dart';
 import 'package:screw_calculator/features/live/domain/entities/live_game.dart';
 import 'package:screw_calculator/features/live/domain/live_code.dart';
 import 'package:screw_calculator/features/live/domain/repositories/live_game_repository.dart';
 
-/// `live_games/{code}` على Firestore. كل لعبة فيها `expireAt` بعد 24 ساعة
-/// عشان سياسة TTL في Firestore تمسحها لوحدها.
+/// `live_games/{code}` على Firestore.
+///
+/// اللعبة بتتمسح من السيرفر أول ما صاحبها يوقّف اللايف أو يخرج من شاشة
+/// النتايج، ولو التطبيق اتقفل فجأة بتتمسح أول ما يفتح تاني ([PendingLiveCodes]).
+/// `expireAt` (بعد 24 ساعة) احتياطي لو اتفعّلت سياسة TTL في Firestore.
 class LiveGameRepositoryImpl implements LiveGameRepository {
-  LiveGameRepositoryImpl({required this.firestore, this.newCode});
+  LiveGameRepositoryImpl({
+    required this.firestore,
+    PendingLiveCodes? pending,
+    this.newCode,
+  }) : _pending = pending ?? PrefsPendingLiveCodes();
 
   final FirebaseFirestore firestore;
+  final PendingLiveCodes _pending;
 
   /// للاختبارات؛ الافتراضي [LiveCode.generate].
   final String Function()? newCode;
@@ -31,6 +40,7 @@ class LiveGameRepositoryImpl implements LiveGameRepository {
       final code = (newCode ?? LiveCode.generate)();
       final doc = _games.doc(code);
       if ((await doc.get()).exists) continue;
+      await _pending.add(code);
       await doc.set(_data(build(code)));
       return code;
     }
@@ -41,10 +51,32 @@ class LiveGameRepositoryImpl implements LiveGameRepository {
   Future<void> update(LiveGame game) => _games.doc(game.code).set(_data(game));
 
   @override
-  Future<void> end(String code) => _games.doc(code).update({
-    'ended': true,
-    'updatedAt': FieldValue.serverTimestamp(),
-  });
+  Future<void> end(String code) async {
+    final doc = _games.doc(code);
+    // نعلّم إنها خلصت الأول (اللي بيتابعوا يشوفوا الرسالة)، وبعدين نمسحها.
+    await doc.update({
+      'ended': true,
+      'updatedAt': FieldValue.serverTimestamp(),
+    });
+    await doc.delete();
+    await _pending.remove(code);
+  }
+
+  @override
+  Future<void> cleanupLeftovers() async {
+    for (final code in await _pending.load()) {
+      try {
+        final doc = _games.doc(code);
+        if ((await doc.get()).exists) {
+          await doc.update({'ended': true});
+          await doc.delete();
+        }
+        await _pending.remove(code);
+      } catch (_) {
+        // نحاول تاني المرة الجاية (مثلًا مفيش نت دلوقتي).
+      }
+    }
+  }
 
   @override
   Stream<LiveGame?> watch(String code) {

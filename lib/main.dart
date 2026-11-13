@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:screw_calculator/app/app.dart';
 import 'package:screw_calculator/app/di/service_locator.dart';
+import 'package:screw_calculator/features/live/domain/repositories/live_game_repository.dart';
 import 'package:screw_calculator/features/prayer/core/notification_service.dart';
 
 void main() async {
@@ -16,6 +19,8 @@ void main() async {
   await Hive.openBox<dynamic>('cachedMessages');
 
   await setupLocator();
+  // يمسح أي لعبة لايف فضلت على السيرفر لو التطبيق اتقفل فجأة وهي شغالة.
+  unawaited(sl<LiveGameRepository>().cleanupLeftovers().catchError((_) {}));
 
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(const MyApp());

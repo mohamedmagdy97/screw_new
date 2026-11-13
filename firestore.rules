@@ -47,8 +47,8 @@ service cloud.firestore {
     }
 
     // الألعاب اللايف: live_games/{code}. أي حد معاه الكود يقدر يتابع. الكتابة
-    // بشكل محدد (كود 6 حروف، 12 لاعب بالكتير، ومعاها expireAt للمسح التلقائي).
-    // فعّل TTL من Firebase Console ← Firestore ← TTL على الحقل expireAt.
+    // بشكل محدد (كود 6 حروف، 12 لاعب بالكتير). التطبيق بيمسح اللعبة لما
+    // صاحبها يوقّف اللايف (بعد ما يعلّم ended)، أو لو عدّى عليها expireAt.
     match /live_games/{code} {
       allow get: if true;
       allow list: if false;
@@ -57,7 +57,8 @@ service cloud.firestore {
                     && request.resource.data.players is list
                     && request.resource.data.players.size() <= 12
                     && request.resource.data.expireAt is timestamp;
-      allow delete: if false;
+      allow delete: if resource.data.ended == true
+                    || resource.data.expireAt < request.time;
     }
 
     // أي مسار آخر مغلق.

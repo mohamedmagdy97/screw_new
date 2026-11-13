@@ -7,8 +7,11 @@ abstract class LiveGameRepository {
 
   Future<void> update(LiveGame game);
 
-  /// يوقّف البث (اللي بيتابعوا بيشوفوا «اللعبة خلصت»).
+  /// يوقّف البث ويمسح اللعبة من السيرفر (اللي بيتابعوا بيشوفوا «وقّف اللايف»).
   Future<void> end(String code);
+
+  /// يمسح أي لعبة بدأها الموبايل ده وما اتمسحتش (مثلًا التطبيق اتقفل فجأة).
+  Future<void> cleanupLeftovers();
 
   /// يتابع اللعبة؛ null لو الكود مش موجود.
   Stream<LiveGame?> watch(String code);

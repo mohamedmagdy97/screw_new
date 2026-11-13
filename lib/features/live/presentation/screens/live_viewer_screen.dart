@@ -24,6 +24,10 @@ class _LiveViewerScreenState extends State<LiveViewerScreen> {
     widget.code,
   );
 
+  /// آخر لقطة وصلت؛ لما صاحب اللعبة يوقّف اللايف والوثيقة تتمسح، بنفضل
+  /// نعرضها بحالة «وقّف اللايف» بدل «مفيش لعبة».
+  LiveGame? _last;
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
@@ -43,7 +47,20 @@ class _LiveViewerScreenState extends State<LiveViewerScreen> {
             if (snap.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
             }
-            final game = snap.data;
+            var game = snap.data;
+            final last = _last;
+            if (game != null) {
+              _last = game;
+            } else if (last != null) {
+              game = LiveGame(
+                code: last.code,
+                players: last.players,
+                teams: last.teams,
+                round: last.round,
+                finished: last.finished,
+                ended: true,
+              );
+            }
             if (game == null) {
               return _Message(
                 icon: Icons.search_off_rounded,
@@ -102,7 +119,9 @@ class _LiveBoard extends StatelessWidget {
                   ),
                   const SizedBox(width: 6),
                 ],
-                CustomText(text: status, fontSize: 14, maxLines: 1),
+                Flexible(
+                  child: CustomText(text: status, fontSize: 14, maxLines: 2),
+                ),
               ],
             ),
           ),
