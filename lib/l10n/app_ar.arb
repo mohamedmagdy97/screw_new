@@ -406,5 +406,50 @@
   },
   "moreAppsTitle": "تطبيقات تانية من MegTech",
   "moreAppsGet": "نزّل",
-  "moreAppsAll": "كل تطبيقاتنا"
+  "moreAppsAll": "كل تطبيقاتنا",
+  "aboutTitle": "عن التطبيق",
+  "aboutDeveloperTitle": "المطوّر",
+  "aboutVersion": "الإصدار {version} ({build})",
+  "@aboutVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      },
+      "build": {
+        "type": "String"
+      }
+    }
+  },
+  "aboutAppTitle": "إيه هو سكرو حاسبة؟",
+  "aboutAppBody": "سكرو حاسبة بيحسبلكم نقط السكرو وانتو بتلعبوا من غير ورقة وقلم: كلاسيك (كل واحد لنفسه) أو صاحب صاحبه. بيحفظ سجل الجولات، ويطلّع إحصائيات اللاعبين، ويخليكم تعملوا بطولة مع صحابكم.",
+  "aboutDeveloperBody": "سكرو حاسبة من تطوير {brand}، مطوّر مستقل بيعمل ألعاب وتطبيقات عربية. التطبيق بيحسب كل حاجة على موبايلك، وسجل جولاتك محفوظ عندك.",
+  "@aboutDeveloperBody": {
+    "placeholders": {
+      "brand": {
+        "type": "String"
+      }
+    }
+  },
+  "aboutWhatsApp": "كلّمني على واتساب",
+  "aboutWhatsAppHint": "مشكلة، سؤال، أو أي فكرة",
+  "aboutWhatsAppMessage": "السلام عليكم، بخصوص تطبيق سكرو حاسبة (إصدار {version}):",
+  "@aboutWhatsAppMessage": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "aboutSuggest": "اقترح فكرة",
+  "aboutSuggestHint": "ميزة نفسك تشوفها في التطبيق؟ ابعتهالي",
+  "aboutSuggestMessage": "السلام عليكم، عندي فكرة لتطبيق سكرو حاسبة:",
+  "aboutOpenFailed": "مقدرناش نفتح واتساب. الرقم اتنسخ.",
+  "aboutContact": "تواصل معانا",
+  "aboutEmailCopied": "اتنسخ الإيميل",
+  "aboutRate": "قيّم سكرو حاسبة على المتجر",
+  "aboutRateHint": "لو التطبيق عجبك، تقييمك بيساعد ناس تانية تلاقيه",
+  "aboutShare": "شارك التطبيق مع أصحابك",
+  "aboutLicenses": "تراخيص المكتبات",
+  "aboutFooter": "اقتراحاتكم بتخلي التطبيق أحسن. ابعتوها لنا.",
+  "aboutMadeBy": "من"
 }

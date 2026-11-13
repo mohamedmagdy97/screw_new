@@ -14,6 +14,7 @@ class MoreAppsSection extends StatefulWidget {
     required this.load,
     required this.open,
     this.allAppsUrl,
+    this.padding = const EdgeInsets.fromLTRB(12, 16, 12, 8),
   });
 
   /// يحمّل التطبيقات المناسبة للمنصّة (فارغة عند الفشل).
@@ -25,6 +26,9 @@ class MoreAppsSection extends StatefulWidget {
   /// صفحة MegTech بكل التطبيقات؛ يضيف زر «كل تطبيقاتنا» تحت القائمة. على
   /// iPhone تُفتح بـ `?p=ios` لتعرض تطبيقات App Store فقط.
   final String? allAppsUrl;
+
+  /// المسافة حول الكارت.
+  final EdgeInsetsGeometry padding;
 
   @override
   State<MoreAppsSection> createState() => _MoreAppsSectionState();
@@ -54,7 +58,7 @@ class _MoreAppsSectionState extends State<MoreAppsSection> {
         final palette = context.palette;
         final allAppsUrl = widget.allAppsUrl;
         return Padding(
-          padding: const EdgeInsets.fromLTRB(12, 16, 12, 8),
+          padding: widget.padding,
           child: Material(
             color: palette.surface,
             shape: RoundedRectangleBorder(

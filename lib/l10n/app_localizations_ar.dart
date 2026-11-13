@@ -716,4 +716,75 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get moreAppsAll => 'كل تطبيقاتنا';
+
+  @override
+  String get aboutTitle => 'عن التطبيق';
+
+  @override
+  String get aboutDeveloperTitle => 'المطوّر';
+
+  @override
+  String aboutVersion(String version, String build) {
+    return 'الإصدار $version ($build)';
+  }
+
+  @override
+  String get aboutAppTitle => 'إيه هو سكرو حاسبة؟';
+
+  @override
+  String get aboutAppBody =>
+      'سكرو حاسبة بيحسبلكم نقط السكرو وانتو بتلعبوا من غير ورقة وقلم: كلاسيك (كل واحد لنفسه) أو صاحب صاحبه. بيحفظ سجل الجولات، ويطلّع إحصائيات اللاعبين، ويخليكم تعملوا بطولة مع صحابكم.';
+
+  @override
+  String aboutDeveloperBody(String brand) {
+    return 'سكرو حاسبة من تطوير $brand، مطوّر مستقل بيعمل ألعاب وتطبيقات عربية. التطبيق بيحسب كل حاجة على موبايلك، وسجل جولاتك محفوظ عندك.';
+  }
+
+  @override
+  String get aboutWhatsApp => 'كلّمني على واتساب';
+
+  @override
+  String get aboutWhatsAppHint => 'مشكلة، سؤال، أو أي فكرة';
+
+  @override
+  String aboutWhatsAppMessage(String version) {
+    return 'السلام عليكم، بخصوص تطبيق سكرو حاسبة (إصدار $version):';
+  }
+
+  @override
+  String get aboutSuggest => 'اقترح فكرة';
+
+  @override
+  String get aboutSuggestHint => 'ميزة نفسك تشوفها في التطبيق؟ ابعتهالي';
+
+  @override
+  String get aboutSuggestMessage =>
+      'السلام عليكم، عندي فكرة لتطبيق سكرو حاسبة:';
+
+  @override
+  String get aboutOpenFailed => 'مقدرناش نفتح واتساب. الرقم اتنسخ.';
+
+  @override
+  String get aboutContact => 'تواصل معانا';
+
+  @override
+  String get aboutEmailCopied => 'اتنسخ الإيميل';
+
+  @override
+  String get aboutRate => 'قيّم سكرو حاسبة على المتجر';
+
+  @override
+  String get aboutRateHint => 'لو التطبيق عجبك، تقييمك بيساعد ناس تانية تلاقيه';
+
+  @override
+  String get aboutShare => 'شارك التطبيق مع أصحابك';
+
+  @override
+  String get aboutLicenses => 'تراخيص المكتبات';
+
+  @override
+  String get aboutFooter => 'اقتراحاتكم بتخلي التطبيق أحسن. ابعتوها لنا.';
+
+  @override
+  String get aboutMadeBy => 'من';
 }

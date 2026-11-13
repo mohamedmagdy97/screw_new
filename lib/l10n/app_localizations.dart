@@ -1386,6 +1386,132 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'كل تطبيقاتنا'**
   String get moreAppsAll;
+
+  /// No description provided for @aboutTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'عن التطبيق'**
+  String get aboutTitle;
+
+  /// No description provided for @aboutDeveloperTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'المطوّر'**
+  String get aboutDeveloperTitle;
+
+  /// No description provided for @aboutVersion.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإصدار {version} ({build})'**
+  String aboutVersion(String version, String build);
+
+  /// No description provided for @aboutAppTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'إيه هو سكرو حاسبة؟'**
+  String get aboutAppTitle;
+
+  /// No description provided for @aboutAppBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'سكرو حاسبة بيحسبلكم نقط السكرو وانتو بتلعبوا من غير ورقة وقلم: كلاسيك (كل واحد لنفسه) أو صاحب صاحبه. بيحفظ سجل الجولات، ويطلّع إحصائيات اللاعبين، ويخليكم تعملوا بطولة مع صحابكم.'**
+  String get aboutAppBody;
+
+  /// No description provided for @aboutDeveloperBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'سكرو حاسبة من تطوير {brand}، مطوّر مستقل بيعمل ألعاب وتطبيقات عربية. التطبيق بيحسب كل حاجة على موبايلك، وسجل جولاتك محفوظ عندك.'**
+  String aboutDeveloperBody(String brand);
+
+  /// No description provided for @aboutWhatsApp.
+  ///
+  /// In ar, this message translates to:
+  /// **'كلّمني على واتساب'**
+  String get aboutWhatsApp;
+
+  /// No description provided for @aboutWhatsAppHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'مشكلة، سؤال، أو أي فكرة'**
+  String get aboutWhatsAppHint;
+
+  /// No description provided for @aboutWhatsAppMessage.
+  ///
+  /// In ar, this message translates to:
+  /// **'السلام عليكم، بخصوص تطبيق سكرو حاسبة (إصدار {version}):'**
+  String aboutWhatsAppMessage(String version);
+
+  /// No description provided for @aboutSuggest.
+  ///
+  /// In ar, this message translates to:
+  /// **'اقترح فكرة'**
+  String get aboutSuggest;
+
+  /// No description provided for @aboutSuggestHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'ميزة نفسك تشوفها في التطبيق؟ ابعتهالي'**
+  String get aboutSuggestHint;
+
+  /// No description provided for @aboutSuggestMessage.
+  ///
+  /// In ar, this message translates to:
+  /// **'السلام عليكم، عندي فكرة لتطبيق سكرو حاسبة:'**
+  String get aboutSuggestMessage;
+
+  /// No description provided for @aboutOpenFailed.
+  ///
+  /// In ar, this message translates to:
+  /// **'مقدرناش نفتح واتساب. الرقم اتنسخ.'**
+  String get aboutOpenFailed;
+
+  /// No description provided for @aboutContact.
+  ///
+  /// In ar, this message translates to:
+  /// **'تواصل معانا'**
+  String get aboutContact;
+
+  /// No description provided for @aboutEmailCopied.
+  ///
+  /// In ar, this message translates to:
+  /// **'اتنسخ الإيميل'**
+  String get aboutEmailCopied;
+
+  /// No description provided for @aboutRate.
+  ///
+  /// In ar, this message translates to:
+  /// **'قيّم سكرو حاسبة على المتجر'**
+  String get aboutRate;
+
+  /// No description provided for @aboutRateHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'لو التطبيق عجبك، تقييمك بيساعد ناس تانية تلاقيه'**
+  String get aboutRateHint;
+
+  /// No description provided for @aboutShare.
+  ///
+  /// In ar, this message translates to:
+  /// **'شارك التطبيق مع أصحابك'**
+  String get aboutShare;
+
+  /// No description provided for @aboutLicenses.
+  ///
+  /// In ar, this message translates to:
+  /// **'تراخيص المكتبات'**
+  String get aboutLicenses;
+
+  /// No description provided for @aboutFooter.
+  ///
+  /// In ar, this message translates to:
+  /// **'اقتراحاتكم بتخلي التطبيق أحسن. ابعتوها لنا.'**
+  String get aboutFooter;
+
+  /// No description provided for @aboutMadeBy.
+  ///
+  /// In ar, this message translates to:
+  /// **'من'**
+  String get aboutMadeBy;
 }
 
 class _AppLocalizationsDelegate

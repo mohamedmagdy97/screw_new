@@ -108,6 +108,7 @@ flutter:
   assets:
     - assets/icons/
     - assets/megtech/apps.json
+    - assets/megtech/megtech_mark.png
     - assets/megtech/icons/
     - assets/video/screw_video.mp4
     - assets/sounds/azan.mp3

@@ -1,5 +1,5 @@
 class SocialLinks {
-  static String whatsapp = 'https://wa.me/+201149504892';
+  static String whatsapp = 'https://wa.me/201556464892';
   static String github =
       'https://github.com/mohamedmagdy97/mmagdy/blob/master/README.md';
   static String linkedin =

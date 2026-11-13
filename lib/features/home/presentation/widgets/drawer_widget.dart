@@ -13,16 +13,14 @@ import 'package:screw_calculator/core/theme/app_palette.dart';
 import 'package:screw_calculator/core/theme/app_theme.dart';
 import 'package:screw_calculator/core/theme/theme_cubit.dart';
 import 'package:screw_calculator/core/widgets/custom_text.dart';
+import 'package:screw_calculator/features/about/presentation/screens/about_screen.dart';
 import 'package:screw_calculator/features/chat/presentation/widgets/blocked_users_dialog.dart';
-import 'package:screw_calculator/features/contact_us/data/datasources/url_launcher_data_source.dart';
 import 'package:screw_calculator/features/contact_us/presentation/screens/contact_us_screen.dart';
 import 'package:screw_calculator/features/history/presentation/screens/history_screen.dart';
 import 'package:screw_calculator/features/home/presentation/controller/home_controller.dart';
 import 'package:screw_calculator/features/home/presentation/widgets/chat_entry_flow.dart';
 import 'package:screw_calculator/features/home/presentation/widgets/drawer_tile.dart';
 import 'package:screw_calculator/features/home/presentation/widgets/weekly_reminder_tile.dart';
-import 'package:screw_calculator/features/more_apps/domain/usecases/get_more_apps_usecase.dart';
-import 'package:screw_calculator/features/more_apps/presentation/widgets/more_apps_section.dart';
 import 'package:screw_calculator/features/notifications/presentation/screens/notifications_screen.dart';
 import 'package:screw_calculator/features/prayer/presentation/screens/prayer_screen.dart';
 import 'package:screw_calculator/features/rules/presentation/screens/rules_screen.dart';
@@ -181,11 +179,11 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                     color: palette.lose,
                     onTap: () => showBlockedUsersDialog(context),
                   ),
-
-                  MoreAppsSection(
-                    load: sl<GetMoreAppsUseCase>().call,
-                    open: sl<UrlLauncherDataSource>().launchUrl,
-                    allAppsUrl: AppLinks.megtechApps,
+                  DrawerTile(
+                    icon: Icons.info_rounded,
+                    title: l10n.aboutTitle,
+                    color: palette.accent,
+                    onTap: () => _go(const AboutScreen()),
                   ),
                 ],
               ),

@@ -722,4 +722,77 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get moreAppsAll => 'All our apps';
+
+  @override
+  String get aboutTitle => 'About';
+
+  @override
+  String get aboutDeveloperTitle => 'Developer';
+
+  @override
+  String aboutVersion(String version, String build) {
+    return 'Version $version ($build)';
+  }
+
+  @override
+  String get aboutAppTitle => 'What is Screw Calculator?';
+
+  @override
+  String get aboutAppBody =>
+      'Screw Calculator keeps score while you play, no pen and paper needed: Classic (every player for themselves) or Partners mode. It saves your game history, shows player stats, and lets you run a tournament with your friends.';
+
+  @override
+  String aboutDeveloperBody(String brand) {
+    return 'Screw Calculator is made by $brand, an independent developer building Arabic games and apps. Everything is calculated on your phone, and your game history stays with you.';
+  }
+
+  @override
+  String get aboutWhatsApp => 'Message me on WhatsApp';
+
+  @override
+  String get aboutWhatsAppHint => 'A problem, a question, or any idea';
+
+  @override
+  String aboutWhatsAppMessage(String version) {
+    return 'Hi, about the Screw Calculator app (version $version):';
+  }
+
+  @override
+  String get aboutSuggest => 'Suggest an idea';
+
+  @override
+  String get aboutSuggestHint => 'A feature you\'d like to see? Send it over';
+
+  @override
+  String get aboutSuggestMessage => 'Hi, I have an idea for Screw Calculator:';
+
+  @override
+  String get aboutOpenFailed =>
+      'Couldn\'t open WhatsApp. The number was copied.';
+
+  @override
+  String get aboutContact => 'Contact us';
+
+  @override
+  String get aboutEmailCopied => 'Email copied';
+
+  @override
+  String get aboutRate => 'Rate Screw Calculator on the store';
+
+  @override
+  String get aboutRateHint =>
+      'If you like the app, your rating helps others find it';
+
+  @override
+  String get aboutShare => 'Share the app with friends';
+
+  @override
+  String get aboutLicenses => 'Open-source licenses';
+
+  @override
+  String get aboutFooter =>
+      'Your suggestions make the app better. Send them our way.';
+
+  @override
+  String get aboutMadeBy => 'by';
 }
